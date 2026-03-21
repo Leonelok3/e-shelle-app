@@ -1,9 +1,99 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}Connexion — E-Shelle{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
 {% block content %}
-<h2 class="h4">Connexion</h2>
-<form method="post" class="card p-3" style="max-width: 420px;">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button class="btn btn-primary">Se connecter</button>
-</form>
+<div class="auth-layout">
+
+  {# Visuel gauche avec particules #}
+  <div class="auth-visual">
+    <canvas id="particles-canvas" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
+    <div style="position:relative;z-index:2;text-align:center">
+      <a href="/" style="display:inline-flex;align-items:center;gap:.75rem;font-family:var(--font-display);font-size:1.75rem;font-weight:800;color:var(--text-primary);text-decoration:none;margin-bottom:2.5rem">
+        <svg viewBox="0 0 40 40" width="44" height="44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="40" height="40" rx="10" fill="#0D1F0D"/>
+          <path d="M10 20 C10 12 18 8 20 14 C22 8 30 12 30 20" fill="#2E7D32"/>
+          <line x1="20" y1="14" x2="20" y2="28" stroke="#4CAF50" stroke-width="2" stroke-linecap="round"/>
+          <rect x="10" y="29" width="20" height="4" rx="2" fill="#F57C00"/>
+        </svg>
+        E-<span style="color:var(--accent-light)">Shelle</span>
+      </a>
+      <h2 style="font-family:var(--font-display);font-size:1.5rem;font-weight:700;margin-bottom:.75rem">Bienvenue 👋</h2>
+      <p style="color:var(--text-secondary);max-width:300px;line-height:1.7;margin:0 auto">Accède à tes formations, ta boutique et tous tes outils depuis un seul endroit.</p>
+      <div style="margin-top:2.5rem;display:flex;flex-direction:column;gap:.85rem;text-align:left;max-width:280px;margin-left:auto;margin-right:auto">
+        {% for point in "500+ formations disponibles,Boutique digitale intégrée,Génération IA (Claude),Support WhatsApp 24h/7j"|split:"," %}
+        <div style="display:flex;align-items:center;gap:.6rem;color:var(--text-secondary);font-size:.88rem">
+          <span style="color:var(--primary-light);font-weight:700">✓</span> {{ point }}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {# Formulaire de connexion #}
+  <div class="auth-form-side">
+    <div style="max-width:420px;width:100%">
+      <a href="/" style="color:var(--text-secondary);font-size:.85rem;display:inline-flex;align-items:center;gap:.35rem;margin-bottom:2.5rem;text-decoration:none">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Retour à l'accueil
+      </a>
+
+      <h1 style="font-family:var(--font-display);font-size:2rem;font-weight:800;margin-bottom:.5rem">Se connecter</h1>
+      <p style="color:var(--text-secondary);margin-bottom:2rem">
+        Pas encore de compte ?
+        <a href="{% url 'accounts:register' %}" style="color:var(--primary-light);font-weight:600">S'inscrire gratuitement →</a>
+      </p>
+
+      {% if form.errors %}
+      <div style="background:rgba(244,67,54,.1);border:1px solid rgba(244,67,54,.3);border-radius:var(--radius-md);padding:1rem;margin-bottom:1.5rem;color:#EF9A9A;font-size:.88rem">
+        ❌ Identifiants incorrects. Vérifiez votre nom d'utilisateur et mot de passe.
+      </div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label class="form-label" for="id_username">Nom d'utilisateur</label>
+          <input type="text" name="username" id="id_username" class="form-control"
+                 placeholder="votre_nom" autocomplete="username" required autofocus
+                 value="{{ form.username.value|default:'' }}">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="id_password" style="display:flex;justify-content:space-between;align-items:center">
+            <span>Mot de passe</span>
+            <a href="#" style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted);font-size:.78rem">Mot de passe oublié ?</a>
+          </label>
+          <input type="password" name="password" id="id_password" class="form-control"
+                 placeholder="••••••••" autocomplete="current-password" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:.75rem">
+          Se connecter
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </form>
+
+      <p style="text-align:center;margin-top:2.5rem;font-size:.78rem;color:var(--text-muted);border-top:1px solid var(--border);padding-top:1.5rem">
+        🔒 Connexion sécurisée · Made in Cameroon 🇨🇲
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<style>
+  body.auth-page { background: var(--bg-dark); }
+  .auth-layout { min-height: 100vh; }
+  @media (max-width: 768px) {
+    .auth-visual { display: none; }
+    .auth-form-side { padding: 2rem 1.5rem; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+  }
+</style>
 {% endblock %}

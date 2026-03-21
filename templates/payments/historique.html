@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Historique des paiements — E-Shelle{% endblock %}
+
+{% block content %}
+<div style="padding-top:5rem">
+  <section class="section">
+    <div class="container" style="max-width:900px">
+      <div style="margin-bottom:2rem">
+        <div class="section-label" style="display:inline-flex">💰 Paiements</div>
+        <h1 class="section-title" style="margin-top:.5rem">Historique des transactions</h1>
+      </div>
+
+      {% if transactions %}
+      <div class="glass-card" style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:.88rem">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border)">
+              <th style="text-align:left;padding:.75rem 1rem;color:var(--text-muted);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em">Référence</th>
+              <th style="text-align:left;padding:.75rem 1rem;color:var(--text-muted);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em">Date</th>
+              <th style="text-align:left;padding:.75rem 1rem;color:var(--text-muted);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em">Type</th>
+              <th style="text-align:left;padding:.75rem 1rem;color:var(--text-muted);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em">Méthode</th>
+              <th style="text-align:right;padding:.75rem 1rem;color:var(--text-muted);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em">Montant</th>
+              <th style="text-align:center;padding:.75rem 1rem;color:var(--text-muted);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em">Statut</th>
+              <th style="padding:.75rem 1rem"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for tx in transactions %}
+            <tr style="border-bottom:1px solid rgba(255,255,255,.04);transition:background .15s" onmouseenter="this.style.background='rgba(255,255,255,.02)'" onmouseleave="this.style.background=''">
+              <td style="padding:.75rem 1rem;font-family:var(--font-mono);font-size:.78rem;color:var(--text-muted)">
+                {{ tx.reference|truncatechars:16 }}
+              </td>
+              <td style="padding:.75rem 1rem;color:var(--text-secondary)">
+                {{ tx.created_at|date:"d M Y" }}<br>
+                <span style="font-size:.75rem;color:var(--text-muted)">{{ tx.created_at|time:"H:i" }}</span>
+              </td>
+              <td style="padding:.75rem 1rem">
+                <span class="chip" style="font-size:.75rem">{{ tx.get_type_tx_display }}</span>
+              </td>
+              <td style="padding:.75rem 1rem;color:var(--text-secondary)">{{ tx.get_methode_display }}</td>
+              <td style="padding:.75rem 1rem;text-align:right;font-family:var(--font-display);font-weight:700;color:var(--primary-light)">
+                {{ tx.montant|floatformat:0 }} FCFA
+              </td>
+              <td style="padding:.75rem 1rem;text-align:center">
+                {% if tx.statut == "succes" %}
+                <span class="badge badge-green">✅ Succès</span>
+                {% elif tx.statut == "en_attente" %}
+                <span class="badge badge-orange">⏳ En attente</span>
+                {% elif tx.statut == "echec" %}
+                <span class="badge" style="background:rgba(244,67,54,.12);color:#ef5350">❌ Échoué</span>
+                {% else %}
+                <span class="chip">{{ tx.statut }}</span>
+                {% endif %}
+              </td>
+              <td style="padding:.75rem 1rem;text-align:right">
+                <a href="{% url 'payments:confirmation' tx_id=tx.pk %}" style="font-size:.78rem;color:var(--primary-light);text-decoration:none">Détails →</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {# Résumé stats #}
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem">
+        <div class="glass-card" style="text-align:center">
+          <div style="font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--primary-light)">{{ transactions.count }}</div>
+          <div style="font-size:.78rem;color:var(--text-muted);margin-top:.25rem">Transactions</div>
+        </div>
+        <div class="glass-card" style="text-align:center">
+          <div style="font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--primary-light)">
+            {% with total=transactions|length %}{{ total }}{% endwith %}
+          </div>
+          <div style="font-size:.78rem;color:var(--text-muted);margin-top:.25rem">FCFA dépensés</div>
+        </div>
+        <div class="glass-card" style="text-align:center">
+          <div style="font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--warning)">
+            {{ transactions|length }}
+          </div>
+          <div style="font-size:.78rem;color:var(--text-muted);margin-top:.25rem">Achats réussis</div>
+        </div>
+      </div>
+
+      {% else %}
+      <div style="text-align:center;padding:4rem 2rem">
+        <div style="font-size:3.5rem;margin-bottom:1rem">💳</div>
+        <h2 style="font-family:var(--font-display);margin-bottom:.75rem">Aucune transaction</h2>
+        <p style="color:var(--text-muted);margin-bottom:1.5rem">Vos achats apparaîtront ici après votre premier paiement.</p>
+        <a href="{% url 'boutique:catalogue' %}" class="btn btn-primary btn-lg">Explorer la boutique →</a>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+</div>
+{% endblock %}

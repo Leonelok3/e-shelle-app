@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}S'inscrire — E-Shelle{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="auth-layout">
+
+  {# Visuel gauche #}
+  <div class="auth-visual">
+    <canvas id="particles-canvas" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
+    <div style="position:relative;z-index:2;text-align:center">
+      <a href="/" style="display:inline-flex;align-items:center;gap:.75rem;font-family:var(--font-display);font-size:1.75rem;font-weight:800;color:var(--text-primary);text-decoration:none;margin-bottom:2.5rem">
+        <svg viewBox="0 0 40 40" width="44" height="44" fill="none">
+          <rect width="40" height="40" rx="10" fill="#0D1F0D"/>
+          <path d="M10 20 C10 12 18 8 20 14 C22 8 30 12 30 20" fill="#2E7D32"/>
+          <line x1="20" y1="14" x2="20" y2="28" stroke="#4CAF50" stroke-width="2" stroke-linecap="round"/>
+          <rect x="10" y="29" width="20" height="4" rx="2" fill="#F57C00"/>
+        </svg>
+        E-<span style="color:var(--accent-light)">Shelle</span>
+      </a>
+      <div style="background:rgba(46,125,50,.1);border:1px solid rgba(46,125,50,.3);border-radius:var(--radius-xl);padding:2rem;max-width:300px;margin:0 auto">
+        <div style="font-size:2.5rem;margin-bottom:1rem">🚀</div>
+        <h3 style="font-family:var(--font-display);font-size:1.15rem;font-weight:700;margin-bottom:.5rem">
+          {% if plan == 'pro' %}Plan Pro — 7 jours gratuits{% else %}Compte Starter — Gratuit{% endif %}
+        </h3>
+        <p style="color:var(--text-secondary);font-size:.85rem;line-height:1.6">
+          {% if plan == 'pro' %}
+            Accès complet à toutes les fonctionnalités pendant 7 jours sans engagement.
+          {% else %}
+            Commence gratuitement, passe Pro quand tu es prêt.
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  {# Formulaire d'inscription #}
+  <div class="auth-form-side">
+    <div style="max-width:460px;width:100%">
+      <a href="{% url 'accounts:login' %}" style="color:var(--text-secondary);font-size:.85rem;display:inline-flex;align-items:center;gap:.35rem;margin-bottom:2rem;text-decoration:none">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Déjà un compte ? Se connecter
+      </a>
+
+      <h1 style="font-family:var(--font-display);font-size:1.75rem;font-weight:800;margin-bottom:.35rem">Créer mon compte</h1>
+      <p style="color:var(--text-secondary);margin-bottom:2rem;font-size:.9rem">Rejoins 500+ entrepreneurs africains sur E-Shelle 🇨🇲</p>
+
+      {% if messages %}
+        {% for message in messages %}
+        <div style="background:rgba(244,67,54,.1);border:1px solid rgba(244,67,54,.3);border-radius:var(--radius-md);padding:.85rem 1rem;margin-bottom:1.25rem;color:#EF9A9A;font-size:.85rem">
+          ❌ {{ message }}
+        </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="plan" value="{{ plan }}">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Prénom</label>
+            <input type="text" name="first_name" class="form-control" placeholder="Jean" autocomplete="given-name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nom</label>
+            <input type="text" name="last_name" class="form-control" placeholder="Dupont" autocomplete="family-name">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Nom d'utilisateur <span style="color:#EF5350">*</span></label>
+          <input type="text" name="username" class="form-control" placeholder="jean_dupont" required autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Adresse email <span style="color:#EF5350">*</span></label>
+          <input type="email" name="email" class="form-control" placeholder="jean@email.com" required autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Je suis</label>
+          <select name="role" class="form-control">
+            <option value="STUDENT">📚 Apprenant / Étudiant</option>
+            <option value="CLIENT">💼 Entrepreneur / Client</option>
+            <option value="TEACHER">🎓 Formateur</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Mot de passe <span style="color:#EF5350">*</span></label>
+            <input type="password" name="password1" class="form-control" placeholder="Min. 8 caractères" required autocomplete="new-password">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirmer <span style="color:#EF5350">*</span></label>
+            <input type="password" name="password2" class="form-control" placeholder="Répéter" required autocomplete="new-password">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:.75rem">
+          Créer mon compte gratuitement →
+        </button>
+
+        <p style="font-size:.75rem;color:var(--text-muted);text-align:center;margin-top:.75rem">
+          En t'inscrivant, tu acceptes nos <a href="#" style="color:var(--primary-light)">conditions d'utilisation</a>.
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<style>
+  body.auth-page { background: var(--bg-dark); }
+  .auth-layout { min-height: 100vh; }
+  @media (max-width: 768px) {
+    .auth-visual { display: none; }
+    .auth-form-side { padding: 2rem 1.25rem; display: flex; align-items: flex-start; justify-content: center; padding-top: 3rem; }
+  }
+</style>
+{% endblock %}

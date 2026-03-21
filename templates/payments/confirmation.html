@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Paiement Confirmé — E-Shelle{% endblock %}
+
+{% block content %}
+<div style="padding-top:5rem">
+  <section class="section">
+    <div class="container" style="max-width:680px">
+
+      {# Statut paiement #}
+      {% if transaction.statut == "succes" %}
+      <div style="text-align:center;margin-bottom:3rem">
+        <div style="width:80px;height:80px;border-radius:50%;background:rgba(46,125,50,.15);display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 1.25rem;animation:scaleIn .6s ease">✅</div>
+        <div class="section-label" style="display:inline-flex;margin-bottom:.75rem">Paiement confirmé</div>
+        <h1 class="section-title">Merci pour votre commande !</h1>
+        <p class="section-subtitle">Vos produits sont prêts à télécharger. Un email de confirmation a été envoyé.</p>
+      </div>
+      {% else %}
+      <div style="text-align:center;margin-bottom:3rem">
+        <div style="width:80px;height:80px;border-radius:50%;background:rgba(244,67,54,.1);display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 1.25rem">❌</div>
+        <h1 class="section-title" style="color:var(--error)">Paiement échoué</h1>
+        <p class="section-subtitle">Une erreur est survenue. Veuillez réessayer ou choisir une autre méthode.</p>
+        {% if transaction.commande %}
+        <a href="{% url 'payments:initier' commande_id=transaction.commande.pk %}" class="btn btn-primary btn-lg" style="margin-top:1.5rem">Réessayer →</a>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {# Détails transaction #}
+      <div class="glass-card" style="margin-bottom:1.5rem">
+        <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:1.25rem">📋 Détails de la transaction</h3>
+        <dl style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem 1.5rem;font-size:.88rem">
+          <div>
+            <dt style="color:var(--text-muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em">Référence</dt>
+            <dd style="font-family:var(--font-mono);margin-top:.2rem;font-size:.82rem">{{ transaction.reference }}</dd>
+          </div>
+          <div>
+            <dt style="color:var(--text-muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em">Montant</dt>
+            <dd style="font-weight:700;color:var(--primary-light);margin-top:.2rem">{{ transaction.montant|floatformat:0 }} FCFA</dd>
+          </div>
+          <div>
+            <dt style="color:var(--text-muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em">Méthode</dt>
+            <dd style="margin-top:.2rem">{{ transaction.get_methode_display }}</dd>
+          </div>
+          <div>
+            <dt style="color:var(--text-muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em">Date</dt>
+            <dd style="margin-top:.2rem">{{ transaction.created_at|date:"d M Y à H:i" }}</dd>
+          </div>
+        </dl>
+      </div>
+
+      {# Liens de téléchargement #}
+      {% if telechargements %}
+      <div class="glass-card" style="margin-bottom:1.5rem;border:1px solid rgba(46,125,50,.2);background:rgba(46,125,50,.04)">
+        <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:1.25rem">📥 Vos téléchargements</h3>
+        {% for dl in telechargements %}
+        <div style="display:flex;align-items:center;gap:1rem;padding:.75rem 0;{% if not forloop.last %}border-bottom:1px solid rgba(255,255,255,.04){% endif %}">
+          <div style="width:44px;height:44px;border-radius:var(--radius-sm);background:rgba(46,125,50,.12);display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0">📦</div>
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:.9rem">{{ dl.produit.titre }}</div>
+            <div style="font-size:.75rem;color:var(--text-muted)">Expire le {{ dl.expire_at|date:"d M Y" }}</div>
+          </div>
+          <a href="{% url 'boutique:telecharger' token=dl.token %}" class="btn btn-primary btn-sm" download>⬇ Télécharger</a>
+        </div>
+        {% endfor %}
+        <div style="margin-top:1rem;font-size:.78rem;color:var(--text-muted)">
+          🔒 Liens sécurisés · Accès illimité pendant 30 jours · Retrouvez-les dans votre dashboard
+        </div>
+      </div>
+      {% endif %}
+
+      {# Actions #}
+      <div style="display:flex;gap:1rem;flex-wrap:wrap">
+        <a href="{% url 'dashboard:index' %}" class="btn btn-primary" style="flex:1">Aller au dashboard →</a>
+        <a href="{% url 'payments:historique' %}" class="btn btn-outline" style="flex:1">Historique</a>
+        <a href="{% url 'boutique:catalogue' %}" class="btn btn-outline" style="flex:1">Continuer les achats</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+// Confetti si succès
+{% if transaction.statut == "succes" %}
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => window.EShelle?.launchConfetti?.(), 500);
+});
+{% endif %}
+</script>
+{% endblock %}

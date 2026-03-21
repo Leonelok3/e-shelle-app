@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Configurateur de Projet — E-Shelle{% endblock %}
+{% block nav_services %}active{% endblock %}
+
+{% block extra_head %}
+<style>
+  .wizard-step { display:none; }
+  .wizard-step.active { display:block; animation:fadeInUp .4s ease; }
+  .option-card { border:2px solid var(--border); border-radius:var(--radius-md); padding:1.25rem; cursor:pointer; transition:all .2s; text-align:center; }
+  .option-card:hover { border-color:var(--primary-light); background:rgba(46,125,50,.06); }
+  .option-card.selected { border-color:var(--primary-light); background:rgba(46,125,50,.1); box-shadow:0 0 0 1px var(--primary-light); }
+  .wizard-progress-bar { height:4px; background:var(--bg-elevated); border-radius:99px; overflow:hidden; margin-bottom:2.5rem; }
+  .wizard-progress-fill { height:100%; background:var(--gradient-cta); border-radius:99px; transition:width .4s ease; }
+  .price-estimate { font-family:var(--font-display); font-size:2.2rem; font-weight:800; color:var(--primary-light); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="padding-top:5rem">
+  <section class="section">
+    <div class="container" style="max-width:760px">
+      <div style="text-align:center;margin-bottom:2.5rem">
+        <div class="section-label" style="display:inline-flex">🔧 Configurateur</div>
+        <h1 class="section-title" style="margin-top:1rem">Configurez votre <span class="text-gradient">projet web</span></h1>
+        <p class="section-subtitle">Répondez à quelques questions — obtenez un devis instantané.</p>
+      </div>
+
+      {# Barre de progression #}
+      <div class="wizard-progress-bar">
+        <div class="wizard-progress-fill" id="wizard-fill" style="width:25%"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:2rem">
+        {% for label in "Type;Fonctions;Budget;Contact"|split:";" %}
+        <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem">
+          <div id="step-dot-{{ forloop.counter }}" style="width:28px;height:28px;border-radius:50%;background:{% if forloop.first %}var(--gradient-cta){% else %}var(--bg-elevated){% endif %};border:2px solid {% if forloop.first %}var(--primary-light){% else %}var(--border){% endif %};display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;transition:all .3s">{{ forloop.counter }}</div>
+          <span style="font-size:.72rem;color:var(--text-muted)">{{ label }}</span>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="glass-card">
+        {# Étape 1 : Type de projet #}
+        <div class="wizard-step active" id="step-1">
+          <h2 style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;margin-bottom:1.5rem;text-align:center">Quel type de projet souhaitez-vous ?</h2>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem" id="type-options">
+            {% with types="Site Vitrine|🌐;E-Commerce|🛒;Application Web|⚙️;Blog / Média|✍️;Plateforme SaaS|🚀;Site Institutionnel|🏛️" %}
+            {% for item in types|split:";" %}
+            {% with parts=item|split:"|" %}
+            <div class="option-card" onclick="selectOption(this,'type','{{ parts.0 }}')" data-value="{{ parts.0 }}">
+              <div style="font-size:2rem;margin-bottom:.5rem">{{ parts.1 }}</div>
+              <div style="font-weight:600;font-size:.9rem">{{ parts.0 }}</div>
+            </div>
+            {% endwith %}
+            {% endfor %}
+            {% endwith %}
+          </div>
+          <button class="btn btn-primary btn-block" onclick="nextStep(2)" id="btn-next-1" disabled>Continuer →</button>
+        </div>
+
+        {# Étape 2 : Fonctionnalités #}
+        <div class="wizard-step" id="step-2">
+          <h2 style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;margin-bottom:1.5rem;text-align:center">Quelles fonctionnalités voulez-vous ?</h2>
+          <p style="font-size:.85rem;color:var(--text-muted);text-align:center;margin-bottom:1.5rem">Sélectionnez tout ce qui vous intéresse (choix multiples)</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:2rem">
+            {% for feat in "Formulaire de contact|📬;Galerie photos|🖼️;Blog intégré|✍️;Espace membres|👥;Paiement en ligne|💳;Chat en direct|💬;Newsletter|📧;SEO avancé|🔍;Multi-langues|🌍;Tableau de bord|📊;Intégration IA|🤖;API Mobile|📱"|split:";" %}
+            {% with parts=feat|split:"|" %}
+            <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.65rem;border:1px solid var(--border);border-radius:var(--radius-sm);transition:all .2s" onmouseenter="this.style.borderColor='var(--primary-light)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'" id="feat-{{ forloop.counter }}">
+              <input type="checkbox" name="features" value="{{ parts.0 }}" style="width:16px;height:16px;cursor:pointer" onchange="updateFeatStyle(this)">
+              <span style="font-size:1.1rem">{{ parts.1 }}</span>
+              <span style="font-size:.85rem;font-weight:500">{{ parts.0 }}</span>
+            </label>
+            {% endwith %}
+            {% endfor %}
+          </div>
+          <div style="display:flex;gap:.75rem">
+            <button class="btn btn-outline" onclick="nextStep(1)" style="flex:1">← Retour</button>
+            <button class="btn btn-primary" onclick="nextStep(3)" style="flex:2">Continuer →</button>
+          </div>
+        </div>
+
+        {# Étape 3 : Budget et délai #}
+        <div class="wizard-step" id="step-3">
+          <h2 style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;margin-bottom:1.5rem;text-align:center">Budget et délai souhaités</h2>
+          <div style="margin-bottom:1.5rem">
+            <label class="form-label">Budget estimé (FCFA)</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem" id="budget-options">
+              {% for b in "< 100 000 FCFA|budget_s;100 000 – 300 000 FCFA|budget_m;300 000 – 700 000 FCFA|budget_l;> 700 000 FCFA|budget_xl"|split:";" %}
+              {% with parts=b|split:"|" %}
+              <div class="option-card" onclick="selectOption(this,'budget','{{ parts.1 }}')" style="text-align:center;padding:1rem">
+                <div style="font-size:.9rem;font-weight:600">{{ parts.0 }}</div>
+              </div>
+              {% endwith %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Délai souhaité</label>
+            <select name="delai" class="form-control" id="wizard-delai">
+              <option value="urgent">🔥 Urgent — sous 7 jours</option>
+              <option value="normal" selected>📅 Normal — 2 à 4 semaines</option>
+              <option value="flexible">🌿 Flexible — + d'un mois</option>
+            </select>
+          </div>
+
+          {# Estimation de prix #}
+          <div class="glass-card" style="text-align:center;background:rgba(46,125,50,.08);border:1px solid rgba(46,125,50,.2);margin-bottom:1.5rem">
+            <div style="font-size:.82rem;color:var(--text-muted);margin-bottom:.5rem">Estimation indicative</div>
+            <div class="price-estimate" id="price-estimate">Sur devis</div>
+          </div>
+
+          <div style="display:flex;gap:.75rem">
+            <button class="btn btn-outline" onclick="nextStep(2)" style="flex:1">← Retour</button>
+            <button class="btn btn-primary" onclick="nextStep(4)" style="flex:2">Continuer →</button>
+          </div>
+        </div>
+
+        {# Étape 4 : Contact #}
+        <div class="wizard-step" id="step-4">
+          <h2 style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;margin-bottom:1.5rem;text-align:center">Vos coordonnées</h2>
+          <form action="{% url 'services:devis' %}" method="post" id="wizard-form">
+            {% csrf_token %}
+            <input type="hidden" name="type_projet" id="h-type">
+            <input type="hidden" name="budget" id="h-budget">
+            <input type="hidden" name="features_list" id="h-features">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Prénom & Nom *</label>
+                <input type="text" name="nom" class="form-control" placeholder="Jean Dupont" required value="{{ request.user.get_full_name }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email *</label>
+                <input type="email" name="email" class="form-control" placeholder="jean@email.com" required value="{{ request.user.email }}">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Téléphone</label>
+                <input type="tel" name="telephone" class="form-control" placeholder="+237 6XX XXX XXX">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Entreprise</label>
+                <input type="text" name="entreprise" class="form-control" placeholder="Votre entreprise">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Description du projet</label>
+              <textarea name="description" class="form-control" rows="4" placeholder="Décrivez votre projet en quelques lignes…"></textarea>
+            </div>
+
+            <div style="display:flex;gap:.75rem">
+              <button type="button" class="btn btn-outline" onclick="nextStep(3)" style="flex:1">← Retour</button>
+              <button type="submit" class="btn btn-primary" style="flex:2" onclick="prepareSubmit()">🚀 Envoyer ma demande →</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const steps = [null,1,2,3,4];
+let currentStep = 1;
+const selections = { type: '', budget: '' };
+
+function nextStep(n) {
+  document.getElementById('step-'+currentStep).classList.remove('active');
+  currentStep = n;
+  document.getElementById('step-'+n).classList.add('active');
+  const fill = [null,'25','50','75','100'][n];
+  document.getElementById('wizard-fill').style.width = fill + '%';
+  // Update dot styles
+  for (let i=1;i<=4;i++) {
+    const dot = document.getElementById('step-dot-'+i);
+    if (i <= n) { dot.style.background='var(--gradient-cta)'; dot.style.borderColor='var(--primary-light)'; }
+    else { dot.style.background='var(--bg-elevated)'; dot.style.borderColor='var(--border)'; }
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function selectOption(el, key, val) {
+  el.closest('[id$="-options"]')?.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selections[key] = val;
+  if (key === 'type') document.getElementById('btn-next-1').disabled = false;
+  if (key === 'budget') updateEstimate();
+}
+
+function updateFeatStyle(inp) {
+  const label = inp.closest('label');
+  label.style.borderColor = inp.checked ? 'var(--primary-light)' : 'var(--border)';
+  label.style.background = inp.checked ? 'rgba(46,125,50,.07)' : '';
+}
+
+function updateEstimate() {
+  const map = { budget_s:'< 100 000 FCFA', budget_m:'100 000 – 300 000 FCFA', budget_l:'300 000 – 700 000 FCFA', budget_xl:'> 700 000 FCFA' };
+  document.getElementById('price-estimate').textContent = map[selections.budget] || 'Sur devis';
+}
+
+function prepareSubmit() {
+  document.getElementById('h-type').value = selections.type;
+  document.getElementById('h-budget').value = selections.budget;
+  const features = [...document.querySelectorAll('input[name="features"]:checked')].map(i=>i.value).join(',');
+  document.getElementById('h-features').value = features;
+  document.getElementById('wizard-delai').name = 'delai';
+}
+
+// Pre-select from URL param
+const params = new URLSearchParams(location.search);
+if (params.get('offre')) {
+  // Try to match an option
+  document.querySelectorAll('#type-options .option-card').forEach(c => {
+    if (c.dataset.value?.toLowerCase().includes(params.get('offre').toLowerCase())) {
+      selectOption(c, 'type', c.dataset.value);
+    }
+  });
+}
+</script>
+{% endblock %}

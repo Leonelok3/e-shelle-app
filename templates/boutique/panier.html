@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mon Panier — E-Shelle{% endblock %}
+{% block nav_boutique %}active{% endblock %}
+
+{% block content %}
+<div style="padding-top:5rem">
+  <section class="section">
+    <div class="container" style="max-width:960px">
+      <div style="margin-bottom:2rem">
+        <div class="section-label" style="display:inline-flex">🛒 Panier</div>
+        <h1 class="section-title" style="margin-top:.5rem">Mon panier</h1>
+      </div>
+
+      {% if panier.lignes.exists %}
+      <div style="display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:start">
+        {# Lignes du panier #}
+        <div>
+          {% for ligne in panier.lignes.all %}
+          <div class="glass-card" style="display:flex;gap:1rem;align-items:center;padding:1rem;margin-bottom:.75rem">
+            {# Miniature #}
+            {% if ligne.produit.thumbnail %}
+            <img src="{{ ligne.produit.thumbnail.url }}" alt="{{ ligne.produit.titre }}" style="width:80px;height:60px;object-fit:cover;border-radius:var(--radius-sm);flex-shrink:0">
+            {% else %}
+            <div style="width:80px;height:60px;border-radius:var(--radius-sm);background:var(--bg-surface);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">📦</div>
+            {% endif %}
+
+            {# Infos #}
+            <div style="flex:1;min-width:0">
+              <div style="font-size:.75rem;color:var(--primary-light);margin-bottom:.2rem">{{ ligne.produit.categorie.nom }}</div>
+              <a href="{% url 'boutique:detail' slug=ligne.produit.slug %}" style="font-weight:600;font-size:.9rem;color:var(--text-primary);text-decoration:none">{{ ligne.produit.titre }}</a>
+              <div style="font-size:.8rem;color:var(--text-muted);margin-top:.2rem">{{ ligne.produit.get_type_produit_display }}</div>
+            </div>
+
+            {# Prix #}
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-family:var(--font-display);font-weight:700;color:var(--primary-light)">
+                {% if ligne.produit.is_gratuit %}Gratuit{% else %}{{ ligne.produit.prix|floatformat:0 }} FCFA{% endif %}
+              </div>
+              {% if ligne.quantite > 1 %}
+              <div style="font-size:.75rem;color:var(--text-muted)">× {{ ligne.quantite }}</div>
+              {% endif %}
+            </div>
+
+            {# Supprimer #}
+            <form method="post" action="{% url 'boutique:retirer' ligne_id=ligne.pk %}">
+              {% csrf_token %}
+              <button type="submit" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:1.1rem;padding:.25rem;transition:color .2s" title="Retirer"
+                      onmouseenter="this.style.color='var(--error)'" onmouseleave="this.style.color='var(--text-muted)'">✕</button>
+            </form>
+          </div>
+          {% endfor %}
+
+          <div style="margin-top:1rem">
+            <a href="{% url 'boutique:catalogue' %}" style="font-size:.85rem;color:var(--primary-light);text-decoration:none">← Continuer les achats</a>
+          </div>
+        </div>
+
+        {# Résumé commande #}
+        <div class="glass-card" style="position:sticky;top:6rem">
+          <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:1.25rem">Résumé</h3>
+
+          <div style="display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.25rem;font-size:.9rem">
+            {% for ligne in panier.lignes.all %}
+            <div style="display:flex;justify-content:space-between;color:var(--text-secondary)">
+              <span style="flex:1;margin-right:.5rem">{{ ligne.produit.titre|truncatechars:30 }}</span>
+              <span>{% if ligne.produit.is_gratuit %}0{% else %}{{ ligne.produit.prix|floatformat:0 }}{% endif %} FCFA</span>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div style="border-top:1px solid var(--border);padding-top:1rem;margin-bottom:1.25rem">
+            <div style="display:flex;justify-content:space-between;font-family:var(--font-display);font-size:1.2rem;font-weight:800">
+              <span>Total</span>
+              <span style="color:var(--primary-light)">{{ panier.total|floatformat:0 }} FCFA</span>
+            </div>
+          </div>
+
+          <a href="{% url 'boutique:checkout' %}" class="btn btn-primary btn-block btn-lg">Passer à la caisse →</a>
+
+          <div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:1rem;font-size:.78rem;color:var(--text-muted)">
+            🔒 Paiement sécurisé Mobile Money
+          </div>
+        </div>
+      </div>
+
+      {% else %}
+      <div style="text-align:center;padding:5rem 2rem">
+        <div style="font-size:4rem;margin-bottom:1rem">🛒</div>
+        <h2 style="font-family:var(--font-display);margin-bottom:.75rem">Votre panier est vide</h2>
+        <p style="color:var(--text-muted);margin-bottom:1.5rem">Découvrez nos produits digitaux premium.</p>
+        <a href="{% url 'boutique:catalogue' %}" class="btn btn-primary btn-lg">Parcourir la boutique →</a>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+</div>
+{% endblock %}

@@ -7,9 +7,24 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path("admin/", admin.site.urls),
 
+    # Authentification
     path("accounts/", include("accounts.urls")),
-    path("dash/", include("progress.urls")),  # ✅ dashboards
 
+    # Anciens dashboards (compatibilité)
+    path("dash/", include("progress.urls")),
+
+    # Modules E-Shelle SaaS
+    path("formations/",  include("formations.urls",  namespace="formations")),
+    path("boutique/",    include("boutique.urls",    namespace="boutique")),
+    path("services/",    include("services.urls",    namespace="services")),
+    path("dashboard/",   include("dashboard.urls",   namespace="dashboard")),
+    path("payments/",    include("payments.urls",    namespace="payments")),
+    path("ia/",          include("ai_engine.urls",   namespace="ai_engine")),
+
+    # API REST
+    path("api/v1/",      include("api.urls",         namespace="api")),
+
+    # Page d'accueil
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
 ]
 

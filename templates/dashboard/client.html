@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Mon espace client — E-Shelle{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="app-layout" style="padding-top:0">
+  <nav class="sidebar" id="app-sidebar" style="padding-top:4rem">
+    <div class="sidebar-header">
+      <svg viewBox="0 0 40 40" width="28" height="28" fill="none">
+        <rect width="40" height="40" rx="8" fill="#0D1F0D"/>
+        <path d="M10 20 C10 12 18 8 20 14 C22 8 30 12 30 20" fill="#2E7D32"/>
+        <rect x="10" y="29" width="20" height="4" rx="2" fill="#F57C00"/>
+      </svg>
+      <span>Mon Espace</span>
+    </div>
+    <div class="sidebar-nav">
+      <a href="{% url 'dashboard:index' %}" class="sidebar-link active"><span class="icon">🏠</span> Tableau de bord</a>
+      <a href="{% url 'boutique:index' %}" class="sidebar-link"><span class="icon">🛒</span> Boutique</a>
+      <a href="{% url 'services:index' %}" class="sidebar-link"><span class="icon">🌐</span> Services</a>
+      <a href="{% url 'payments:historique' %}" class="sidebar-link"><span class="icon">💳</span> Mes achats</a>
+      <a href="{% url 'accounts:profil' %}" class="sidebar-link"><span class="icon">👤</span> Mon profil</a>
+      <a href="{% url 'accounts:logout' %}" class="sidebar-link" style="color:#EF9A9A"><span class="icon">↩️</span> Déconnexion</a>
+    </div>
+  </nav>
+
+  <main class="app-main">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem">
+      <div>
+        <h1 style="font-family:var(--font-display);font-size:1.5rem;font-weight:800">
+          Bonjour {{ request.user.first_name|default:request.user.username }} 💼
+        </h1>
+        <p style="color:var(--text-secondary)">Gérez vos commandes et téléchargements.</p>
+      </div>
+      <button class="btn-icon btn-ghost" data-toggle-sidebar>☰</button>
+    </div>
+
+    <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="stat-widget green">
+        <div class="stat-icon">🛒</div>
+        <div class="stat-value">{{ commandes|length }}</div>
+        <div class="stat-label">Commandes</div>
+      </div>
+      <div class="stat-widget orange">
+        <div class="stat-icon">⬇️</div>
+        <div class="stat-value">{{ telechargements|length }}</div>
+        <div class="stat-label">Téléchargements</div>
+      </div>
+      <div class="stat-widget">
+        <div class="stat-icon">📝</div>
+        <div class="stat-value">{{ devis|length }}</div>
+        <div class="stat-label">Devis</div>
+      </div>
+    </div>
+
+    {% if telechargements %}
+    <div style="margin-bottom:2rem">
+      <h2 style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:1rem">⬇️ Mes téléchargements</h2>
+      <div class="grid-3">
+        {% for dl in telechargements %}
+        <div class="card" style="padding:1.25rem">
+          <h3 style="font-size:.9rem;font-weight:700;margin-bottom:.5rem">{{ dl.produit.titre }}</h3>
+          <p style="font-size:.78rem;color:var(--text-secondary);margin-bottom:1rem">
+            {{ dl.nb_telechargements }}/{{ dl.max_telechargements }} téléchargements
+            {% if dl.expire_at %} · Expire le {{ dl.expire_at|date:"d/m/Y" }}{% endif %}
+          </p>
+          {% if dl.est_valide %}
+            <a href="{% url 'boutique:telecharger' token=dl.token %}" class="btn btn-primary btn-sm btn-block">⬇ Télécharger</a>
+          {% else %}
+            <span class="btn btn-ghost btn-sm btn-block" style="cursor:not-allowed;opacity:.5">Lien expiré</span>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if devis %}
+    <div>
+      <h2 style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:1rem">📝 Mes devis</h2>
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead><tr><th>Type</th><th>Budget</th><th>Statut</th><th>Date</th></tr></thead>
+          <tbody>
+            {% for d in devis %}
+            <tr>
+              <td><strong>{{ d.get_type_projet_display }}</strong></td>
+              <td>{{ d.get_budget_display }}</td>
+              <td><span class="badge badge-gray">{{ d.get_statut_display }}</span></td>
+              <td>{{ d.created_at|date:"d/m/Y" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
+  </main>
+</div>
+{% endblock %}

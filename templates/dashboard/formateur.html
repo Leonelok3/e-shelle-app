@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Dashboard Formateur — E-Shelle{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="app-layout" style="padding-top:0">
+  <nav class="sidebar" id="app-sidebar" style="padding-top:4rem">
+    <div class="sidebar-header">
+      <svg viewBox="0 0 40 40" width="28" height="28" fill="none">
+        <rect width="40" height="40" rx="8" fill="#0D1F0D"/>
+        <path d="M10 20 C10 12 18 8 20 14 C22 8 30 12 30 20" fill="#2E7D32"/>
+        <rect x="10" y="29" width="20" height="4" rx="2" fill="#F57C00"/>
+      </svg>
+      <span>Formateur</span>
+    </div>
+    <div class="sidebar-nav">
+      <a href="{% url 'dashboard:index' %}" class="sidebar-link active"><span class="icon">📊</span> Dashboard</a>
+      <a href="/admin/formations/formation/add/" class="sidebar-link"><span class="icon">➕</span> Créer une formation</a>
+      <a href="/admin/formations/" class="sidebar-link"><span class="icon">📚</span> Mes formations</a>
+      <a href="{% url 'accounts:profil' %}" class="sidebar-link"><span class="icon">👤</span> Mon profil</a>
+      <a href="{% url 'accounts:logout' %}" class="sidebar-link" style="color:#EF9A9A"><span class="icon">↩️</span> Déconnexion</a>
+    </div>
+  </nav>
+
+  <main class="app-main">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem">
+      <div>
+        <h1 style="font-family:var(--font-display);font-size:1.5rem;font-weight:800">
+          Espace Formateur 🎓
+        </h1>
+        <p style="color:var(--text-secondary)">{{ nb_apprenants }} apprenants dans vos formations.</p>
+      </div>
+      <div style="display:flex;gap:.75rem">
+        <button class="btn-icon btn-ghost" data-toggle-sidebar>☰</button>
+        <a href="/admin/formations/formation/add/" class="btn btn-primary btn-sm">+ Nouvelle formation</a>
+      </div>
+    </div>
+
+    <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="stat-widget green">
+        <div class="stat-icon">📚</div>
+        <div class="stat-value">{{ formations|length }}</div>
+        <div class="stat-label">Mes formations</div>
+      </div>
+      <div class="stat-widget orange">
+        <div class="stat-icon">🎓</div>
+        <div class="stat-value">{{ nb_apprenants }}</div>
+        <div class="stat-label">Apprenants total</div>
+      </div>
+      <div class="stat-widget">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-value">—</div>
+        <div class="stat-label">Note moyenne</div>
+      </div>
+    </div>
+
+    <div>
+      <h2 style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:1rem">📖 Mes formations</h2>
+      {% if formations %}
+      <div class="grid-3">
+        {% for f in formations %}
+        <div class="card" style="padding:1.25rem">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem">
+            <h3 style="font-size:.9rem;font-weight:700;flex:1">{{ f.titre }}</h3>
+            {% if f.is_published %}<span class="badge badge-green">Publié</span>{% else %}<span class="badge badge-gray">Brouillon</span>{% endif %}
+          </div>
+          <div style="display:flex;gap:1rem;font-size:.78rem;color:var(--text-secondary);margin-bottom:1rem">
+            <span>🎓 {{ f.nb_inscriptions }} apprenants</span>
+            <span>📖 {{ f.nb_lecons }} leçons</span>
+          </div>
+          <div style="display:flex;gap:.5rem">
+            <a href="{% url 'formations:detail' slug=f.slug %}" class="btn btn-outline btn-sm" style="flex:1">Voir</a>
+            <a href="/admin/formations/formation/{{ f.pk }}/change/" class="btn btn-ghost btn-sm" style="flex:1">Éditer</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div style="text-align:center;padding:3rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg)">
+        <div style="font-size:3rem;margin-bottom:1rem">🎓</div>
+        <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.5rem">Pas encore de formation</h3>
+        <p style="color:var(--text-secondary);font-size:.9rem;margin-bottom:1.25rem">Créez votre première formation depuis l'admin.</p>
+        <a href="/admin/formations/formation/add/" class="btn btn-primary">Créer une formation →</a>
+      </div>
+      {% endif %}
+    </div>
+  </main>
+</div>
+{% endblock %}

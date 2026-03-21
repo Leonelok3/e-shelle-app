@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard Admin — E-Shelle{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="app-layout" style="padding-top:0">
+
+  {# Sidebar admin #}
+  <nav class="sidebar" id="app-sidebar" style="padding-top:4rem">
+    <div class="sidebar-header">
+      <svg viewBox="0 0 40 40" width="28" height="28" fill="none">
+        <rect width="40" height="40" rx="8" fill="#0D1F0D"/>
+        <path d="M10 20 C10 12 18 8 20 14 C22 8 30 12 30 20" fill="#2E7D32"/>
+        <rect x="10" y="29" width="20" height="4" rx="2" fill="#F57C00"/>
+      </svg>
+      <span>Admin</span>
+    </div>
+    <div class="sidebar-nav">
+      <div class="sidebar-section-label">Vue d'ensemble</div>
+      <a href="{% url 'dashboard:index' %}" class="sidebar-link active">
+        <span class="icon">📊</span> Dashboard
+      </a>
+      <a href="{% url 'formations:catalogue' %}" class="sidebar-link">
+        <span class="icon">📚</span> Formations
+      </a>
+      <a href="{% url 'boutique:catalogue' %}" class="sidebar-link">
+        <span class="icon">🛒</span> Boutique
+      </a>
+      <a href="{% url 'services:index' %}" class="sidebar-link">
+        <span class="icon">🌐</span> Services
+      </a>
+
+      <div class="sidebar-section-label" style="margin-top:1rem">Administration</div>
+      <a href="/admin/" class="sidebar-link">
+        <span class="icon">⚙️</span> Django Admin
+      </a>
+      <a href="{% url 'accounts:logout' %}" class="sidebar-link" style="color:#EF9A9A">
+        <span class="icon">↩️</span> Déconnexion
+      </a>
+    </div>
+  </nav>
+
+  <main class="app-main">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem">
+      <div>
+        <h1 style="font-family:var(--font-display);font-size:1.5rem;font-weight:800">
+          Dashboard Administrateur 🚀
+        </h1>
+        <p style="color:var(--text-secondary);font-size:.9rem">Vue globale de la plateforme E-Shelle.</p>
+      </div>
+      <button class="btn-icon btn-ghost" data-toggle-sidebar>☰</button>
+    </div>
+
+    {# Stats widgets #}
+    <div class="stats-grid">
+      <div class="stat-widget green">
+        <span class="stat-change up">+{{ new_users }} cette semaine</span>
+        <div class="stat-icon">👥</div>
+        <div class="stat-value">{{ nb_users }}</div>
+        <div class="stat-label">Utilisateurs totaux</div>
+      </div>
+      <div class="stat-widget orange">
+        <div class="stat-icon">📚</div>
+        <div class="stat-value">{{ nb_formations }}</div>
+        <div class="stat-label">Formations publiées</div>
+      </div>
+      <div class="stat-widget">
+        <div class="stat-icon">🎓</div>
+        <div class="stat-value">{{ nb_inscrits }}</div>
+        <div class="stat-label">Inscriptions totales</div>
+      </div>
+      <div class="stat-widget">
+        <div class="stat-icon">💰</div>
+        <div class="stat-value">{{ revenus|floatformat:0 }}</div>
+        <div class="stat-label">FCFA ce mois (30j)</div>
+      </div>
+    </div>
+
+    {# Transactions récentes #}
+    <div style="margin-bottom:2rem">
+      <h2 style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:1rem">
+        💳 Transactions récentes
+      </h2>
+      {% if transactions %}
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Référence</th>
+              <th>Utilisateur</th>
+              <th>Type</th>
+              <th>Montant</th>
+              <th>Méthode</th>
+              <th>Statut</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for tx in transactions %}
+            <tr>
+              <td><strong>{{ tx.reference }}</strong></td>
+              <td>{{ tx.utilisateur.username }}</td>
+              <td>{{ tx.get_type_tx_display }}</td>
+              <td style="color:var(--primary-light);font-weight:600">{{ tx.montant|floatformat:0 }} {{ tx.devise }}</td>
+              <td>{{ tx.get_methode_display }}</td>
+              <td>
+                {% if tx.statut == 'succes' %}
+                  <span class="badge badge-green">✓ Succès</span>
+                {% elif tx.statut == 'echec' %}
+                  <span class="badge badge-red">✗ Échec</span>
+                {% else %}
+                  <span class="badge badge-gray">{{ tx.get_statut_display }}</span>
+                {% endif %}
+              </td>
+              <td>{{ tx.created_at|date:"d/m/Y H:i" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <div style="text-align:center;padding:2rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);color:var(--text-secondary)">
+          Aucune transaction pour le moment.
+        </div>
+      {% endif %}
+    </div>
+
+    {# Actions rapides #}
+    <div>
+      <h2 style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:1rem">⚡ Actions rapides</h2>
+      <div class="grid-4">
+        <a href="/admin/formations/formation/add/" class="glass-card" style="text-align:center;text-decoration:none">
+          <div style="font-size:2rem;margin-bottom:.5rem">➕</div>
+          <div style="font-size:.85rem;font-weight:600">Créer formation</div>
+        </a>
+        <a href="/admin/boutique/produit/add/" class="glass-card" style="text-align:center;text-decoration:none">
+          <div style="font-size:2rem;margin-bottom:.5rem">🛒</div>
+          <div style="font-size:.85rem;font-weight:600">Ajouter produit</div>
+        </a>
+        <a href="/admin/services/projetportfolio/add/" class="glass-card" style="text-align:center;text-decoration:none">
+          <div style="font-size:2rem;margin-bottom:.5rem">🖼️</div>
+          <div style="font-size:.85rem;font-weight:600">Ajouter portfolio</div>
+        </a>
+        <a href="/admin/" class="glass-card" style="text-align:center;text-decoration:none">
+          <div style="font-size:2rem;margin-bottom:.5rem">⚙️</div>
+          <div style="font-size:.85rem;font-weight:600">Admin complet</div>
+        </a>
+      </div>
+    </div>
+
+  </main>
+</div>
+{% endblock %}

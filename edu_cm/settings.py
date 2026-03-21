@@ -36,6 +36,14 @@ INSTALLED_APPS = [
     "content.apps.ContentConfig",
     "progress.apps.ProgressConfig",
     "api.apps.ApiConfig",
+
+    # Modules E-Shelle SaaS
+    "formations.apps.FormationsConfig",
+    "boutique.apps.BoutiqueConfig",
+    "services.apps.ServicesConfig",
+    "dashboard.apps.DashboardConfig",
+    "ai_engine.apps.AiEngineConfig",
+    "payments.apps.PaymentsConfig",
 ]
 
 MIDDLEWARE = [
@@ -110,6 +118,25 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 LOGIN_URL = "accounts:login"
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "accounts:login"
+
+# Auth redirects étendus
+LOGIN_REDIRECT_URL = "/dashboard/"
+
+# Anthropic / Claude AI
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+
+# Email (dev : console, prod : SMTP)
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
+EMAIL_HOST     = os.getenv("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT     = int(os.getenv("EMAIL_PORT", "587"))
+EMAIL_USE_TLS  = True
+EMAIL_HOST_USER     = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+DEFAULT_FROM_EMAIL  = os.getenv("DEFAULT_FROM_EMAIL", "noreply@e-shelle.com")
+
+# Taille max upload (fichiers produits digitaux)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800   # 50 Mo
+FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800   # 50 Mo
 
 # DRF
 REST_FRAMEWORK = {

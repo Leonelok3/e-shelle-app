@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Générateur IA — E-Shelle{% endblock %}
+
+{% block extra_head %}
+<style>
+  .template-btn { cursor:pointer; border:1px solid var(--border); border-radius:var(--radius-md); padding:.6rem .9rem; background:none; color:var(--text-secondary); font-size:.82rem; transition:all .2s; text-align:left; }
+  .template-btn:hover { border-color:var(--primary-light); color:var(--primary-light); background:rgba(46,125,50,.06); }
+  #ai-output { min-height:200px; font-family:var(--font-mono); font-size:.88rem; line-height:1.7; color:var(--text-secondary); white-space:pre-wrap; word-break:break-word; }
+  .typing-cursor::after { content:'▋'; animation:blink 1s step-end infinite; color:var(--primary-light); }
+  @keyframes blink { 50% { opacity:0 } }
+  .token-counter { font-family:var(--font-mono); font-size:.75rem; color:var(--text-muted); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="padding-top:5rem">
+  <section class="section">
+    <div class="container" style="max-width:960px">
+      <div style="margin-bottom:2.5rem">
+        <div class="section-label" style="display:inline-flex">🤖 IA</div>
+        <h1 class="section-title" style="margin-top:.75rem">Générateur de contenu <span class="text-gradient">IA</span></h1>
+        <p class="section-subtitle">Créez du contenu de qualité pour vos cours, produits et services en quelques secondes.</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:240px 1fr;gap:2rem;align-items:start">
+        {# Sidebar templates #}
+        <div>
+          <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:.75rem">Templates rapides</div>
+          <div style="display:flex;flex-direction:column;gap:.4rem">
+            {% for tpl in templates %}
+            <button class="template-btn" onclick="useTemplate('{{ tpl.contenu|escapejs }}','{{ tpl.type_gen }}')">
+              {{ tpl.nom }}
+            </button>
+            {% empty %}
+            <button class="template-btn" onclick="useTemplate('Rédige une description captivante pour une formation en ligne sur [SUJET]. Inclure : objectifs, public cible, bénéfices clés.','description_formation')">📚 Description formation</button>
+            <button class="template-btn" onclick="useTemplate('Génère 5 idées de titres accrocheurs pour un ebook sur [SUJET] ciblant les entrepreneurs africains.','titres_ebook')">📕 Titres ebook</button>
+            <button class="template-btn" onclick="useTemplate('Écris un email de relance professionnel pour convaincre un prospect de [SECTEUR] d'acheter [PRODUIT].','email_marketing')">📧 Email marketing</button>
+            <button class="template-btn" onclick="useTemplate('Crée un plan de cours complet en 8 leçons pour enseigner [COMPÉTENCE] à des débutants.','plan_cours')">🗂️ Plan de cours</button>
+            <button class="template-btn" onclick="useTemplate('Rédige une description produit convaincante pour vendre [PRODUIT DIGITAL] sur une boutique en ligne.','description_produit')">🛒 Description produit</button>
+            <button class="template-btn" onclick="useTemplate('Génère 10 questions de quiz sur [SUJET] avec 4 choix de réponse chacune. Indique la bonne réponse.','quiz')">📝 Questions quiz</button>
+            <button class="template-btn" onclick="useTemplate('Écris un post LinkedIn engageant sur [SUJET] pour un entrepreneur africain du secteur tech.','social_media')">📱 Post LinkedIn</button>
+            <button class="template-btn" onclick="useTemplate('Propose une liste de 8 fonctionnalités indispensables pour un site web [TYPE DE SITE] en Afrique.','fonctionnalites_site')">🌐 Features site web</button>
+            {% endfor %}
+          </div>
+
+          <div style="margin-top:1.5rem">
+            <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:.75rem">Modèle</div>
+            <select id="model-select" class="form-control" style="font-size:.83rem">
+              <option value="claude-haiku-4-5-20251001">Claude Haiku (rapide)</option>
+              <option value="claude-sonnet-4-6">Claude Sonnet (puissant)</option>
+            </select>
+          </div>
+
+          <a href="{% url 'ai_engine:historique' %}" class="btn btn-outline btn-sm btn-block" style="margin-top:1rem">📜 Historique</a>
+        </div>
+
+        {# Zone principale #}
+        <div>
+          <div class="glass-card" style="margin-bottom:1.25rem">
+            <div class="form-group" style="margin-bottom:1rem">
+              <label class="form-label">Type de génération</label>
+              <select id="type-gen" class="form-control">
+                <option value="contenu">Contenu général</option>
+                <option value="description">Description produit/formation</option>
+                <option value="email">Email marketing</option>
+                <option value="social">Réseaux sociaux</option>
+                <option value="quiz">Questions quiz</option>
+                <option value="plan">Plan de cours</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:1rem">
+              <label class="form-label">Votre prompt *</label>
+              <textarea id="prompt-input" class="form-control" rows="5"
+                        placeholder="Ex : Écris une description pour un cours de marketing digital destiné aux PME camerounaises…"></textarea>
+            </div>
+            <div style="display:flex;gap:.75rem">
+              <button id="btn-generate" onclick="startGeneration()" class="btn btn-primary" style="flex:1">
+                ✨ Générer avec l'IA
+              </button>
+              <button onclick="clearOutput()" class="btn btn-outline">🗑️</button>
+            </div>
+          </div>
+
+          {# Résultat #}
+          <div class="glass-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+              <h3 style="font-family:var(--font-display);font-size:.95rem;font-weight:700">Résultat</h3>
+              <div style="display:flex;align-items:center;gap:.75rem">
+                <span class="token-counter" id="token-count"></span>
+                <button onclick="copyResult()" class="btn btn-outline btn-sm" id="btn-copy" style="display:none">📋 Copier</button>
+              </div>
+            </div>
+            <div id="ai-output">
+              <span style="color:var(--text-muted);font-style:italic;font-size:.85rem">Le contenu généré apparaîtra ici…</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+function useTemplate(text, type) {
+  document.getElementById('prompt-input').value = text;
+  if (type) {
+    const sel = document.getElementById('type-gen');
+    for (const opt of sel.options) {
+      if (opt.value === type) { sel.value = type; break; }
+    }
+  }
+  document.getElementById('prompt-input').focus();
+}
+
+async function startGeneration() {
+  const prompt = document.getElementById('prompt-input').value.trim();
+  if (!prompt) { window.EShelle?.Toasts?.error('Entrez un prompt avant de générer.'); return; }
+
+  const btn    = document.getElementById('btn-generate');
+  const output = document.getElementById('ai-output');
+  const type   = document.getElementById('type-gen').value;
+  const modele = document.getElementById('model-select').value;
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Génération…';
+  output.textContent = '';
+  output.classList.add('typing-cursor');
+  document.getElementById('btn-copy').style.display = 'none';
+  document.getElementById('token-count').textContent = '';
+
+  try {
+    await window.EShelle.aiStream(
+      '{% url "ai_engine:stream" %}',
+      { prompt, type_gen: type, modele },
+      (chunk) => { output.textContent += chunk; },
+      (data) => {
+        if (data.done) {
+          document.getElementById('token-count').textContent = `${data.tokens || 0} tokens`;
+          document.getElementById('btn-copy').style.display = '';
+        }
+        if (data.error) window.EShelle?.Toasts?.error(data.error);
+      }
+    );
+  } catch(e) {
+    output.textContent = 'Erreur : ' + e.message;
+  } finally {
+    output.classList.remove('typing-cursor');
+    btn.disabled = false;
+    btn.textContent = '✨ Générer avec l\'IA';
+  }
+}
+
+function copyResult() {
+  const text = document.getElementById('ai-output').textContent;
+  window.EShelle?.copyToClipboard?.(text);
+  window.EShelle?.Toasts?.success('Copié dans le presse-papier !');
+}
+
+function clearOutput() {
+  document.getElementById('ai-output').innerHTML = '<span style="color:var(--text-muted);font-style:italic;font-size:.85rem">Le contenu généré apparaîtra ici…</span>';
+  document.getElementById('btn-copy').style.display = 'none';
+  document.getElementById('token-count').textContent = '';
+}
+</script>
+{% endblock %}

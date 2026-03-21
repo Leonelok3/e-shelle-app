@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Finaliser la commande — E-Shelle{% endblock %}
+{% block nav_boutique %}active{% endblock %}
+
+{% block content %}
+<div style="padding-top:5rem">
+  <section class="section">
+    <div class="container" style="max-width:880px">
+      <div style="margin-bottom:2rem;text-align:center">
+        <div class="section-label" style="display:inline-flex">💳 Commande</div>
+        <h1 class="section-title" style="margin-top:.5rem">Finaliser la commande</h1>
+      </div>
+
+      {# Étapes #}
+      <div style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:3rem">
+        <div style="display:flex;align-items:center;gap:.5rem">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--gradient-cta);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700">1</div>
+          <span style="font-size:.85rem;font-weight:600">Panier</span>
+        </div>
+        <div style="width:60px;height:2px;background:var(--gradient-cta);margin:0 .5rem"></div>
+        <div style="display:flex;align-items:center;gap:.5rem">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--gradient-cta);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700">2</div>
+          <span style="font-size:.85rem;font-weight:600">Commande</span>
+        </div>
+        <div style="width:60px;height:2px;background:var(--border);margin:0 .5rem"></div>
+        <div style="display:flex;align-items:center;gap:.5rem">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--bg-elevated);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:var(--text-muted)">3</div>
+          <span style="font-size:.85rem;color:var(--text-muted)">Paiement</span>
+        </div>
+      </div>
+
+      <form method="post">
+        {% csrf_token %}
+        <div style="display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:start">
+          {# Formulaire #}
+          <div>
+            <div class="glass-card" style="margin-bottom:1.25rem">
+              <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:1.25rem">📦 Informations de livraison</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Prénom</label>
+                  <input type="text" class="form-control" value="{{ request.user.first_name }}" readonly style="opacity:.7">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Nom</label>
+                  <input type="text" class="form-control" value="{{ request.user.last_name }}" readonly style="opacity:.7">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" value="{{ request.user.email }}" readonly style="opacity:.7">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Numéro Mobile Money *</label>
+                <input type="tel" name="telephone" class="form-control" placeholder="+237 6XX XXX XXX" required>
+                <div style="font-size:.75rem;color:var(--text-muted);margin-top:.35rem">Ce numéro sera utilisé pour le paiement Mobile Money.</div>
+              </div>
+            </div>
+
+            <div class="glass-card">
+              <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:1rem">📋 Récapitulatif</h3>
+              {% for ligne in panier.lignes.all %}
+              <div style="display:flex;align-items:center;gap:.75rem;padding:.65rem 0;{% if not forloop.last %}border-bottom:1px solid rgba(255,255,255,.04);{% endif %}">
+                <div style="font-size:1.25rem">{{ ligne.produit.categorie.icone }}</div>
+                <div style="flex:1">
+                  <div style="font-size:.88rem;font-weight:600">{{ ligne.produit.titre }}</div>
+                  <div style="font-size:.75rem;color:var(--text-muted)">{{ ligne.produit.get_type_produit_display }}</div>
+                </div>
+                <div style="font-weight:700;font-size:.9rem;color:var(--primary-light)">
+                  {% if ligne.produit.is_gratuit %}Gratuit{% else %}{{ ligne.produit.prix|floatformat:0 }} FCFA{% endif %}
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          {# Résumé + CTA #}
+          <div class="glass-card" style="position:sticky;top:6rem">
+            <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:1.25rem">💰 Total à payer</h3>
+            <div style="display:flex;justify-content:space-between;margin-bottom:.6rem;font-size:.88rem;color:var(--text-secondary)">
+              <span>Sous-total</span>
+              <span>{{ panier.total|floatformat:0 }} FCFA</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:.6rem;font-size:.88rem;color:var(--text-secondary)">
+              <span>Frais</span>
+              <span style="color:var(--primary-light)">0 FCFA</span>
+            </div>
+            <div style="border-top:1px solid var(--border);padding-top:1rem;margin-bottom:1.25rem;display:flex;justify-content:space-between;font-family:var(--font-display);font-size:1.3rem;font-weight:800">
+              <span>Total</span>
+              <span style="color:var(--primary-light)">{{ panier.total|floatformat:0 }} FCFA</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg">
+              Confirmer → Paiement
+            </button>
+
+            <div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:1rem;font-size:.75rem;color:var(--text-muted)">
+              🔒 Paiement sécurisé SSL<br>MTN MoMo · Airtel Money
+            </div>
+
+            <div style="margin-top:1.25rem;border-top:1px solid var(--border);padding-top:1rem;text-align:center">
+              <a href="{% url 'boutique:panier' %}" style="font-size:.82rem;color:var(--text-muted);text-decoration:none">← Retour au panier</a>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>
+{% endblock %}

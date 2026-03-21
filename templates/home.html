@@ -1,13 +1,576 @@
 {% extends "base.html" %}
-{% block content %}
-<div class="p-4 bg-light rounded">
-  <h1 class="h3">Bienvenue sur E-shelle</h1>
-  <p>Plateforme d’apprentissage : leçons, exercices, examens blancs et sujets d’examen (PDF).</p>
+{% load static %}
 
-  {% if user.is_authenticated %}
-    <a class="btn btn-primary" href="{% url 'accounts:go' %}">Aller à mon espace</a>
-  {% else %}
-    <a class="btn btn-primary" href="{% url 'accounts:login' %}">Se connecter</a>
-  {% endif %}
-</div>
+{% block title %}E-Shelle — Plateforme SaaS Africaine · Formation · Boutique · Web IA{% endblock %}
+{% block nav_home %}active{% endblock %}
+
+{% block content %}
+
+{# ════════════════════════════════════════════════════════════════
+   SECTION 1 — HERO
+   ════════════════════════════════════════════════════════════════ #}
+<section class="hero" aria-label="Présentation E-Shelle">
+  <canvas id="particles-canvas"></canvas>
+
+  {# Glows décoratifs #}
+  <div class="hero-glow hero-glow-1" aria-hidden="true"></div>
+  <div class="hero-glow hero-glow-2" aria-hidden="true"></div>
+
+  <div class="container" style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
+
+    {# Contenu gauche #}
+    <div class="hero-content">
+      <div class="hero-badge aos-hidden">
+        <span class="dot-live"></span>
+        🚀 Plateforme IA · Cameroun · 2026
+      </div>
+
+      <h1 class="hero-title aos-hidden aos-delay-1">
+        L'intelligence artificielle
+        <span class="text-gradient"> au service</span>
+        de votre croissance
+      </h1>
+
+      <p class="hero-subtitle aos-hidden aos-delay-2">
+        Formation · Automatisation · Création web · Boutique digitale · Tout en un.
+        La seule plateforme africaine qui transforme vos idées en revenus.
+      </p>
+
+      <div class="hero-actions aos-hidden aos-delay-3">
+        <a href="/formations/" class="btn btn-primary btn-lg">
+          Découvrir les modules
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="/services/demo/" class="btn btn-outline-white btn-lg">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="rgba(255,255,255,.1)"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg>
+          Voir une démo
+        </a>
+      </div>
+
+      {# Compteurs animés #}
+      <div class="hero-stats aos-hidden aos-delay-4">
+        <div class="hero-stat">
+          <div class="hero-stat-value">
+            <span data-counter="500" data-suffix="+">500+</span>
+          </div>
+          <div class="hero-stat-label">Apprenants actifs</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">
+            <span data-counter="50" data-suffix="+">50+</span>
+          </div>
+          <div class="hero-stat-label">Sites créés</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">
+            <span data-counter="20" data-suffix="+">20+</span>
+          </div>
+          <div class="hero-stat-label">Outils IA</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">
+            <span data-counter="98" data-suffix="%">98%</span>
+          </div>
+          <div class="hero-stat-label">Satisfaction</div>
+        </div>
+      </div>
+    </div>
+
+    {# Dashboard mockup flottant #}
+    <div class="hero-visual" aria-hidden="true">
+      <div class="dashboard-mockup">
+        <div class="mockup-header">
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+          <span class="mockup-title">dashboard.e-shelle.com</span>
+        </div>
+
+        <div class="mockup-stat-grid">
+          <div class="mockup-stat-card green">
+            <div class="label">Revenus du mois</div>
+            <div class="value">485K FCFA</div>
+          </div>
+          <div class="mockup-stat-card orange">
+            <div class="label">Nouveaux inscrits</div>
+            <div class="value">+47</div>
+          </div>
+          <div class="mockup-stat-card">
+            <div class="label">Cours actifs</div>
+            <div class="value" style="color:var(--text-primary)">12</div>
+          </div>
+          <div class="mockup-stat-card">
+            <div class="label">Commandes</div>
+            <div class="value" style="color:var(--text-primary)">28</div>
+          </div>
+        </div>
+
+        {# Mini graphique #}
+        <div style="margin-top:.75rem">
+          <div style="font-size:.68rem;color:var(--text-muted);margin-bottom:.5rem">Activité 7 derniers jours</div>
+          <div class="mockup-bar-chart">
+            <div class="mockup-bar" style="--h:40%"></div>
+            <div class="mockup-bar" style="--h:65%"></div>
+            <div class="mockup-bar" style="--h:45%"></div>
+            <div class="mockup-bar" style="--h:80%"></div>
+            <div class="mockup-bar active" style="--h:90%"></div>
+            <div class="mockup-bar" style="--h:70%"></div>
+            <div class="mockup-bar" style="--h:100%"></div>
+          </div>
+        </div>
+
+        {# Notifications mini #}
+        <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:var(--text-secondary);margin-bottom:.4rem">
+            <span class="dot-live" style="width:6px;height:6px;flex-shrink:0"></span> Kofi Mensah a acheté "Pack IA Pro"
+          </div>
+          <div style="display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:var(--text-secondary)">
+            <span class="dot-live" style="width:6px;height:6px;background:var(--accent-light);flex-shrink:0"></span> Nouveau devis reçu — Site e-commerce
+          </div>
+        </div>
+      </div>
+
+      {# Badge flottant #}
+      <div style="position:absolute;top:-1rem;right:-1rem;background:var(--gradient-cta);padding:.6rem 1rem;border-radius:var(--radius-full);font-size:.75rem;font-weight:700;color:#fff;box-shadow:var(--shadow-green)">
+        🇨🇲 Made in Africa
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{# ════════════════════════════════════════════════════════════════
+   SECTION 2 — MODULES
+   ════════════════════════════════════════════════════════════════ #}
+<section class="section" id="modules">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:3.5rem">
+      <div class="section-label aos-hidden">Nos modules</div>
+      <h2 class="section-title aos-hidden aos-delay-1">Tout ce dont vous avez besoin,<br>en un seul endroit</h2>
+      <p class="section-subtitle aos-hidden aos-delay-2">Chaque module est indépendant, activable à la demande, et peut être personnalisé pour votre business.</p>
+    </div>
+
+    <div class="modules-grid">
+
+      <div class="module-card aos-hidden">
+        <div class="module-icon">🧠</div>
+        <div style="position:absolute;top:1.25rem;right:1.25rem"><span class="badge badge-green">Actif</span></div>
+        <h3>Formation IA & Tech</h3>
+        <p>Cours en ligne sur l'IA, le développement web, le marketing digital et la comptabilité. Certificats inclus.</p>
+        <a href="/formations/" class="btn btn-outline btn-sm">Explorer →</a>
+      </div>
+
+      <div class="module-card aos-hidden aos-delay-1">
+        <div class="module-icon">🛒</div>
+        <div style="position:absolute;top:1.25rem;right:1.25rem"><span class="badge badge-green">Actif</span></div>
+        <h3>Boutique Digitale</h3>
+        <p>Vendez vos templates, ebooks, plugins et outils IA. Paiement Mobile Money, téléchargement automatique.</p>
+        <a href="/boutique/" class="btn btn-outline btn-sm">Explorer →</a>
+      </div>
+
+      <div class="module-card aos-hidden aos-delay-2">
+        <div class="module-icon">🌐</div>
+        <div style="position:absolute;top:1.25rem;right:1.25rem"><span class="badge badge-green">Actif</span></div>
+        <h3>Création Web IA</h3>
+        <p>Site vitrine, e-commerce ou application web générés avec l'IA en 7 jours. Devis automatique intelligent.</p>
+        <a href="/services/" class="btn btn-outline btn-sm">Explorer →</a>
+      </div>
+
+      <div class="module-card aos-hidden aos-delay-3">
+        <div class="module-icon">🤖</div>
+        <div style="position:absolute;top:1.25rem;right:1.25rem"><span class="badge badge-orange">Bientôt</span></div>
+        <h3>Automatisation & Agents</h3>
+        <p>Agents IA personnalisés pour automatiser vos tâches, vos emails et vos processus métier.</p>
+        <a href="/services/contact/" class="btn btn-outline btn-sm">Rejoindre liste →</a>
+      </div>
+
+      <div class="module-card aos-hidden aos-delay-4">
+        <div class="module-icon">📊</div>
+        <div style="position:absolute;top:1.25rem;right:1.25rem"><span class="badge badge-green">Actif</span></div>
+        <h3>Tableau de bord</h3>
+        <p>Analytics temps réel, gestion des revenus, suivi des apprenants et génération de contenu IA intégrée.</p>
+        <a href="/dashboard/" class="btn btn-outline btn-sm">Mon dashboard →</a>
+      </div>
+
+      <div class="module-card aos-hidden aos-delay-5">
+        <div class="module-icon">📱</div>
+        <div style="position:absolute;top:1.25rem;right:1.25rem"><span class="badge badge-orange">Sur devis</span></div>
+        <h3>Application sur mesure</h3>
+        <p>Développement d'application mobile ou web sur mesure pour votre entreprise ou vos clients.</p>
+        <a href="/services/contact/" class="btn btn-outline btn-sm">Demander →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider-gradient" style="margin:0"></div>
+
+{# ════════════════════════════════════════════════════════════════
+   SECTION 3 — COMMENT ÇA MARCHE
+   ════════════════════════════════════════════════════════════════ #}
+<section class="section" id="comment-ca-marche">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:3.5rem">
+      <div class="section-label aos-hidden">Processus simple</div>
+      <h2 class="section-title aos-hidden aos-delay-1">3 étapes pour démarrer</h2>
+      <p class="section-subtitle aos-hidden aos-delay-2">Pas de configuration complexe, pas de code requis. Tu es opérationnel en moins de 5 minutes.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card aos-hidden">
+        <div class="step-number">1</div>
+        <h3>Choisis ton module</h3>
+        <p>Sélectionne le ou les modules qui correspondent à ton business : formation, boutique, services ou tout en un.</p>
+      </div>
+      <div class="step-card aos-hidden aos-delay-2">
+        <div class="step-number">2</div>
+        <h3>Accède en ligne</h3>
+        <p>Ton espace est disponible 24h/24 depuis ton téléphone ou ton ordinateur. L'IA te guide pas à pas.</p>
+      </div>
+      <div class="step-card aos-hidden aos-delay-4">
+        <div class="step-number">3</div>
+        <h3>Génère des revenus</h3>
+        <p>Vends tes formations, tes produits digitaux ou tes services. Les paiements Mobile Money sont intégrés.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ════════════════════════════════════════════════════════════════
+   SECTION 4 — CHIFFRES CLÉS
+   ════════════════════════════════════════════════════════════════ #}
+<section class="section-sm" style="background:linear-gradient(135deg,rgba(46,125,50,.06),rgba(245,124,0,.04))">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center" class="grid-responsive-2">
+      <div class="aos-hidden">
+        <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:800;color:var(--primary-light)">
+          <span data-counter="500" data-suffix="+">500+</span>
+        </div>
+        <div style="color:var(--text-secondary);font-size:.9rem;margin-top:.25rem">Entrepreneurs formés</div>
+      </div>
+      <div class="aos-hidden aos-delay-1">
+        <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:800;color:var(--accent-light)">
+          <span data-counter="50" data-suffix="+">50+</span>
+        </div>
+        <div style="color:var(--text-secondary);font-size:.9rem;margin-top:.25rem">Sites web livrés</div>
+      </div>
+      <div class="aos-hidden aos-delay-2">
+        <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:800;color:var(--primary-light)">
+          <span data-counter="5">5</span>
+        </div>
+        <div style="color:var(--text-secondary);font-size:.9rem;margin-top:.25rem">Pays africains</div>
+      </div>
+      <div class="aos-hidden aos-delay-3">
+        <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:800;color:var(--accent-light)">
+          <span data-counter="98" data-suffix="%">98%</span>
+        </div>
+        <div style="color:var(--text-secondary);font-size:.9rem;margin-top:.25rem">Taux de satisfaction</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ════════════════════════════════════════════════════════════════
+   SECTION 5 — TÉMOIGNAGES
+   ════════════════════════════════════════════════════════════════ #}
+<section class="section" id="temoignages">
+  <div class="container" style="max-width:800px">
+    <div class="text-center" style="margin-bottom:3rem">
+      <div class="section-label aos-hidden">Témoignages</div>
+      <h2 class="section-title aos-hidden aos-delay-1">Ce que disent nos utilisateurs</h2>
+    </div>
+
+    <div class="testimonials-wrapper aos-hidden">
+      <div class="testimonials-track" id="testimonial-track">
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"E-Shelle a complètement transformé mon business. J'ai lancé ma boutique de templates en moins d'une semaine, et le premier mois j'ai généré 180 000 FCFA. La plateforme est intuitive et le support est réactif."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">KM</div>
+            <div>
+              <div class="testimonial-name">Kofi Mensah</div>
+              <div class="testimonial-role">Designer · Douala, Cameroun 🇨🇲</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"J'ai suivi la formation Django en 3 semaines et j'ai immédiatement décroché mon premier contrat de développement web. Le contenu est de qualité professionnelle et les exercices pratiques sont excellents."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">AF</div>
+            <div>
+              <div class="testimonial-name">Aminata Fofana</div>
+              <div class="testimonial-role">Développeuse web · Abidjan, Côte d'Ivoire 🇨🇮</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"Le module de création web avec IA est bluffant. Mon site e-commerce a été livré en 5 jours avec un design professionnel. Le générateur de contenu IA m'a économisé des heures de travail."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">OD</div>
+            <div>
+              <div class="testimonial-name">Oumar Diallo</div>
+              <div class="testimonial-role">Entrepreneur · Dakar, Sénégal 🇸🇳</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"Grâce aux formations en marketing digital, j'ai appris à promouvoir mes produits sur les réseaux sociaux. Mon revenu a doublé en 2 mois. E-Shelle, c'est vraiment la plateforme des entrepreneurs africains !"</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">GB</div>
+            <div>
+              <div class="testimonial-name">Grace Balogun</div>
+              <div class="testimonial-role">Vendeuse en ligne · Lagos, Nigeria 🇳🇬</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"Le tableau de bord est incroyable. Je gère mes 3 sources de revenus depuis une seule interface. Les graphiques en temps réel m'aident à prendre de meilleures décisions business."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">JM</div>
+            <div>
+              <div class="testimonial-name">Jean-Paul Mutombo</div>
+              <div class="testimonial-role">Consultant digital · Kinshasa, RDC 🇨🇩</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"Le configurateur de devis est magique. Je crée des propositions professionnelles en 5 minutes. Mes clients sont impressionnés et mon taux de conversion a augmenté de 40%."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">BN</div>
+            <div>
+              <div class="testimonial-name">Brice Nkolo</div>
+              <div class="testimonial-role">Agence web · Yaoundé, Cameroun 🇨🇲</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="slider-dots" role="tablist" aria-label="Témoignages">
+        <button class="slider-dot active" role="tab" aria-label="Témoignage 1"></button>
+        <button class="slider-dot" role="tab" aria-label="Témoignage 2"></button>
+        <button class="slider-dot" role="tab" aria-label="Témoignage 3"></button>
+        <button class="slider-dot" role="tab" aria-label="Témoignage 4"></button>
+        <button class="slider-dot" role="tab" aria-label="Témoignage 5"></button>
+        <button class="slider-dot" role="tab" aria-label="Témoignage 6"></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ════════════════════════════════════════════════════════════════
+   SECTION 6 — TARIFS
+   ════════════════════════════════════════════════════════════════ #}
+<section class="section" id="tarifs">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:3.5rem">
+      <div class="section-label aos-hidden">Tarification simple</div>
+      <h2 class="section-title aos-hidden aos-delay-1">Des prix accessibles,<br>des résultats concrets</h2>
+      <p class="section-subtitle aos-hidden aos-delay-2">Pas d'engagement. Annulez à tout moment. Paiement Mobile Money disponible.</p>
+    </div>
+
+    <div class="pricing-grid">
+
+      {# Plan Starter #}
+      <div class="pricing-card aos-hidden">
+        <div class="pricing-plan">Starter</div>
+        <div class="pricing-price">0 <sub>FCFA/mois</sub></div>
+        <p class="pricing-desc">Parfait pour découvrir la plateforme et tester les fonctionnalités de base.</p>
+        <ul class="pricing-features">
+          <li><span class="check">✓</span> 2 cours gratuits</li>
+          <li><span class="check">✓</span> 1 produit en boutique</li>
+          <li><span class="check">✓</span> Dashboard basique</li>
+          <li><span class="x">✕</span> Génération IA</li>
+          <li><span class="x">✕</span> Certificats</li>
+          <li><span class="x">✕</span> Support prioritaire</li>
+        </ul>
+        <a href="/accounts/register/" class="btn btn-outline btn-block">Commencer gratuitement</a>
+      </div>
+
+      {# Plan Pro — mis en avant #}
+      <div class="pricing-card featured aos-hidden aos-delay-1">
+        <div class="pricing-featured-badge">⭐ Populaire</div>
+        <div class="pricing-plan">Pro</div>
+        <div class="pricing-price" style="color:var(--primary-light)">9 900 <sub>FCFA/mois</sub></div>
+        <p class="pricing-desc">L'accès complet à tous les modules. Idéal pour les entrepreneurs sérieux.</p>
+        <ul class="pricing-features">
+          <li><span class="check">✓</span> Tous les cours & formations</li>
+          <li><span class="check">✓</span> Boutique illimitée</li>
+          <li><span class="check">✓</span> Génération IA (100 req/mois)</li>
+          <li><span class="check">✓</span> Certificats officiels</li>
+          <li><span class="check">✓</span> Analytics avancés</li>
+          <li><span class="check">✓</span> Support WhatsApp prioritaire</li>
+        </ul>
+        <a href="/accounts/register/?plan=pro" class="btn btn-primary btn-block">Démarrer l'essai →</a>
+        <p style="text-align:center;font-size:.78rem;color:var(--text-muted);margin-top:.75rem">✅ 7 jours d'essai gratuit, sans carte</p>
+      </div>
+
+      {# Plan Enterprise #}
+      <div class="pricing-card aos-hidden aos-delay-2">
+        <div class="pricing-plan">Enterprise</div>
+        <div class="pricing-price">Sur <sub>mesure</sub></div>
+        <p class="pricing-desc">Solution clé en main pour agences, écoles et entreprises avec white-label complet.</p>
+        <ul class="pricing-features">
+          <li><span class="check">✓</span> Tout le plan Pro</li>
+          <li><span class="check">✓</span> White-label (votre marque)</li>
+          <li><span class="check">✓</span> IA illimitée</li>
+          <li><span class="check">✓</span> Intégration sur mesure</li>
+          <li><span class="check">✓</span> Formation équipe incluse</li>
+          <li><span class="check">✓</span> Manager dédié</li>
+        </ul>
+        <a href="/services/contact/?type=enterprise" class="btn btn-outline btn-block">Nous contacter</a>
+      </div>
+
+    </div>
+
+    {# Garantie #}
+    <div style="text-align:center;margin-top:2.5rem" class="aos-hidden">
+      <div style="display:inline-flex;align-items:center;gap:2rem;flex-wrap:wrap;justify-content:center;padding:1.25rem 2rem;background:rgba(46,125,50,.06);border:1px solid rgba(46,125,50,.2);border-radius:var(--radius-full);">
+        <span style="font-size:.88rem;color:var(--text-secondary)">🔒 Paiement sécurisé</span>
+        <span style="font-size:.88rem;color:var(--text-secondary)">📱 Mobile Money (MTN · Airtel)</span>
+        <span style="font-size:.88rem;color:var(--text-secondary)">↩️ Remboursement 30 jours</span>
+        <span style="font-size:.88rem;color:var(--text-secondary)">💬 Support en français</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ════════════════════════════════════════════════════════════════
+   SECTION 7 — FONCTIONNALITÉS VISUELLES
+   ════════════════════════════════════════════════════════════════ #}
+<section class="section" style="background:linear-gradient(135deg,rgba(46,125,50,.04),transparent)">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:3rem">
+      <div class="section-label aos-hidden">Technologie 2026</div>
+      <h2 class="section-title aos-hidden aos-delay-1">Propulsé par l'intelligence artificielle</h2>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem">
+
+      <div class="glass-card aos-hidden" style="text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:1rem">🤖</div>
+        <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:.5rem">Génération de contenu IA</h3>
+        <p style="font-size:.85rem;color:var(--text-secondary)">Crée des cours complets, descriptions produits, emails marketing en quelques secondes avec Claude AI.</p>
+      </div>
+
+      <div class="glass-card aos-hidden aos-delay-1" style="text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:1rem">💳</div>
+        <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:.5rem">Paiement Mobile Money</h3>
+        <p style="font-size:.85rem;color:var(--text-secondary)">MTN Mobile Money, Airtel Money et Orange Money intégrés. Tes clients paient depuis leur téléphone.</p>
+      </div>
+
+      <div class="glass-card aos-hidden aos-delay-2" style="text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:1rem">📊</div>
+        <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:.5rem">Analytics en temps réel</h3>
+        <p style="font-size:.85rem;color:var(--text-secondary)">Suis tes revenus, tes inscrits et tes ventes avec des graphiques interactifs mis à jour en live.</p>
+      </div>
+
+      <div class="glass-card aos-hidden aos-delay-3" style="text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:1rem">🌍</div>
+        <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:.5rem">Conçu pour l'Afrique</h3>
+        <p style="font-size:.85rem;color:var(--text-secondary)">Interface en français, prix en FCFA, support WhatsApp. Une plateforme faite pour les réalités africaines.</p>
+      </div>
+
+      <div class="glass-card aos-hidden aos-delay-4" style="text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:1rem">🔒</div>
+        <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:.5rem">Sécurité enterprise</h3>
+        <p style="font-size:.85rem;color:var(--text-secondary)">HTTPS, chiffrement des données, authentification 2FA, sauvegardes automatiques quotidiennes.</p>
+      </div>
+
+      <div class="glass-card aos-hidden aos-delay-5" style="text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:1rem">⚡</div>
+        <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:.5rem">Ultra rapide</h3>
+        <p style="font-size:.85rem;color:var(--text-secondary)">Temps de chargement inférieur à 2 secondes. Optimisé pour les connexions 3G et 4G africaines.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider-gradient" style="margin:0"></div>
+
+{# ════════════════════════════════════════════════════════════════
+   SECTION 8 — CTA FINAL + NEWSLETTER
+   ════════════════════════════════════════════════════════════════ #}
+<section class="section">
+  <div class="container">
+    <div class="cta-section aos-hidden">
+      <div class="section-label" style="display:inline-flex">🚀 Rejoins la communauté</div>
+      <h2 class="section-title" style="margin-top:1rem">
+        Rejoins <span class="text-gradient">500+ entrepreneurs africains</span><br>qui réussissent avec E-Shelle
+      </h2>
+      <p class="section-subtitle" style="margin:1rem auto 2rem">
+        Reçois nos tutoriels gratuits, nos actualités et nos offres exclusives directement dans ta boîte mail.
+      </p>
+
+      <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+        <input type="email" class="form-control" placeholder="ton@email.com" required autocomplete="email">
+        <button type="submit" class="btn btn-accent btn-lg">S'abonner gratuitement →</button>
+      </form>
+
+      <p style="margin-top:1rem;font-size:.78rem;color:var(--text-muted)">
+        🔒 Pas de spam. Désabonnement en 1 clic.
+      </p>
+
+      <div style="display:flex;justify-content:center;gap:2rem;margin-top:3rem;flex-wrap:wrap">
+        <a href="/accounts/register/" class="btn btn-primary btn-xl">
+          Créer mon compte gratuit
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="/services/contact/" class="btn btn-outline btn-xl">
+          Parler à l'équipe
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock content %}
+
+{% block extra_scripts %}
+<script>
+/* Gestion newsletter inline */
+function handleNewsletter(e) {
+  e.preventDefault();
+  const email = e.target.querySelector('input[type=email]').value;
+  if (email) {
+    window.EShelle.Toasts.success('Merci ! Vérifie ta boîte mail pour confirmer.', 'Abonnement réussi');
+    e.target.reset();
+  }
+}
+</script>
+
+{# Styles spécifiques home #}
+<style>
+/* Responsive grid 2 colonnes sur mobile */
+.grid-responsive-2 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+@media (max-width: 768px) {
+  .grid-responsive-2 { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  .hero > .container { grid-template-columns: 1fr !important; }
+  .hero-visual { display: none; }
+  .modules-grid { grid-template-columns: 1fr !important; }
+  .steps-grid { grid-template-columns: 1fr !important; }
+  .pricing-grid { grid-template-columns: 1fr !important; max-width: 420px; margin: 0 auto; }
+  .pricing-card.featured { transform: none !important; }
+}
+@media (max-width: 480px) {
+  .grid-responsive-2 { grid-template-columns: 1fr; }
+}
+</style>
 {% endblock %}

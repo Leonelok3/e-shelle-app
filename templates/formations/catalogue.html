@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Formations en ligne — E-Shelle{% endblock %}
+{% block nav_formations %}active{% endblock %}
+
+{% block content %}
+<div style="padding-top:5rem">
+
+  {# Hero formations #}
+  <section style="background:linear-gradient(135deg,#0A0A0A,#0D1F0D);padding:4rem 0;border-bottom:1px solid var(--border)">
+    <div class="container text-center">
+      <div class="section-label aos-hidden" style="display:inline-flex">📚 Catalogue</div>
+      <h1 class="section-title aos-hidden aos-delay-1" style="margin-top:1rem">Formations en ligne</h1>
+      <p class="section-subtitle aos-hidden aos-delay-2">
+        <span data-counter="{{ formations|length }}" data-suffix=" formations">{{ formations|length }} formations</span> disponibles
+        · IA, Tech, Marketing, Comptabilité et plus
+      </p>
+      {# Barre de recherche #}
+      <form method="get" style="max-width:500px;margin:2rem auto 0">
+        <div class="input-group">
+          <span style="display:flex;align-items:center;padding:0 1rem;background:rgba(255,255,255,.04);color:var(--text-muted)">🔍</span>
+          <input type="search" name="q" class="form-control" placeholder="Rechercher une formation…"
+                 value="{{ recherche }}" autocomplete="off">
+          <button type="submit" class="btn btn-primary" style="border-radius:0">Rechercher</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div style="display:flex;gap:2rem;align-items:flex-start;flex-wrap:wrap">
+
+        {# Sidebar filtres #}
+        <aside style="min-width:220px;max-width:220px;flex-shrink:0" class="filters-sidebar">
+          <h3 style="font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:1rem">Filtres</h3>
+
+          <form method="get" id="filter-form">
+            {% if recherche %}<input type="hidden" name="q" value="{{ recherche }}">{% endif %}
+
+            <div style="margin-bottom:1.5rem">
+              <h4 style="font-size:.8rem;font-weight:600;color:var(--text-muted);margin-bottom:.75rem">Catégorie</h4>
+              <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--text-secondary);cursor:pointer;margin-bottom:.5rem">
+                <input type="radio" name="categorie" value="" {% if not cat_slug %}checked{% endif %} onchange="this.form.submit()"> Toutes
+              </label>
+              {% for cat in categories %}
+              <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--text-secondary);cursor:pointer;margin-bottom:.5rem">
+                <input type="radio" name="categorie" value="{{ cat.slug }}" {% if cat_slug == cat.slug %}checked{% endif %} onchange="this.form.submit()">
+                {{ cat.icone }} {{ cat.nom }}
+              </label>
+              {% endfor %}
+            </div>
+
+            <div style="margin-bottom:1.5rem">
+              <h4 style="font-size:.8rem;font-weight:600;color:var(--text-muted);margin-bottom:.75rem">Niveau</h4>
+              <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--text-secondary);cursor:pointer;margin-bottom:.5rem">
+                <input type="radio" name="niveau" value="" {% if not niveau %}checked{% endif %} onchange="this.form.submit()"> Tous
+              </label>
+              {% for val, label in niveaux %}
+              <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--text-secondary);cursor:pointer;margin-bottom:.5rem">
+                <input type="radio" name="niveau" value="{{ val }}" {% if niveau == val %}checked{% endif %} onchange="this.form.submit()"> {{ label }}
+              </label>
+              {% endfor %}
+            </div>
+
+            <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--text-secondary);cursor:pointer">
+              <input type="checkbox" name="gratuit" value="1" {% if request.GET.gratuit %}checked{% endif %} onchange="this.form.submit()">
+              Formations gratuites uniquement
+            </label>
+          </form>
+        </aside>
+
+        {# Grille formations #}
+        <div style="flex:1;min-width:0">
+          {% if formations %}
+          <div class="grid-auto">
+            {% for f in formations %}
+            <div class="course-card aos-hidden">
+              <div class="course-thumbnail">
+                {% if f.thumbnail %}
+                  <img src="{{ f.thumbnail.url }}" alt="{{ f.titre }}" loading="lazy">
+                {% else %}
+                  <div style="width:100%;height:100%;background:linear-gradient(135deg,rgba(46,125,50,.3),rgba(245,124,0,.2));display:flex;align-items:center;justify-content:center;font-size:3rem">📚</div>
+                {% endif %}
+                <div class="overlay">
+                  <div class="play-btn">▶</div>
+                </div>
+                <div class="course-meta-top">
+                  <span class="badge badge-green">{{ f.get_niveau_display }}</span>
+                  {% if f.est_gratuite %}<span class="badge badge-orange">Gratuit</span>{% endif %}
+                </div>
+              </div>
+              <div class="course-body">
+                <div class="course-category">{{ f.categorie.icone }} {{ f.categorie.nom }}</div>
+                <h3 class="course-title">
+                  <a href="{% url 'formations:detail' slug=f.slug %}" style="color:inherit">{{ f.titre }}</a>
+                </h3>
+                <div class="course-meta">
+                  <span>📖 {{ f.nb_lecons }} leçons</span>
+                  <span>⏱️ {{ f.duree_totale }}min</span>
+                  <span>🌐 {{ f.get_langue_display }}</span>
+                </div>
+                {% if f.note_moyenne > 0 %}
+                <div class="course-stars">
+                  ★ {{ f.note_moyenne|floatformat:1 }}
+                  <span>({{ f.nb_inscrits }} inscrits)</span>
+                </div>
+                {% endif %}
+              </div>
+              <div class="course-footer">
+                <div class="course-price {% if f.est_gratuite %}free{% endif %}">
+                  {% if f.prix_barre %}<span class="original">{{ f.prix_barre|floatformat:0 }} FCFA</span>{% endif %}
+                  {% if f.est_gratuite %}Gratuit{% else %}{{ f.prix|floatformat:0 }} FCFA{% endif %}
+                </div>
+                <a href="{% url 'formations:detail' slug=f.slug %}" class="btn btn-outline btn-sm">Voir →</a>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div style="text-align:center;padding:5rem 2rem">
+            <div style="font-size:4rem;margin-bottom:1rem">🔍</div>
+            <h3 style="font-size:1.25rem;font-weight:700;margin-bottom:.5rem">Aucune formation trouvée</h3>
+            <p style="color:var(--text-secondary)">Essaie d'autres filtres ou <a href="{% url 'formations:catalogue' %}" style="color:var(--primary-light)">réinitialise la recherche</a>.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

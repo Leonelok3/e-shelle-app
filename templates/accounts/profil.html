@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mon Profil — E-Shelle{% endblock %}
+
+{% block content %}
+<div style="padding-top:5rem">
+  <section class="section">
+    <div class="container" style="max-width:900px">
+      <div style="margin-bottom:2rem">
+        <div class="section-label" style="display:inline-flex">👤 Profil</div>
+        <h1 class="section-title" style="margin-top:.5rem">Mon profil</h1>
+      </div>
+
+      <div style="display:grid;grid-template-columns:260px 1fr;gap:2rem;align-items:start">
+        {# Carte profil gauche #}
+        <div>
+          <div class="glass-card" style="text-align:center;padding:2rem 1.5rem">
+            <div style="position:relative;display:inline-block;margin-bottom:1.25rem">
+              <img src="{{ profile.avatar_url }}" alt="{{ request.user.username }}" id="avatar-preview"
+                   style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--primary-light)">
+              <label for="avatar-input" style="position:absolute;bottom:0;right:0;width:28px;height:28px;border-radius:50%;background:var(--gradient-cta);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;border:2px solid var(--bg-card)" title="Changer l'avatar">✏️</label>
+            </div>
+            <div style="font-family:var(--font-display);font-weight:700;font-size:1.1rem">{{ request.user.get_full_name|default:request.user.username }}</div>
+            <div style="font-size:.82rem;color:var(--text-muted);margin-top:.2rem">@{{ request.user.username }}</div>
+            <div style="margin-top:.75rem">
+              <span class="badge {% if profile.plan == 'pro' %}badge-orange{% elif profile.plan == 'enterprise' %}badge-red{% else %}badge-green{% endif %}">
+                {{ profile.get_plan_display|default:profile.plan|title }}
+              </span>
+            </div>
+            {% if profile.solde > 0 %}
+            <div style="margin-top:1rem;padding:.75rem;background:rgba(46,125,50,.08);border-radius:var(--radius-md)">
+              <div style="font-size:.75rem;color:var(--text-muted)">Solde</div>
+              <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--primary-light)">{{ profile.solde|floatformat:0 }} FCFA</div>
+            </div>
+            {% endif %}
+          </div>
+
+          {# Navigation rapide #}
+          <nav style="display:flex;flex-direction:column;gap:.35rem;margin-top:1rem">
+            <a href="{% url 'dashboard:index' %}" class="btn btn-outline btn-sm" style="text-align:left">📊 Dashboard</a>
+            <a href="{% url 'formations:mon_dashboard' %}" class="btn btn-outline btn-sm" style="text-align:left">📚 Mes formations</a>
+            <a href="{% url 'payments:historique' %}" class="btn btn-outline btn-sm" style="text-align:left">💳 Transactions</a>
+            <a href="{% url 'accounts:logout' %}" class="btn btn-outline btn-sm" style="text-align:left;color:var(--error)">🚪 Déconnexion</a>
+          </nav>
+        </div>
+
+        {# Formulaire édition #}
+        <div>
+          {% if messages %}
+          {% for msg in messages %}
+          <div style="background:rgba(46,125,50,.1);border:1px solid rgba(46,125,50,.3);border-radius:var(--radius-md);padding:1rem;margin-bottom:1.5rem;color:var(--primary-light)">
+            ✅ {{ msg }}
+          </div>
+          {% endfor %}
+          {% endif %}
+
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="avatar" id="avatar-input" accept="image/*" style="display:none" onchange="previewAvatar(this)">
+
+            <div class="glass-card" style="margin-bottom:1.25rem">
+              <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:1.25rem">👤 Informations personnelles</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Prénom</label>
+                  <input type="text" name="first_name" class="form-control" value="{{ request.user.first_name }}" placeholder="Prénom">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Nom</label>
+                  <input type="text" name="last_name" class="form-control" value="{{ request.user.last_name }}" placeholder="Nom">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" value="{{ request.user.email }}" placeholder="votre@email.com">
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">Bio</label>
+                <textarea name="bio" class="form-control" rows="3" placeholder="Quelques mots sur vous…">{{ profile.bio }}</textarea>
+              </div>
+            </div>
+
+            <div class="glass-card" style="margin-bottom:1.25rem">
+              <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:1.25rem">📍 Coordonnées</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Téléphone</label>
+                  <input type="tel" name="telephone" class="form-control" value="{{ profile.telephone }}" placeholder="+237 6XX XXX XXX">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Ville</label>
+                  <input type="text" name="ville" class="form-control" value="{{ profile.ville }}" placeholder="Douala">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Pays</label>
+                  <input type="text" name="pays" class="form-control" value="{{ profile.pays }}" placeholder="Cameroun">
+                </div>
+                <div class="form-group" style="margin-bottom:0">
+                  <label class="form-label">Site web</label>
+                  <input type="url" name="site_web" class="form-control" value="{{ profile.site_web }}" placeholder="https://votre-site.com">
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg">💾 Enregistrer les modifications</button>
+          </form>
+
+          {# Sécurité du compte #}
+          <div class="glass-card" style="margin-top:1.25rem">
+            <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:1rem">🔒 Sécurité</h3>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-weight:600;font-size:.9rem">Mot de passe</div>
+                <div style="font-size:.78rem;color:var(--text-muted)">Dernière modification : inconnue</div>
+              </div>
+              <a href="{% url 'accounts:password_change' %}" class="btn btn-outline btn-sm">Modifier</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+function previewAvatar(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => document.getElementById('avatar-preview').src = e.target.result;
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+</script>
+{% endblock %}

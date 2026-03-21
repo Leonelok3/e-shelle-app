@@ -5,9 +5,11 @@ from django.utils.translation import gettext_lazy as _
 
 class Role(models.TextChoices):
     SUPERADMIN = "SUPERADMIN", _("Super Admin")
-    TEACHER = "TEACHER", _("Enseignant")
-    PARENT = "PARENT", _("Parent")
-    STUDENT = "STUDENT", _("Élève")
+    TEACHER    = "TEACHER",    _("Enseignant / Formateur")
+    PARENT     = "PARENT",     _("Parent")
+    STUDENT    = "STUDENT",    _("Élève / Apprenant")
+    CLIENT     = "CLIENT",     _("Client / Entrepreneur")
+    VENDOR     = "VENDOR",     _("Vendeur / Partenaire")
 
 
 class CustomUser(AbstractUser):
@@ -15,6 +17,52 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({self.role})"
+
+    @property
+    def is_admin(self):
+        return self.role == Role.SUPERADMIN or self.is_superuser
+
+    @property
+    def is_teacher(self):
+        return self.role == Role.TEACHER
+
+    @property
+    def is_client(self):
+        return self.role == Role.CLIENT
+
+
+def avatar_upload_path(instance, filename):
+    return f"avatars/{instance.user.id}/{filename}"
+
+
+class UserProfile(models.Model):
+    """Profil étendu pour tous les utilisateurs SaaS."""
+    user       = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="profile")
+    avatar     = models.ImageField(upload_to=avatar_upload_path, null=True, blank=True)
+    bio        = models.TextField(blank=True, default="")
+    telephone  = models.CharField(max_length=25, blank=True, default="")
+    ville      = models.CharField(max_length=100, blank=True, default="")
+    pays       = models.CharField(max_length=100, blank=True, default="Cameroun")
+    site_web   = models.URLField(blank=True, default="")
+    # Solde virtuel (pour programme d'affiliation, crédits IA, etc.)
+    solde      = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    # Plan souscrit
+    PLANS = [("free","Gratuit"),("pro","Pro"),("enterprise","Enterprise")]
+    plan       = models.CharField(max_length=20, choices=PLANS, default="free")
+    plan_expiry = models.DateField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Profil de {self.user.username}"
+
+    @property
+    def avatar_url(self):
+        if self.avatar:
+            return self.avatar.url
+        # Initiales par défaut
+        initials = (self.user.first_name[:1] + self.user.last_name[:1]).upper() or self.user.username[:2].upper()
+        return f"https://ui-avatars.com/api/?name={initials}&background=2E7D32&color=fff&size=128"
 
 
 class StudentProfile(models.Model):

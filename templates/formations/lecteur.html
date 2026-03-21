@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ lecon.titre }} — {{ formation.titre }} — E-Shelle{% endblock %}
+{% block nav_formations %}active{% endblock %}
+
+{% block extra_head %}
+<style>
+  .lecteur-layout { display:grid; grid-template-columns:300px 1fr; min-height:calc(100vh - 5rem); }
+  .lecteur-sidebar { background:var(--bg-surface); border-right:1px solid var(--border); overflow-y:auto; position:sticky; top:5rem; height:calc(100vh - 5rem); }
+  .lecon-item { display:flex; align-items:center; gap:.6rem; padding:.65rem 1rem; border-bottom:1px solid rgba(255,255,255,.04); text-decoration:none; transition:background .2s; font-size:.83rem; }
+  .lecon-item:hover { background:rgba(46,125,50,.06); }
+  .lecon-item.active { background:rgba(46,125,50,.12); border-left:3px solid var(--primary-light); }
+  .lecon-item.done .lecon-check { background:var(--primary-light); color:#fff; }
+  .lecon-check { width:20px; height:20px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:.65rem; flex-shrink:0; }
+  .lecon-titre { flex:1; color:var(--text-secondary); line-height:1.4; }
+  .lecon-item.active .lecon-titre { color:var(--text-primary); font-weight:600; }
+  .lecteur-main { padding:2rem; max-width:900px; }
+  .video-container { position:relative; padding-bottom:56.25%; height:0; border-radius:var(--radius-lg); overflow:hidden; background:#000; margin-bottom:2rem; }
+  .video-container iframe, .video-container video { position:absolute; inset:0; width:100%; height:100%; border:none; }
+  @media(max-width:768px) {
+    .lecteur-layout { grid-template-columns:1fr; }
+    .lecteur-sidebar { position:static; height:auto; max-height:280px; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="padding-top:5rem">
+  {# Barre du haut #}
+  <div style="background:var(--bg-surface);border-bottom:1px solid var(--border);padding:.75rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:5rem;z-index:50">
+    <a href="{% url 'formations:detail' slug=formation.slug %}" style="color:var(--text-muted);text-decoration:none;font-size:.85rem;display:flex;align-items:center;gap:.4rem">← {{ formation.titre|truncatechars:40 }}</a>
+    <div style="flex:1;height:6px;background:var(--bg-elevated);border-radius:99px;overflow:hidden;max-width:300px">
+      {% with pct=progression.lecon.chapitre.formation.inscription_set.first.progression_pct|default:0 %}
+      <div style="height:100%;width:{{ pct }}%;background:var(--gradient-cta);border-radius:99px;transition:width .5s"></div>
+      {% endwith %}
+    </div>
+    <div style="font-size:.78rem;color:var(--text-muted)">Leçon {{ lecon.ordre }}</div>
+  </div>
+
+  <div class="lecteur-layout">
+    {# Sidebar leçons #}
+    <aside class="lecteur-sidebar">
+      <div style="padding:1rem;border-bottom:1px solid var(--border)">
+        <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)">Programme</div>
+      </div>
+      {% for l in lecons_all %}
+      <a href="{% url 'formations:lecteur' formation_slug=formation.slug lecon_id=l.pk %}"
+         class="lecon-item {% if l.pk == lecon.pk %}active{% endif %} {% if l.pk in completees %}done{% endif %}">
+        <div class="lecon-check">{% if l.pk in completees %}✓{% endif %}</div>
+        <span style="font-size:.9rem;flex-shrink:0">{% if l.type_contenu == 'video' %}🎬{% elif l.type_contenu == 'quiz' %}📝{% elif l.type_contenu == 'pdf' %}📄{% else %}📖{% endif %}</span>
+        <span class="lecon-titre">{{ l.titre }}</span>
+        {% if l.duree_minutes %}<span style="font-size:.7rem;color:var(--text-muted);flex-shrink:0">{{ l.duree_minutes }}m</span>{% endif %}
+      </a>
+      {% endfor %}
+    </aside>
+
+    {# Zone principale #}
+    <main class="lecteur-main">
+      {# Contenu vidéo #}
+      {% if lecon.video_url %}
+      <div class="video-container">
+        {% if "youtube.com" in lecon.video_url or "youtu.be" in lecon.video_url %}
+        <iframe src="{{ lecon.video_url }}" allowfullscreen loading="lazy" title="{{ lecon.titre }}"></iframe>
+        {% else %}
+        <video controls><source src="{{ lecon.video_url }}"></video>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {# Titre + navigation #}
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:1rem">
+        <h1 style="font-family:var(--font-display);font-size:1.4rem;font-weight:700">{{ lecon.titre }}</h1>
+        <div style="display:flex;gap:.75rem">
+          {% if lecon_prev %}
+          <a href="{% url 'formations:lecteur' formation_slug=formation.slug lecon_id=lecon_prev.pk %}" class="btn btn-outline btn-sm">← Précédente</a>
+          {% endif %}
+          {% if lecon_next %}
+          <a href="{% url 'formations:lecteur' formation_slug=formation.slug lecon_id=lecon_next.pk %}" class="btn btn-primary btn-sm">Suivante →</a>
+          {% endif %}
+        </div>
+      </div>
+
+      {# Contenu texte #}
+      {% if lecon.contenu %}
+      <div class="glass-card" style="margin-bottom:1.5rem;line-height:1.8;color:var(--text-secondary);font-size:.92rem">
+        {{ lecon.contenu|safe }}
+      </div>
+      {% endif %}
+
+      {# PDF attaché #}
+      {% if lecon.fichier_pdf %}
+      <div class="glass-card" style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+        <div style="font-size:2rem">📄</div>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:.9rem">Ressource PDF</div>
+          <div style="font-size:.8rem;color:var(--text-muted)">Support de cours à télécharger</div>
+        </div>
+        <a href="{{ lecon.fichier_pdf.url }}" download class="btn btn-outline btn-sm">Télécharger</a>
+      </div>
+      {% endif %}
+
+      {# Marquer comme terminée #}
+      <div style="border-top:1px solid var(--border);padding-top:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+        {% if progression.completee %}
+        <div style="display:flex;align-items:center;gap:.5rem;color:var(--primary-light);font-weight:600">
+          ✅ Leçon terminée
+        </div>
+        {% else %}
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" name="complete" value="1" class="btn btn-primary" id="btn-complete"
+                  onclick="if(this.form.submit.bind){window.EShelle.launchConfetti()}">
+            ✅ Marquer comme terminée
+          </button>
+        </form>
+        {% endif %}
+        <div style="display:flex;gap:.75rem">
+          {% if lecon_prev %}
+          <a href="{% url 'formations:lecteur' formation_slug=formation.slug lecon_id=lecon_prev.pk %}" class="btn btn-outline">← Précédente</a>
+          {% endif %}
+          {% if lecon_next %}
+          <a href="{% url 'formations:lecteur' formation_slug=formation.slug lecon_id=lecon_next.pk %}" class="btn btn-primary">Suivante →</a>
+          {% else %}
+          <a href="{% url 'formations:detail' slug=formation.slug %}" class="btn btn-accent">🏆 Terminer la formation</a>
+          {% endif %}
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+{% if progression.completee == False %}
+<script>
+document.getElementById('btn-complete')?.addEventListener('click', function() {
+  setTimeout(() => window.EShelle?.launchConfetti?.(), 200);
+});
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Demande de Devis — E-Shelle{% endblock %}
+{% block nav_services %}active{% endblock %}
+
+{% block content %}
+<div style="padding-top:5rem">
+  <section class="section">
+    <div class="container" style="max-width:800px">
+      <div style="text-align:center;margin-bottom:3rem">
+        <div class="section-label" style="display:inline-flex">📋 Devis</div>
+        <h1 class="section-title" style="margin-top:1rem">Demande de devis <span class="text-gradient">gratuit</span></h1>
+        <p class="section-subtitle">Réponse garantie sous 24h. Accompagnement de A à Z.</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 280px;gap:2rem;align-items:start">
+        {# Formulaire #}
+        <div class="glass-card">
+          {% if messages %}
+          {% for msg in messages %}
+          <div style="background:rgba(46,125,50,.1);border:1px solid rgba(46,125,50,.3);border-radius:var(--radius-md);padding:1rem;margin-bottom:1.5rem;color:var(--primary-light)">
+            ✅ {{ msg }}
+          </div>
+          {% endfor %}
+          {% endif %}
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Nom complet *</label>
+                <input type="text" name="nom" class="form-control" placeholder="Jean Dupont" required value="{{ request.user.get_full_name }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email *</label>
+                <input type="email" name="email" class="form-control" placeholder="jean@email.com" required value="{{ request.user.email }}">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Téléphone</label>
+                <input type="tel" name="telephone" class="form-control" placeholder="+237 6XX XXX XXX">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Entreprise</label>
+                <input type="text" name="entreprise" class="form-control" placeholder="Votre entreprise">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Type de projet</label>
+                <select name="type_projet" class="form-control">
+                  <option value="site_vitrine">Site Vitrine</option>
+                  <option value="ecommerce">E-Commerce</option>
+                  <option value="app_web">Application Web</option>
+                  <option value="blog">Blog / Média</option>
+                  <option value="saas">Plateforme SaaS</option>
+                  <option value="mobile">App Mobile</option>
+                  <option value="autre">Autre</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Budget estimé</label>
+                <select name="budget" class="form-control">
+                  <option value="nd">Non défini</option>
+                  <option value="budget_s">&lt; 100 000 FCFA</option>
+                  <option value="budget_m">100 000 – 300 000 FCFA</option>
+                  <option value="budget_l">300 000 – 700 000 FCFA</option>
+                  <option value="budget_xl">&gt; 700 000 FCFA</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Délai souhaité</label>
+              <select name="delai" class="form-control">
+                <option value="urgent">🔥 Urgent — sous 7 jours</option>
+                <option value="normal" selected>📅 Normal — 2 à 4 semaines</option>
+                <option value="flexible">🌿 Flexible — + d'un mois</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Description du projet *</label>
+              <textarea name="description" class="form-control" rows="5" placeholder="Décrivez votre projet : objectif, fonctionnalités souhaitées, public cible, inspiration…" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block btn-lg">📋 Envoyer ma demande →</button>
+          </form>
+        </div>
+
+        {# Infos latérales #}
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div class="glass-card" style="padding:1.25rem;border:1px solid rgba(46,125,50,.2);background:rgba(46,125,50,.05)">
+            <div style="font-weight:700;margin-bottom:.75rem;color:var(--primary-light)">🎁 Devis 100% gratuit</div>
+            <p style="font-size:.83rem;color:var(--text-secondary);line-height:1.6">Aucun engagement. Nous analysons votre projet et vous envoyons une proposition détaillée.</p>
+          </div>
+          <div class="glass-card" style="padding:1.25rem">
+            <div style="font-weight:700;margin-bottom:.75rem">⚡ Réponse sous 24h</div>
+            <p style="font-size:.83rem;color:var(--text-secondary);line-height:1.6">Notre équipe examine chaque demande et revient vers vous rapidement avec un chiffrage précis.</p>
+          </div>
+          <div class="glass-card" style="padding:1.25rem">
+            <div style="font-weight:700;margin-bottom:.5rem">📞 Préférez un appel ?</div>
+            <a href="https://wa.me/237000000000" target="_blank" class="btn btn-outline btn-sm btn-block" style="margin-top:.75rem">💬 WhatsApp direct</a>
+          </div>
+          <div class="glass-card" style="padding:1.25rem;text-align:center">
+            <div style="font-size:1.8rem;margin-bottom:.5rem">🌍</div>
+            <div style="font-size:.83rem;color:var(--text-secondary)">Nous travaillons avec des clients à travers toute l'Afrique.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
