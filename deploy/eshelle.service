@@ -1,0 +1,46 @@
+# Systemd service — Gunicorn pour E-Shelle
+# Fichier à placer : /etc/systemd/system/eshelle.service
+# Activer          : sudo systemctl enable eshelle && sudo systemctl start eshelle
+
+[Unit]
+Description=E-Shelle — Gunicorn WSGI Server
+After=network.target
+
+[Service]
+User=eshelle
+Group=www-data
+WorkingDirectory=/home/eshelle/app
+
+# Charger les variables d'environnement depuis .env
+EnvironmentFile=/home/eshelle/app/.env
+
+# Dossier pour le socket Unix
+RuntimeDirectory=eshelle
+RuntimeDirectoryMode=0755
+
+# Démarrage : Gunicorn avec workers
+ExecStart=/home/eshelle/app/.venv/bin/gunicorn \
+    --workers 3 \
+    --worker-class sync \
+    --bind unix:/run/eshelle/gunicorn.sock \
+    --timeout 120 \
+    --keep-alive 5 \
+    --access-logfile /var/log/eshelle/access.log \
+    --error-logfile  /var/log/eshelle/error.log \
+    --log-level info \
+    edu_cm.wsgi:application
+
+# Rechargement gracieux (sans coupure)
+ExecReload=/bin/kill -s HUP $MAINPID
+
+# Redémarrage automatique en cas de crash
+Restart=on-failure
+RestartSec=5s
+
+# Sécurité supplémentaire
+PrivateTmp=true
+ProtectSystem=full
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

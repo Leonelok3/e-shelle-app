@@ -78,13 +78,29 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "edu_cm.wsgi.application"
 
-# Base de données (SQLite dev)
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+# Base de données — SQLite en dev, PostgreSQL en prod (via DATABASE_URL)
+DATABASE_URL = os.getenv("DATABASE_URL", "")
+if DATABASE_URL:
+    import urllib.parse as _up
+    _u = _up.urlparse(DATABASE_URL)
+    DATABASES = {
+        "default": {
+            "ENGINE":   "django.db.backends.postgresql",
+            "NAME":     _u.path.lstrip("/"),
+            "USER":     _u.username,
+            "PASSWORD": _u.password,
+            "HOST":     _u.hostname,
+            "PORT":     str(_u.port or 5432),
+            "CONN_MAX_AGE": 60,
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 # Mot de passe
 AUTH_PASSWORD_VALIDATORS = [
@@ -133,6 +149,15 @@ EMAIL_USE_TLS  = True
 EMAIL_HOST_USER     = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 DEFAULT_FROM_EMAIL  = os.getenv("DEFAULT_FROM_EMAIL", "noreply@e-shelle.com")
+
+# Sécurité HTTPS (activée quand DEBUG=False)
+if not DEBUG:
+    SESSION_COOKIE_SECURE  = os.getenv("SESSION_COOKIE_SECURE",  "True").lower() == "true"
+    CSRF_COOKIE_SECURE     = os.getenv("CSRF_COOKIE_SECURE",     "True").lower() == "true"
+    SECURE_HSTS_SECONDS    = int(os.getenv("SECURE_HSTS_SECONDS", "63072000"))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD    = True
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Taille max upload (fichiers produits digitaux)
 DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800   # 50 Mo
