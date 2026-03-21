@@ -20,6 +20,10 @@ sudo -u $APP_USER "$APP_DIR/.venv/bin/python" "$APP_DIR/manage.py" migrate --noi
 echo "→ Collecte des statiques..."
 sudo -u $APP_USER "$APP_DIR/.venv/bin/python" "$APP_DIR/manage.py" collectstatic --noinput
 
+echo "→ Correction permissions staticfiles..."
+chmod o+x /home/eshelle /home/eshelle/app
+chmod -R o+r /home/eshelle/app/staticfiles/
+
 echo "→ Rechargement Gunicorn (gracieux)..."
 systemctl reload eshelle 2>/dev/null || systemctl restart eshelle
 

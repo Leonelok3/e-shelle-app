@@ -104,7 +104,14 @@ else:
     print('Superuser déjà existant.')
 "
 
-# ── 8. Logs ─────────────────────────────────────────────────────────────────
+# ── 8. Permissions Nginx → staticfiles ──────────────────────────────────────
+# Ubuntu crée les home dirs en 700 → www-data (Nginx) ne peut pas lire
+chmod o+x /home/$APP_USER
+chmod o+x "$APP_DIR"
+chmod -R o+r "$APP_DIR/staticfiles/"
+echo "✔  Permissions staticfiles corrigées pour Nginx"
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
 mkdir -p /var/log/eshelle
 chown $APP_USER:www-data /var/log/eshelle
 
