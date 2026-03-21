@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="h4 mb-3">Dashboard Parent</h2>
+
+{% if not children_cards %}
+  <div class="alert alert-info">Aucun enfant lié à ce compte.</div>
+{% endif %}
+
+<div class="row g-3">
+  {% for c in children_cards %}
+  <div class="col-lg-6">
+    <div class="card p-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <div class="h5 mb-0">{{ c.child.username }}</div>
+          <div class="text-muted small">Classe: {{ c.class_level|default:"Non définie" }}</div>
+        </div>
+        <span class="badge bg-primary">Moy: {{ c.avg_score }}</span>
+      </div>
+
+      <div class="row g-2 mt-2">
+        <div class="col-4"><div class="p-2 bg-light rounded"><div class="small text-muted">Tentatives</div><div class="fw-bold">{{ c.total }}</div></div></div>
+        <div class="col-4"><div class="p-2 bg-light rounded"><div class="small text-muted">Meilleur</div><div class="fw-bold">{{ c.best }}</div></div></div>
+        <div class="col-4"><div class="p-2 bg-light rounded"><div class="small text-muted">Moyenne</div><div class="fw-bold">{{ c.avg_score }}</div></div></div>
+      </div>
+
+      <hr>
+      <div class="small fw-bold mb-1">Dernières tentatives</div>
+      <ul class="small mb-0">
+        {% for a in c.recent|slice:":5" %}
+          <li>{{ a.created_at|date:"d/m H:i" }} — {{ a.score }}/{{ a.max_score }}</li>
+        {% empty %}
+          <li class="text-muted">Aucune tentative</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

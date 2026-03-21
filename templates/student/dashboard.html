@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="h4 mb-3">Dashboard Élève</h2>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-4"><div class="card p-3"><div class="text-muted">Tentatives</div><div class="h3">{{ stats.total }}</div></div></div>
+  <div class="col-md-4"><div class="card p-3"><div class="text-muted">Moyenne</div><div class="h3">{{ stats.avg_score }}</div></div></div>
+  <div class="col-md-4"><div class="card p-3"><div class="text-muted">Meilleur score</div><div class="h3">{{ stats.best }}</div></div></div>
+</div>
+
+<div class="card p-3 mb-3">
+  <h3 class="h6 mb-2">Évolution des scores</h3>
+  <canvas id="scoreChart" height="90"></canvas>
+  {{ stats.labels|json_script:"labels-data" }}
+  {{ stats.data|json_script:"scores-data" }}
+</div>
+
+<div class="card p-3">
+  <h3 class="h6 mb-2">Dernières tentatives</h3>
+  <div class="table-responsive">
+    <table class="table table-sm">
+      <thead><tr><th>Date</th><th>Type</th><th>Titre</th><th>Score</th></tr></thead>
+      <tbody>
+      {% for a in stats.recent %}
+        <tr>
+          <td>{{ a.created_at|date:"d/m/Y H:i" }}</td>
+          <td>{{ a.attempt_type }}</td>
+          <td>{{ a.exam.title|default:a.exercise.title }}</td>
+          <td>{{ a.score }}/{{ a.max_score }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="text-muted">Aucune tentative.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const labels = JSON.parse(document.getElementById("labels-data").textContent);
+  const scores = JSON.parse(document.getElementById("scores-data").textContent);
+
+  new Chart(document.getElementById("scoreChart"), {
+    type: "line",
+    data: { labels, datasets: [{ label: "Score", data: scores, tension: 0.25 }] },
+    options: { responsive: true }
+  });
+</script>
+{% endblock %}

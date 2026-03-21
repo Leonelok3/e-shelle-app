@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="h4 mb-3">Dashboard Enseignant</h2>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card p-3">
+      <h3 class="h6 mb-2">Dernières tentatives</h3>
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead><tr><th>Date</th><th>Élève</th><th>Type</th><th>Score</th></tr></thead>
+          <tbody>
+            {% for a in recent_attempts %}
+              <tr>
+                <td>{{ a.created_at|date:"d/m H:i" }}</td>
+                <td>{{ a.user.username }}</td>
+                <td>{{ a.attempt_type }}</td>
+                <td>{{ a.score }}/{{ a.max_score }}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="4" class="text-muted">Aucune tentative.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card p-3">
+      <h3 class="h6 mb-2">Top 10 (moyenne)</h3>
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead><tr><th>Élève</th><th>Moyenne</th><th>Tentatives</th></tr></thead>
+          <tbody>
+            {% for s in leaderboard %}
+              <tr>
+                <td>{{ s.user__username }}</td>
+                <td>{{ s.avg|floatformat:2 }}</td>
+                <td>{{ s.total }}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="3" class="text-muted">Pas assez de données.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
