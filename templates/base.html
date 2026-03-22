@@ -30,7 +30,7 @@
   {% block extra_css %}{% endblock %}
 
   {# Favicon SVG inline #}
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230A0A0A'/><path d='M8 16 C8 10 14 6 16 11 C18 6 24 10 24 16' fill='%232E7D32'/><rect x='8' y='23' width='16' height='3' rx='1.5' fill='%23F57C00'/></svg>">
+  <link rel="icon" href="{% static 'img/logo.png' %}">
 
   {% block extra_head %}{% endblock %}
 </head>
@@ -50,14 +50,7 @@
 
     {# Logo E-Shelle #}
     <a href="/" class="navbar-logo">
-      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="36" height="36">
-        <rect width="40" height="40" rx="10" fill="#0D1F0D"/>
-        <path d="M10 20 C10 12 18 8 20 14 C22 8 30 12 30 20" fill="#2E7D32"/>
-        <line x1="20" y1="14" x2="20" y2="28" stroke="#4CAF50" stroke-width="2" stroke-linecap="round"/>
-        <path d="M20 20 C22 16 28 16 26 22 C24 25 20 24 20 20Z" fill="#4CAF50" opacity="0.8"/>
-        <rect x="10" y="29" width="20" height="4" rx="2" fill="#F57C00"/>
-      </svg>
-      E-<span>Shelle</span>
+      <img src="{% static 'img/logo.png' %}" alt="E-Shelle" height="38" style="height:38px;width:auto;display:block;border-radius:6px;">
     </a>
 
     {# Liens de navigation #}
@@ -217,13 +210,7 @@
       {# À propos #}
       <div class="footer-brand">
         <div class="footer-logo">
-          <svg viewBox="0 0 32 32" width="26" height="26" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <rect width="32" height="32" rx="8" fill="#0D1F0D"/>
-            <path d="M8 16 C8 10 14 6 16 11 C18 6 24 10 24 16" fill="#2E7D32"/>
-            <line x1="16" y1="11" x2="16" y2="22" stroke="#4CAF50" stroke-width="1.5" stroke-linecap="round"/>
-            <rect x="8" y="23" width="16" height="3" rx="1.5" fill="#F57C00"/>
-          </svg>
-          E-Shelle
+          <img src="{% static 'img/logo.png' %}" alt="E-Shelle" height="32" style="height:32px;width:auto;display:inline-block;border-radius:5px;vertical-align:middle;margin-right:.4rem;">
         </div>
         <p>Plateforme SaaS africaine tout-en-un. Formation, boutique digitale, création web IA et automatisation.<br>
         <strong style="color:var(--primary-light)">L'expérience à votre service.</strong></p>
