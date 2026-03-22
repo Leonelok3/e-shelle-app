@@ -1505,13 +1505,8 @@ select.form-control { cursor: pointer; }
   .navbar-nav     { display: none !important; }    /* liens cachés → menu burger */
   .burger         { display: flex !important; }
 
-  /* Navbar actions : cacher tout sauf burger sur petit écran */
-  .navbar-actions .btn-icon,
-  .navbar-actions .notif-bell,
-  .navbar-actions [data-open-cart],
-  .navbar-actions .btn-outline,
-  .navbar-actions .btn-accent,
-  .navbar-actions .btn-sm:not(.burger) { display: none !important; }
+  /* Navbar actions : cacher TOUT sauf le burger (ciblé par ID) */
+  .navbar-actions > *:not(#burger-btn) { display: none !important; }
 
   /* Contenu général */
   .hero { padding-top: 4.5rem; min-height: auto; padding-bottom: 4rem; }
