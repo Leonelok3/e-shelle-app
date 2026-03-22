@@ -44,8 +44,9 @@
       {% endwith %}
     </div>
 
-    <!-- Zone réponse QCM -->
+    <!-- Zone réponse -->
     {% if exercice.type_exercice == 'qcm' and exercice.options_qcm %}
+    <!-- QCM : correction automatique -->
     <div class="math-card" style="margin-bottom:1.5rem" id="zone-reponse">
       <div style="font-weight:600;margin-bottom:1rem">Choisis la bonne réponse :</div>
       {% for opt in exercice.options_qcm %}
@@ -55,77 +56,163 @@
         <span>{{ opt.texte }}</span>
       </label>
       {% endfor %}
-      <button class="btn-math" style="margin-top:1rem;width:100%" onclick="soumettre()">Vérifier ma réponse</button>
+      <button class="btn-math" style="margin-top:1rem;width:100%" onclick="soumettreQCM()">Vérifier ma réponse</button>
     </div>
+
     {% else %}
-    <div class="math-card" style="margin-bottom:1.5rem">
+    <!-- Exercice ouvert : réponse libre + auto-évaluation -->
+    <div class="math-card" style="margin-bottom:1.5rem" id="zone-reponse">
       <div style="font-weight:600;margin-bottom:.75rem">Ta réponse :</div>
       <textarea id="reponse-texte" rows="5" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--math-border);border-radius:8px;padding:.85rem;color:var(--le-text);resize:vertical;font-size:.95rem" placeholder="Rédige ta solution ici…"></textarea>
-      <button class="btn-math" style="margin-top:1rem" onclick="soumettre()">Soumettre</button>
+      <button id="btn-submit" class="btn-math" style="margin-top:1rem" onclick="soumettreOuvert()">Soumettre et voir la correction</button>
     </div>
     {% endif %}
 
-    <!-- Résultat (caché) -->
-    <div id="zone-resultat" style="display:none"></div>
+    <!-- Résultat score (affiché après auto-évaluation ou QCM) -->
+    <div id="zone-resultat" style="display:none;margin-bottom:1.5rem"></div>
 
-    <!-- Correction (cachée) -->
-    <div id="zone-correction" style="display:none" class="math-card">
+    <!-- Correction détaillée -->
+    <div id="zone-correction" style="display:none;margin-bottom:1.5rem" class="math-card">
       <div style="font-weight:700;color:var(--math-primary);margin-bottom:1rem">📋 Correction détaillée</div>
       <div id="correction-contenu"></div>
     </div>
+
+    <!-- Auto-évaluation (exercices ouverts seulement) -->
+    {% if exercice.type_exercice != 'qcm' %}
+    <div id="zone-auto-eval" style="display:none;margin-bottom:1.5rem" class="math-card">
+      <div style="font-weight:700;margin-bottom:.5rem">📊 Compare ta réponse avec la correction</div>
+      <p style="color:var(--math-muted);font-size:.9rem;margin-bottom:1.25rem">Regarde la correction ci-dessus et évalue honnêtement ta réponse :</p>
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+        <button class="btn-auto-eval" onclick="autoEvaluer(1.0)"
+          style="flex:1;min-width:160px;padding:.85rem 1rem;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:.9rem;background:rgba(76,175,80,0.15);color:#4CAF50;border:1px solid rgba(76,175,80,0.3)">
+          ✅ J'ai réussi<br><span style="font-size:.75rem;opacity:.8">100% des points</span>
+        </button>
+        <button class="btn-auto-eval" onclick="autoEvaluer(0.5)"
+          style="flex:1;min-width:160px;padding:.85rem 1rem;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:.9rem;background:rgba(255,193,7,0.15);color:#FFC107;border:1px solid rgba(255,193,7,0.3)">
+          🔶 Partiellement<br><span style="font-size:.75rem;opacity:.8">50% des points</span>
+        </button>
+        <button class="btn-auto-eval" onclick="autoEvaluer(0.0)"
+          style="flex:1;min-width:160px;padding:.85rem 1rem;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:.9rem;background:rgba(244,67,54,0.15);color:#F44336;border:1px solid rgba(244,67,54,0.3)">
+          ❌ Pas encore<br><span style="font-size:.75rem;opacity:.8">0% des points</span>
+        </button>
+      </div>
+    </div>
+    {% endif %}
+
   </div>
 </div>
 
 <script>
 const exerciceId = {{ exercice.pk }};
-function getCookie(n) { let v=document.cookie.match('(^|;) ?'+n+'=([^;]*)(;|$)'); return v?v[2]:null; }
+const bareme = {{ exercice.bareme }};
+let reponseEleve = '';
 
-function soumettre() {
-  let reponses = {};
-  {% if exercice.type_exercice == 'qcm' %}
+function getCookie(n) {
+  let v = document.cookie.match('(^|;) ?' + n + '=([^;]*)(;|$)');
+  return v ? v[2] : null;
+}
+
+// ── QCM : correction automatique ────────────────────────────────
+function soumettreQCM() {
   const sel = document.querySelector('input[name="qcm"]:checked');
   if (!sel) { alert('Sélectionne une réponse'); return; }
-  reponses = {options: [sel.value]};
-  {% else %}
-  reponses = {texte: document.getElementById('reponse-texte').value};
-  {% endif %}
-
   fetch(`/maths/exercice/${exerciceId}/soumettre/`, {
     method: 'POST',
     headers: {'X-CSRFToken': getCookie('csrftoken'), 'Content-Type': 'application/json'},
-    body: JSON.stringify({reponses})
+    body: JSON.stringify({reponses: {options: [sel.value]}})
   }).then(r => r.json()).then(data => {
-    const zone = document.getElementById('zone-resultat');
-    const correct = data.score >= 100;
-    zone.style.display = 'block';
-    zone.innerHTML = `<div class="math-card" style="border-color:${correct?'#4CAF50':'#F44336'};background:${correct?'rgba(76,175,80,0.1)':'rgba(244,67,54,0.1)'};margin-bottom:1rem">
-      <div style="font-size:1.75rem;margin-bottom:.5rem">${correct?'🎉':'💪'}</div>
-      <div style="font-size:1.25rem;font-weight:700">${data.score}% — ${correct?'Bonne réponse !':'Essaie encore'}</div>
-      <div style="font-size:.88rem;color:var(--math-muted);margin-top:.25rem">${data.points_obtenus} / {{ exercice.bareme }} points</div>
-      <button onclick="voirCorrection()" class="btn-math-outline" style="margin-top:1rem;font-size:.88rem">📋 Voir la correction</button>
-    </div>`;
+    afficherScore(data.score, data.points_obtenus);
+    // Coloriser les options
+    {% if exercice.options_qcm %}
+    {% for opt in exercice.options_qcm %}
+    {% if opt.correct %}
+    const optCorrecte = document.getElementById('opt-{{ opt.label }}');
+    if (optCorrecte) optCorrecte.style.borderColor = '#4CAF50';
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    if (data.score < 100) {
+      // Montrer la correction pour QCM raté
+      voirCorrectionAuto();
+    }
   });
 }
 
-function voirCorrection() {
+// ── Exercice ouvert : afficher correction puis auto-évaluer ─────
+function soumettreOuvert() {
+  const texte = document.getElementById('reponse-texte').value.trim();
+  if (!texte) { alert('Rédige ta réponse avant de soumettre'); return; }
+  reponseEleve = texte;
+  document.getElementById('btn-submit').disabled = true;
+  document.getElementById('btn-submit').textContent = 'Chargement…';
+  voirCorrectionOuvert();
+}
+
+function voirCorrectionOuvert() {
   fetch(`/maths/exercice/${exerciceId}/correction/`, {
     headers: {'X-CSRFToken': getCookie('csrftoken')}
   }).then(r => r.json()).then(data => {
-    const c = data.correction;
-    const zone = document.getElementById('zone-correction');
-    const cont = document.getElementById('correction-contenu');
-    let html = '';
-    if (c.methode) html += `<div class="bloc-methode" style="margin-bottom:1rem"><strong>Méthode :</strong> ${c.methode}</div>`;
-    if (c.etapes) c.etapes.forEach(e => {
-      html += `<div style="display:flex;gap:.75rem;padding:.6rem 0;border-top:1px solid rgba(255,255,255,0.05)">
-        <span style="color:var(--math-primary);font-weight:700;flex-shrink:0">${e.numero}.</span>
-        <div><div>${e.texte}</div>${e.justification?`<div style="font-size:.82rem;color:var(--math-muted);margin-top:.2rem">${e.justification}</div>`:''}</div>
-      </div>`;
-    });
-    if (c.piege) html += `<div class="bloc-remarque" style="margin-top:1rem">⚠️ Piège fréquent : ${c.piege}</div>`;
-    cont.innerHTML = html;
-    zone.style.display = 'block';
+    afficherCorrection(data.correction);
+    document.getElementById('zone-auto-eval').style.display = 'block';
+    document.getElementById('zone-reponse').style.display = 'none';
   });
+}
+
+function autoEvaluer(scoreVal) {
+  document.querySelectorAll('.btn-auto-eval').forEach(b => b.disabled = true);
+  fetch(`/maths/exercice/${exerciceId}/soumettre/`, {
+    method: 'POST',
+    headers: {'X-CSRFToken': getCookie('csrftoken'), 'Content-Type': 'application/json'},
+    body: JSON.stringify({reponses: {texte: reponseEleve}, score_auto: scoreVal})
+  }).then(r => r.json()).then(data => {
+    afficherScore(data.score, data.points_obtenus);
+    document.getElementById('zone-auto-eval').style.display = 'none';
+  });
+}
+
+// ── Afficher correction (QCM raté) ──────────────────────────────
+function voirCorrectionAuto() {
+  fetch(`/maths/exercice/${exerciceId}/correction/`, {
+    headers: {'X-CSRFToken': getCookie('csrftoken')}
+  }).then(r => r.json()).then(data => {
+    afficherCorrection(data.correction);
+  });
+}
+
+// Bouton "Voir la correction" dans le résultat (si besoin)
+function voirCorrection() {
+  voirCorrectionAuto();
+}
+
+// ── Rendu de la correction ───────────────────────────────────────
+function afficherCorrection(c) {
+  let html = '';
+  if (c.methode) html += `<div class="bloc-methode" style="margin-bottom:1rem"><strong>Méthode :</strong> ${c.methode}</div>`;
+  if (c.etapes) c.etapes.forEach(e => {
+    html += `<div style="display:flex;gap:.75rem;padding:.6rem 0;border-top:1px solid rgba(255,255,255,0.05)">
+      <span style="color:var(--math-primary);font-weight:700;flex-shrink:0">${e.numero}.</span>
+      <div><div>${e.texte}</div>${e.justification ? `<div style="font-size:.82rem;color:var(--math-muted);margin-top:.2rem">${e.justification}</div>` : ''}</div>
+    </div>`;
+  });
+  if (c.reponse_finale) html += `<div style="margin-top:1rem;padding:1rem;background:rgba(76,175,80,0.1);border-radius:8px;border-left:3px solid #4CAF50;font-weight:600">✅ Réponse : ${c.reponse_finale}</div>`;
+  if (c.piege) html += `<div class="bloc-remarque" style="margin-top:1rem">⚠️ Piège fréquent : ${c.piege}</div>`;
+  document.getElementById('correction-contenu').innerHTML = html;
+  document.getElementById('zone-correction').style.display = 'block';
+}
+
+// ── Afficher le score final ──────────────────────────────────────
+function afficherScore(scorePct, pointsObtenus) {
+  const zone = document.getElementById('zone-resultat');
+  const color = scorePct >= 80 ? '#4CAF50' : scorePct >= 50 ? '#FFC107' : '#F44336';
+  const emoji = scorePct >= 80 ? '🎉' : scorePct >= 50 ? '🔶' : '💪';
+  const msg   = scorePct >= 80 ? 'Excellent !' : scorePct >= 50 ? 'Bien essayé !' : 'Continue à pratiquer';
+  zone.style.display = 'block';
+  zone.innerHTML = `<div class="math-card" style="border-color:${color};background:rgba(0,0,0,0.2)">
+    <div style="font-size:1.75rem;margin-bottom:.5rem">${emoji}</div>
+    <div style="font-size:1.25rem;font-weight:700">${scorePct}% — ${msg}</div>
+    <div style="font-size:.88rem;color:var(--math-muted);margin-top:.25rem">${pointsObtenus} / ${bareme} points enregistrés</div>
+    <button onclick="voirCorrection()" class="btn-math-outline" style="margin-top:1rem;font-size:.88rem">📋 Voir la correction</button>
+  </div>`;
 }
 </script>
 {% endblock %}

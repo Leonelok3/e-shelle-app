@@ -125,7 +125,13 @@ def soumettre_exercice(request, pk):
     profil, _ = ProfilEleve.objects.get_or_create(user=request.user)
     data = json.loads(request.body)
     reponses = data.get('reponses', {})
-    score = _calculer_score_exercice(exercice, reponses)
+    score_auto = data.get('score_auto')  # Auto-évaluation pour exercices ouverts
+
+    if score_auto is not None:
+        score = float(score_auto)
+    else:
+        score = _calculer_score_exercice(exercice, reponses)
+
     tentative = ResultatExercice.objects.filter(eleve=profil, exercice=exercice).count() + 1
     resultat = ResultatExercice.objects.create(
         eleve=profil, exercice=exercice,
