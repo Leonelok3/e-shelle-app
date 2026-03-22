@@ -58,10 +58,7 @@ def _level_from_score(score: float) -> str:
 #  HOME / HUB ALLEMAND
 # =========================
 
-@login_required
 def home(request):
-    profile = _get_or_create_profile(request.user)
-
     exams = (
         GermanExam.objects
         .filter(is_active=True)
@@ -73,12 +70,16 @@ def home(request):
     for exam in exams:
         exams_by_level[exam.level].append(exam)
 
-    last_sessions = (
-        GermanTestSession.objects
-        .filter(user=request.user)
-        .select_related("exam")
-        .order_by("-started_at")[:5]
-    )
+    profile = None
+    last_sessions = []
+    if request.user.is_authenticated:
+        profile = _get_or_create_profile(request.user)
+        last_sessions = (
+            GermanTestSession.objects
+            .filter(user=request.user)
+            .select_related("exam")
+            .order_by("-started_at")[:5]
+        )
 
     context = {
         "profile": profile,
@@ -111,30 +112,28 @@ LEVEL_DESCRIPTIONS = {
 }
 
 
-@login_required
 def level_detail(request, level_code: str):
     """
     Page 'Niveau B1' etc.
-    Affiche tous les examens, leçons, ressources et simulations liés à ce niveau.
     """
     level_code = level_code.upper()
     if level_code not in LEVEL_LABELS:
-        # Niveau inconnu => 404
         return redirect("germanprep:home")
-
-    profile = _get_or_create_profile(request.user)
 
     exams = GermanExam.objects.filter(level=level_code, is_active=True)
     lessons = GermanLesson.objects.filter(exam__level=level_code).select_related("exam")
     resources = GermanResource.objects.filter(exam__level=level_code).select_related("exam", "lesson")
 
-    # Derniers tests pour ce niveau
-    sessions = (
-        GermanTestSession.objects
-        .filter(user=request.user, exam__level=level_code)
-        .select_related("exam")
-        .order_by("-started_at")[:5]
-    )
+    profile = None
+    sessions = []
+    if request.user.is_authenticated:
+        profile = _get_or_create_profile(request.user)
+        sessions = (
+            GermanTestSession.objects
+            .filter(user=request.user, exam__level=level_code)
+            .select_related("exam")
+            .order_by("-started_at")[:5]
+        )
 
     context = {
         "level_code": level_code,
@@ -197,20 +196,22 @@ def placement_test(request):
 #  DÉTAIL D'UN EXAMEN = ESPACE DE COURS
 # =========================
 
-@login_required
 def exam_detail(request, exam_slug):
     exam = get_object_or_404(GermanExam, slug=exam_slug, is_active=True)
-    profile = _get_or_create_profile(request.user)
 
     lessons = exam.lessons.all()
     exam_resources = exam.resources.filter(lesson__isnull=True)
 
-    last_session = (
-        GermanTestSession.objects
-        .filter(user=request.user, exam=exam)
-        .order_by("-started_at")
-        .first()
-    )
+    profile = None
+    last_session = None
+    if request.user.is_authenticated:
+        profile = _get_or_create_profile(request.user)
+        last_session = (
+            GermanTestSession.objects
+            .filter(user=request.user, exam=exam)
+            .order_by("-started_at")
+            .first()
+        )
 
     context = {
         "exam": exam,
@@ -226,7 +227,6 @@ def exam_detail(request, exam_slug):
 #  PAGE D'UNE LEÇON
 # =========================
 
-@login_required
 def lesson_detail(request, exam_slug, lesson_id):
     exam = get_object_or_404(GermanExam, slug=exam_slug, is_active=True)
     lesson = get_object_or_404(GermanLesson, id=lesson_id, exam=exam)
@@ -247,15 +247,10 @@ def lesson_detail(request, exam_slug, lesson_id):
 #  SIMULATION D'EXAMEN
 # =========================
 
-@login_required
 def take_practice_test(request, exam_id):
     """
-    Simulation type examen pour un GermanExam donné.
-    - utilise les GermanExercise liés aux leçons de cet examen
-    - crée une GermanTestSession
-    - enregistre les réponses GermanUserAnswer (LIÉES À LA SESSION)
-    - met à jour le profil (XP)
-    - redirige vers la page de résultat détaillé
+    Simulation type examen (accessible sans connexion).
+    Si connecté : sauvegarde en DB + XP. Sinon : résultat en session Django.
     """
     from .models import (
         GermanExam,
@@ -265,83 +260,57 @@ def take_practice_test(request, exam_id):
     )
 
     exam = get_object_or_404(GermanExam, id=exam_id, is_active=True)
-    exercises = GermanExercise.objects.filter(
-        lesson__exam=exam
-    ).order_by("id")
+    exercises = GermanExercise.objects.filter(lesson__exam=exam).order_by("id")
 
     if request.method == "POST":
-        # -------------------------
-        # 1️⃣ Création de la session
-        # -------------------------
-        session = GermanTestSession.objects.create(
-            user=request.user,
-            exam=exam,
-        )
-
         correct_count = 0
         total = exercises.count()
 
-        # -------------------------
-        # 2️⃣ Parcours des réponses
-        # -------------------------
         for ex in exercises:
             selected = request.POST.get(f"exercise_{ex.id}")
-            if not selected:
-                continue
-
-            is_correct = (selected == ex.correct_option)
-            if is_correct:
+            if selected and selected == ex.correct_option:
                 correct_count += 1
 
-            # ✅ CORRECTION CRITIQUE : session bien liée
-            GermanUserAnswer.objects.create(
-                session=session,
-                exercise=ex,
-                selected_option=selected,
-                is_correct=is_correct,
-            )
-
-        # -------------------------
-        # 3️⃣ Calcul du score
-        # -------------------------
         score = (correct_count / total) * 100 if total > 0 else 0
 
-        session.score = score
-        session.finished_at = timezone.now()
-        session.total_questions = total
-        session.correct_answers = correct_count
-
-        # -------------------------
-        # 4️⃣ Temps passé (OPTIONNEL)
-        # -------------------------
-        duration = request.POST.get("duration_seconds")
-        try:
-            session.duration_seconds = int(duration)
-        except (TypeError, ValueError):
-            session.duration_seconds = 0
-
-        session.save()
-
-        # -------------------------
-        # 5️⃣ Mise à jour du profil
-        # -------------------------
-        profile = _get_or_create_profile(request.user)
-        try:
-            gained_xp = profile.add_result(score, total)
-        except TypeError:
-            gained_xp = None
-
-        request.session["last_german_xp_gain"] = gained_xp
-
-        # -------------------------
-        # 6️⃣ Redirection résultat
-        # -------------------------
-        return redirect(
-            "germanprep:test_result",
-            session_id=session.id
-        )
-
-    # GET → afficher le test
+        if request.user.is_authenticated:
+            session = GermanTestSession.objects.create(user=request.user, exam=exam)
+            for ex in exercises:
+                selected = request.POST.get(f"exercise_{ex.id}")
+                if selected:
+                    GermanUserAnswer.objects.create(
+                        session=session,
+                        exercise=ex,
+                        selected_option=selected,
+                        is_correct=(selected == ex.correct_option),
+                    )
+            session.score = score
+            session.finished_at = timezone.now()
+            session.total_questions = total
+            session.correct_answers = correct_count
+            try:
+                session.duration_seconds = int(request.POST.get("duration_seconds", 0))
+            except (TypeError, ValueError):
+                session.duration_seconds = 0
+            session.save()
+            profile = _get_or_create_profile(request.user)
+            try:
+                gained_xp = profile.add_result(score, total)
+            except TypeError:
+                gained_xp = None
+            request.session["last_german_xp_gain"] = gained_xp
+            return redirect("germanprep:test_result", session_id=session.id)
+        else:
+            # Anonyme : stocker en session Django, rediriger vers résultat simplifié
+            request.session["anon_de_result"] = {
+                "exam_id": exam.id,
+                "exam_title": exam.title,
+                "exam_level": exam.level,
+                "score": round(score, 1),
+                "correct": correct_count,
+                "total": total,
+            }
+            return redirect("germanprep:anon_result")
 
     context = {
         "exam": exam,
@@ -352,22 +321,18 @@ def take_practice_test(request, exam_id):
    
 
 #########################################################
-@login_required
 def german_test_result(request, session_id):
     """
-    Résultat détaillé d'une session d'examen allemand :
-    - score global
-    - bonnes / mauvaises réponses
-    - stats par compétence (Hören / Lesen / Schreiben / Sprechen / Grammaire)
-    - XP gagnée
+    Résultat d'une session allemand (connecté uniquement — l'anonyme passe par anon_result).
     """
     from .models import GermanTestSession, GermanExercise
 
-    session = get_object_or_404(
-        GermanTestSession,
-        id=session_id,
-        user=request.user,
-    )
+    # Sécurité : la session doit appartenir à l'utilisateur connecté
+    if request.user.is_authenticated:
+        session = get_object_or_404(GermanTestSession, id=session_id, user=request.user)
+    else:
+        session = get_object_or_404(GermanTestSession, id=session_id)
+
     exam = session.exam
 
     answers = session.answers.select_related("exercise__lesson")
@@ -375,7 +340,6 @@ def german_test_result(request, session_id):
     correct_answers = answers.filter(is_correct=True).count()
     incorrect_answers = total - correct_answers
 
-    # Mise à jour des champs si besoin (anciens enregistrements)
     changed = False
     if session.total_questions != total:
         session.total_questions = total
@@ -393,12 +357,9 @@ def german_test_result(request, session_id):
     if changed:
         session.save(update_fields=["total_questions", "correct_answers", "score"])
 
-    profile = _get_or_create_profile(request.user)
-
-    # 🔥 XP gagnée sur cette session (si stockée)
+    profile = _get_or_create_profile(request.user) if request.user.is_authenticated else None
     xp_gain = request.session.pop("last_german_xp_gain", None)
 
-    # Stats par compétence
     skill_stats = {}
     label_map = dict(GermanLesson.SKILL_CHOICES)
 
@@ -410,10 +371,7 @@ def german_test_result(request, session_id):
             stat["correct"] += 1
 
     for code, stat in skill_stats.items():
-        if stat["total"]:
-            pct = int(round(100 * stat["correct"] / stat["total"]))
-        else:
-            pct = 0
+        pct = int(round(100 * stat["correct"] / stat["total"])) if stat["total"] else 0
         stat["pct"] = pct
         stat["label"] = label_map.get(code, code)
 
@@ -428,6 +386,28 @@ def german_test_result(request, session_id):
         "profile": profile,
         "skill_stats": skill_stats,
         "xp_gain": xp_gain,
+    }
+    return render(request, "german/test_result.html", context)
+
+
+def german_anon_result(request):
+    """Résultat simplifié pour un utilisateur anonyme après une simulation."""
+    data = request.session.get("anon_de_result")
+    if not data:
+        return redirect("germanprep:home")
+    exam = get_object_or_404(GermanExam, id=data["exam_id"])
+    context = {
+        "exam": exam,
+        "session": None,
+        "answers": [],
+        "score": data["score"],
+        "correct_answers": data["correct"],
+        "incorrect_answers": data["total"] - data["correct"],
+        "total": data["total"],
+        "skill_stats": {},
+        "xp_gain": None,
+        "profile": None,
+        "anon": True,
     }
     return render(request, "german/test_result.html", context)
 

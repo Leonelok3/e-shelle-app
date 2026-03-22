@@ -281,7 +281,6 @@ def dashboard(request):
 #  LISTE DES TESTS
 # =========================
 
-@login_required
 def test_list(request):
     tests = (
         EnglishTest.objects
@@ -295,20 +294,12 @@ def test_list(request):
 #  PASSER UN TEST
 # =========================
 
-@login_required
 def take_test(request, test_id):
     """
-    Page de passation du test :
-    - Affiche toutes les questions
-    - Gère l'enregistrement des réponses
-    - Timer côté front (durée = test.duration_minutes)
+    Page de passation du test (accessible sans connexion).
+    Si connecté : sauvegarde en DB + XP. Sinon : résultat en session Django.
     """
     test = get_object_or_404(EnglishTest, pk=test_id, is_active=True)
-
-    session, _ = UserTestSession.objects.get_or_create(
-        user=request.user,
-        test=test,
-    )
 
     questions = (
         EnglishQuestion.objects
@@ -320,59 +311,54 @@ def take_test(request, test_id):
         correct_count = 0
         total_questions = questions.count()
 
-        # Nettoyage des anciennes réponses
-        UserAnswer.objects.filter(session=session).delete()
-
         for q in questions:
-            field_name = f"question_{q.id}"
-            selected_option = request.POST.get(field_name)
-            if not selected_option:
-                continue
-
-            is_correct = (selected_option == q.correct_option)
-            if is_correct:
+            selected_option = request.POST.get(f"question_{q.id}")
+            if selected_option and selected_option == q.correct_option:
                 correct_count += 1
-
-            UserAnswer.objects.create(
-                session=session,
-                question=q,
-                selected_option=selected_option,
-                is_correct=is_correct,
-            )
 
         score_percent = (
             round(correct_count * 100.0 / total_questions, 2)
             if total_questions > 0 else 0.0
         )
 
-        session.score = score_percent
-        session.total_questions = total_questions
-        session.correct_answers = correct_count
-        session.finished_at = timezone.now()
-
-        # ✅ AJOUT CHRONO (SAFE)
-        duration = request.POST.get("duration_seconds")
-        try:
-            session.duration_seconds = int(duration)
-        except (TypeError, ValueError):
-            session.duration_seconds = 0
-
-        session.save()
-
-        # Gamification
-        profile = _get_or_create_profile(request.user)
-        gained_xp = profile.add_result(
-            score_percent,
-            total_questions,
-            exam_type=test.exam_type,
-        )
-        request.session["last_english_xp_gain"] = gained_xp
+        if request.user.is_authenticated:
+            session, _ = UserTestSession.objects.get_or_create(
+                user=request.user, test=test,
+            )
+            UserAnswer.objects.filter(session=session).delete()
+            for q in questions:
+                selected_option = request.POST.get(f"question_{q.id}")
+                if selected_option:
+                    UserAnswer.objects.create(
+                        session=session,
+                        question=q,
+                        selected_option=selected_option,
+                        is_correct=(selected_option == q.correct_option),
+                    )
+            session.score = score_percent
+            session.total_questions = total_questions
+            session.correct_answers = correct_count
+            session.finished_at = timezone.now()
+            try:
+                session.duration_seconds = int(request.POST.get("duration_seconds", 0))
+            except (TypeError, ValueError):
+                session.duration_seconds = 0
+            session.save()
+            profile = _get_or_create_profile(request.user)
+            gained_xp = profile.add_result(score_percent, total_questions, exam_type=test.exam_type)
+            request.session["last_english_xp_gain"] = gained_xp
+        else:
+            # Utilisateur anonyme : stockage temporaire en session Django
+            request.session[f"anon_en_{test_id}"] = {
+                "score": score_percent,
+                "correct": correct_count,
+                "total": total_questions,
+            }
 
         return redirect("englishprep:test_result", test_id=test.id)
 
     context = {
         "test": test,
-        "session": session,
         "questions": questions,
         "duration_minutes": test.duration_minutes or 20,
     }
@@ -384,9 +370,26 @@ def take_test(request, test_id):
 #  RÉSULTAT D’UN TEST
 # =========================
 
-@login_required
 def test_result(request, test_id):
     test = get_object_or_404(EnglishTest, id=test_id)
+
+    if not request.user.is_authenticated:
+        # Résultat anonyme depuis la session Django
+        anon = request.session.get(f"anon_en_{test_id}")
+        if not anon:
+            return redirect("englishprep:test_list")
+        context = {
+            "test": test,
+            "score": anon["score"],
+            "correct_answers": anon["correct"],
+            "incorrect_answers": anon["total"] - anon["correct"],
+            "total": anon["total"],
+            "skill_stats": {},
+            "xp_gain": None,
+            "profile": None,
+            "anon": True,
+        }
+        return render(request, "english/test_result.html", context)
 
     session = (
         UserTestSession.objects
@@ -421,8 +424,6 @@ def test_result(request, test_id):
         session.save(update_fields=["total_questions", "correct_answers", "score"])
 
     profile = _get_or_create_profile(request.user)
-
-    # XP gagnée sur ce test (si dispo)
     xp_gain = request.session.pop("last_english_xp_gain", None)
 
     skill_stats = {}

@@ -113,17 +113,14 @@ def _audio_url_from_question(q: Question):
 # =========================================================
 # 🏠 ACCUEIL & HUBS
 # =========================================================
-@login_required
 def home(request):
     return render(request, "preparation_tests/home.html")
 
 
-@login_required
 def french_exams(request):
     return render(request, "preparation_tests/french_exams.html")
 
 
-@login_required
 def tef_hub(request):
     sections = [
         {"code": "co", "title": "Compréhension orale"},
@@ -145,7 +142,6 @@ def tef_hub(request):
     )
 
 
-@login_required
 def tcf_hub(request):
     sections = [
         {"code": "co", "title": "Compréhension orale"},
@@ -167,12 +163,10 @@ def tcf_hub(request):
     )
 
 
-@login_required
 def delf_hub(request):
     return render(request, "preparation_tests/fr_delf_hub.html")
 
 
-@login_required
 def dalf_hub(request):
     return render(request, "preparation_tests/fr_dalf_hub.html")
 
@@ -180,13 +174,11 @@ def dalf_hub(request):
 # =========================================================
 # 📚 EXAMENS
 # =========================================================
-@login_required
 def exam_list(request):
     exams = Exam.objects.all().order_by("language", "name")
     return render(request, "preparation_tests/exam_list.html", {"exams": exams})
 
 
-@login_required
 def exam_detail(request, exam_code):
     exam = get_object_or_404(Exam, code__iexact=exam_code)
     sections = exam.sections.all()
@@ -200,7 +192,6 @@ def exam_detail(request, exam_code):
 # =========================================================
 # 📖 COURS PAR SECTION
 # =========================================================
-@login_required
 def course_section(request, exam_code, section):
     exam_code = exam_code.upper()
     exam = get_object_or_404(Exam, code__iexact=exam_code)
@@ -211,10 +202,9 @@ def course_section(request, exam_code, section):
         is_published=True
     ).order_by("level", "order")
 
-    cefr = get_cefr_progress(
-        user=request.user,
-        exam_code=exam.code,
-        skill=section,
+    cefr = (
+        get_cefr_progress(user=request.user, exam_code=exam.code, skill=section)
+        if request.user.is_authenticated else []
     )
 
     return render(
@@ -233,21 +223,20 @@ def course_section(request, exam_code, section):
 # =========================================================
 # 📘 LEÇON + EXERCICES
 # =========================================================
-@login_required
 def lesson_session(request, exam_code, section, lesson_id):
     """
     Affiche une leçon avec ses exercices.
     """
     lesson = get_object_or_404(CourseLesson, id=lesson_id)
-    user = request.user
+    user = request.user if request.user.is_authenticated else None
 
     raw_exercises = CourseExercise.objects.filter(
         lesson=lesson,
         is_active=True,
     ).order_by("order")
 
-    # Progression utilisateur sur cette leçon
-    ulp = _ulp_first(user, lesson)
+    # Progression utilisateur sur cette leçon (None si anonyme)
+    ulp = _ulp_first(user, lesson) if user else None
     progress_completed = ulp.completed_exercises if ulp else 0
     progress_total = raw_exercises.count()
     progress_percent = ulp.percent if ulp else 0

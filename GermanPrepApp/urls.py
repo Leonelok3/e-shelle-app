@@ -30,6 +30,7 @@ urlpatterns = [
 
     # Résultats & analyse
     path("session/<int:session_id>/resultat/", views.german_test_result, name="test_result"),
+    path("resultat-anon/", views.german_anon_result, name="anon_result"),
     path("session/<int:session_id>/review-incorrect/", views.german_review_incorrect, name="review_incorrect"),
     path("session/<int:session_id>/skills/", views.german_skill_analysis, name="skill_analysis"),
 

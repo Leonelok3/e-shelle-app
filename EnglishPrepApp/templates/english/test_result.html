@@ -97,13 +97,18 @@
 
   <!-- Actions -->
   <div style="display:flex;flex-wrap:wrap;gap:.75rem">
-    {% if incorrect_answers > 0 %}
+    {% if not anon and incorrect_answers > 0 %}
     <a class="le-btn le-btn-accent" href="{% url 'englishprep:review_incorrect' test.id %}">🔍 Revoir mes erreurs</a>
     {% endif %}
     <a class="le-btn le-btn-primary" href="{% url 'englishprep:take_test' test.id %}">🔄 Refaire le test</a>
+    {% if not anon %}
     <a class="le-btn le-btn-ghost" href="{% url 'englishprep:exam_learning_path' test.id %}">📚 Cours & exercices</a>
     <a class="le-btn le-btn-ghost" href="{% url 'englishprep:exam_list' %}">📋 Tous les tests</a>
     <a class="le-btn le-btn-ghost" href="{% url 'englishprep:ai_coach' %}">🤖 Coach IA</a>
+    {% else %}
+    <a class="le-btn le-btn-ghost" href="{% url 'englishprep:test_list' %}">📋 Tous les tests</a>
+    <a class="le-btn le-btn-accent" href="{% url 'accounts:login' %}">🔐 Connectez-vous pour sauvegarder vos résultats</a>
+    {% endif %}
   </div>
 
 </div>
