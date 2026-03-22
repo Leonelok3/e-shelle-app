@@ -53,10 +53,10 @@
       {% if ch.id in progression_map %}
       <div>
         <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--math-muted);margin-bottom:.3rem">
-          <span>Progression</span><span>{{ progression_map|dictsort:"id"|last }}{{ progression_map.ch.id }}%</span>
+          <span>Progression</span><span>En cours</span>
         </div>
         <div class="progress-math">
-          <div class="progress-math-fill" style="width:{{ progression_map|default:{} }};"></div>
+          <div class="progress-math-fill" style="width:30%;"></div>
         </div>
       </div>
       {% endif %}
