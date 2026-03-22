@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Analyse des compétences – {{ exam.title }} – Immigration97{% endblock %}
+{% block title %}Analyse des compétences – {{ exam.title }} – E-Shelle{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -65,7 +65,7 @@
   </nav>
 
   <div class="ep-hero">
-    <p class="ep-hero-kicker">Immigration97 · Allemand · Analyse</p>
+    <p class="ep-hero-kicker">E-Shelle · Allemand · Analyse</p>
     <h1>Analyse des <span>compétences</span></h1>
     <p>{{ exam.title }} · Session du {{ session.started_at|date:"d/m/Y H:i" }} · Score global : {{ global_pct }} %</p>
   </div>

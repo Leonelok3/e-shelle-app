@@ -27,6 +27,9 @@ urlpatterns = [
     # Abonnements
     path("billing/",     include("billing.urls",         namespace="billing")),
 
+    # Hub des langues
+    path("langues/", TemplateView.as_view(template_name="langues/hub.html"), name="langues_hub"),
+
     # Cours de langues
     path("anglais/",     include("EnglishPrepApp.urls",    namespace="englishprep")),
     path("allemand/",    include("GermanPrepApp.urls",     namespace="germanprep")),

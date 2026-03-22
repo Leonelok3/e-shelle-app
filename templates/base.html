@@ -24,6 +24,7 @@
   {# Design System E-Shelle #}
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/eshelle.css' %}">
+  <link rel="stylesheet" href="{% static 'css/langues.css' %}">
 
   {# Favicon SVG inline #}
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230A0A0A'/><path d='M8 16 C8 10 14 6 16 11 C18 6 24 10 24 16' fill='%232E7D32'/><rect x='8' y='23' width='16' height='3' rx='1.5' fill='%23F57C00'/></svg>">
@@ -60,6 +61,7 @@
     <ul class="navbar-nav" role="list">
       <li><a href="/"                            class="nav-link {% block nav_home %}{% endblock %}">Accueil</a></li>
       <li><a href="/formations/"                 class="nav-link {% block nav_formations %}{% endblock %}">Formations</a></li>
+      <li><a href="/langues/"                    class="nav-link {% block nav_langues %}{% endblock %}">Langues</a></li>
       <li><a href="/boutique/"                   class="nav-link {% block nav_boutique %}{% endblock %}">Boutique</a></li>
       <li><a href="/services/"                   class="nav-link {% block nav_services %}{% endblock %}">Services</a></li>
       <li><a href="/#tarifs"                     class="nav-link">Tarifs</a></li>
@@ -109,6 +111,7 @@
     <div style="padding:0 .5rem">
       <a href="/"                   class="nav-link" role="menuitem">🏠 Accueil</a>
       <a href="/formations/"        class="nav-link" role="menuitem">📚 Formations</a>
+      <a href="/langues/"           class="nav-link" role="menuitem">🌍 Langues</a>
       <a href="/boutique/"          class="nav-link" role="menuitem">🛒 Boutique</a>
       <a href="/services/"          class="nav-link" role="menuitem">🌐 Services</a>
       <a href="/#tarifs"            class="nav-link" role="menuitem">💰 Tarifs</a>

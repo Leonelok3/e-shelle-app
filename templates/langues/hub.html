@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Cours de Langues — E-Shelle{% endblock %}
+{% block meta_description %}Maîtrisez le français, l'anglais, l'allemand ou l'italien. Préparation aux examens officiels (TEF, TCF, IELTS, TOEFL, Goethe, DELF) avec coach IA.{% endblock %}
+
+{% block content %}
+<div class="ep-wrap">
+
+  <!-- Hero -->
+  <div class="ep-hero" style="margin-top: 2.5rem;">
+    <div style="position:relative;z-index:1;">
+      <p class="ep-hero-kicker">E-Shelle · Académie des Langues</p>
+      <h1>Maîtrise une langue,<br><span>ouvre des portes</span></h1>
+      <p>Prépare les examens officiels (TEF, TCF, IELTS, TOEFL, Goethe, DELF/DALF) avec des cours structurés A1→C2, des tests réalistes et un coach IA personnalisé.</p>
+      <div class="ep-hero-btns">
+        <a href="#langues" class="ep-btn-primary">🌍 Choisir ma langue</a>
+        <a href="{% url 'preparation_tests:home' %}" class="ep-btn-outline">🇫🇷 Préparation français</a>
+      </div>
+    </div>
+    <div style="position:absolute;right:2.5rem;top:50%;transform:translateY(-50%);font-size:9rem;opacity:.06;pointer-events:none;line-height:1;">🌍</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="ep-profile-bar" style="margin-bottom:2.5rem;">
+    <div class="ep-stat">
+      <span>Langues</span>
+      <strong>4</strong>
+    </div>
+    <div class="ep-stat">
+      <span>Niveaux CECR</span>
+      <strong>A1→C2</strong>
+    </div>
+    <div class="ep-stat">
+      <span>Examens préparés</span>
+      <strong>10+</strong>
+    </div>
+    <div class="ep-stat">
+      <span>Coach IA</span>
+      <strong>Inclus</strong>
+    </div>
+  </div>
+
+  <!-- Grid des 4 langues -->
+  <div id="langues">
+    <h2 class="ep-section-title">Choisis ta langue</h2>
+    <p class="ep-section-sub">Chaque parcours couvre 6 niveaux CECR avec cours, exercices et examens blancs.</p>
+
+    <div class="lang-hub-grid">
+
+      <!-- Français -->
+      <a href="{% url 'preparation_tests:home' %}"
+         class="lang-hub-card"
+         style="--card-color: #4CAF50; --card-gradient: linear-gradient(135deg, rgba(46,125,50,.15), transparent);">
+        <span class="lang-hub-flag">🇫🇷</span>
+        <div class="lang-hub-title">Français</div>
+        <div class="lang-hub-sub">Préparation complète aux examens officiels : TEF, TCF, DELF, DALF. Compréhension orale/écrite, expression, examens blancs.</div>
+        <div class="lang-hub-pills">
+          <span class="lang-hub-pill">TEF</span>
+          <span class="lang-hub-pill">TCF</span>
+          <span class="lang-hub-pill">DELF</span>
+          <span class="lang-hub-pill">DALF</span>
+          <span class="lang-hub-pill">A1 → C2</span>
+        </div>
+        <div class="lang-hub-cta">Accéder au parcours →</div>
+      </a>
+
+      <!-- Anglais -->
+      <a href="{% url 'englishprep:dashboard' %}"
+         class="lang-hub-card"
+         style="--card-color: #60a5fa; --card-gradient: linear-gradient(135deg, rgba(29,78,216,.15), transparent);">
+        <span class="lang-hub-flag">🇬🇧</span>
+        <div class="lang-hub-title">Anglais</div>
+        <div class="lang-hub-sub">Entraîne-toi pour IELTS, TOEFL et TOEIC avec des tests réalistes, suivi de score et coach IA intégré.</div>
+        <div class="lang-hub-pills">
+          <span class="lang-hub-pill">IELTS</span>
+          <span class="lang-hub-pill">TOEFL</span>
+          <span class="lang-hub-pill">TOEIC</span>
+          <span class="lang-hub-pill">A1 → C2</span>
+        </div>
+        <div class="lang-hub-cta" style="color:#60a5fa;">Accéder au parcours →</div>
+      </a>
+
+      <!-- Allemand -->
+      <a href="{% url 'germanprep:home' %}"
+         class="lang-hub-card"
+         style="--card-color: #fbbf24; --card-gradient: linear-gradient(135deg, rgba(194,65,12,.15), transparent);">
+        <span class="lang-hub-flag">🇩🇪</span>
+        <div class="lang-hub-title">Allemand</div>
+        <div class="lang-hub-sub">Cours A1→C2, examens Goethe, telc, TestDaF, DSH et IntegrationKurs. Idéal pour l'immigration en Allemagne.</div>
+        <div class="lang-hub-pills">
+          <span class="lang-hub-pill">Goethe</span>
+          <span class="lang-hub-pill">telc</span>
+          <span class="lang-hub-pill">TestDaF</span>
+          <span class="lang-hub-pill">DSH</span>
+          <span class="lang-hub-pill">A1 → C2</span>
+        </div>
+        <div class="lang-hub-cta" style="color:#fbbf24;">Accéder au parcours →</div>
+      </a>
+
+      <!-- Italien -->
+      <a href="{% url 'italian_courses:category_list' %}"
+         class="lang-hub-card"
+         style="--card-color: #f87171; --card-gradient: linear-gradient(135deg, rgba(185,28,28,.15), transparent);">
+        <span class="lang-hub-flag">🇮🇹</span>
+        <div class="lang-hub-title">Italien</div>
+        <div class="lang-hub-sub">Cours structurés de A1 à C2 pour préparer le Nulla Osta, vivre et travailler en Italie.</div>
+        <div class="lang-hub-pills">
+          <span class="lang-hub-pill">Nulla Osta</span>
+          <span class="lang-hub-pill">CILS</span>
+          <span class="lang-hub-pill">PLIDA</span>
+          <span class="lang-hub-pill">A1 → C2</span>
+        </div>
+        <div class="lang-hub-cta" style="color:#f87171;">Accéder au parcours →</div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- Comment ça marche -->
+  <div style="margin-top:3.5rem;">
+    <h2 class="ep-section-title">Comment ça marche ?</h2>
+    <p class="ep-section-sub">Un parcours pédagogique complet en 4 étapes</p>
+
+    <div class="ep-exam-cards" style="grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); margin-top:1.25rem;">
+      <div class="ep-exam-card">
+        <div style="font-size:2.2rem;margin-bottom:.75rem;">🎯</div>
+        <div class="ep-exam-name">1. Évalue ton niveau</div>
+        <div class="ep-exam-desc">Passe un test de placement pour connaître ton niveau CECR actuel (A1 à C2).</div>
+      </div>
+      <div class="ep-exam-card">
+        <div style="font-size:2.2rem;margin-bottom:.75rem;">📚</div>
+        <div class="ep-exam-name">2. Suis les cours</div>
+        <div class="ep-exam-desc">Leçons structurées par compétence : lecture, écoute, expression orale et écrite.</div>
+      </div>
+      <div class="ep-exam-card">
+        <div style="font-size:2.2rem;margin-bottom:.75rem;">⚡</div>
+        <div class="ep-exam-name">3. Fais les exercices</div>
+        <div class="ep-exam-desc">Exercices interactifs, QCM, simulations d'examens officiels avec correction instantanée.</div>
+      </div>
+      <div class="ep-exam-card">
+        <div style="font-size:2.2rem;margin-bottom:.75rem;">🤖</div>
+        <div class="ep-exam-name">4. Coach IA</div>
+        <div class="ep-exam-desc">Ton coach IA analyse tes erreurs et génère un plan d'entraînement personnalisé.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
