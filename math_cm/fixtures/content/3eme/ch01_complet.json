@@ -1,0 +1,309 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "3eme-1-ensembles-et-applications",
+  "meta": {
+    "classe": "3ème",
+    "numero": 1,
+    "titre": "Ensembles et applications",
+    "categorie": "logique",
+    "difficulte": 2,
+    "description": "Notion d'ensemble, opérations sur les ensembles, applications et fonctions — bases de la logique mathématique au secondaire.",
+    "objectifs": [
+      "Définir et représenter un ensemble par extension ou compréhension",
+      "Effectuer les opérations union, intersection et complémentaire",
+      "Représenter des ensembles par des diagrammes de Venn",
+      "Distinguer application, injection, surjection et bijection"
+    ],
+    "prerequis_slugs": [],
+    "duree_estimee": 60,
+    "points_total_exercices": 50
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Notion d'ensemble — définitions et représentations",
+      "type_lecon": "definition",
+      "duree_lecture": 16,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Un **ensemble** est une collection bien définie d'objets appelés **éléments**. On note un ensemble par une lettre majuscule (A, B, E...) et ses éléments entre accolades.\n\n• Si x est un élément de E : **x ∈ E** (x appartient à E)\n• Si x n'est pas un élément de E : **x ∉ E**\n• L'ensemble sans élément s'appelle l'**ensemble vide** : **∅** ou **{ }**"
+          },
+          {
+            "type": "exemple",
+            "titre": "Définir un ensemble",
+            "valeur": "**Par extension (liste des éléments) :**\nA = {1, 2, 3, 4, 5} (les 5 premiers entiers)\nB = {rouge, vert, bleu} (couleurs primaires)\n\n**Par compréhension (propriété) :**\nC = {x ∈ ℕ | x < 6} = {0, 1, 2, 3, 4, 5}\nD = {x ∈ ℝ | x² = 4} = {−2, 2}\n\n**Ensemble des élèves d'une classe de 3ème à Yaoundé :**\nE = {Alain, Bernadette, Cyrille, Doris, ...}"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Sous-ensemble (inclusion) :**\nA est un **sous-ensemble** de B (noté A ⊂ B) si tout élément de A appartient aussi à B.\n\nExemple : {2, 4} ⊂ {1, 2, 3, 4, 5} ✓\n\n**Cardinal d'un ensemble :** Le nombre d'éléments d'un ensemble fini E est noté **Card(E)** ou **|E|**.\nCard({1, 2, 3, 4}) = 4\nCard(∅) = 0"
+          },
+          {
+            "type": "contexte",
+            "valeur": "Dans un lycée de Douala, E = ensemble des élèves de 3ème. Sous-ensembles : F = élèves de la filière scientifique, G = élèves qui font du sport. On peut demander combien d'élèves font à la fois la filière scientifique ET le sport (intersection)."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Opérations sur les ensembles",
+      "type_lecon": "definition",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Union A ∪ B :** ensemble des éléments appartenant à A **ou** à B (ou aux deux).\nA ∪ B = {x | x ∈ A ou x ∈ B}\n\n**Intersection A ∩ B :** ensemble des éléments appartenant à A **et** à B.\nA ∩ B = {x | x ∈ A et x ∈ B}\n\n**Complémentaire Ā (ou Cₑ A) :** ensemble des éléments de E **n'appartenant pas** à A.\nĀ = {x ∈ E | x ∉ A}\n\n**Différence A \\ B :** éléments de A qui ne sont pas dans B.\nA \\ B = {x ∈ A | x ∉ B}"
+          },
+          {
+            "type": "exemple",
+            "titre": "Calculs d'opérations",
+            "valeur": "Soit E = {1,2,3,4,5,6,7,8}, A = {1,2,3,4,5}, B = {3,4,5,6,7}\n\nA ∪ B = {1,2,3,4,5,6,7}\nA ∩ B = {3,4,5}\nĀ = {6,7,8} (dans E)\nA \\ B = {1,2}\nB \\ A = {6,7}\n\n**Vérification :** Card(A∪B) = Card(A) + Card(B) − Card(A∩B)\n= 5 + 5 − 3 = **7** ✓"
+          },
+          {
+            "type": "methode",
+            "titre": "Formule du cardinal de l'union",
+            "valeur": "**Card(A ∪ B) = Card(A) + Card(B) − Card(A ∩ B)**\n\nCette formule évite de compter deux fois les éléments en commun.\n\nExemple : 30 élèves font des maths, 25 font de la physique, 15 font les deux. Combien font l'une ou l'autre matière ?\nCard(M ∪ P) = 30 + 25 − 15 = **40 élèves**"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Diagramme de Venn :** représentation graphique des ensembles par des cercles ou ovales qui se chevauchent. L'ensemble référentiel E est représenté par un rectangle."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Applications — définitions et types",
+      "type_lecon": "definition",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Une **application** (ou fonction) f de E vers F est une règle qui associe à chaque élément x de E **un unique** élément f(x) de F.\n\nNotations : f : E → F  ou  f : x ↦ f(x)\n• E est l'**ensemble de départ** (ou domaine)\n• F est l'**ensemble d'arrivée** (ou codomaine)\n• f(x) est l'**image** de x\n• x est un **antécédent** de f(x)"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Types d'applications :**\n\n• **Injection** (application injective) : tout élément de F a **au plus un** antécédent dans E.\nx₁ ≠ x₂ ⟹ f(x₁) ≠ f(x₂)\n\n• **Surjection** (application surjective) : tout élément de F a **au moins un** antécédent dans E.\n∀ y ∈ F, ∃ x ∈ E : f(x) = y\n\n• **Bijection** : application à la fois injective ET surjective. Chaque élément de F a **exactement un** antécédent."
+          },
+          {
+            "type": "exemple",
+            "titre": "Exemples concrets",
+            "valeur": "E = {élèves d'une classe}, F = {notes de 0 à 20}\nf(élève) = sa note au devoir\n\nCette application est une **application** mais ni injective (deux élèves peuvent avoir la même note) ni surjective (certaines notes ne sont peut-être pas obtenues).\n\n**Bijection :** g : {1,2,3} → {a,b,c}\ng(1)=a, g(2)=b, g(3)=c → bijection ✓"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Composition d'applications et image d'un ensemble",
+      "type_lecon": "methode",
+      "duree_lecture": 16,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Image d'un ensemble A par f :**\nf(A) = {f(x) | x ∈ A}\nC'est l'ensemble de toutes les images des éléments de A.\n\n**Composition de deux applications :**\nSi f : E → F et g : F → G, alors **g ∘ f : E → G** est définie par :\n(g ∘ f)(x) = g(f(x))\n\nOn applique d'abord f puis g."
+          },
+          {
+            "type": "exemple",
+            "titre": "Calculs de composition",
+            "valeur": "Soit f : ℝ → ℝ, f(x) = 2x + 1\net g : ℝ → ℝ, g(x) = x²\n\n(g ∘ f)(x) = g(f(x)) = g(2x+1) = (2x+1)²\n\n(f ∘ g)(x) = f(g(x)) = f(x²) = 2x² + 1\n\n**Attention :** g ∘ f ≠ f ∘ g en général !"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Application réciproque :**\nSi f : E → F est une **bijection**, il existe une unique application f⁻¹ : F → E telle que :\nf⁻¹(f(x)) = x pour tout x ∈ E\nf(f⁻¹(y)) = y pour tout y ∈ F\n\nExemple : f(x) = 3x − 2 → f⁻¹(y) = (y+2)/3\n\n**Récapitulatif :**\n• Ensemble : collection d'éléments\n• Union ∪, Intersection ∩, Complémentaire\n• Application : règle associant à tout x ∈ E un unique f(x) ∈ F\n• Injection, surjection, bijection"
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Opérations sur les ensembles",
+      "type_exercice": "application",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Soit E = {0,1,2,3,4,5,6,7,8,9}, A = {0,2,4,6,8} et B = {0,3,6,9}.\n\na) Calculer A ∪ B et A ∩ B.\nb) Calculer Ā et B̄ dans E.\nc) Vérifier la formule : Card(A∪B) = Card(A) + Card(B) − Card(A∩B)."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** A ∪ B = {0,2,3,4,6,8,9}\nA ∩ B = {0,6}\n\n**b)** Ā = {1,3,5,7,9} (éléments de E non dans A)\nB̄ = {1,2,4,5,7,8}\n\n**c)** Card(A) = 5, Card(B) = 4, Card(A∩B) = 2\nCard(A∪B) = 5 + 4 − 2 = **7** ✓ (A∪B a bien 7 éléments)"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Diagramme de Venn — Problème concret",
+      "type_exercice": "probleme",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Dans une classe de 40 élèves d'un lycée de Bafoussam :\n• 25 élèves pratiquent le football (F)\n• 18 élèves pratiquent le basketball (B)\n• 8 élèves pratiquent les deux sports\n\na) Calculer Card(F ∪ B).\nb) Combien d'élèves ne pratiquent aucun des deux sports ?\nc) Combien pratiquent uniquement le football ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** Card(F∪B) = 25 + 18 − 8 = **35 élèves**\n\n**b)** Élèves sans sport = 40 − 35 = **5 élèves**\n\n**c)** Football uniquement = Card(F) − Card(F∩B) = 25 − 8 = **17 élèves**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Images et antécédents",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Soit f : ℝ → ℝ définie par f(x) = 2x − 3.\n\na) Calculer f(0), f(3), f(−1), f(3/2).\nb) Trouver les antécédents de 5 et de −7 par f.\nc) Calculer l'image de l'ensemble A = {0 ; 1 ; 2 ; 3} par f."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** f(0) = −3 ; f(3) = 3 ; f(−1) = −5 ; f(3/2) = 0\n\n**b)** f(x) = 5 → 2x−3 = 5 → x = **4**\nf(x) = −7 → 2x−3 = −7 → x = **−2**\n\n**c)** f(A) = {f(0), f(1), f(2), f(3)} = {−3, −1, 1, 3}"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Types d'applications",
+      "type_exercice": "application",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Pour chaque application, dire si elle est injective, surjective, bijective ou aucune de ces propriétés. Justifier.\n\na) f : ℝ → ℝ, f(x) = 3x + 1\nb) g : ℝ → ℝ, g(x) = x²\nc) h : {1,2,3} → {a,b,c,d}, h(1)=a, h(2)=c, h(3)=b"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** f(x) = 3x+1 : **Bijection**\n• Injection : 3x₁+1 = 3x₂+1 ⟹ x₁ = x₂ ✓\n• Surjection : pour tout y, x = (y−1)/3 ∈ ℝ ✓\n\n**b)** g(x) = x² : **Ni injective ni surjective** sur ℝ\n• Pas injective : g(2) = g(−2) = 4\n• Pas surjective : −1 n'a pas d'antécédent dans ℝ\n\n**c)** h : {1,2,3} → {a,b,c,d} : **Injective mais pas surjective**\n• Injective : images distinctes (a, c, b) ✓\n• Pas surjective : d n'a pas d'antécédent"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Ensembles et applications",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** Si A = {1,2,3} et B = {2,3,4,5}, alors A ∩ B = :\n(A) {1,2,3,4,5}  (B) {2,3}  (C) {1,4,5}  (D) {1,2,3,4}\n\n**Q2.** Card(A∪B) avec Card(A)=8, Card(B)=6, Card(A∩B)=3 est :\n(A) 17  (B) 14  (C) 11  (D) 9\n\n**Q3.** Une application bijective de E vers F implique :\n(A) Card(E) < Card(F)  (B) Card(E) = Card(F)  (C) Card(E) > Card(F)  (D) Aucune relation"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (B) {2,3} : éléments communs à A et B\n\n**Q2.** (C) 11 : 8 + 6 − 3 = 11\n\n**Q3.** (B) Card(E) = Card(F) : une bijection établit une correspondance 1-à-1"
+          }
+        ]
+      },
+      "options_qcm": [
+        ["{1,2,3,4,5}", "{2,3}", "{1,4,5}", "{1,2,3,4}"],
+        ["17", "14", "11", "9"],
+        ["Card(E) < Card(F)", "Card(E) = Card(F)", "Card(E) > Card(F)", "Aucune relation"]
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Problème BEPC — Enquête scolaire",
+      "type_exercice": "probleme",
+      "niveau": "examen",
+      "bareme": 10,
+      "duree_recommandee": 25,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Dans un lycée de Ngaoundéré, une enquête sur 200 élèves montre :\n• 120 élèves utilisent Orange Cameroun (O)\n• 95 élèves utilisent MTN Cameroun (M)\n• 30 élèves n'utilisent ni l'un ni l'autre\n\n**1.** Combien d'élèves utilisent au moins un des deux opérateurs ?\n**2.** Combien utilisent les deux opérateurs à la fois ?\n**3.** Combien utilisent uniquement Orange ?\n**4.** Représenter la situation dans un diagramme de Venn (décrire les effectifs dans chaque zone)."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** Utilisent au moins un opérateur = 200 − 30 = **170 élèves**\n\n**2.** Card(O∩M) = Card(O) + Card(M) − Card(O∪M)\n= 120 + 95 − 170 = **45 élèves** utilisent les deux\n\n**3.** Orange uniquement = 120 − 45 = **75 élèves**\n\n**4.** Diagramme de Venn :\n• Zone Orange seul : 75\n• Zone intersection (O∩M) : 45\n• Zone MTN seul : 95 − 45 = 50\n• Zone hors cercles (ni l'un ni l'autre) : 30\n• Vérification : 75 + 45 + 50 + 30 = 200 ✓"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 7,
+      "titre": "Synthèse complète",
+      "type_exercice": "synthese",
+      "niveau": "approfondissement",
+      "bareme": 14,
+      "duree_recommandee": 35,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A — Ensembles :**\nE = {1,2,3,4,5,6,7,8,9,10}, A = {nombres pairs de E}, B = {multiples de 3 de E}\n\n1. Lister les éléments de A et de B.\n2. Calculer A∪B, A∩B, A\\B et B\\A.\n3. Calculer Card(A∪B) par la formule et vérifier.\n\n**Partie B — Applications :**\nSoit f : ℝ → ℝ, f(x) = −2x + 4 et g : ℝ → ℝ, g(x) = x/2.\n\n1. Calculer (g ∘ f)(x) et (f ∘ g)(x).\n2. f est-elle bijective ? Si oui, donner f⁻¹.\n3. Vérifier que f⁻¹ ∘ f = identité."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.**\n1. A = {2,4,6,8,10}, B = {3,6,9}\n\n2. A∪B = {2,3,4,6,8,9,10}\nA∩B = {6}\nA\\B = {2,4,8,10}\nB\\A = {3,9}\n\n3. Card(A) = 5, Card(B) = 3, Card(A∩B) = 1\nCard(A∪B) = 5+3−1 = **7** ✓ (A∪B a bien 7 éléments)\n\n**Partie B.**\n1. (g∘f)(x) = g(f(x)) = g(−2x+4) = (−2x+4)/2 = **−x+2**\n(f∘g)(x) = f(g(x)) = f(x/2) = −2(x/2)+4 = **−x+4**\n\n2. f est **bijective** (affine avec a≠0)\nf⁻¹ : y = −2x+4 → 2x = 4−y → x = (4−y)/2\nf⁻¹(x) = **(4−x)/2**\n\n3. (f⁻¹∘f)(x) = f⁻¹(−2x+4) = (4−(−2x+4))/2 = (2x)/2 = **x** ✓"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}
