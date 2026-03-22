@@ -81,7 +81,8 @@ function initInteractiveQCM() {
   const cards = document.querySelectorAll('[data-qcm-card]');
   if (!cards.length) return;
 
-  const mode        = document.body.dataset.qcmMode || 'interactive'; // interactive | exam
+  const wrapper     = document.querySelector('[data-qcm-mode]');
+  const mode        = (wrapper && wrapper.dataset.qcmMode) || document.body.dataset.qcmMode || 'interactive'; // interactive | exam
   let   correct     = 0;
   let   answered    = 0;
   const total       = cards.length;
@@ -179,8 +180,8 @@ function initInteractiveQCM() {
     });
   });
 
-  // Disable submit until all answered (interactive mode)
-  if (submitBtn && mode === 'interactive') {
+  // Disable submit until all answered (both modes)
+  if (submitBtn && (mode === 'interactive' || mode === 'exam')) {
     submitBtn.disabled = true;
   }
 }

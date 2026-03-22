@@ -523,8 +523,46 @@
 
 /* ─── Responsive ─────────────────────────────────────────── */
 @media (max-width: 640px) {
-  .pt-card, .pt-card--question { padding: 1.25rem; }
-  .pt-grid-layout { grid-template-columns: 1fr; }
-  .pt-hero { padding: 1.75rem 0 1.25rem; }
-  .pt-title { font-size: 1.3rem; }
+  .container { padding: 0 .85rem; }
+
+  /* Hero */
+  .pt-hero { padding: 1.5rem 0 1rem; margin-top: 3.5rem; }
+  .pt-title { font-size: 1.15rem; }
+  .pt-lead { font-size: .86rem; }
+  .pt-stats-row { gap: .75rem; font-size: .78rem; }
+
+  /* Grid — single column */
+  .pt-grid-layout { grid-template-columns: 1fr; gap: 1rem; }
+
+  /* Cards */
+  .pt-card { padding: 1rem 1rem; border-radius: 12px; }
+  .pt-card--question { padding: 1rem; }
+  .pt-card--side { padding: .9rem 1rem; }
+
+  /* Progress */
+  .pt-progress-wrap { padding: .85rem 1rem; }
+
+  /* QCM choices */
+  .pt-choice {
+    padding: .7rem .85rem;
+    font-size: .88rem;
+    min-height: 48px;
+  }
+
+  /* Open text */
+  .pt-open-text textarea {
+    min-height: 120px;
+    font-size: .9rem;
+  }
+
+  /* CEFR bar */
+  .pt-cefr-bar { gap: .25rem; }
+  .pt-cefr-bubble { width: 30px; height: 30px; font-size: .65rem; }
+
+  /* Question stem */
+  .pt-question-stem { font-size: .88rem; padding: .75rem .85rem; }
+
+  /* Section heading */
+  .pt-lesson-content h2 { font-size: 1rem; }
+  .pt-lesson-content p, .pt-lesson-content li { font-size: .88rem; }
 }

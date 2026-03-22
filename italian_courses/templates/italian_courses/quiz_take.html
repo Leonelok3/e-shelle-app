@@ -67,7 +67,7 @@
       <div class="le-options">
         {% for c in q.choices.all %}
         <div class="le-option" data-value="{{ c.id }}" role="button" tabindex="0">
-          <span class="le-option-letter">{{ forloop.counter|stringformat:"s"|slice:":1" }}</span>
+          <span class="le-option-letter">{% if forloop.counter == 1 %}A{% elif forloop.counter == 2 %}B{% elif forloop.counter == 3 %}C{% else %}D{% endif %}</span>
           <span style="flex:1">{{ c.text }}</span>
           <span class="le-option-feedback"></span>
           <input type="radio" name="q_{{ q.id }}" value="{{ c.id }}" style="display:none">
