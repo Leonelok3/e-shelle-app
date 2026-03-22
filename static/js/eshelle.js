@@ -168,21 +168,37 @@ function initScrollAnimations() {
    5. MENU BURGER MOBILE
    ======================================================== */
 function initMobileMenu() {
-  const burger   = document.getElementById('burger-btn');
+  const burger    = document.getElementById('burger-btn');
   const mobileNav = document.getElementById('navbar-mobile');
   if (!burger || !mobileNav) return;
 
+  function closeMenu() {
+    burger.classList.remove('open');
+    mobileNav.classList.remove('open');
+    document.body.classList.remove('menu-open');
+    burger.setAttribute('aria-expanded', 'false');
+  }
+
   burger.addEventListener('click', () => {
-    burger.classList.toggle('open');
-    mobileNav.classList.toggle('open');
+    const isOpen = mobileNav.classList.toggle('open');
+    burger.classList.toggle('open', isOpen);
+    document.body.classList.toggle('menu-open', isOpen);
+    burger.setAttribute('aria-expanded', String(isOpen));
   });
 
   // Fermer au clic sur un lien
-  mobileNav.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-      burger.classList.remove('open');
-      mobileNav.classList.remove('open');
-    });
+  mobileNav.querySelectorAll('.nav-link, a').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  // Fermer avec Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMenu();
+  });
+
+  // Fermer si on repasse en desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) closeMenu();
   });
 }
 
