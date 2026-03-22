@@ -1,97 +1,89 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Résultat Quiz — {{ quiz.title }}{% endblock %}
-
-{% block extra_css %}
-<style>
-  .it-result-wrap { max-width: 760px; margin: 0 auto; padding: 0 1.25rem 4rem; }
-
-  .it-result-bc {
-    display: flex; align-items: center; gap: .5rem;
-    font-size: .82rem; color: #64748b;
-    margin: 2rem 0 1.5rem;
-  }
-  .it-result-bc a { color: #F59E0B; text-decoration: none; font-weight: 500; }
-
-  .it-score-card {
-    border-radius: 16px;
-    padding: 2.5rem 2rem;
-    text-align: center;
-    margin-bottom: 2rem;
-    color: #fff;
-  }
-  .it-score-card.great  { background: linear-gradient(135deg, #16a34a, #15803d); }
-  .it-score-card.good   { background: linear-gradient(135deg, #F59E0B, #d97706); }
-  .it-score-card.retry  { background: linear-gradient(135deg, #dc2626, #b91c1c); }
-
-  .it-score-emoji { font-size: 3rem; margin-bottom: .5rem; }
-  .it-score-num   { font-size: 3rem; font-weight: 800; margin-bottom: .25rem; line-height: 1; }
-  .it-score-label { font-size: 1.1rem; font-weight: 600; margin-bottom: .4rem; }
-  .it-score-msg   { font-size: .88rem; opacity: .8; }
-
-  .it-result-actions {
-    display: flex; gap: .75rem; flex-wrap: wrap;
-    margin-top: 1.75rem;
-  }
-  .it-btn-primary {
-    background: #102B4E; color: #fff;
-    border-radius: 10px; padding: .75rem 1.5rem;
-    font-weight: 700; font-size: .88rem;
-    text-decoration: none; transition: background .2s;
-  }
-  .it-btn-primary:hover { background: #1a3d6b; color: #fff; }
-  .it-btn-secondary {
-    background: #f1f5f9; color: #475569;
-    border-radius: 10px; padding: .75rem 1.5rem;
-    font-weight: 600; font-size: .88rem;
-    text-decoration: none; border: 1.5px solid #e2e8f0;
-  }
-  .it-btn-secondary:hover { background: #e2e8f0; }
-</style>
-{% endblock %}
+{% block title %}Résultat — {{ quiz.title }}{% endblock %}
 
 {% block content %}
-<div class="it-result-wrap">
+<div class="le-wrap-narrow" style="padding-top:5.5rem">
 
-  <div class="it-result-bc">
-    <a href="{% url 'italian_courses:category_list' %}">🇮🇹 Cours Italien</a>
-    <span>›</span>
+  <!-- Breadcrumb -->
+  <nav class="le-bc">
+    <a href="{% url 'italian_courses:category_list' %}">🇮🇹 Italien</a>
+    <span class="le-bc-sep">›</span>
     <a href="{% url 'italian_courses:lesson_detail' category_slug=quiz.lesson.category.slug lesson_slug=quiz.lesson.slug %}">{{ quiz.lesson.title }}</a>
-    <span>›</span>
+    <span class="le-bc-sep">›</span>
     <span>Résultat</span>
-  </div>
+  </nav>
 
-  <!-- Score -->
-  <div class="it-score-card
-    {% if score == total %}great
+  <!-- Score hero -->
+  {% with pct=score|floatformat:0 %}
+  <div class="le-result-hero
+    {% if score == total %}perfect
+    {% elif score >= total|floatformat:0|add:0 %}perfect
     {% elif score >= 3 %}good
     {% else %}retry{% endif %}">
-    <div class="it-score-emoji">
-      {% if score == total %}🏆
-      {% elif score >= 3 %}🎯
-      {% else %}💪{% endif %}
+
+    <span class="le-result-emoji">
+      {% if score == total %}🏆{% elif score >= 3 %}🎯{% else %}💪{% endif %}
+    </span>
+
+    <div class="le-result-score">
+      <span data-count-to="{{ score }}" data-count-duration="800">{{ score }}</span> / {{ total }}
     </div>
-    <div class="it-score-num">{{ score }} / {{ total }}</div>
-    <div class="it-score-label">
-      {% if score == total %}Score parfait !
-      {% elif score >= 3 %}Bon résultat !
-      {% else %}Continuez à pratiquer
+
+    <div class="le-result-score-label">
+      {% if score == total %}Score parfait — Excellent !
+      {% elif score >= 3 %}Bon résultat — Continue !
+      {% else %}Continue à pratiquer
       {% endif %}
     </div>
-    <div class="it-score-msg">{{ quiz.title }}</div>
+
+    <div class="le-result-score-msg">{{ quiz.title }}</div>
+
+    <!-- Jauge -->
+    {% if total > 0 %}
+    <div style="max-width:300px;margin:1.5rem auto 0">
+      <div class="le-progress-track" style="height:10px">
+        <div class="le-skill-bar-fill"
+             data-pct="{% widthratio score total 100 %}"
+             style="width:0%"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:.4rem;font-size:.72rem;color:rgba(255,255,255,.5)">
+        <span>0</span>
+        <span>{% widthratio score total 100 %}% de réussite</span>
+        <span>{{ total }}</span>
+      </div>
+    </div>
+    {% endif %}
+
   </div>
+  {% endwith %}
 
   <!-- Actions -->
-  <div class="it-result-actions">
-    <a class="it-btn-primary"
+  <div style="display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center">
+    <a class="le-btn le-btn-primary"
        href="{% url 'italian_courses:lesson_detail' category_slug=quiz.lesson.category.slug lesson_slug=quiz.lesson.slug %}">
       ← Retour à la leçon
     </a>
-    <a class="it-btn-secondary"
+    <a class="le-btn le-btn-accent"
        href="{% url 'italian_courses:quiz_take' quiz_id=quiz.id %}">
       🔄 Refaire le quiz
     </a>
+    <a class="le-btn le-btn-ghost"
+       href="{% url 'italian_courses:lesson_list' category_slug=quiz.lesson.category.slug %}">
+      📚 Toutes les leçons
+    </a>
+  </div>
+
+  <!-- Message motivation -->
+  <div style="text-align:center;margin-top:2rem;background:var(--le-glass);border:1px solid var(--le-border);border-radius:var(--le-radius);padding:1.5rem">
+    {% if score == total %}
+    <p style="color:var(--le-primary);font-weight:700;font-size:1rem;margin:0">🌟 Perfetto ! Vous maîtrisez cette leçon. Passez à la suivante !</p>
+    {% elif score >= 3 %}
+    <p style="color:var(--le-accent);font-weight:600;font-size:.95rem;margin:0">👍 Bravo ! Quelques révisions et vous serez au top. Relisez la leçon puis retentez.</p>
+    {% else %}
+    <p style="color:rgba(255,255,255,.65);font-size:.9rem;margin:0">💡 Pas de problème ! Relisez attentivement la leçon et retentez le quiz. La pratique régulière est la clé.</p>
+    {% endif %}
   </div>
 
 </div>

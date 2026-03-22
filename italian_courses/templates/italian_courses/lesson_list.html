@@ -3,221 +3,92 @@
 
 {% block title %}{{ category.name }} — Cours Italien{% endblock %}
 
-{% block extra_css %}
-<style>
-  .it-list-wrap { max-width: 860px; margin: 0 auto; padding: 0 1.25rem 4rem; }
-
-  /* Breadcrumb */
-  .it-bc {
-    display: flex; align-items: center; gap: .5rem;
-    font-size: .82rem; color: #64748b;
-    margin: 2rem 0 1.5rem;
-  }
-  .it-bc a { color: #F59E0B; text-decoration: none; font-weight: 500; }
-  .it-bc a:hover { text-decoration: underline; }
-
-  /* Header */
-  .it-list-header {
-    background: linear-gradient(135deg, #102B4E 0%, #1a3d6b 100%);
-    border-radius: 16px;
-    padding: 1.75rem 2rem;
-    color: #fff;
-    margin-bottom: 1.75rem;
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 1rem;
-  }
-  .it-list-header h1 { font-size: 1.5rem; font-weight: 800; margin: 0; letter-spacing: -.02em; }
-  .it-list-header-meta { display: flex; gap: .75rem; flex-wrap: wrap; }
-  .it-list-chip {
-    background: rgba(255,255,255,.12);
-    border: 1px solid rgba(255,255,255,.2);
-    border-radius: 999px;
-    padding: .3rem .85rem;
-    font-size: .78rem; font-weight: 600;
-  }
-
-  /* Recherche */
-  .it-search-bar {
-    display: flex; gap: .6rem; margin-bottom: 1.5rem;
-  }
-  .it-search-bar input {
-    flex: 1;
-    padding: .7rem 1rem;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 10px;
-    font-size: .9rem;
-    font-family: inherit;
-    outline: none;
-    transition: border-color .2s;
-  }
-  .it-search-bar input:focus { border-color: #F59E0B; }
-  .it-search-bar button {
-    background: #102B4E; color: #fff;
-    border: none; border-radius: 10px;
-    padding: .7rem 1.2rem;
-    font-weight: 600; font-size: .85rem;
-    cursor: pointer; font-family: inherit;
-  }
-
-  /* Progress bar globale */
-  .it-progress-bar-wrap { margin-bottom: 1.75rem; }
-  .it-progress-label { font-size: .82rem; color: #64748b; margin-bottom: .4rem; font-weight: 500; }
-  .it-progress-track {
-    background: #e2e8f0; border-radius: 999px; height: 8px; overflow: hidden;
-  }
-  .it-progress-fill {
-    height: 100%; border-radius: 999px;
-    background: linear-gradient(90deg, #F59E0B, #f97316);
-    transition: width .5s ease;
-  }
-
-  /* Cards leçons */
-  .it-lesson-card {
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    padding: 1.25rem 1.5rem;
-    margin-bottom: .9rem;
-    display: flex; align-items: center; gap: 1.25rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,.05);
-    transition: box-shadow .2s, border-color .2s;
-  }
-  .it-lesson-card:hover { box-shadow: 0 4px 20px rgba(16,43,78,.1); border-color: #cbd5e1; }
-  .it-lesson-card.is-done { border-left: 4px solid #16a34a; }
-
-  .it-lesson-num {
-    width: 40px; height: 40px; border-radius: 10px;
-    background: #f1f5f9;
-    display: flex; align-items: center; justify-content: center;
-    font-size: .78rem; font-weight: 700; color: #64748b;
-    flex-shrink: 0;
-  }
-  .it-lesson-card.is-done .it-lesson-num { background: #dcfce7; color: #16a34a; }
-
-  .it-lesson-body { flex: 1; min-width: 0; }
-  .it-lesson-title-link {
-    font-size: .97rem; font-weight: 700; color: #102B4E;
-    text-decoration: none; display: block; margin-bottom: .25rem;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .it-lesson-title-link:hover { color: #F59E0B; }
-  .it-lesson-meta { display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; }
-  .it-lesson-time { font-size: .78rem; color: #94a3b8; }
-  .it-lesson-done-badge {
-    font-size: .72rem; font-weight: 700;
-    background: #dcfce7; color: #16a34a;
-    padding: .15rem .6rem; border-radius: 999px;
-    border: 1px solid #bbf7d0;
-  }
-
-  .it-lesson-open {
-    background: #102B4E; color: #fff;
-    border: none; border-radius: 8px;
-    padding: .5rem 1rem;
-    font-size: .8rem; font-weight: 600;
-    text-decoration: none; white-space: nowrap;
-    transition: background .2s;
-    flex-shrink: 0;
-  }
-  .it-lesson-open:hover { background: #1a3d6b; color: #fff; }
-
-  .it-empty-state {
-    text-align: center; padding: 3rem 1rem;
-    background: #fff; border-radius: 14px;
-    border: 1px solid #e2e8f0; color: #94a3b8;
-  }
-
-  @media(max-width:560px){
-    .it-lesson-card { flex-wrap: wrap; gap: .75rem; }
-    .it-list-header { flex-direction: column; }
-  }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="it-list-wrap">
+<div id="le-read-progress"></div>
+<div class="le-wrap" style="padding-top:5.5rem">
 
   <!-- Breadcrumb -->
-  <div class="it-bc">
-    <a href="{% url 'italian_courses:category_list' %}">🇮🇹 Cours Italien</a>
-    <span>›</span>
+  <nav class="le-bc">
+    <a href="{% url 'italian_courses:category_list' %}">🇮🇹 Italien</a>
+    <span class="le-bc-sep">›</span>
     <span>{{ category.name }}</span>
-  </div>
+  </nav>
 
   <!-- Header -->
-  <div class="it-list-header">
-    <h1>{{ category.name }}</h1>
-    <div class="it-list-header-meta">
-      <span class="it-list-chip">{{ lessons|length }} leçon{{ lessons|length|pluralize }}</span>
-      <span class="it-list-chip">⏱ ~{{ lessons|length }}h de contenu</span>
+  <div class="le-header" data-flag="🇮🇹">
+    <div class="le-header-kicker">Cours d'Italien</div>
+    <h1 class="le-header-title">{{ category.name }}</h1>
+    <div class="le-header-meta">
+      <span class="le-header-chip">📚 {{ lessons|length }} leçon{{ lessons|length|pluralize }}</span>
+      <span class="le-header-chip orange">⏱ ~{{ lessons|length }}h de contenu</span>
+      <span class="le-header-chip green">🇮🇹 Nulla Osta · CILS · PLIDA</span>
     </div>
   </div>
 
-  <!-- Barre de progression globale -->
+  <!-- Progression globale -->
   {% if user.is_authenticated and lessons %}
-  {% with total=lessons|length %}
-  <div class="it-progress-bar-wrap">
-    <div class="it-progress-label" id="progressLabel">Chargement progression…</div>
-    <div class="it-progress-track">
-      <div class="it-progress-fill" id="progressFill" style="width:0%"></div>
+  <div class="le-global-progress">
+    <div class="le-global-progress-head">
+      <span class="le-global-progress-label" id="le-global-label">Calcul en cours…</span>
+      <span class="le-global-progress-pct" id="le-global-pct">—</span>
+    </div>
+    <div class="le-progress-track">
+      <div class="le-progress-fill" id="le-global-fill" style="width:0%"></div>
     </div>
   </div>
-  {% endwith %}
   {% endif %}
 
   <!-- Recherche -->
-  <form method="get" class="it-search-bar">
-    <input type="text" name="q" placeholder="Rechercher une leçon…" value="{{ request.GET.q }}">
-    <button type="submit">🔍 Filtrer</button>
-  </form>
+  <div style="margin-bottom:1.25rem;display:flex;gap:.6rem;">
+    <div style="flex:1;display:flex;align-items:center;background:var(--le-glass);border:1px solid var(--le-border);border-radius:10px;padding:.6rem 1rem;gap:.6rem">
+      <span style="color:var(--le-text-muted);font-size:.9rem">🔍</span>
+      <input id="le-search" type="text" placeholder="Rechercher une leçon…"
+             style="flex:1;background:transparent;border:none;outline:none;color:var(--le-text);font-size:.88rem;font-family:inherit"
+             value="{{ request.GET.q }}">
+    </div>
+  </div>
 
   <!-- Liste des leçons -->
-  {% for lesson in lessons %}
-  {% with prog=progress_by_lesson_id|get_item:lesson.id %}
-  <div class="it-lesson-card {% if prog and prog.completed %}is-done{% endif %}">
-    <div class="it-lesson-num">
-      {% if prog and prog.completed %}✓{% else %}{{ lesson.order }}{% endif %}
-    </div>
-    <div class="it-lesson-body">
-      <a class="it-lesson-title-link"
-         href="{% url 'italian_courses:lesson_detail' category_slug=category.slug lesson_slug=lesson.slug %}">
-        {{ lesson.title }}
-      </a>
-      <div class="it-lesson-meta">
-        {% if lesson.estimated_minutes %}
-        <span class="it-lesson-time">⏱ {{ lesson.estimated_minutes }} min</span>
-        {% endif %}
-        {% if prog and prog.completed %}
-        <span class="it-lesson-done-badge">✅ Terminée</span>
-        {% endif %}
-      </div>
-    </div>
-    <a class="it-lesson-open"
+  <div class="le-lesson-list">
+    {% for lesson in lessons %}
+    {% with prog=progress_by_lesson_id|get_item:lesson.id %}
+    <a class="le-lesson-card {% if prog and prog.completed %}done{% endif %}"
        href="{% url 'italian_courses:lesson_detail' category_slug=category.slug lesson_slug=lesson.slug %}">
-      Ouvrir →
+      <div class="le-lesson-num">
+        {% if prog and prog.completed %}✓{% else %}{{ lesson.order }}{% endif %}
+      </div>
+      <div class="le-lesson-body">
+        <div class="le-lesson-name">{{ lesson.title }}</div>
+        <div class="le-lesson-meta-row">
+          {% if lesson.estimated_minutes %}
+          <span class="le-lesson-time">⏱ {{ lesson.estimated_minutes }} min</span>
+          {% endif %}
+          {% if prog and prog.completed %}
+          <span class="le-badge-done">✅ Terminée</span>
+          {% endif %}
+        </div>
+      </div>
+      <span class="le-lesson-cta">Ouvrir →</span>
     </a>
+    {% endwith %}
+    {% empty %}
+    <div style="text-align:center;padding:3rem 1rem;background:var(--le-glass);border:1px solid var(--le-border);border-radius:var(--le-radius);color:var(--le-text-muted)">
+      <div style="font-size:2.5rem;margin-bottom:.5rem">📭</div>
+      <p>Aucune leçon disponible pour le moment.</p>
+    </div>
+    {% endfor %}
   </div>
-  {% endwith %}
-  {% empty %}
-  <div class="it-empty-state">
-    <p style="font-size:2rem;margin:0 0 .5rem">📭</p>
-    <p>Aucune leçon trouvée.</p>
-  </div>
-  {% endfor %}
 
 </div>
+{% endblock %}
 
-{% if user.is_authenticated %}
+{% block extra_js %}
 <script>
-(function(){
-  const cards  = document.querySelectorAll('.it-lesson-card');
-  const done   = document.querySelectorAll('.it-lesson-card.is-done').length;
-  const total  = cards.length;
-  const pct    = total ? Math.round(done / total * 100) : 0;
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressLabel').textContent =
-    'Progression : ' + done + ' / ' + total + ' leçon' + (total > 1 ? 's' : '') + ' terminée' + (done > 1 ? 's' : '') + ' (' + pct + '%)';
-})();
+document.addEventListener('DOMContentLoaded', () => {
+  // Restore search if ?q= param
+  const q = new URLSearchParams(location.search).get('q') || '';
+  const inp = document.getElementById('le-search');
+  if (inp && q) { inp.value = q; }
+});
 </script>
-{% endif %}
 {% endblock %}
