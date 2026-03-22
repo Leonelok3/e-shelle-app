@@ -1,0 +1,278 @@
+{# billing/templates/billing/access.html #}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mon Accès Premium Immigration Canada · Abonnement Visa & Résidence Permanente | Immigration97{% endblock %}
+{% block meta_description %}Gérez votre abonnement premium Immigration97 : accès illimité aux outils visa Canada, résidence permanente, tests IELTS TCF TEF, CV international, photo visa biométrique. Activez votre plan dès maintenant.{% endblock %}
+
+{% block body_class %}billing{% endblock %}
+{% block app_scope %}billing{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/billing.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Schema.org pour SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Gestion Accès Premium Immigration Canada",
+  "description": "Gérez votre abonnement premium pour accéder aux outils d'immigration : visa Canada, résidence permanente, tests de langue, CV international",
+  "provider": {
+    "@type": "Organization",
+    "name": "Immigration97",
+    "url": "{{ request.scheme }}://{{ request.get_host }}"
+  }
+}
+</script>
+
+<div class="access-container">
+    <!-- HEADER SEO -->
+    <header class="access-header">
+        <h1 class="access-title">Gestion de mon Accès Premium Immigration</h1>
+        <p class="access-subtitle">
+            Votre abonnement pour visa Canada, résidence permanente, tests IELTS/TCF/TEF, CV international et guides d'immigration officiels
+        </p>
+    </header>
+
+    <!-- CARTE STATUT PRINCIPAL -->
+    <article class="status-card">
+        {% if active_subscription %}
+            <div class="status-icon status-icon--active" aria-label="Abonnement actif">🛡️</div>
+
+            <div class="status-content">
+                <h2 class="status-text status-text--active">Abonnement Premium Actif</h2>
+
+                <div class="status-details">
+                    <p class="plan-name">
+                        Plan <strong>{{ active_subscription.plan.name }}</strong>
+                        <span class="badge badge-success">Actif</span>
+                    </p>
+
+                    <div class="access-benefits">
+                        <h3 class="benefits-title">🎯 Accès illimité à :</h3>
+                        <ul class="benefits-list">
+                            <li>✅ Générateur CV International ATS-Optimisé</li>
+                            <li>✅ Photo Visa Biométrique (Format officiel)</li>
+                            <li>✅ Tests de langue : IELTS, TCF, TEF</li>
+                            <li>✅ Guides Visa Travail Canada & Europe</li>
+                            <li>✅ Résidence Permanente : Entrée Express, PNP</li>
+                            <li>✅ Assistance Immigration 24/7</li>
+                            <li>✅ Calculateur Score CRS & Éligibilité</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="expiry-info">
+                    <div class="expiry-date">
+                        📅 Expire le : <strong>{{ active_subscription.expires_at|date:"d F Y à H:i" }}</strong>
+                    </div>
+                    <div class="days-remaining">
+                        ⏰ <strong>{{ active_subscription.days_remaining }} jours restants</strong>
+                    </div>
+                    {% if active_subscription.days_remaining <= 7 %}
+                    <div class="renewal-alert">
+                        ⚠️ Pensez à renouveler votre abonnement pour continuer à profiter des outils premium
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="status-actions">
+                <a href="/" class="btn btn-primary btn-lg">
+                    🚀 Accéder à mes outils premium
+                </a>
+                <a href="{% url 'billing:pricing' %}" class="btn btn-secondary">
+                    🔄 Renouveler mon abonnement
+                </a>
+            </div>
+
+        {% elif session_active %}
+            <div class="status-icon status-icon--warning" aria-label="Accès temporaire">⏱️</div>
+
+            <div class="status-content">
+                <h2 class="status-text status-text--warning">Accès Temporaire Actif</h2>
+                <p class="status-description">
+                    Votre session d'essai est valide. Profitez-en pour tester nos outils d'immigration premium.
+                </p>
+
+                <div class="trial-features">
+                    <p class="features-intro">🎁 Accès temporaire à :</p>
+                    <ul class="benefits-list">
+                        <li>Générateur CV (limité)</li>
+                        <li>Photo Visa (3 formats)</li>
+                        <li>Aperçu tests de langue</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="status-actions">
+                <a href="/" class="btn btn-primary">
+                    ▶️ Continuer l'exploration
+                </a>
+                <a href="{% url 'billing:pricing' %}" class="btn btn-secondary">
+                    ⭐ Passer à Premium
+                </a>
+            </div>
+
+        {% else %}
+            <div class="status-icon status-icon--inactive" aria-label="Pas d'accès actif">🔓</div>
+
+            <div class="status-content">
+                <h2 class="status-text status-text--inactive">Aucun Accès Actif</h2>
+                <p class="status-description">
+                    Débloquez tous les outils premium d'immigration Canada, visa travail, résidence permanente, tests de langue IELTS/TCF/TEF et générateur CV international.
+                </p>
+
+                <div class="premium-teaser">
+                    <h3 class="teaser-title">🎯 Que contient l'accès Premium ?</h3>
+                    <ul class="benefits-list">
+                        <li>✅ <strong>Visa Canada</strong> : Guide complet travail, études, PVT</li>
+                        <li>✅ <strong>Résidence Permanente</strong> : Entrée Express, PNP, parrainage</li>
+                        <li>✅ <strong>Tests de langue</strong> : IELTS, TCF, TEF avec exercices</li>
+                        <li>✅ <strong>CV International</strong> : Format ATS, modèles Canada/Europe</li>
+                        <li>✅ <strong>Photo Visa</strong> : Biométrique conforme normes officielles</li>
+                        <li>✅ <strong>Calculateurs</strong> : Score CRS, éligibilité immigration</li>
+                        <li>✅ <strong>Support 24/7</strong> : Assistance immigration personnalisée</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="status-actions">
+                <a href="{% url 'billing:pricing' %}" class="btn btn-primary btn-lg cta-pulse">
+                    ⭐ Découvrir les Abonnements Premium
+                </a>
+                <a href="{% url 'billing:redeem' %}" class="btn btn-secondary">
+                    🎟️ J'ai un code d'activation
+                </a>
+            </div>
+        {% endif %}
+    </article>
+
+    <!-- SECTION PLANS DISPONIBLES -->
+    <section class="plans-section">
+        <div class="plans-header">
+            <h2 class="plans-title">💎 Plans d'Abonnement Premium Immigration</h2>
+            <p class="plans-description">
+                Choisissez le plan qui correspond à votre projet d'immigration au Canada : visa travail, résidence permanente, études ou PVT.
+            </p>
+        </div>
+
+        <div class="plans-grid">
+            {% for plan in plans %}
+            <article class="mini-plan">
+                <div class="plan-badge">
+                    {% if plan.is_popular %}🏆 Populaire
+                    {% elif plan.duration_days >= 365 %}💎 Annuel
+                    {% elif plan.duration_days == 30 %}⚡ Mensuel
+                    {% elif plan.duration_days == 7 %}🧪 Semaine
+                    {% else %}💼 Plan{% endif %}
+                </div>
+
+                <div class="plan-content">
+                    <h3 class="plan-title">{{ plan.name }}</h3>
+
+                    <p class="plan-meta">
+                        ⏱️ {{ plan.get_duration_display }} d'accès complet
+                    </p>
+
+                    <div class="plan-price">
+                        <span class="price-amount">{{ plan.price_xaf|floatformat:0 }} FCFA</span>
+                        <span class="price-period">({{ plan.price_usd }} $)</span>
+                    </div>
+
+                    <ul class="plan-features">
+                        <li>✅ Tous les outils premium</li>
+                        <li>✅ Tests de langue illimités</li>
+                        <li>✅ Support prioritaire</li>
+                        {% if plan.duration_days >= 365 %}
+                        <li>⭐ Consultation gratuite</li>
+                        <li>⭐ Mises à jour exclusives</li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <div class="plan-action">
+                    <a href="{% url 'billing:buy_plan' plan.slug %}" class="btn btn-primary">
+                        Choisir {{ plan.name }}
+                    </a>
+                </div>
+            </article>
+            {% empty %}
+            <p>Aucun plan disponible pour le moment.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <aside class="final-cta">
+        <h3 class="cta-title">🎯 Prêt à démarrer votre projet d'immigration ?</h3>
+        <p class="cta-description">
+            Accès instantané à tous les outils premium.
+        </p>
+        <div class="cta-buttons">
+            <a href="{% url 'billing:pricing' %}" class="btn btn-primary btn-lg">
+                🚀 Commencer maintenant
+            </a>
+            {# Mets le bon lien quand ta page FAQ existe #}
+            <a href="/faq/" class="btn btn-secondary">
+                ❓ Questions fréquentes
+            </a>
+        </div>
+    </aside>
+
+    <!-- TRUST SECTION -->
+    <aside class="trust-section">
+        <div class="trust-grid">
+            <div class="trust-item">
+                <div class="trust-icon">🔒</div>
+                <h4 class="trust-title">Paiement Sécurisé</h4>
+                <p class="trust-text">Transactions cryptées SSL</p>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon">💯</div>
+                <h4 class="trust-title">Satisfait ou Remboursé</h4>
+                <p class="trust-text">Garantie 30 jours</p>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon">⚡</div>
+                <h4 class="trust-title">Accès Instantané</h4>
+                <p class="trust-text">Activation immédiate</p>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon">🎓</div>
+                <h4 class="trust-title">Expertise</h4>
+                <p class="trust-text">Outils & contenus mis à jour</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- FAQ RAPIDE -->
+    <section class="quick-faq">
+        <h3 class="faq-title">❓ Questions Fréquentes sur l'Abonnement Premium</h3>
+
+        <div class="faq-item">
+            <h4 class="faq-question">Que comprend l'abonnement premium Immigration97 ?</h4>
+            <p class="faq-answer">
+                Générateur CV, photo visa biométrique, préparation tests (IELTS/TCF/TEF), guides visa Canada, calculateurs et support.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h4 class="faq-question">Comment activer mon abonnement premium ?</h4>
+            <p class="faq-answer">
+                Après paiement, votre accès est activé automatiquement. Vous pouvez aussi activer via un code prépayé.
+            </p>
+        </div>
+
+        <div class="faq-item">
+            <h4 class="faq-question">Puis-je annuler mon abonnement ?</h4>
+            <p class="faq-answer">
+                Oui. Vous gardez l'accès jusqu'à la fin de la période payée.
+            </p>
+        </div>
+    </section>
+</div>
+{% endblock %}

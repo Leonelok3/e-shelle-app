@@ -44,6 +44,15 @@ INSTALLED_APPS = [
     "dashboard.apps.DashboardConfig",
     "ai_engine.apps.AiEngineConfig",
     "payments.apps.PaymentsConfig",
+
+    # Abonnements / paiements avancés
+    "billing.apps.BillingConfig",
+
+    # Cours de langues (immigration97)
+    "EnglishPrepApp.apps.EnglishprepappConfig",
+    "GermanPrepApp.apps.GermanprepappConfig",
+    "italian_courses.apps.ItalianCoursesConfig",
+    "preparation_tests.apps.PreparationTestsConfig",
 ]
 
 MIDDLEWARE = [

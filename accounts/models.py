@@ -44,6 +44,12 @@ class UserProfile(models.Model):
     ville      = models.CharField(max_length=100, blank=True, default="")
     pays       = models.CharField(max_length=100, blank=True, default="Cameroun")
     site_web   = models.URLField(blank=True, default="")
+    # Niveau CECR (utilisé par les cours de langues)
+    LEVEL_CHOICES = [
+        ("A1","A1"), ("A2","A2"), ("B1","B1"),
+        ("B2","B2"), ("C1","C1"), ("C2","C2"),
+    ]
+    level = models.CharField(max_length=2, choices=LEVEL_CHOICES, blank=True, default="A1")
     # Solde virtuel (pour programme d'affiliation, crédits IA, etc.)
     solde      = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     # Plan souscrit

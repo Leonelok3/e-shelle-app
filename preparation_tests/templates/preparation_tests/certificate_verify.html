@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load static %}
+
+{# ==================================================
+   SCOPE STRICT APP — OBLIGATOIRE
+================================================== #}
+{% block body_class %}preparation-tests{% endblock %}
+{% block app_scope %}preparation-tests{% endblock %}
+
+{# ==================================================
+   SEO — TITLE & META
+================================================== #}
+{% block title %}
+Certificat CECR vérifié | Immigration97
+{% endblock %}
+
+{% block meta_description %}
+Vérification officielle d’un certificat CECR délivré par Immigration97.
+Authenticité, niveau linguistique, date de délivrance et informations du candidat.
+{% endblock %}
+
+{# ==================================================
+   CSS APP (MÊME FICHIER, MÊME STYLE)
+================================================== #}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/preparation_tests.css' %}?v=20260226">
+{% endblock %}
+
+{% block content %}
+
+<!-- ==================================================
+CERTIFICAT CECR — VERIFICATION OFFICIELLE
+================================================== -->
+<section class="pt-certificate-section">
+  <div class="container pt-fade-up">
+
+    <article class="pt-card pt-card--certificate">
+
+      <!-- ================= HEADER ================= -->
+      <header class="pt-certificate-header text-center">
+        <span class="pt-badge pt-badge--success">
+          ✔ Certificat authentique
+        </span>
+
+        <h1 class="pt-certificate-title">
+          Certificat CECR vérifié
+        </h1>
+
+        <p class="pt-certificate-subtitle">
+          Ce certificat linguistique a été délivré et validé
+          par la plateforme <strong>Immigration97</strong>.
+        </p>
+      </header>
+
+      <!-- ================= INFOS ================= -->
+      <section class="pt-certificate-body">
+
+        <dl class="pt-certificate-list">
+
+          <div>
+            <dt>Nom du candidat</dt>
+            <dd>
+              {{ certificate.user.get_full_name|default:certificate.user.username }}
+            </dd>
+          </div>
+
+          <div>
+            <dt>Examen</dt>
+            <dd>{{ certificate.exam_code }}</dd>
+          </div>
+
+          <div>
+            <dt>Niveau CECR</dt>
+            <dd class="pt-level">
+              {{ certificate.level }}
+            </dd>
+          </div>
+
+          <div>
+            <dt>Identifiant du certificat</dt>
+            <dd class="pt-mono">
+              {{ certificate.public_id }}
+            </dd>
+          </div>
+
+          <div>
+            <dt>Date de délivrance</dt>
+            <dd>{{ certificate.issued_at|date:"d/m/Y" }}</dd>
+          </div>
+
+        </dl>
+
+      </section>
+
+      <!-- ================= FOOTER ================= -->
+      <footer class="pt-certificate-footer text-center">
+        <p class="pt-certificate-note">
+          Ce certificat peut être présenté à des universités,
+          employeurs ou autorités pour attester officiellement
+          du niveau linguistique du candidat.
+        </p>
+      </footer>
+
+    </article>
+
+  </div>
+</section>
+
+{% endblock %}

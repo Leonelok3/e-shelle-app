@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}preparation-tests{% endblock %}
+{% block app_scope %}preparation-tests{% endblock %}
+
+{% block title %}
+Hub DELF – Préparation A1 à B2 par compétences | Immigration97
+{% endblock %}
+
+{% block meta_description %}
+Préparation complète au DELF (Diplôme d'Études en Langue Française) niveaux A1, A2, B1 et B2 :
+compréhension orale et écrite, production orale et écrite, exercices guidés et examens blancs.
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/preparation_tests.css' %}?v=20260226">
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="pt-hero">
+  <div class="container pt-fade-up">
+
+    <span class="pt-badge">
+      🎓 DELF · Diplôme d'Études en Langue Française
+    </span>
+
+    <h1 class="pt-title">
+      Prépare ton <span class="pt-gradient-primary">DELF</span><br>
+      par compétences
+    </h1>
+
+    <p class="pt-lead">
+      Le DELF couvre les niveaux <strong>A1 à B2</strong> du CECR.
+      Diplôme officiel du Ministère de l'Éducation Nationale français,
+      <strong>reconnu à vie</strong> dans plus de 175 pays.
+    </p>
+
+    <div class="pt-badges" role="list" aria-label="Avantages">
+      <span class="pt-badge pt-badge--soft" role="listitem">🧭 Niveaux A1 → B2</span>
+      <span class="pt-badge pt-badge--soft" role="listitem">🎓 Diplôme reconnu à vie</span>
+      <span class="pt-badge pt-badge--soft" role="listitem">📊 Analyse Coach IA</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- COMPÉTENCES -->
+<section class="pt-section">
+  <div class="container">
+    <div class="pt-grid-layout">
+
+      <!-- MAIN -->
+      <div class="pt-main">
+
+        <article class="pt-card">
+          <h2>Choisis ta compétence DELF</h2>
+          <p class="pt-card-meta" style="margin-bottom:1.25rem;">
+            Le DELF évalue 4 compétences. Chaque épreuve est notée sur 25 points (total : 100).
+            La note minimale par épreuve est 5/25 — travaille chaque compétence.
+          </p>
+
+          <div class="pt-modules-grid">
+
+            <!-- CO -->
+            <article class="pt-card pt-card--module">
+              <h3>🎧 Compréhension de l'oral (CO)</h3>
+              <p class="pt-card-meta">
+                Dialogues, annonces, émissions courtes — de A1 (phrases simples) à B2 (débats nuancés).
+              </p>
+              <div class="pt-cta-group">
+                <a href="{% url "preparation_tests:co_hub" %}" class="pt-btn-secondary"
+                   aria-label="Cours et exercices Compréhension orale">
+                  📘 Cours + exercices
+                </a>
+                <a href="{% url "preparation_tests:start_session_with_section" "delf" "co" %}"
+                   class="pt-btn-primary" aria-label="Examen blanc Compréhension orale">
+                  ⏱ Examen blanc
+                </a>
+              </div>
+            </article>
+
+            <!-- CE -->
+            <article class="pt-card pt-card--module">
+              <h3>📖 Compréhension de l'écrit (CE)</h3>
+              <p class="pt-card-meta">
+                Panneaux, formulaires, articles, publicités — lecture de documents authentiques de A1 à B2.
+              </p>
+              <div class="pt-cta-group">
+                <a href="{% url "preparation_tests:ce_hub" %}" class="pt-btn-secondary"
+                   aria-label="Cours et exercices Compréhension écrite">
+                  📘 Cours + exercices
+                </a>
+                <a href="{% url "preparation_tests:start_session_with_section" "delf" "ce" %}"
+                   class="pt-btn-primary" aria-label="Examen blanc Compréhension écrite">
+                  ⏱ Examen blanc
+                </a>
+              </div>
+            </article>
+
+            <!-- EE — appelée "Production écrite" au DELF -->
+            <article class="pt-card pt-card--module">
+              <h3>✍️ Production écrite (PE)</h3>
+              <p class="pt-card-meta">
+                Notes, e-mails, lettres, descriptions, courts textes argumentatifs — selon le niveau.
+              </p>
+              <div class="pt-cta-group">
+                <a href="{% url "preparation_tests:ee_hub" %}" class="pt-btn-secondary"
+                   aria-label="Cours et exercices Production écrite">
+                  📘 Cours + exercices
+                </a>
+                <a href="{% url "preparation_tests:start_session_with_section" "delf" "ee" %}"
+                   class="pt-btn-primary" aria-label="Examen blanc Production écrite">
+                  ⏱ Examen blanc
+                </a>
+              </div>
+            </article>
+
+            <!-- EO — appelée "Production orale" au DELF -->
+            <article class="pt-card pt-card--module">
+              <h3>🗣 Production orale (PO)</h3>
+              <p class="pt-card-meta">
+                Entretien dirigé, monologue suivi, exercice en interaction — de A1 à B2.
+              </p>
+              <div class="pt-cta-group">
+                <a href="{% url "preparation_tests:eo_hub" %}" class="pt-btn-secondary"
+                   aria-label="Cours et exercices Production orale">
+                  📘 Cours + exercices
+                </a>
+                <a href="{% url "preparation_tests:start_session_with_section" "delf" "eo" %}"
+                   class="pt-btn-primary" aria-label="Examen blanc Production orale">
+                  ⏱ Examen blanc
+                </a>
+              </div>
+            </article>
+
+          </div>
+        </article>
+
+        <!-- NIVEAUX DELF -->
+        <article class="pt-card" style="margin-top:1rem;">
+          <h2>📋 Niveaux couverts par le DELF</h2>
+          <div class="pt-level-grid" style="margin-top:1rem;">
+
+            <div class="pt-level-card">
+              <span class="pt-level-badge pt-level-a1">A1</span>
+              <h3>Débutant</h3>
+              <p>Comprendre et utiliser des expressions familières du quotidien.</p>
+              <a href="{% url "preparation_tests:co_by_level" "A1" %}" class="pt-btn-secondary" style="font-size:.85rem;">
+                📘 Voir le contenu A1
+              </a>
+            </div>
+
+            <div class="pt-level-card">
+              <span class="pt-level-badge pt-level-a2">A2</span>
+              <h3>Élémentaire</h3>
+              <p>Gérer les situations simples et se décrire.</p>
+              <a href="{% url "preparation_tests:co_by_level" "A2" %}" class="pt-btn-secondary" style="font-size:.85rem;">
+                📘 Voir le contenu A2
+              </a>
+            </div>
+
+            <div class="pt-level-card">
+              <span class="pt-level-badge pt-level-b1">B1</span>
+              <h3>Intermédiaire</h3>
+              <p>Exprimer une opinion, raconter et comprendre l'essentiel.</p>
+              <a href="{% url "preparation_tests:co_by_level" "B1" %}" class="pt-btn-secondary" style="font-size:.85rem;">
+                📘 Voir le contenu B1
+              </a>
+            </div>
+
+            <div class="pt-level-card">
+              <span class="pt-level-badge pt-level-b2">B2</span>
+              <h3>Avancé</h3>
+              <p>Argumenter, comprendre les nuances, interagir aisément.</p>
+              <a href="{% url "preparation_tests:co_by_level" "B2" %}" class="pt-btn-secondary" style="font-size:.85rem;">
+                📘 Voir le contenu B2
+              </a>
+            </div>
+
+          </div>
+        </article>
+
+        <!-- EXAMEN BLANC FORMAT DELF OFFICIEL -->
+        <article class="pt-card pt-card--actions" style="margin-top:1rem;">
+          <h2>🧪 Examen blanc format DELF officiel</h2>
+          <p class="pt-card-meta">
+            Simule un examen DELF complet (CO + CE auto-corrigés, PE + PO avec correction IA).
+            Score /25 par épreuve — seuil 50/100 + min 5/25.
+          </p>
+          <div class="pt-cta-group">
+            <a href="{% url "preparation_tests:exam_format_hub" "delf" %}" class="pt-btn-primary">
+              {% if not has_premium and not has_temp_access %}🔒{% endif %} ▶ Examen blanc DELF officiel
+            </a>
+            <a href="{% url "preparation_tests:level_mock_hub" %}" class="pt-btn-ghost">
+              📋 Examen blanc par niveau CECR
+            </a>
+          </div>
+        </article>
+
+        <div class="pt-back-link">
+          <a href="{% url "preparation_tests:dashboard_global" %}" class="pt-btn-secondary">
+            📊 Voir ma progression globale
+          </a>
+        </div>
+
+      </div>
+
+      <!-- SIDEBAR -->
+      <aside class="pt-side">
+
+        <div class="pt-card pt-card--side">
+          <h3>Pourquoi le DELF ?</h3>
+          <ul class="pt-side-list">
+            <li>Diplôme officiel reconnu à vie</li>
+            <li>Admissions universitaires en France</li>
+            <li>Dossiers d'immigration (visa, RP)</li>
+            <li>Validé dans plus de 175 pays</li>
+          </ul>
+        </div>
+
+        <div class="pt-card pt-card--side" style="margin-top:1rem;">
+          <h3>Structure d'un examen DELF</h3>
+          <p class="pt-card-meta">
+            4 épreuves × 25 pts = <strong>100 pts total</strong>.<br>
+            Seuil : 50/100 global + min 5/25 par épreuve.<br>
+            Durée totale : environ <strong>3h</strong> (varie selon niveau).
+          </p>
+        </div>
+
+        <div class="pt-card pt-card--side" style="margin-top:1rem;">
+          <h3>DELF → DALF ?</h3>
+          <p class="pt-card-meta">
+            Tu vises le C1 ou C2 ? Le DALF est fait pour toi.
+          </p>
+          <a href="{% url "preparation_tests:dalf_hub" %}" class="pt-btn-secondary" style="margin-top:.5rem;">
+            🎓 Hub DALF (C1–C2)
+          </a>
+        </div>
+
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

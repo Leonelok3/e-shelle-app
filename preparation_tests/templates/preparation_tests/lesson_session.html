@@ -1,0 +1,409 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}preparation-tests{% endblock %}
+{% block app_scope %}preparation-tests{% endblock %}
+
+{% block title %}
+{{ lesson.title }} – {{ display_exam_code|upper }} {{ section|upper }} | Immigration97
+{% endblock %}
+
+{% block meta_description %}
+Leçon {{ section|upper }} – {{ display_exam_code|upper }} niveau {{ lesson.level }} :
+audio, questions corrigées et entraînement progressif CECR avec Immigration97.
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/preparation_tests.css' %}?v=20260226">
+{% endblock %}
+
+{% block content %}
+
+<section class="pt-hero pt-hero--lesson">
+  <div class="container pt-fade-up">
+
+    <span class="pt-badge">
+      {{ display_exam_code|upper }} · {{ section|upper }} · Niveau {{ lesson.level }}
+    </span>
+
+    <h1 class="pt-title">{{ lesson.title }}</h1>
+
+    {# ✅ PROGRESSION LIVE #}
+    <div class="pt-progress-wrap" aria-label="Progression de la leçon">
+      <div class="pt-progress-top">
+        <strong class="pt-progress-label">Progression</strong>
+        <span class="pt-progress-stats">
+          <span id="ptProgressDone">{{ progress_completed }}</span>/<span id="ptProgressTotal">{{ progress_total }}</span>
+          – <span id="ptProgressPct">{{ progress_percent }}</span>%
+        </span>
+      </div>
+
+      <div class="pt-progress-bar" role="progressbar"
+           aria-valuenow="{{ progress_percent }}"
+           aria-valuemin="0"
+           aria-valuemax="100">
+        <div id="ptProgressFill" class="pt-progress-fill" style="width: {{ progress_percent }}%;"></div>
+      </div>
+
+      <p class="pt-progress-hint">
+        Valide un exercice correctement pour avancer.
+      </p>
+    </div>
+
+    {# 💎 CTA Premium (conversion) #}
+    {% if not is_premium %}
+      <div class="pt-card pt-card--premium-cta" style="margin-top:14px;">
+        <strong>🔒 Mode Premium</strong>
+        <p style="margin:6px 0 10px;">
+          Débloque <b>tous les audios</b>, la progression complète, et l’accès illimité A1 → C2 (FR / EN / DE / IT).
+        </p>
+        <a class="pt-btn-primary" href="{% url "billing:pricing" %}">
+          Passer Premium
+        </a>
+      </div>
+    {% endif %}
+
+    {% include "preparation_tests/partials/_cefr_bar.html" %}
+
+    <p class="pt-lead">
+      {% if section == "eo" %}
+        Entraînement à la <strong>prise de parole</strong> guidé avec
+        <strong>retour IA personnalisé</strong> et correction immédiate.
+      {% elif section == "ee" %}
+        Entraînement à la <strong>production écrite</strong> avec
+        <strong>correction IA</strong>, analyse des erreurs et version améliorée.
+      {% elif section == "ce" %}
+        Entraînement à la <strong>lecture et compréhension de textes</strong>
+        niveau {{ lesson.level }}. Lis attentivement le document ci-dessous
+        et réponds aux <strong>questions de compréhension</strong> avec correction immédiate.
+      {% else %}
+        Entraînement guidé avec <strong>audio</strong>,
+        <strong>questions interactives</strong> et
+        <strong>correction immédiate</strong>.
+      {% endif %}
+    </p>
+
+  </div>
+</section>
+
+<section class="pt-section pt-section--nav">
+  <div class="container">
+    {% include "preparation_tests/partials/_prep_nav.html" %}
+  </div>
+</section>
+
+<section class="pt-section">
+  <div class="container">
+    <div class="pt-grid-layout">
+
+      <div class="pt-main">
+        {% if section == "ce" %}
+          <p class="pt-card-meta" style="margin-bottom:8px;">
+            📄 <strong>Texte de compréhension</strong> — lisez attentivement avant de répondre aux questions.
+          </p>
+        {% endif %}
+        <article class="pt-card pt-card--lesson-content">
+          {{ lesson.content_html|safe }}
+        </article>
+      </div>
+
+      <aside class="pt-side">
+        <div class="pt-card pt-card--side">
+          {% if section == "ce" %}
+            <h3>📖 Conseils CE</h3>
+            <ul class="pt-side-list">
+              <li>Lis le texte une 1ère fois rapidement pour l'idée générale</li>
+              <li>Lis les questions avant de relire en détail</li>
+              <li>Repère les mots-clés dans le texte</li>
+              <li>Élimine les réponses clairement fausses</li>
+            </ul>
+            <p class="pt-small">
+              💡 Pour le TEF/TCF, tu as environ
+              <strong>1 min 30</strong> par question de CE.
+              Entraîne-toi à lire vite et efficacement.
+            </p>
+          {% else %}
+            <h3>🎯 Objectif pédagogique</h3>
+            <ul class="pt-side-list">
+              <li>Comprendre les consignes</li>
+              <li>Identifier les informations clés</li>
+              <li>Répondre efficacement sous contrainte de temps</li>
+            </ul>
+          {% endif %}
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+<section class="pt-section pt-section--exercises">
+  <div class="container">
+
+    <h2 class="pt-section-title text-center">
+      {% if section == "eo" %}🎤 Sujets d’expression orale
+      {% elif section == "ee" %}✍️ Sujets d’expression écrite
+      {% elif section == "ce" %}📖 Questions de compréhension
+      {% else %}🎧 Exercices d’application
+      {% endif %}
+    </h2>
+
+    <input type="hidden" id="csrf-token" value="{{ csrf_token }}">
+
+    <div class="pt-exercises-grid">
+
+      {% for row in exercises %}
+      {% with exercise=row.obj %}
+
+      {# ============================================================ #}
+      {# 🎤 EO — Expression Orale : sujet + enregistreur audio        #}
+      {# ============================================================ #}
+      {% if section == "eo" %}
+
+      <article class="pt-card pt-card--exercise pt-eo-card"
+               data-exercise-id="{{ exercise.id }}">
+
+        <header class="pt-exercise-header">
+          <h3>Sujet {{ forloop.counter }}</h3>
+        </header>
+
+        <div class="pt-exercise-question">{{ exercise.question_text }}</div>
+
+        {% if exercise.instruction %}
+          <div class="pt-exercise-instruction pt-eo-instructions">
+            <strong>📋 Consignes :</strong>
+            <p>{{ exercise.instruction }}</p>
+          </div>
+        {% endif %}
+
+        {% if exercise.summary %}
+          <div class="pt-eo-expected">
+            <strong>🎯 Points à aborder :</strong>
+            <p class="pt-eo-points-hint">{{ exercise.summary }}</p>
+          </div>
+        {% endif %}
+
+        <div class="pt-recorder" data-exercise-id="{{ exercise.id }}">
+          <div class="pt-recorder-controls">
+            <button class="pt-record-btn" type="button">
+              🎤 Commencer l’enregistrement
+            </button>
+            <span class="pt-record-timer"></span>
+          </div>
+          <audio class="pt-playback" controls style="display:none; width:100%; margin-top:12px;"></audio>
+        </div>
+
+        <div class="pt-cta-group" style="margin-top:14px;">
+          <button class="pt-submit-eo pt-btn-primary" type="button" disabled>
+            📤 Soumettre pour évaluation IA
+          </button>
+        </div>
+
+        <div class="pt-eo-result" style="display:none;"></div>
+
+      </article>
+
+      {# ============================================================ #}
+      {# ✍️ EE — Expression Écrite : sujet + zone de rédaction        #}
+      {# ============================================================ #}
+      {% elif section == "ee" %}
+
+      <article class="pt-card pt-card--exercise pt-ee-card"
+               data-exercise-id="{{ exercise.id }}">
+
+        <header class="pt-exercise-header">
+          <h3>Sujet {{ forloop.counter }}</h3>
+        </header>
+
+        <div class="pt-exercise-question">{{ exercise.question_text }}</div>
+
+        {% if exercise.instruction %}
+          <div class="pt-exercise-instruction pt-ee-instructions">
+            <strong>📋 Consignes :</strong>
+            <p>{{ exercise.instruction }}</p>
+          </div>
+        {% endif %}
+
+        <div class="pt-ee-editor">
+          <textarea
+            class="pt-ee-textarea"
+            rows="8"
+            placeholder="Rédigez votre réponse ici..."
+          ></textarea>
+          <div class="pt-word-counter">
+            <span class="pt-word-count">0</span> mot(s)
+          </div>
+        </div>
+
+        <div class="pt-cta-group" style="margin-top:14px;">
+          <button class="pt-submit-ee pt-btn-primary" type="button">
+            ✅ Soumettre pour correction IA
+          </button>
+        </div>
+
+        <div class="pt-ee-result" style="display:none;"></div>
+
+      </article>
+
+      {# ============================================================ #}
+      {# 📖 CE — Compréhension Écrite : QCM sans audio               #}
+      {# ============================================================ #}
+      {% elif section == "ce" %}
+
+      <article class="pt-card pt-card--exercise pt-ce-card"
+               data-exercise-id="{{ exercise.id }}">
+
+        <header class="pt-exercise-header">
+          <h3>Question {{ forloop.counter }}</h3>
+          {% if exercise.instruction %}
+            <p class="pt-exercise-instruction">{{ exercise.instruction }}</p>
+          {% endif %}
+        </header>
+
+        <p class="pt-exercise-question">{{ exercise.question_text }}</p>
+
+        <form
+          class="pt-exercise-form"
+          data-correct="{{ exercise.correct_option|upper }}"
+          data-exercise-id="{{ exercise.id }}"
+          novalidate
+        >
+
+          {% if exercise.option_a %}
+          <label class="pt-option">
+            <input type="radio" name="q{{ exercise.id }}" value="A">
+            <span>A.</span> {{ exercise.option_a }}
+          </label>
+          {% endif %}
+
+          {% if exercise.option_b %}
+          <label class="pt-option">
+            <input type="radio" name="q{{ exercise.id }}" value="B">
+            <span>B.</span> {{ exercise.option_b }}
+          </label>
+          {% endif %}
+
+          {% if exercise.option_c %}
+          <label class="pt-option">
+            <input type="radio" name="q{{ exercise.id }}" value="C">
+            <span>C.</span> {{ exercise.option_c }}
+          </label>
+          {% endif %}
+
+          {% if exercise.option_d %}
+          <label class="pt-option">
+            <input type="radio" name="q{{ exercise.id }}" value="D">
+            <span>D.</span> {{ exercise.option_d }}
+          </label>
+          {% endif %}
+
+          <div class="pt-cta-group">
+            <button type="button" class="pt-btn-primary pt-check-answer">
+              Vérifier la réponse
+            </button>
+          </div>
+
+          <p class="pt-feedback" hidden></p>
+        </form>
+
+      </article>
+
+      {# ============================================================ #}
+      {# 🎧 CO — Compréhension Orale : audio + QCM                   #}
+      {# ============================================================ #}
+      {% else %}
+
+      <article class="pt-card pt-card--exercise">
+
+        <header class="pt-exercise-header">
+          <h3>Exercice {{ forloop.counter }}</h3>
+          {% if exercise.instruction %}
+            <p class="pt-exercise-instruction">{{ exercise.instruction }}</p>
+          {% endif %}
+        </header>
+
+        {# 🔒 AUDIO PREMIUM READY #}
+        {% if exercise.audio_url %}
+          {% if row.can_audio %}
+            <div class="pt-audio-box">
+              <audio controls preload="metadata" playsinline controlslist="nodownload noplaybackrate">
+                <source src="{{ exercise.audio_url }}" type="audio/mpeg">
+                Votre navigateur ne supporte pas l’audio.
+              </audio>
+            </div>
+          {% else %}
+            <div class="pt-audio-box pt-audio-box--missing">
+              🔒 Audio Premium : <a href="{% url "billing:pricing" %}">débloquer</a>
+              <span style="display:block; opacity:.85; margin-top:4px;">
+                Astuce : valide l’exercice précédent ou passe Premium.
+              </span>
+            </div>
+          {% endif %}
+        {% else %}
+          <div class="pt-audio-box pt-audio-box--missing">⚠️ Aucun audio disponible pour cet exercice</div>
+        {% endif %}
+
+        <p class="pt-exercise-question">{{ exercise.question_text }}</p>
+
+        <form
+          class="pt-exercise-form"
+          data-correct="{{ exercise.correct_option|upper }}"
+          data-exercise-id="{{ exercise.id }}"
+          novalidate
+        >
+
+          {% if exercise.option_a %}
+          <label class="pt-option">
+            <input type="radio" name="q{{ exercise.id }}" value="A">
+            <span>A.</span> {{ exercise.option_a }}
+          </label>
+          {% endif %}
+
+          {% if exercise.option_b %}
+          <label class="pt-option">
+            <input type="radio" name="q{{ exercise.id }}" value="B">
+            <span>B.</span> {{ exercise.option_b }}
+          </label>
+          {% endif %}
+
+          {% if exercise.option_c %}
+          <label class="pt-option">
+            <input type="radio" name="q{{ exercise.id }}" value="C">
+            <span>C.</span> {{ exercise.option_c }}
+          </label>
+          {% endif %}
+
+          {% if exercise.option_d %}
+          <label class="pt-option">
+            <input type="radio" name="q{{ exercise.id }}" value="D">
+            <span>D.</span> {{ exercise.option_d }}
+          </label>
+          {% endif %}
+
+          <div class="pt-cta-group">
+            <button type="button" class="pt-btn-primary pt-check-answer">
+              Vérifier la réponse
+            </button>
+          </div>
+
+          <p class="pt-feedback" hidden></p>
+        </form>
+
+      </article>
+
+      {% endif %}{# end section branch #}
+
+      {% endwith %}
+      {% empty %}
+        <p class="pt-empty text-center">Aucun exercice disponible pour cette leçon.</p>
+      {% endfor %}
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/preparation_tests.js' %}?v=20260218-premium" defer></script>
+{% endblock %}

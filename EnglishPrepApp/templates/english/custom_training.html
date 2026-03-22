@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Entraînement personnalisé – Immigration97{% endblock %}
+
+{% block extra_css %}
+<style>
+  .ep-wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+  .ep-bc { font-size: .82rem; color: #64748b; margin: 1.5rem 0 1.25rem; display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; }
+  .ep-bc a { color: #F59E0B; text-decoration: none; font-weight: 500; }
+
+  .ep-hero { background: linear-gradient(135deg, #102B4E 0%, #1a3d6b 100%); border-radius: 20px; padding: 2.5rem 2rem; color: #fff; margin-bottom: 2rem; text-align: center; position: relative; overflow: hidden; }
+  .ep-hero::before { content: "💪"; font-size: 8rem; position: absolute; right: 2rem; top: 50%; transform: translateY(-50%); opacity: .07; pointer-events: none; }
+  .ep-hero-kicker { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .15em; opacity: .6; margin-bottom: .5rem; }
+  .ep-hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; margin: 0 0 .65rem; }
+  .ep-hero h1 span { color: #F59E0B; }
+  .ep-hero p { font-size: .9rem; opacity: .8; margin: 0; max-width: 560px; margin: 0 auto; }
+
+  .ep-quick { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.75rem; }
+  .ep-quick-link { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: .5rem 1rem; font-size: .82rem; font-weight: 600; color: #102B4E; text-decoration: none; transition: border-color .2s, box-shadow .2s; display: flex; align-items: center; gap: .4rem; }
+  .ep-quick-link:hover { border-color: #F59E0B; box-shadow: 0 2px 8px rgba(245,158,11,.15); }
+
+  .ep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.1rem; }
+  .ep-exercise-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 1.35rem; display: flex; flex-direction: column; gap: .75rem; transition: box-shadow .2s, border-color .2s; }
+  .ep-exercise-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.08); border-color: #F59E0B; }
+
+  .ep-q-num { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: #F59E0B; }
+  .ep-q-text { font-size: .95rem; font-weight: 600; color: #102B4E; line-height: 1.5; }
+  .ep-options { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .35rem; }
+  .ep-options li { font-size: .83rem; color: #475569; padding: .4rem .65rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 7px; }
+
+  .ep-btn-answer { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; background: #102B4E; color: #fff; border-radius: 8px; padding: .65rem 1.25rem; font-size: .85rem; font-weight: 700; text-decoration: none; transition: background .2s; margin-top: auto; }
+  .ep-btn-answer:hover { background: #1a3d6b; color: #fff; }
+
+  .ep-empty { text-align: center; padding: 4rem 1rem; color: #94a3b8; background: #f8fafc; border-radius: 14px; border: 1px solid #e2e8f0; }
+
+  @media (max-width: 600px) {
+    .ep-hero::before { display: none; }
+    .ep-grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ep-wrap">
+
+  <nav class="ep-bc">
+    <a href="{% url 'englishprep:dashboard' %}">Anglais</a>
+    <span>›</span>
+    <span>Entraînement personnalisé</span>
+  </nav>
+
+  <div class="ep-hero">
+    <p class="ep-hero-kicker">Immigration97 · Training Mode</p>
+    <h1><span>Entraînement</span> personnalisé</h1>
+    <p>Travaille précisément les compétences à améliorer. Réponds aux questions, progresse étape par étape et gagne de l'XP.</p>
+  </div>
+
+  <div class="ep-quick">
+    <a href="{% url 'englishprep:dashboard' %}" class="ep-quick-link">🏠 Dashboard</a>
+    <a href="{% url 'englishprep:exam_hub' %}" class="ep-quick-link">🌐 Hub examens</a>
+    <a href="{% url 'englishprep:exam_list' %}" class="ep-quick-link">📚 Tous les tests</a>
+  </div>
+
+  {% if exercises %}
+  <div class="ep-grid">
+    {% for exercise in exercises %}
+    <article class="ep-exercise-card">
+      <p class="ep-q-num">Question {{ forloop.counter }}</p>
+      <p class="ep-q-text">{{ exercise.question_text }}</p>
+      <ul class="ep-options">
+        <li>A. {{ exercise.option_a }}</li>
+        <li>B. {{ exercise.option_b }}</li>
+        <li>C. {{ exercise.option_c }}</li>
+        <li>D. {{ exercise.option_d }}</li>
+      </ul>
+      <a href="{% url 'englishprep:submit_training' exercise.id %}" class="ep-btn-answer">➡️ Répondre maintenant</a>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="ep-empty">
+    <p style="font-size:2rem;margin-bottom:.75rem;">📭</p>
+    <p>Aucun exercice disponible pour le moment.<br>Reviens plus tard ou choisis un autre mode d'entraînement.</p>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

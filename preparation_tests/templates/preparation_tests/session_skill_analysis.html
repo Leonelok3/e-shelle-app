@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+{% load static %}
+
+{# ==================================================
+   SCOPE STRICT APP
+================================================== #}
+{% block body_class %}preparation-tests{% endblock %}
+{% block app_scope %}preparation-tests{% endblock %}
+
+{# ==================================================
+   SEO
+================================================== #}
+{% block title %}
+Analyse de compétences CECR – TEF & TCF | Immigration97
+{% endblock %}
+
+{% block meta_description %}
+Analyse détaillée des compétences linguistiques (CO, CE, EE, EO) :
+scores par section, niveaux CECR, priorités détectées
+et plan de progression personnalisé Immigration97.
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/preparation_tests.css' %}?v=20260226">
+{% endblock %}
+
+{% block content %}
+
+<!-- ==================================================
+HERO — ANALYSE IA
+================================================== -->
+<section class="pt-hero pt-hero--analysis">
+  <div class="container pt-fade-up">
+
+    <span class="pt-badge">
+      🧠 Analyse de compétences
+    </span>
+
+    <h1 class="pt-title">
+      Ton profil
+      <span class="pt-gradient-secondary">CO · CE · EE · EO</span>
+    </h1>
+
+    <p class="pt-lead">
+      Analyse consolidée de ta session :
+      forces, faiblesses et leviers concrets
+      pour améliorer ton score plus rapidement.
+    </p>
+
+    <div class="pt-pill-row">
+      <span class="pt-pill">
+        ✅ {{ global_correct }} / {{ global_total }} bonnes réponses
+      </span>
+      <span class="pt-pill">
+        🎯 Score global {{ global_pct }} %
+      </span>
+      <span class="pt-pill">
+        🧪 Session #{{ session.id }}
+      </span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==================================================
+ANALYSE PAR COMPÉTENCE
+================================================== -->
+<section class="pt-section">
+  <div class="container">
+
+    <article class="pt-card">
+      <h2>📊 Analyse par compétence</h2>
+      <p class="pt-muted">
+        Identifie immédiatement les sections à renforcer en priorité.
+      </p>
+
+      <div class="pt-stats-grid">
+
+        {% for code, data in per_section.items %}
+        <div
+          class="pt-stat-block"
+          data-pct="{{ data.pct|default_if_none:'0' }}"
+        >
+          <div class="pt-stat-header">
+            <span class="pt-stat-label">
+              {% if code == "CO" %}🎧 Compréhension orale
+              {% elif code == "CE" %}📖 Compréhension écrite
+              {% elif code == "EE" %}✍️ Expression écrite
+              {% elif code == "EO" %}🗣 Expression orale
+              {% else %}{{ code }}{% endif %}
+            </span>
+            <strong>{{ data.pct }}%</strong>
+          </div>
+
+          <div class="pt-stat-meta">
+            {{ data.correct }}/{{ data.total }} bonnes réponses
+            — Niveau <strong>{{ data.level }}</strong>
+          </div>
+
+          <div class="pt-progress-bar">
+            <div class="pt-progress-fill"></div>
+          </div>
+        </div>
+        {% empty %}
+          <p class="pt-muted">
+            Aucune statistique par section disponible.
+          </p>
+        {% endfor %}
+
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ==================================================
+ANALYSE PAR DIFFICULTÉ
+================================================== -->
+<section class="pt-section">
+  <div class="container">
+
+    <article class="pt-card">
+      <h2>⚖️ Analyse par difficulté</h2>
+      <p class="pt-muted">
+        Comprends ton comportement face aux questions faciles,
+        moyennes et difficiles.
+      </p>
+
+      <div class="pt-stats-grid">
+
+        {% for diff, data in per_diff.items %}
+        <div
+          class="pt-stat-block"
+          data-pct="{{ data.pct|default_if_none:'0' }}"
+        >
+          <div class="pt-stat-header">
+            <span>Niveau {{ diff }}</span>
+            <strong>{{ data.pct }}%</strong>
+          </div>
+
+          <div class="pt-stat-meta">
+            {{ data.correct }}/{{ data.total }} bonnes réponses
+          </div>
+
+          <div class="pt-progress-bar">
+            <div class="pt-progress-fill"></div>
+          </div>
+        </div>
+        {% empty %}
+          <p class="pt-muted">
+            Aucune donnée par difficulté disponible.
+          </p>
+        {% endfor %}
+
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ==================================================
+PRIORITÉS & PLAN D’ACTION
+================================================== -->
+<section class="pt-section">
+  <div class="container">
+
+    <div class="pt-grid-2">
+
+      <!-- PRIORITÉS -->
+      <article class="pt-card pt-card--priority">
+        <h2>🚨 Priorités de travail</h2>
+
+        <ul class="pt-list">
+          {% if weak_sections %}
+            {% for s in weak_sections %}
+              <li>
+                <strong>{{ s.label }}</strong>
+                — {{ s.pct }}%
+                {% if forloop.first %}
+                  <span class="pt-tag pt-tag--danger">
+                    Priorité n°1
+                  </span>
+                {% endif %}
+              </li>
+            {% endfor %}
+          {% else %}
+            <li>Aucune section critique détectée.</li>
+          {% endif %}
+        </ul>
+      </article>
+
+      <!-- PLAN -->
+      <article class="pt-card pt-card--action">
+        <h2>🎯 Plan d’action recommandé</h2>
+
+        <ul class="pt-list">
+          <li>1️⃣ Commence par la section la plus faible</li>
+          <li>2️⃣ Revois le cours correspondant</li>
+          <li>3️⃣ Lance une session ciblée (10–15 questions)</li>
+          <li>4️⃣ Reviens analyser les progrès</li>
+        </ul>
+
+        <div class="pt-cta-group">
+          {% if session.exam %}
+          <a
+            href="{% url "preparation_tests:start_session" session.exam.code %}"
+            class="pt-btn-primary"
+          >
+            🔁 Nouvelle session
+          </a>
+          {% endif %}
+
+          <a
+            href="{% url "preparation_tests:session_correction" session.id %}"
+            class="pt-btn-ghost"
+          >
+            Retour au corrigé
+          </a>
+        </div>
+      </article>
+
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}
+
+{% block body_end %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".pt-stat-block").forEach(function (block) {
+      const pct = Math.max(0, Math.min(100, parseFloat(block.dataset.pct || 0)));
+      const bar = block.querySelector(".pt-progress-fill");
+      if (bar) bar.style.width = pct + "%";
+    });
+  });
+</script>
+{% endblock %}

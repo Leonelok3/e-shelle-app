@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% load static %}
+
+{# ==================================================
+   SCOPE STRICT APP — OBLIGATOIRE
+================================================== #}
+{% block body_class %}preparation-tests{% endblock %}
+{% block app_scope %}preparation-tests{% endblock %}
+
+{# ==================================================
+   SEO — TITLE & META
+================================================== #}
+{% block title %}
+Préparation Tests de Langue Immigration (TEF, TCF, IELTS) | Immigration97
+{% endblock %}
+
+{% block meta_description %}
+Prépare efficacement les tests de langue exigés pour l’immigration,
+les études et le travail à l’international : TEF, TCF, IELTS, TOEFL,
+allemand. Entraînements ciblés, préparation progressive et suivi intelligent.
+{% endblock %}
+
+{# ==================================================
+   CSS APP — VERSIONNÉ (ANTI CACHE)
+================================================== #}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/preparation_tests.css' %}?v=20260226">
+{% endblock %}
+
+{% block content %}
+
+<!-- ==================================================
+HERO — PREPARATION TESTS DE LANGUE
+================================================== -->
+<section class="pt-hero">
+  <div class="container pt-fade-up">
+
+    <span class="pt-badge">
+      Tests de langue officiels · Immigration97
+    </span>
+
+    <h1 class="pt-title">
+      Réussis ton
+      <span class="pt-gradient-primary">test de langue</span><br>
+      avec une préparation
+      <span class="pt-gradient-secondary">orientée immigration</span>
+    </h1>
+
+    <p class="pt-lead">
+      Un score insuffisant peut bloquer un projet
+      d’immigration, d’études ou de travail.
+      Immigration97 te propose une préparation
+      <strong>structurée</strong> et
+      <strong>alignée sur les exigences officielles</strong>.
+    </p>
+
+    <ul class="pt-checklist">
+      <li>✔ TEF & TCF Canada / France</li>
+      <li>✔ IELTS & TOEFL (études & travail)</li>
+      <li>✔ Tests d’allemand (Goethe, Telc)</li>
+      <li>✔ Préparation par niveau CECR</li>
+      <li>✔ Suivi progressif et intelligent</li>
+    </ul>
+
+    <div class="pt-cta-group">
+      <a href="{% url "preparation_tests:french_exams" %}" class="pt-btn-primary">
+        🚀 Commencer un test
+      </a>
+      <a href="{% url "billing:access" %}" class="pt-btn-secondary">
+        Accès Premium
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==================================================
+MODULES DE PREPARATION
+================================================== -->
+<section id="tests" class="pt-section">
+  <div class="container">
+
+    <header class="pt-section-header">
+      <h2>
+        Choisis ton
+        <span class="pt-gradient-primary">test de langue</span>
+      </h2>
+      <p>
+        Préparations progressives et ciblées
+        selon les exigences d’immigration,
+        d’études et de travail à l’international.
+      </p>
+    </header>
+
+    <div class="pt-grid-3">
+
+      <!-- FRANÇAIS -->
+      <article class="pt-card">
+        <h3>🇫🇷 Tests de Français</h3>
+        <p class="pt-card-meta">
+          TEF, TCF, DELF & DALF pour immigration,
+          résidence permanente, naturalisation et études.
+        </p>
+
+        <ul class="pt-checklist">
+          <li>Niveaux CECR A1 → C2</li>
+          <li>Examens blancs</li>
+          <li>Objectifs Canada / France</li>
+        </ul>
+
+        <div class="pt-cta-group">
+          <a href="{% url "preparation_tests:french_exams" %}" class="pt-btn-primary">
+            Accéder
+          </a>
+        </div>
+      </article>
+
+      <!-- ANGLAIS -->
+      <article class="pt-card">
+        <h3>🇬🇧 Tests d’Anglais</h3>
+        <p class="pt-card-meta">
+          IELTS & TOEFL pour études internationales,
+          travail qualifié et mobilité professionnelle.
+        </p>
+
+        <ul class="pt-checklist">
+          <li>Questions type examen</li>
+          <li>Préparation ciblée</li>
+          <li>Estimation du score</li>
+        </ul>
+
+        <div class="pt-cta-group">
+          <a href="/langue/english/" class="pt-btn-primary">
+            Accéder
+          </a>
+        </div>
+      </article>
+
+      <!-- ALLEMAND -->
+      <article class="pt-card">
+        <h3>🇩🇪 Tests d’Allemand</h3>
+        <p class="pt-card-meta">
+          Goethe, Telc et certifications reconnues
+          pour études et travail en Europe.
+        </p>
+
+        <ul class="pt-checklist">
+          <li>Niveaux A1 → C1</li>
+          <li>Exercices guidés</li>
+          <li>Correction intelligente</li>
+        </ul>
+
+        <div class="pt-cta-group">
+          <a href="/langue/german/" class="pt-btn-primary">
+            Accéder
+          </a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==================================================
+CTA FINAL
+================================================== -->
+<section class="pt-section pt-section--center">
+  <div class="container">
+
+    <div class="pt-card pt-card--highlight text-center">
+      <h2>Prêt à améliorer ton score ?</h2>
+      <p class="pt-card-meta">
+        Débloque toutes les préparations linguistiques
+        Immigration97 et avance sereinement.
+      </p>
+
+      <div class="pt-cta-group center">
+        <a href="{% url "billing:access" %}" class="pt-btn-primary">
+          Activer mon accès
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}

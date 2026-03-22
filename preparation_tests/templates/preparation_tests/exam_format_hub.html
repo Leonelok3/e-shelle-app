@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}preparation-tests{% endblock %}
+{% block app_scope %}preparation-tests{% endblock %}
+
+{% block title %}
+Examen blanc {{ cfg.name }} — Choisir le niveau | Immigration97
+{% endblock %}
+
+{% block meta_description %}
+Examen blanc format officiel {{ cfg.name }} : timing réel, score officiel et correction IA.
+Sélectionne ton niveau CECR et commence la simulation.
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/preparation_tests.css' %}?v=20260301">
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="pt-hero">
+  <div class="container pt-fade-up">
+
+    <span class="pt-badge">
+      {{ cfg.badge }}
+    </span>
+
+    <h1 class="pt-title">
+      Examen blanc <span class="pt-gradient-primary">{{ cfg.name }}</span>
+    </h1>
+
+    <p class="pt-lead">
+      Simule les <strong>conditions réelles</strong> de l'examen avec
+      le format officiel, le timing précis et un score calculé selon les barèmes authentiques.
+    </p>
+
+    <div class="pt-badges" role="list" aria-label="Avantages">
+      <span class="pt-badge pt-badge--soft" role="listitem">⏱ Timing officiel</span>
+      <span class="pt-badge pt-badge--soft" role="listitem">📊 Score {{ cfg.name }}</span>
+      <span class="pt-badge pt-badge--soft" role="listitem">🤖 Correction IA (EE/EO)</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- SÉLECTION DU NIVEAU -->
+<section class="pt-section">
+  <div class="container">
+
+    {% if not has_premium and not has_temp_access %}
+    <div style="
+      background:rgba(245,158,11,.1);
+      border:1px solid #f59e0b;
+      border-radius:8px;
+      padding:.9rem 1.25rem;
+      margin-bottom:1.25rem;
+      font-size:.92rem;
+    ">
+      🔒 Les examens blancs format officiel sont réservés aux abonnés Premium.
+      <a href="{% url 'billing:access' %}"
+         style="color:#f59e0b; font-weight:600; margin-left:.5rem;">
+        → Activer mon accès Premium
+      </a>
+    </div>
+    {% endif %}
+
+    <div class="pt-grid-layout">
+
+      <!-- MAIN -->
+      <div class="pt-main">
+
+        <article class="pt-card">
+          <h2>Choisir le niveau</h2>
+          <p class="pt-card-meta" style="margin-bottom:1.5rem;">
+            {{ cfg.note }}
+          </p>
+
+          <div class="pt-level-grid" style="margin-top:1rem;">
+            {% for ld in levels_data %}
+            <div class="pt-level-card{% if not ld.can_start %}" style="opacity:.55{% endif %}">
+              <span class="pt-level-badge pt-level-{{ ld.level|lower }}">{{ ld.level }}</span>
+
+              <div style="margin:.5rem 0; font-size:.82rem; color:rgba(255,255,255,.6);">
+                🎧 {{ ld.co_exercises }} ex. CO &nbsp;·&nbsp; 📖 {{ ld.ce_exercises }} ex. CE
+              </div>
+
+              {% if ld.can_start %}
+                {% if has_premium or has_temp_access %}
+                <a
+                  href="{% url "preparation_tests:exam_format_exam" exam_code ld.level %}"
+                  class="pt-btn-primary"
+                  style="font-size:.85rem; margin-top:.5rem;"
+                  aria-label="Démarrer l'examen blanc {{ cfg.name }} niveau {{ ld.level }}"
+                >
+                  ▶ Démarrer {{ ld.level }}
+                </a>
+                {% else %}
+                <a
+                  href="{% url 'billing:access' %}?next={% url 'preparation_tests:exam_format_exam' exam_code ld.level %}"
+                  class="pt-btn-primary"
+                  style="font-size:.85rem; margin-top:.5rem;"
+                  aria-label="Accès Premium requis pour {{ cfg.name }} niveau {{ ld.level }}"
+                >
+                  🔒 Premium — {{ ld.level }}
+                </a>
+                {% endif %}
+              {% else %}
+                <span
+                  class="pt-btn-ghost"
+                  style="font-size:.82rem; cursor:not-allowed; opacity:.5; margin-top:.5rem; display:inline-block;"
+                >
+                  ⏳ Contenu en préparation
+                </span>
+              {% endif %}
+            </div>
+            {% empty %}
+            <p class="pt-empty">Aucun niveau configuré pour cet examen.</p>
+            {% endfor %}
+          </div>
+        </article>
+
+        <!-- LIENS RETOUR -->
+        <div class="pt-cta-group" style="margin-top:1rem;">
+          <a href="{% url "preparation_tests:level_mock_hub" %}" class="pt-btn-ghost">
+            📋 Examen blanc par niveau CECR
+          </a>
+          <a href="{% url "preparation_tests:dashboard_global" %}" class="pt-btn-secondary">
+            📊 Ma progression
+          </a>
+        </div>
+
+      </div>
+
+      <!-- SIDEBAR -->
+      <aside class="pt-side">
+
+        <div class="pt-card pt-card--side">
+          <h3>Format {{ cfg.name }}</h3>
+          <p class="pt-card-meta" style="font-size:.88rem;">{{ cfg.note }}</p>
+        </div>
+
+        {% if exam_code == "tef" %}
+        <div class="pt-card pt-card--side" style="margin-top:1rem;">
+          <h3>Barème TEF (0–450)</h3>
+          <ul class="pt-side-list">
+            <li>A1 : 0 – 180</li>
+            <li>A2 : 181 – 241</li>
+            <li>B1 : 242 – 303</li>
+            <li>B2 : 304 – 365</li>
+            <li>C1 : 366 – 416</li>
+            <li>C2 : 417 – 450</li>
+          </ul>
+        </div>
+
+        {% elif exam_code == "tcf" %}
+        <div class="pt-card pt-card--side" style="margin-top:1rem;">
+          <h3>Barème TCF (0–699)</h3>
+          <ul class="pt-side-list">
+            <li>A1 : 0 – 225</li>
+            <li>A2 : 226 – 299</li>
+            <li>B1 : 300 – 399</li>
+            <li>B2 : 400 – 499</li>
+            <li>C1 : 500 – 588</li>
+            <li>C2 : 589 – 699</li>
+          </ul>
+        </div>
+
+        {% elif exam_code == "delf" or exam_code == "dalf" %}
+        <div class="pt-card pt-card--side" style="margin-top:1rem;">
+          <h3>Barème {{ cfg.name }}</h3>
+          <ul class="pt-side-list">
+            <li>4 épreuves × 25 pts</li>
+            <li>Total : 100 pts</li>
+            <li>Seuil : 50/100 global</li>
+            <li>Min. 5/25 par épreuve</li>
+          </ul>
+          <p class="pt-card-meta" style="font-size:.82rem; margin-top:.5rem;">
+            CO + CE auto-notés. EE + EO évalués par IA.
+          </p>
+        </div>
+        {% endif %}
+
+        <div class="pt-card pt-card--side" style="margin-top:1rem;">
+          <h3>Conseils</h3>
+          <ul class="pt-side-list">
+            <li>Prépare-toi dans un endroit calme</li>
+            <li>Respecte le temps imparti</li>
+            <li>Ne consulte pas tes notes</li>
+            <li>Parle à voix haute pour l'EO</li>
+          </ul>
+        </div>
+
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

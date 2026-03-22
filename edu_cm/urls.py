@@ -24,6 +24,15 @@ urlpatterns = [
     # API REST
     path("api/v1/",      include("api.urls",         namespace="api")),
 
+    # Abonnements
+    path("billing/",     include("billing.urls",         namespace="billing")),
+
+    # Cours de langues
+    path("anglais/",     include("EnglishPrepApp.urls",    namespace="englishprep")),
+    path("allemand/",    include("GermanPrepApp.urls",     namespace="germanprep")),
+    path("italien/",     include("italian_courses.urls",   namespace="italian_courses")),
+    path("prep/",        include("preparation_tests.urls", namespace="preparation_tests")),
+
     # Page d'accueil
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
 ]

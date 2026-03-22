@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load static %}
+
+{# ==================================================
+   SCOPE STRICT APP
+================================================== #}
+{% block body_class %}preparation-tests{% endblock %}
+{% block app_scope %}preparation-tests{% endblock %}
+
+{# ==================================================
+   SEO
+================================================== #}
+{% block title %}
+Plan d’étude {{ exam_code|upper }} — Progression CECR | Immigration97
+{% endblock %}
+
+{% block meta_description %}
+Plan d’étude personnalisé {{ exam_code|upper }} :
+progression quotidienne, leçons ciblées,
+suivi intelligent et validation CECR avec Immigration97.
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/preparation_tests.css' %}?v=20260226">
+{% endblock %}
+
+{% block content %}
+
+<!-- ==================================================
+HERO — PLAN D’ÉTUDE
+================================================== -->
+<section class="pt-hero pt-hero--plan">
+  <div class="container pt-fade-up">
+
+    <span class="pt-badge">
+      📅 Plan d’étude personnalisé
+    </span>
+
+    <h1 class="pt-title">
+      Plan d’étude
+      <span class="pt-gradient-secondary">{{ exam_code|upper }}</span>
+    </h1>
+
+    <p class="pt-lead">
+      Niveau <strong>{{ plan.level }}</strong>
+      — Jour <strong>{{ plan.current_day }}</strong>
+      sur {{ plan.total_days }}.
+    </p>
+
+    <!-- PROGRESSION -->
+    <div class="pt-progress-wrapper">
+      <div class="pt-progress-track">
+        <div
+          class="pt-progress-fill"
+          style="width: {{ plan.progress_percent }}%;"
+        ></div>
+      </div>
+      <span class="pt-progress-label">
+        {{ plan.progress_percent }}%
+      </span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==================================================
+PLANNING JOURNALIER
+================================================== -->
+<section class="pt-section">
+  <div class="container">
+
+    <article class="pt-card">
+      <h2>🗓️ Programme jour par jour</h2>
+      <p class="pt-muted">
+        Suis ce planning dans l’ordre recommandé
+        pour maximiser ta progression.
+      </p>
+
+      <div class="pt-study-grid">
+
+        {% for day in plan.days %}
+        <div
+          class="pt-study-day
+          {% if day.is_current %}pt-study-day--current{% endif %}
+          {% if day.is_completed %}pt-study-day--done{% endif %}
+          "
+        >
+
+          <div class="pt-study-header">
+            Jour {{ day.day }}
+          </div>
+
+          <div class="pt-study-body">
+            {% if day.lesson %}
+              <strong>{{ day.section }}</strong><br>
+              {{ day.lesson.title }}
+            {% else %}
+              <span class="pt-muted">
+                Révision / repos actif
+              </span>
+            {% endif %}
+          </div>
+
+          {% if day.is_completed %}
+            <div class="pt-study-status">
+              ✅ Terminé
+            </div>
+          {% elif day.is_current %}
+            <div class="pt-study-status pt-study-status--current">
+              ▶ En cours
+            </div>
+          {% endif %}
+
+        </div>
+        {% endfor %}
+
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ==================================================
+ACTION PRINCIPALE
+================================================== -->
+<section class="pt-section pt-section--cta">
+  <div class="container text-center">
+
+    {% if not plan.is_completed %}
+      <a
+        href="{% url "preparation_tests:complete_study_day" exam_code %}"
+        class="pt-btn-primary"
+      >
+        ✅ Marquer la journée comme terminée
+      </a>
+    {% else %}
+      <div class="pt-success-box">
+        🎉 Plan terminé !
+        Tu peux recommencer ou viser un niveau supérieur.
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% endblock %}

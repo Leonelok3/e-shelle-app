@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Résultat Quiz — {{ quiz.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .it-result-wrap { max-width: 760px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+
+  .it-result-bc {
+    display: flex; align-items: center; gap: .5rem;
+    font-size: .82rem; color: #64748b;
+    margin: 2rem 0 1.5rem;
+  }
+  .it-result-bc a { color: #F59E0B; text-decoration: none; font-weight: 500; }
+
+  .it-score-card {
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #fff;
+  }
+  .it-score-card.great  { background: linear-gradient(135deg, #16a34a, #15803d); }
+  .it-score-card.good   { background: linear-gradient(135deg, #F59E0B, #d97706); }
+  .it-score-card.retry  { background: linear-gradient(135deg, #dc2626, #b91c1c); }
+
+  .it-score-emoji { font-size: 3rem; margin-bottom: .5rem; }
+  .it-score-num   { font-size: 3rem; font-weight: 800; margin-bottom: .25rem; line-height: 1; }
+  .it-score-label { font-size: 1.1rem; font-weight: 600; margin-bottom: .4rem; }
+  .it-score-msg   { font-size: .88rem; opacity: .8; }
+
+  .it-result-actions {
+    display: flex; gap: .75rem; flex-wrap: wrap;
+    margin-top: 1.75rem;
+  }
+  .it-btn-primary {
+    background: #102B4E; color: #fff;
+    border-radius: 10px; padding: .75rem 1.5rem;
+    font-weight: 700; font-size: .88rem;
+    text-decoration: none; transition: background .2s;
+  }
+  .it-btn-primary:hover { background: #1a3d6b; color: #fff; }
+  .it-btn-secondary {
+    background: #f1f5f9; color: #475569;
+    border-radius: 10px; padding: .75rem 1.5rem;
+    font-weight: 600; font-size: .88rem;
+    text-decoration: none; border: 1.5px solid #e2e8f0;
+  }
+  .it-btn-secondary:hover { background: #e2e8f0; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="it-result-wrap">
+
+  <div class="it-result-bc">
+    <a href="{% url 'italian_courses:category_list' %}">🇮🇹 Cours Italien</a>
+    <span>›</span>
+    <a href="{% url 'italian_courses:lesson_detail' category_slug=quiz.lesson.category.slug lesson_slug=quiz.lesson.slug %}">{{ quiz.lesson.title }}</a>
+    <span>›</span>
+    <span>Résultat</span>
+  </div>
+
+  <!-- Score -->
+  <div class="it-score-card
+    {% if score == total %}great
+    {% elif score >= 3 %}good
+    {% else %}retry{% endif %}">
+    <div class="it-score-emoji">
+      {% if score == total %}🏆
+      {% elif score >= 3 %}🎯
+      {% else %}💪{% endif %}
+    </div>
+    <div class="it-score-num">{{ score }} / {{ total }}</div>
+    <div class="it-score-label">
+      {% if score == total %}Score parfait !
+      {% elif score >= 3 %}Bon résultat !
+      {% else %}Continuez à pratiquer
+      {% endif %}
+    </div>
+    <div class="it-score-msg">{{ quiz.title }}</div>
+  </div>
+
+  <!-- Actions -->
+  <div class="it-result-actions">
+    <a class="it-btn-primary"
+       href="{% url 'italian_courses:lesson_detail' category_slug=quiz.lesson.category.slug lesson_slug=quiz.lesson.slug %}">
+      ← Retour à la leçon
+    </a>
+    <a class="it-btn-secondary"
+       href="{% url 'italian_courses:quiz_take' quiz_id=quiz.id %}">
+      🔄 Refaire le quiz
+    </a>
+  </div>
+
+</div>
+{% endblock %}

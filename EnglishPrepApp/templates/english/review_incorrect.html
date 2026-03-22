@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Correction de tes erreurs – {{ test.name }} • Immigration97{% endblock %}
+
+{% block meta %}
+<meta name="description" content="Revois les questions d'anglais que tu as ratées sur {{ test.name }}, avec les bonnes réponses et des explications claires.">
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  .ep-wrap { max-width: 900px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+  .ep-bc { font-size: .82rem; color: #64748b; margin: 1.5rem 0 1.25rem; display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; }
+  .ep-bc a { color: #F59E0B; text-decoration: none; font-weight: 500; }
+
+  .ep-hero { background: linear-gradient(135deg, #102B4E 0%, #1a3d6b 100%); border-radius: 20px; padding: 2.25rem 2rem; color: #fff; margin-bottom: 2rem; position: relative; overflow: hidden; }
+  .ep-hero::before { content: "🔍"; font-size: 8rem; position: absolute; right: 2rem; top: 50%; transform: translateY(-50%); opacity: .07; pointer-events: none; }
+  .ep-hero-kicker { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .15em; opacity: .6; margin-bottom: .5rem; }
+  .ep-hero h1 { font-size: clamp(1.3rem, 3.5vw, 1.85rem); font-weight: 800; margin: 0 0 .35rem; }
+  .ep-hero h1 span { color: #F59E0B; display: block; font-size: .85em; opacity: .9; }
+  .ep-hero p { font-size: .88rem; opacity: .8; margin: 0; max-width: 500px; }
+
+  .ep-quick { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.75rem; }
+  .ep-quick-link { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: .5rem 1rem; font-size: .82rem; font-weight: 600; color: #102B4E; text-decoration: none; transition: border-color .2s, box-shadow .2s; display: flex; align-items: center; gap: .4rem; }
+  .ep-quick-link:hover { border-color: #F59E0B; box-shadow: 0 2px 8px rgba(245,158,11,.15); }
+
+  .ep-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.75rem; }
+  .ep-q-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+  .ep-q-item:last-child { margin-bottom: 0; }
+  .ep-q-num { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: #94a3b8; margin-bottom: .6rem; }
+  .ep-q-text { font-size: .95rem; font-weight: 600; color: #102B4E; line-height: 1.55; margin-bottom: 1rem; }
+
+  .ep-answer-label { display: inline-block; border-radius: 20px; padding: .22rem .8rem; font-size: .72rem; font-weight: 700; margin-bottom: .35rem; }
+  .ep-answer-wrong { background: #FEF2F2; color: #b91c1c; }
+  .ep-answer-right { background: #F0FDF4; color: #15803d; }
+  .ep-answer-text { font-size: .88rem; color: #334155; margin: 0 0 .6rem; }
+  .ep-answer-text.correct { color: #15803d; font-weight: 600; }
+
+  .ep-explanation { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: .75rem 1rem; margin-top: .5rem; }
+  .ep-explanation-label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #94a3b8; display: block; margin-bottom: .3rem; }
+  .ep-explanation p { font-size: .85rem; color: #475569; margin: 0; line-height: 1.6; }
+
+  .ep-success { text-align: center; padding: 2.5rem 1rem; color: #15803d; }
+  .ep-success p { font-size: 1rem; font-weight: 600; }
+
+  .ep-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }
+  .ep-btn-primary { background: #102B4E; color: #fff; border-radius: 10px; padding: .75rem 1.5rem; font-weight: 700; font-size: .88rem; text-decoration: none; transition: background .2s; }
+  .ep-btn-primary:hover { background: #1a3d6b; color: #fff; }
+  .ep-btn-secondary { background: #f1f5f9; color: #475569; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: .75rem 1.5rem; font-weight: 600; font-size: .88rem; text-decoration: none; transition: background .2s; }
+  .ep-btn-secondary:hover { background: #e2e8f0; }
+
+  @media (max-width: 600px) { .ep-hero::before { display: none; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ep-wrap">
+
+  <nav class="ep-bc">
+    <a href="{% url 'englishprep:dashboard' %}">Anglais</a>
+    <span>›</span>
+    <a href="{% url 'englishprep:test_result' test.id %}">Résultat</a>
+    <span>›</span>
+    <span>Correction</span>
+  </nav>
+
+  <div class="ep-hero">
+    <p class="ep-hero-kicker">Immigration97 · Correction des erreurs</p>
+    <h1>Revoir les questions ratées<span>{{ test.name }}</span></h1>
+    <p>Comprends tes erreurs et renforce les points faibles avant ton examen officiel.</p>
+  </div>
+
+  <div class="ep-quick">
+    <a href="{% url 'englishprep:dashboard' %}" class="ep-quick-link">🏠 Dashboard</a>
+    <a href="{% url 'englishprep:exam_list' %}" class="ep-quick-link">📚 Examens</a>
+    <a href="{% url 'englishprep:ai_coach' %}" class="ep-quick-link">🤖 Coach IA</a>
+  </div>
+
+  <div class="ep-card">
+    {% if incorrect_answers %}
+    <div>
+      {% for ans in incorrect_answers %}
+      <div class="ep-q-item">
+        <p class="ep-q-num">Question {{ forloop.counter }}</p>
+        <p class="ep-q-text">{{ ans.question.question_text }}</p>
+
+        <div>
+          <span class="ep-answer-label ep-answer-wrong">❌ Ta réponse</span>
+          <p class="ep-answer-text">
+            {% if ans.selected_option == "A" %}{{ ans.question.option_a }}
+            {% elif ans.selected_option == "B" %}{{ ans.question.option_b }}
+            {% elif ans.selected_option == "C" %}{{ ans.question.option_c }}
+            {% elif ans.selected_option == "D" %}{{ ans.question.option_d }}
+            {% else %}<em style="color:#94a3b8;">(aucune réponse)</em>{% endif %}
+          </p>
+        </div>
+
+        <div>
+          <span class="ep-answer-label ep-answer-right">✅ Bonne réponse</span>
+          <p class="ep-answer-text correct">
+            {% if ans.question.correct_option == "A" %}{{ ans.question.option_a }}
+            {% elif ans.question.correct_option == "B" %}{{ ans.question.option_b }}
+            {% elif ans.question.correct_option == "C" %}{{ ans.question.option_c }}
+            {% elif ans.question.correct_option == "D" %}{{ ans.question.option_d }}{% endif %}
+          </p>
+        </div>
+
+        {% if ans.question.explanation %}
+        <div class="ep-explanation">
+          <span class="ep-explanation-label">Explication</span>
+          <p>{{ ans.question.explanation }}</p>
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="ep-success">
+      <p style="font-size:3rem;margin-bottom:.5rem;">🎉</p>
+      <p>Bravo ! Tu n'as fait aucune erreur sur ce test.</p>
+    </div>
+    {% endif %}
+
+    <div class="ep-actions">
+      <a href="{% url 'englishprep:exam_list' %}" class="ep-btn-primary">🚀 Refaire un test</a>
+      <a href="{% url 'englishprep:dashboard' %}" class="ep-btn-secondary">🏠 Tableau de bord</a>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Examens d'anglais disponibles – Immigration97{% endblock %}
+
+{% block meta %}
+<meta name="description" content="Découvre tous les examens d'anglais disponibles sur Immigration97 (IELTS, TOEFL, TOEIC, général) et commence ta préparation en ligne.">
+<meta name="keywords" content="examens d'anglais, IELTS, TOEFL, TOEIC, test en ligne, préparation, Immigration97">
+<meta property="og:title" content="Examens d'anglais disponibles – Immigration97">
+<meta property="og:type" content="website">
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  .ep-wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+  .ep-bc { font-size: .82rem; color: #64748b; margin: 1.5rem 0 1.25rem; display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; }
+  .ep-bc a { color: #F59E0B; text-decoration: none; font-weight: 500; }
+
+  .ep-hero { background: linear-gradient(135deg, #102B4E 0%, #1a3d6b 100%); border-radius: 20px; padding: 2.5rem 2rem; color: #fff; margin-bottom: 2rem; position: relative; overflow: hidden; }
+  .ep-hero::before { content: "📋"; font-size: 8rem; position: absolute; right: 2rem; top: 50%; transform: translateY(-50%); opacity: .07; pointer-events: none; }
+  .ep-hero-kicker { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .15em; opacity: .6; margin-bottom: .5rem; }
+  .ep-hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; margin: 0 0 .65rem; }
+  .ep-hero h1 span { color: #F59E0B; }
+  .ep-hero p { font-size: .9rem; opacity: .8; margin: 0; max-width: 560px; }
+
+  .ep-quick { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.75rem; }
+  .ep-quick-link { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: .5rem 1rem; font-size: .82rem; font-weight: 600; color: #102B4E; text-decoration: none; transition: border-color .2s, box-shadow .2s; display: flex; align-items: center; gap: .4rem; }
+  .ep-quick-link:hover { border-color: #F59E0B; box-shadow: 0 2px 8px rgba(245,158,11,.15); }
+
+  .ep-test-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.1rem; }
+  .ep-test-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 1.35rem; display: flex; flex-direction: column; transition: box-shadow .2s, border-color .2s; }
+  .ep-test-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.08); border-color: #F59E0B; transform: translateY(-2px); }
+
+  .ep-test-tags { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: .75rem; }
+  .ep-tag { border-radius: 20px; padding: .2rem .65rem; font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+  .ep-tag-general { background: #EFF6FF; color: #1d4ed8; }
+  .ep-tag-ielts   { background: #F0FDF4; color: #15803d; }
+  .ep-tag-toefl   { background: #FFF7ED; color: #c2410c; }
+  .ep-tag-toeic   { background: #FDF4FF; color: #7e22ce; }
+  .ep-tag-level   { background: #F1F5F9; color: #475569; }
+
+  .ep-test-name { font-size: 1.05rem; font-weight: 700; color: #102B4E; margin: 0 0 .4rem; }
+  .ep-test-desc { font-size: .84rem; color: #64748b; margin: 0 0 .75rem; flex: 1; line-height: 1.5; }
+  .ep-test-meta { font-size: .75rem; color: #94a3b8; margin-bottom: 1rem; }
+
+  .ep-btn-start { display: flex; align-items: center; justify-content: center; gap: .4rem; background: #102B4E; color: #fff; border-radius: 9px; padding: .65rem 1rem; font-size: .85rem; font-weight: 700; text-decoration: none; transition: background .2s; margin-top: auto; }
+  .ep-btn-start:hover { background: #1a3d6b; color: #fff; }
+
+  .ep-empty { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 3.5rem 2rem; text-align: center; }
+  .ep-empty h2 { font-size: 1.25rem; font-weight: 700; color: #102B4E; margin-bottom: .75rem; }
+  .ep-empty p { font-size: .9rem; color: #64748b; }
+
+  .ep-footer-info { margin-top: 3rem; padding: 1rem 1.25rem; background: #f8fafc; border-radius: 10px; font-size: .75rem; color: #94a3b8; display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem; }
+
+  @media (max-width: 600px) {
+    .ep-hero::before { display: none; }
+    .ep-test-grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ep-wrap">
+
+  <nav class="ep-bc">
+    <a href="{% url 'englishprep:dashboard' %}">Anglais</a>
+    <span>›</span>
+    <span>Tous les examens</span>
+  </nav>
+
+  <div class="ep-hero">
+    <p class="ep-hero-kicker">Immigration97 · Préparation anglais</p>
+    <h1>Examens <span>d'anglais</span> disponibles</h1>
+    <p>Lance un test en ligne (IELTS, TOEFL, TOEIC ou général) et progresse grâce à des QCM réalistes, des corrections détaillées et un suivi de score.</p>
+  </div>
+
+  <div class="ep-quick">
+    <a href="{% url 'englishprep:exam_hub' %}" class="ep-quick-link">🌐 Hub examens</a>
+    <a href="{% url 'englishprep:dashboard' %}" class="ep-quick-link">🏠 Dashboard</a>
+    <a href="{% url 'englishprep:test_history' %}" class="ep-quick-link">📊 Historique</a>
+  </div>
+
+  {% if tests %}
+  <div class="ep-test-grid">
+    {% for test in tests %}
+    <article class="ep-test-card">
+      <div class="ep-test-tags">
+        {% if test.exam_type == "IELTS" %}<span class="ep-tag ep-tag-ielts">IELTS</span>
+        {% elif test.exam_type == "TOEFL" %}<span class="ep-tag ep-tag-toefl">TOEFL</span>
+        {% elif test.exam_type == "TOEIC" %}<span class="ep-tag ep-tag-toeic">TOEIC</span>
+        {% else %}<span class="ep-tag ep-tag-general">Général</span>{% endif %}
+        <span class="ep-tag ep-tag-level">{{ test.level }}</span>
+      </div>
+      <h2 class="ep-test-name">{{ test.name }}</h2>
+      <p class="ep-test-desc">{{ test.short_description|default:"Mini test QCM pour estimer ton niveau d'anglais." }}</p>
+      <p class="ep-test-meta">⏱ {{ test.duration_minutes }} minutes &nbsp;·&nbsp; 🎯 QCM en ligne</p>
+      <a href="{% url 'englishprep:take_test' test.id %}" class="ep-btn-start">🚀 Commencer ce test</a>
+    </article>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="ep-empty">
+    <p style="font-size:2.5rem;margin-bottom:.75rem;">📭</p>
+    <h2>Aucun test disponible pour le moment</h2>
+    <p>Les examens IELTS, TOEFL, TOEIC et général seront bientôt ajoutés.</p>
+    <div style="margin-top:1.5rem;display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap;">
+      <a href="{% url 'englishprep:dashboard' %}" class="ep-quick-link">← Tableau de bord</a>
+      <a href="{% url 'englishprep:exam_hub' %}" class="ep-btn-start" style="border-radius:10px;">🌐 Hub examens</a>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="ep-footer-info">
+    <span>ℹ️ Immigration97 ne remplace pas les organismes officiels (IELTS, TOEFL, TOEIC).</span>
+    <span>Tests d'anglais · Immigration · Études · Carrière</span>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,107 @@
+<nav class="prep-subnav" aria-label="Navigation préparation">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+
+        <ul class="prep-subnav__list">
+
+          <!-- 🎧 CO — Compréhension Orale -->
+          <li class="{% if '/prep/fr/co' in request.path %}is-active{% endif %}">
+            <a href="{% url "preparation_tests:co_hub" %}">
+              <span class="icon">🎧</span>
+              <span class="label">CO</span>
+            </a>
+          </li>
+
+          <!-- 📖 CE — Compréhension Écrite -->
+          <li class="{% if '/prep/fr/ce' in request.path %}is-active{% endif %}">
+            <a href="{% url "preparation_tests:ce_hub" %}">
+              <span class="icon">📖</span>
+              <span class="label">CE</span>
+            </a>
+          </li>
+
+          <!-- 🎤 EO — Expression Orale -->
+          <li class="{% if '/prep/fr/eo' in request.path %}is-active{% endif %}">
+            <a href="{% url "preparation_tests:eo_hub" %}">
+              <span class="icon">🎤</span>
+              <span class="label">EO</span>
+            </a>
+          </li>
+
+          <!-- ✍️ EE — Expression Écrite -->
+          <li class="{% if '/prep/fr/ee' in request.path %}is-active{% endif %}">
+            <a href="{% url "preparation_tests:ee_hub" %}">
+              <span class="icon">✍️</span>
+              <span class="label">EE</span>
+            </a>
+          </li>
+
+          <!-- ⏱️ EXAMEN BLANC -->
+          <li>
+            {% if exam_code and section %}
+              <a href="{% url "preparation_tests:start_mock_exam" exam_code section %}">
+                <span class="icon">⏱️</span>
+                <span class="label">Examen blanc</span>
+              </a>
+            {% else %}
+              <span class="nav-disabled">
+                <span class="icon">⏱️</span>
+                <span class="label">Examen blanc</span>
+              </span>
+            {% endif %}
+          </li>
+
+          <!-- 📜 HISTORIQUE -->
+          <li>
+            <a href="{% url "preparation_tests:session_review" %}">
+              <span class="icon">📜</span>
+              <span class="label">Historique</span>
+            </a>
+          </li>
+
+          <!-- 📈 PROGRESSION -->
+          <li>
+            <a href="{% url "preparation_tests:dashboard_global" %}">
+              <span class="icon">📈</span>
+              <span class="label">Progression</span>
+            </a>
+          </li>
+
+          <!-- 🎯 AMÉLIORER -->
+          <li>
+            <a href="{% url "preparation_tests:dashboard_global" %}">
+              <span class="icon">🎯</span>
+              <span class="label">Améliorer</span>
+            </a>
+          </li>
+
+          <!-- 🤖 COACH IA -->
+          <li>
+            <a href="{% url "preparation_tests:coach_ai_history" %}">
+              <span class="icon">🤖</span>
+              <span class="label">Coach IA</span>
+            </a>
+          </li>
+
+          <!-- ℹ️ EXAMEN (SECONDARY) -->
+          <li class="prep-subnav__secondary">
+            {% if exam_code %}
+              <a href="{% url "preparation_tests:exam_detail" exam_code %}">
+                <span class="icon">ℹ️</span>
+                <span class="label">Examen</span>
+              </a>
+            {% else %}
+              <span class="nav-disabled">
+                <span class="icon">ℹ️</span>
+                <span class="label">Examen</span>
+              </span>
+            {% endif %}
+          </li>
+
+        </ul>
+
+      </div>
+    </div>
+  </div>
+</nav>
