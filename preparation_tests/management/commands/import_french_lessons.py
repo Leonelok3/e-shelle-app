@@ -55,7 +55,7 @@ DATA_DIR = Path(__file__).resolve().parents[3] / "data" / "lessons_json"
 
 
 def _make_slug(section, level, title, idx):
-    base = slugify(f"{section}-{level}-{title}")[:80]
+    base = slugify(f"{section}-{level}-{title}")[:46]
     # Ensure uniqueness by appending index if slug already used
     slug = base
     counter = 1
