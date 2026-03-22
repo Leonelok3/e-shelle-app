@@ -1,0 +1,38 @@
+{% extends "math_cm/base_math.html" %}
+
+{% block title %}Résultat — {{ epreuve.titre }}{% endblock %}
+
+{% block math_content %}
+<div class="le-wrap" style="max-width:700px;margin:0 auto">
+
+  <div class="math-card" style="text-align:center;padding:2.5rem;margin-bottom:2rem;background:{% if resultat.note >= 10 %}rgba(76,175,80,0.08){% else %}rgba(244,67,54,0.08){% endif %};border-color:{% if resultat.note >= 10 %}rgba(76,175,80,0.3){% else %}rgba(244,67,54,0.3){% endif %}">
+    <div style="font-size:4rem;margin-bottom:1rem">{% if resultat.note >= 14 %}🏆{% elif resultat.note >= 10 %}🎯{% else %}💪{% endif %}</div>
+    <div style="font-size:3.5rem;font-weight:800;{% if resultat.note >= 10 %}background:linear-gradient(135deg,#4CAF50,#2E7D32);{% else %}background:linear-gradient(135deg,#F44336,#B71C1C);{% endif %}-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">
+      {{ resultat.note }}/20
+    </div>
+    <div style="font-size:1.2rem;font-weight:700;margin:.5rem 0">{{ mention.0 }}</div>
+    <div style="color:var(--math-muted);font-size:.9rem">{{ epreuve.titre }} · {{ epreuve.classe.label }}</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:2rem">
+    <div class="math-card" style="text-align:center">
+      <div class="stat-number">{{ resultat.note }}</div>
+      <div class="stat-label">Note /20</div>
+    </div>
+    <div class="math-card" style="text-align:center">
+      <div class="stat-number">{{ resultat.temps_passe|floatformat:0 }}</div>
+      <div class="stat-label">Secondes</div>
+    </div>
+    <div class="math-card" style="text-align:center">
+      <div class="stat-number">{{ epreuve.duree }}</div>
+      <div class="stat-label">Min allouées</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center">
+    <a href="{% url 'math_cm:passer_examen' epreuve.slug %}" class="btn-math">🔄 Refaire l'épreuve</a>
+    <a href="{% url 'math_cm:liste_epreuves' %}" class="btn-math-outline">← Toutes les épreuves</a>
+    <a href="{% url 'math_cm:progression_eleve' %}" class="btn-math-outline">📊 Ma progression</a>
+  </div>
+</div>
+{% endblock %}

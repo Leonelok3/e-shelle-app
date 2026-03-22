@@ -1,0 +1,122 @@
+{% extends "math_cm/base_math.html" %}
+
+{% block title %}MathCM — Les maths, enfin claires{% endblock %}
+
+{% block math_content %}
+<div class="le-wrap">
+
+  <!-- Hero -->
+  <div style="text-align:center;padding:3rem 1rem 2rem;position:relative">
+    <div style="display:inline-block;background:rgba(108,99,255,0.15);border:1px solid rgba(108,99,255,0.3);border-radius:100px;padding:.4rem 1.2rem;font-size:.82rem;font-weight:600;color:#A8A4FF;margin-bottom:1.5rem">
+      📐 Programme officiel MINESEC Cameroun
+    </div>
+    <h1 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:800;margin-bottom:1rem;background:var(--math-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">
+      Les maths, enfin claires
+    </h1>
+    <p style="color:var(--math-muted);font-size:1.1rem;max-width:600px;margin:0 auto 2rem">
+      Cours complets, exercices corrigés et examens blancs pour la 3ème, 2nde, 1ère et Terminale.
+      Du BEPC au Baccalauréat.
+    </p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+      <a href="{% url 'math_cm:choisir_classe' %}" class="btn-math" style="font-size:1rem;padding:.9rem 2rem">
+        🚀 Commencer maintenant
+      </a>
+      <a href="{% url 'math_cm:liste_epreuves' %}" class="btn-math-outline" style="font-size:1rem;padding:.9rem 2rem">
+        📝 Examens blancs
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:3rem">
+    <div class="math-card" style="text-align:center;padding:1.5rem">
+      <div class="stat-number">8</div>
+      <div class="stat-label">Niveaux</div>
+    </div>
+    <div class="math-card" style="text-align:center;padding:1.5rem">
+      <div class="stat-number">{{ stats.nb_chapitres|default:"80+" }}</div>
+      <div class="stat-label">Chapitres</div>
+    </div>
+    <div class="math-card" style="text-align:center;padding:1.5rem">
+      <div class="stat-number">{{ stats.nb_exercices|default:"500+" }}</div>
+      <div class="stat-label">Exercices</div>
+    </div>
+    <div class="math-card" style="text-align:center;padding:1.5rem">
+      <div class="stat-number">100%</div>
+      <div class="stat-label">Programme MINESEC</div>
+    </div>
+  </div>
+
+  <!-- Classes -->
+  <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:1.5rem">Choisir ton niveau</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;margin-bottom:3rem">
+    {% for classe in classes %}
+    <a href="{% url 'math_cm:liste_chapitres' classe.nom %}" class="math-card" style="text-decoration:none;display:block">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+        <div style="width:48px;height:48px;border-radius:12px;background:{{ classe.couleur }}22;border:1px solid {{ classe.couleur }}44;display:flex;align-items:center;justify-content:center;font-size:1.5rem">
+          {% if '3' in classe.nom %}🔷{% elif '2nde' in classe.nom %}🔶{% elif '1ere' in classe.nom %}🟣{% else %}🔴{% endif %}
+        </div>
+        <div>
+          <div style="font-weight:700;font-size:1.05rem;color:var(--le-text)">{{ classe.label }}</div>
+          {% if classe.get_examen_label %}
+          <div style="font-size:.78rem;color:{{ classe.couleur }};font-weight:600">Examen : {{ classe.get_examen_label }}</div>
+          {% endif %}
+        </div>
+      </div>
+      <div style="font-size:.85rem;color:var(--math-muted)">
+        {{ classe.chapitres.count }} chapitres
+      </div>
+      <div style="margin-top:1rem;color:var(--math-primary);font-size:.88rem;font-weight:600">
+        Commencer →
+      </div>
+    </a>
+    {% empty %}
+    <div style="color:var(--math-muted);text-align:center;padding:2rem;grid-column:1/-1">
+      Aucune classe disponible. Lancer : <code>python manage.py setup_classes</code>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Comment ça marche -->
+  <div style="background:var(--math-card);border:1px solid var(--math-border);border-radius:16px;padding:2rem;margin-bottom:3rem">
+    <h2 style="text-align:center;font-size:1.4rem;font-weight:700;margin-bottom:2rem">Comment ça marche ?</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem">
+      <div style="text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:.75rem">📚</div>
+        <div style="font-weight:600;margin-bottom:.4rem">1. Lis le cours</div>
+        <div style="font-size:.88rem;color:var(--math-muted)">Cours clairs avec formules et exemples résolus</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:.75rem">✏️</div>
+        <div style="font-weight:600;margin-bottom:.4rem">2. Pratique</div>
+        <div style="font-size:.88rem;color:var(--math-muted)">Exercices progressifs avec corrections détaillées</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:.75rem">🏆</div>
+        <div style="font-weight:600;margin-bottom:.4rem">3. Réussis l'examen</div>
+        <div style="font-size:.88rem;color:var(--math-muted)">Simulations BEPC, Probatoire et Baccalauréat</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Épreuves vedettes -->
+  {% if epreuves %}
+  <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:1.5rem">📝 Épreuves type examen</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-bottom:2rem">
+    {% for ep in epreuves %}
+    <a href="{% url 'math_cm:examen_detail' ep.slug %}" class="math-card" style="text-decoration:none">
+      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--math-primary);margin-bottom:.5rem">
+        {{ ep.get_type_examen_display }} {% if ep.serie != 'toutes' %}— Série {{ ep.serie }}{% endif %}
+      </div>
+      <div style="font-weight:600;color:var(--le-text);margin-bottom:.4rem">{{ ep.titre }}</div>
+      <div style="font-size:.82rem;color:var(--math-muted)">{{ ep.classe.label }} · {{ ep.duree }} min · /{{ ep.bareme_total }}</div>
+      {% if ep.is_premium %}
+      <span style="display:inline-block;margin-top:.75rem;font-size:.72rem;background:rgba(245,124,0,.2);color:#F57C00;border-radius:100px;padding:.2rem .7rem;font-weight:600">⭐ Premium</span>
+      {% endif %}
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

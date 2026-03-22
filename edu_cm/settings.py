@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     # Abonnements / paiements avancés
     "billing.apps.BillingConfig",
 
+    # MathCM — Mathématiques secondaire MINESEC
+    "math_cm.apps.MathCmConfig",
+
     # Cours de langues (immigration97)
     "EnglishPrepApp.apps.EnglishprepappConfig",
     "GermanPrepApp.apps.GermanprepappConfig",

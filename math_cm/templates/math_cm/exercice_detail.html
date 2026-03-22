@@ -1,0 +1,131 @@
+{% extends "math_cm/base_math.html" %}
+
+{% block title %}{{ exercice.titre }} — MathCM{% endblock %}
+
+{% block math_content %}
+<div class="le-wrap">
+
+  <nav class="math-bc">
+    <a href="{% url 'math_cm:accueil' %}">📐 MathCM</a>
+    <span class="math-bc-sep">›</span>
+    <a href="{% url 'math_cm:detail_chapitre' exercice.chapitre.slug %}">{{ exercice.chapitre.titre }}</a>
+    <span class="math-bc-sep">›</span>
+    <span>Exercice {{ exercice.numero }}</span>
+  </nav>
+
+  <div style="max-width:800px">
+    <div class="math-card" style="margin-bottom:1.5rem">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem">
+        <span class="badge-niveau badge-{{ exercice.niveau }}">{{ exercice.get_niveau_display }}</span>
+        <div style="display:flex;gap:.75rem">
+          <span style="font-size:.82rem;color:var(--math-muted)">⏱ {{ exercice.duree_recommandee }} min</span>
+          <span style="font-size:.82rem;color:var(--math-muted)">📊 {{ exercice.bareme }} pts</span>
+        </div>
+      </div>
+      <h1 style="font-size:1.4rem;font-weight:700;margin-bottom:1rem">{{ exercice.titre }}</h1>
+
+      {% with e=exercice.enonce %}
+      {% if e.texte %}<p style="line-height:1.7;margin-bottom:1rem">{{ e.texte }}</p>{% endif %}
+      {% if e.donnees %}
+      <div style="background:rgba(108,99,255,0.08);border-radius:8px;padding:.85rem 1rem;margin-bottom:1rem">
+        {% for d in e.donnees %}<div style="font-size:.9rem">• {{ d }}</div>{% endfor %}
+      </div>
+      {% endif %}
+      {% if e.questions %}
+      <div style="margin-top:1rem">
+        {% for q in e.questions %}
+        <div style="margin-bottom:.75rem">
+          <span style="font-weight:600">{{ q.numero }}.</span> {{ q.texte }}
+          {% if q.points %}<span style="font-size:.78rem;color:var(--math-muted);margin-left:.4rem">({{ q.points }} pts)</span>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endwith %}
+    </div>
+
+    <!-- Zone réponse QCM -->
+    {% if exercice.type_exercice == 'qcm' and exercice.options_qcm %}
+    <div class="math-card" style="margin-bottom:1.5rem" id="zone-reponse">
+      <div style="font-weight:600;margin-bottom:1rem">Choisis la bonne réponse :</div>
+      {% for opt in exercice.options_qcm %}
+      <label style="display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;border-radius:10px;border:1px solid var(--math-border);margin-bottom:.5rem;cursor:pointer;transition:all 0.2s" id="opt-{{ opt.label }}">
+        <input type="radio" name="qcm" value="{{ opt.label }}" style="accent-color:var(--math-primary)">
+        <span style="font-weight:600;color:var(--math-primary);min-width:1.5rem">{{ opt.label }}.</span>
+        <span>{{ opt.texte }}</span>
+      </label>
+      {% endfor %}
+      <button class="btn-math" style="margin-top:1rem;width:100%" onclick="soumettre()">Vérifier ma réponse</button>
+    </div>
+    {% else %}
+    <div class="math-card" style="margin-bottom:1.5rem">
+      <div style="font-weight:600;margin-bottom:.75rem">Ta réponse :</div>
+      <textarea id="reponse-texte" rows="5" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--math-border);border-radius:8px;padding:.85rem;color:var(--le-text);resize:vertical;font-size:.95rem" placeholder="Rédige ta solution ici…"></textarea>
+      <button class="btn-math" style="margin-top:1rem" onclick="soumettre()">Soumettre</button>
+    </div>
+    {% endif %}
+
+    <!-- Résultat (caché) -->
+    <div id="zone-resultat" style="display:none"></div>
+
+    <!-- Correction (cachée) -->
+    <div id="zone-correction" style="display:none" class="math-card">
+      <div style="font-weight:700;color:var(--math-primary);margin-bottom:1rem">📋 Correction détaillée</div>
+      <div id="correction-contenu"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const exerciceId = {{ exercice.pk }};
+function getCookie(n) { let v=document.cookie.match('(^|;) ?'+n+'=([^;]*)(;|$)'); return v?v[2]:null; }
+
+function soumettre() {
+  let reponses = {};
+  {% if exercice.type_exercice == 'qcm' %}
+  const sel = document.querySelector('input[name="qcm"]:checked');
+  if (!sel) { alert('Sélectionne une réponse'); return; }
+  reponses = {options: [sel.value]};
+  {% else %}
+  reponses = {texte: document.getElementById('reponse-texte').value};
+  {% endif %}
+
+  fetch(`/maths/exercice/${exerciceId}/soumettre/`, {
+    method: 'POST',
+    headers: {'X-CSRFToken': getCookie('csrftoken'), 'Content-Type': 'application/json'},
+    body: JSON.stringify({reponses})
+  }).then(r => r.json()).then(data => {
+    const zone = document.getElementById('zone-resultat');
+    const correct = data.score >= 100;
+    zone.style.display = 'block';
+    zone.innerHTML = `<div class="math-card" style="border-color:${correct?'#4CAF50':'#F44336'};background:${correct?'rgba(76,175,80,0.1)':'rgba(244,67,54,0.1)'};margin-bottom:1rem">
+      <div style="font-size:1.75rem;margin-bottom:.5rem">${correct?'🎉':'💪'}</div>
+      <div style="font-size:1.25rem;font-weight:700">${data.score}% — ${correct?'Bonne réponse !':'Essaie encore'}</div>
+      <div style="font-size:.88rem;color:var(--math-muted);margin-top:.25rem">${data.points_obtenus} / {{ exercice.bareme }} points</div>
+      <button onclick="voirCorrection()" class="btn-math-outline" style="margin-top:1rem;font-size:.88rem">📋 Voir la correction</button>
+    </div>`;
+  });
+}
+
+function voirCorrection() {
+  fetch(`/maths/exercice/${exerciceId}/correction/`, {
+    headers: {'X-CSRFToken': getCookie('csrftoken')}
+  }).then(r => r.json()).then(data => {
+    const c = data.correction;
+    const zone = document.getElementById('zone-correction');
+    const cont = document.getElementById('correction-contenu');
+    let html = '';
+    if (c.methode) html += `<div class="bloc-methode" style="margin-bottom:1rem"><strong>Méthode :</strong> ${c.methode}</div>`;
+    if (c.etapes) c.etapes.forEach(e => {
+      html += `<div style="display:flex;gap:.75rem;padding:.6rem 0;border-top:1px solid rgba(255,255,255,0.05)">
+        <span style="color:var(--math-primary);font-weight:700;flex-shrink:0">${e.numero}.</span>
+        <div><div>${e.texte}</div>${e.justification?`<div style="font-size:.82rem;color:var(--math-muted);margin-top:.2rem">${e.justification}</div>`:''}</div>
+      </div>`;
+    });
+    if (c.piege) html += `<div class="bloc-remarque" style="margin-top:1rem">⚠️ Piège fréquent : ${c.piege}</div>`;
+    cont.innerHTML = html;
+    zone.style.display = 'block';
+  });
+}
+</script>
+{% endblock %}

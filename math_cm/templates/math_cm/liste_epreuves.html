@@ -1,0 +1,47 @@
+{% extends "math_cm/base_math.html" %}
+
+{% block title %}Épreuves type examen — MathCM{% endblock %}
+
+{% block math_content %}
+<div class="le-wrap">
+  <nav class="math-bc">
+    <a href="{% url 'math_cm:accueil' %}">📐 MathCM</a>
+    <span class="math-bc-sep">›</span>
+    <span>Épreuves</span>
+  </nav>
+
+  <h1 style="font-size:1.8rem;font-weight:800;margin-bottom:.5rem">📝 Épreuves type examen</h1>
+  <p style="color:var(--math-muted);margin-bottom:2rem">BEPC, Probatoire, Baccalauréat — toutes séries</p>
+
+  <!-- Filtres -->
+  <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:2rem">
+    {% for c in classes %}
+    <a href="?classe={{ c.nom }}{% if type_filtre %}&type={{ type_filtre }}{% endif %}" style="padding:.35rem .9rem;border-radius:100px;font-size:.82rem;font-weight:600;text-decoration:none;{% if classe_filtre == c.nom %}background:var(--math-gradient);color:white{% else %}background:rgba(255,255,255,0.06);color:var(--math-muted);border:1px solid rgba(255,255,255,0.1){% endif %}">
+      {{ c.label }}
+    </a>
+    {% endfor %}
+    {% if classe_filtre %}<a href="{% url 'math_cm:liste_epreuves' %}" style="padding:.35rem .9rem;border-radius:100px;font-size:.82rem;background:rgba(244,67,54,.2);color:#F44336;text-decoration:none;font-weight:600">✕ Effacer</a>{% endif %}
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem">
+    {% for ep in epreuves %}
+    <a href="{% url 'math_cm:examen_detail' ep.slug %}" class="math-card" style="text-decoration:none">
+      <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;color:var(--math-primary);margin-bottom:.5rem">
+        {{ ep.get_type_examen_display }}{% if ep.serie != 'toutes' %} — Série {{ ep.serie }}{% endif %}{% if ep.annee %} · {{ ep.annee }}{% endif %}
+      </div>
+      <div style="font-weight:700;font-size:1rem;color:var(--le-text);margin-bottom:.5rem">{{ ep.titre }}</div>
+      <div style="font-size:.82rem;color:var(--math-muted);margin-bottom:.75rem">
+        {{ ep.classe.label }} · {{ ep.duree }} min · /{{ ep.bareme_total }}{% if ep.region %} · {{ ep.region }}{% endif %}
+      </div>
+      {% if ep.is_premium %}
+      <span style="font-size:.72rem;background:rgba(245,124,0,.2);color:#F57C00;border-radius:100px;padding:.2rem .7rem;font-weight:600">⭐ Premium</span>
+      {% else %}
+      <span style="font-size:.72rem;background:rgba(76,175,80,.2);color:#4CAF50;border-radius:100px;padding:.2rem .7rem;font-weight:600">✅ Gratuit</span>
+      {% endif %}
+    </a>
+    {% empty %}
+    <div style="color:var(--math-muted);text-align:center;padding:3rem;grid-column:1/-1">Aucune épreuve disponible.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

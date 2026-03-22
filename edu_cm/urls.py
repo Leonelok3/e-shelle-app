@@ -27,6 +27,9 @@ urlpatterns = [
     # Abonnements
     path("billing/",     include("billing.urls",         namespace="billing")),
 
+    # MathCM — Mathématiques secondaire MINESEC
+    path("maths/", include("math_cm.urls", namespace="math_cm")),
+
     # Hub des langues
     path("langues/", TemplateView.as_view(template_name="langues/hub.html"), name="langues_hub"),
 

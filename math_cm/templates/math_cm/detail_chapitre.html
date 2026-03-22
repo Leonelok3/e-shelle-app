@@ -1,0 +1,67 @@
+{% extends "math_cm/base_math.html" %}
+
+{% block title %}{{ chapitre.titre }} — MathCM{% endblock %}
+
+{% block math_content %}
+<div class="le-wrap">
+
+  <nav class="math-bc">
+    <a href="{% url 'math_cm:accueil' %}">📐 MathCM</a>
+    <span class="math-bc-sep">›</span>
+    <a href="{% url 'math_cm:liste_chapitres' chapitre.classe.nom %}">{{ chapitre.classe.label }}</a>
+    <span class="math-bc-sep">›</span>
+    <span>{{ chapitre.titre }}</span>
+  </nav>
+
+  <div class="math-card" style="margin-bottom:2rem">
+    <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;color:var(--math-primary);margin-bottom:.5rem">Ch. {{ chapitre.numero }} · {{ chapitre.get_categorie_display }}</div>
+    <h1 style="font-size:1.7rem;font-weight:800;margin-bottom:.75rem">{{ chapitre.titre }}</h1>
+    {% if chapitre.description %}<p style="color:var(--math-muted);margin-bottom:1rem">{{ chapitre.description }}</p>{% endif %}
+    <div style="display:flex;gap:1rem;flex-wrap:wrap">
+      <span style="font-size:.82rem;color:var(--math-muted)">⏱ {{ chapitre.duree_estimee }} min estimées</span>
+      <span style="font-size:.82rem;color:var(--math-muted)">📖 {{ lecons|length }} leçons</span>
+      <span style="font-size:.82rem;color:var(--math-muted)">✏️ {{ exercices|length }} exercices</span>
+    </div>
+  </div>
+
+  <!-- Leçons -->
+  {% if lecons %}
+  <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:1rem">📖 Cours</h2>
+  <div style="display:flex;flex-direction:column;gap:.65rem;margin-bottom:2rem">
+    {% for lecon in lecons %}
+    <a href="{% url 'math_cm:cours_detail' chapitre.slug lecon.slug %}" style="display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:var(--math-card);border:1px solid var(--math-border);border-radius:12px;text-decoration:none;transition:all 0.2s;">
+      <div style="width:36px;height:36px;border-radius:8px;background:{% if progression|default:{} %}{% if lecon.id in progression %}rgba(76,175,80,0.2){% else %}rgba(108,99,255,0.15){% endif %}{% else %}rgba(108,99,255,0.15){% endif %};display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0">
+        {% if lecon.id in progression and progression|dictsort:"id" %}✅{% else %}{{ forloop.counter }}{% endif %}
+      </div>
+      <div style="flex:1">
+        <div style="font-weight:600;color:var(--le-text);font-size:.95rem">{{ lecon.titre }}</div>
+        <div style="font-size:.78rem;color:var(--math-muted);margin-top:.15rem">{{ lecon.get_type_lecon_display }} · {{ lecon.duree_lecture }} min</div>
+      </div>
+      {% if lecon.is_free %}<span style="font-size:.7rem;background:rgba(76,175,80,.2);color:#4CAF50;border-radius:100px;padding:.2rem .6rem;font-weight:600">Gratuit</span>{% endif %}
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Exercices -->
+  {% if exercices %}
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+    <h2 style="font-size:1.2rem;font-weight:700;margin:0">✏️ Exercices</h2>
+    <a href="{% url 'math_cm:quiz_chapitre' chapitre.slug %}" class="btn-math" style="font-size:.85rem;padding:.5rem 1.2rem">⚡ Quiz rapide</a>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem">
+    {% for ex in exercices %}
+    <a href="{% url 'math_cm:exercice_detail' ex.pk %}" class="math-card" style="text-decoration:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+        <span class="badge-niveau badge-{{ ex.niveau }}">{{ ex.get_niveau_display }}</span>
+        <span style="font-size:.78rem;color:var(--math-muted)">{{ ex.bareme }} pts</span>
+      </div>
+      <div style="font-weight:600;color:var(--le-text);font-size:.95rem">{{ ex.titre }}</div>
+      <div style="font-size:.78rem;color:var(--math-muted);margin-top:.4rem">{{ ex.get_type_exercice_display }} · {{ ex.duree_recommandee }} min</div>
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

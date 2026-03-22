@@ -1,0 +1,88 @@
+{% extends "math_cm/base_math.html" %}
+
+{% block title %}Quiz — {{ chapitre.titre }}{% endblock %}
+
+{% block math_content %}
+<div class="le-wrap" style="max-width:700px;margin:0 auto">
+  <nav class="math-bc">
+    <a href="{% url 'math_cm:detail_chapitre' chapitre.slug %}">{{ chapitre.titre }}</a>
+    <span class="math-bc-sep">›</span>
+    <span>Quiz rapide</span>
+  </nav>
+
+  <div style="text-align:center;margin-bottom:2rem">
+    <h1 style="font-size:1.6rem;font-weight:800">⚡ Quiz rapide</h1>
+    <p style="color:var(--math-muted)">{{ chapitre.titre }}</p>
+    <div style="display:flex;justify-content:center;gap:2rem;margin-top:1rem">
+      <div style="text-align:center"><div class="stat-number" id="score-display">0</div><div class="stat-label">Score</div></div>
+      <div style="text-align:center"><div class="stat-number" id="q-display">1</div><div class="stat-label">Question</div></div>
+    </div>
+  </div>
+  <div class="progress-math" style="margin-bottom:2rem">
+    <div class="progress-math-fill" id="quiz-progress" style="width:0%"></div>
+  </div>
+
+  <div id="quiz-container"></div>
+  <div id="quiz-fin" style="display:none;text-align:center">
+    <div style="font-size:4rem;margin-bottom:1rem">🏆</div>
+    <h2 style="font-size:1.5rem;font-weight:800">Quiz terminé !</h2>
+    <div class="stat-number" id="score-final">0%</div>
+    <div style="display:flex;gap:1rem;justify-content:center;margin-top:2rem;flex-wrap:wrap">
+      <button onclick="restartQuiz()" class="btn-math">🔄 Recommencer</button>
+      <a href="{% url 'math_cm:detail_chapitre' chapitre.slug %}" class="btn-math-outline">← Retour au chapitre</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const EXERCICES = {{ exercices_json|safe }};
+let current = 0, score = 0;
+
+function renderQuestion() {
+  if (current >= EXERCICES.length) { showFin(); return; }
+  const ex = EXERCICES[current];
+  const opts = ex.options_qcm || [];
+  document.getElementById('q-display').textContent = current + 1;
+  document.getElementById('quiz-progress').style.width = ((current / EXERCICES.length) * 100) + '%';
+  let html = `<div class="math-card" style="margin-bottom:1.5rem">
+    <div style="font-weight:600;font-size:1.05rem;margin-bottom:1.25rem">${ex.enonce.texte || ex.titre}</div>
+    <div id="options-list">`;
+  opts.forEach(o => {
+    html += `<button onclick="choisir('${o.label}', ${o.correct})" style="display:flex;align-items:center;gap:.75rem;width:100%;padding:.85rem 1rem;border-radius:10px;border:1px solid var(--math-border);background:rgba(255,255,255,0.03);color:var(--le-text);cursor:pointer;margin-bottom:.5rem;text-align:left;transition:all 0.2s;font-size:.95rem" onmouseover="this.style.borderColor='rgba(108,99,255,0.5)'" onmouseout="this.style.borderColor='var(--math-border)'">
+      <span style="font-weight:700;color:var(--math-primary)">${o.label}.</span> ${o.texte}
+    </button>`;
+  });
+  html += '</div></div>';
+  document.getElementById('quiz-container').innerHTML = html;
+}
+
+function choisir(label, correct) {
+  if (correct) { score++; document.getElementById('score-display').textContent = score; }
+  const btns = document.querySelectorAll('#options-list button');
+  btns.forEach(b => {
+    b.disabled = true;
+    if (b.textContent.trim().startsWith(label)) {
+      b.style.background = correct ? 'rgba(76,175,80,0.2)' : 'rgba(244,67,54,0.2)';
+      b.style.borderColor = correct ? '#4CAF50' : '#F44336';
+    }
+  });
+  setTimeout(() => { current++; renderQuestion(); }, 1200);
+}
+
+function showFin() {
+  document.getElementById('quiz-container').style.display = 'none';
+  document.getElementById('quiz-fin').style.display = 'block';
+  document.getElementById('score-final').textContent = Math.round(score / EXERCICES.length * 100) + '%';
+}
+
+function restartQuiz() {
+  current = 0; score = 0;
+  document.getElementById('score-display').textContent = 0;
+  document.getElementById('quiz-container').style.display = 'block';
+  document.getElementById('quiz-fin').style.display = 'none';
+  renderQuestion();
+}
+
+renderQuestion();
+</script>
+{% endblock %}

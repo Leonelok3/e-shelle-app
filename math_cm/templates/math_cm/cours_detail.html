@@ -1,0 +1,167 @@
+{% extends "math_cm/base_math.html" %}
+
+{% block title %}{{ lecon.titre }} — {{ chapitre.titre }}{% endblock %}
+
+{% block math_content %}
+<div class="le-wrap">
+
+  <nav class="math-bc">
+    <a href="{% url 'math_cm:accueil' %}">📐 MathCM</a>
+    <span class="math-bc-sep">›</span>
+    <a href="{% url 'math_cm:liste_chapitres' chapitre.classe.nom %}">{{ chapitre.classe.label }}</a>
+    <span class="math-bc-sep">›</span>
+    <a href="{% url 'math_cm:detail_chapitre' chapitre.slug %}">Ch.{{ chapitre.numero }}</a>
+    <span class="math-bc-sep">›</span>
+    <span>{{ lecon.titre }}</span>
+  </nav>
+
+  <div style="display:grid;grid-template-columns:280px 1fr;gap:2rem;align-items:start" id="cours-layout">
+
+    <!-- Sidebar -->
+    <aside style="position:sticky;top:80px;max-height:calc(100vh - 100px);overflow-y:auto">
+      <div class="math-card" style="padding:1rem">
+        <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;color:var(--math-muted);margin-bottom:.75rem">Leçons du chapitre</div>
+        {% for l in lecons_chapitre %}
+        <a href="{% url 'math_cm:cours_detail' chapitre.slug l.slug %}" style="display:flex;align-items:center;gap:.65rem;padding:.6rem .75rem;border-radius:8px;text-decoration:none;margin-bottom:.25rem;{% if l.id == lecon.id %}background:rgba(108,99,255,0.2);color:white;{% else %}color:var(--math-muted);{% endif %}transition:all 0.2s">
+          <span style="font-size:.8rem;flex-shrink:0">{{ forloop.counter }}</span>
+          <span style="font-size:.85rem;line-height:1.3">{{ l.titre }}</span>
+        </a>
+        {% endfor %}
+      </div>
+    </aside>
+
+    <!-- Contenu cours -->
+    <div>
+      <div style="margin-bottom:1.5rem">
+        <div style="font-size:.78rem;color:var(--math-primary);font-weight:600;margin-bottom:.4rem">{{ lecon.get_type_lecon_display }} · {{ lecon.duree_lecture }} min</div>
+        <h1 style="font-size:1.6rem;font-weight:800;margin-bottom:.5rem">{{ lecon.titre }}</h1>
+        <div style="display:flex;align-items:center;gap:1rem">
+          <div class="progress-math" style="flex:1">
+            <div class="progress-math-fill" id="reading-progress" style="width:0%"></div>
+          </div>
+          {% if progression.completed %}
+          <span style="color:#4CAF50;font-size:.85rem;font-weight:600">✅ Terminé</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Contenu dynamique -->
+      <div id="cours-contenu">
+        {% if lecon.contenu %}
+          {% with c=lecon.contenu %}
+          {% if c.introduction %}
+          <p style="font-size:1rem;color:var(--math-muted);line-height:1.7;margin-bottom:1.5rem">{{ c.introduction }}</p>
+          {% endif %}
+
+          {% for section in c.sections %}
+          <div style="margin-bottom:1.75rem">
+            <h2 style="font-size:1.15rem;font-weight:700;margin-bottom:.75rem;color:var(--le-text)">{{ section.titre }}</h2>
+
+            {% if section.type == 'definition' or section.type == 'texte' %}
+            <div class="bloc-definition"><p style="margin:0;line-height:1.7">{{ section.contenu }}</p></div>
+            {% elif section.type == 'theoreme' or section.type == 'propriete' %}
+            <div class="bloc-theoreme"><p style="margin:0;font-weight:600;line-height:1.7">{{ section.contenu }}</p></div>
+            {% elif section.type == 'methode' %}
+            <div class="bloc-methode"><p style="margin:0;line-height:1.7">{{ section.contenu }}</p></div>
+            {% elif section.type == 'remarque' %}
+            <div class="bloc-remarque"><p style="margin:0;line-height:1.7">{{ section.contenu }}</p></div>
+            {% else %}
+            <p style="line-height:1.7;margin-bottom:1rem">{{ section.contenu }}</p>
+            {% endif %}
+
+            {% for f in section.formules %}
+            <div class="formule-block">$${{ f }}$$</div>
+            {% endfor %}
+
+            {% for ex in section.exemples %}
+            <div class="bloc-exemple">
+              <div style="font-weight:600;margin-bottom:.5rem">📌 Exemple : {{ ex.enonce }}</div>
+              {% for etape in ex.etapes %}
+              <div style="font-size:.9rem;padding:.3rem 0;border-top:1px solid rgba(255,255,255,0.05);color:var(--math-muted)">
+                {{ forloop.counter }}. {{ etape }}
+              </div>
+              {% endfor %}
+              {% if ex.solution %}
+              <div style="margin-top:.5rem;font-weight:600;color:#4CAF50">✅ {{ ex.solution }}</div>
+              {% endif %}
+            </div>
+            {% endfor %}
+
+            {% for rem in section.remarques %}
+            <div style="font-size:.88rem;color:#FFC107;background:rgba(255,193,7,0.07);border:1px solid rgba(255,193,7,0.2);border-radius:6px;padding:.5rem .85rem;margin-top:.5rem">
+              💡 {{ rem }}
+            </div>
+            {% endfor %}
+          </div>
+          {% endfor %}
+
+          {% if c.retenir %}
+          <div style="background:rgba(108,99,255,0.1);border:1px solid rgba(108,99,255,0.25);border-radius:12px;padding:1.25rem;margin-bottom:1.5rem">
+            <div style="font-weight:700;color:var(--math-primary);margin-bottom:.75rem">🧠 À retenir</div>
+            {% for point in c.retenir %}
+            <div style="display:flex;gap:.5rem;margin-bottom:.4rem;font-size:.92rem">
+              <span style="color:var(--math-primary);flex-shrink:0">→</span>
+              <span>{{ point }}</span>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+          {% endwith %}
+        {% else %}
+        <div style="color:var(--math-muted);text-align:center;padding:3rem">Contenu en cours de génération…</div>
+        {% endif %}
+      </div>
+
+      <!-- Actions -->
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--math-border)">
+        {% if lecon_prev %}
+        <a href="{% url 'math_cm:cours_detail' chapitre.slug lecon_prev.slug %}" class="btn-math-outline" style="font-size:.88rem">← {{ lecon_prev.titre }}</a>
+        {% endif %}
+        {% if not progression.completed %}
+        <button id="btn-complete" class="btn-math" onclick="marquerComplete()" style="margin-left:auto">
+          ✅ Marquer comme terminé (+10 XP)
+        </button>
+        {% else %}
+        <span style="margin-left:auto;color:#4CAF50;font-weight:600;display:flex;align-items:center;gap:.4rem">✅ Leçon terminée</span>
+        {% endif %}
+        {% if lecon_next %}
+        <a href="{% url 'math_cm:cours_detail' chapitre.slug lecon_next.slug %}" class="btn-math" style="font-size:.88rem">{{ lecon_next.titre }} →</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function getCookie(name) {
+  let v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+  return v ? v[2] : null;
+}
+function marquerComplete() {
+  fetch("{% url 'math_cm:marquer_complete' chapitre.slug lecon.slug %}", {
+    method: 'POST',
+    headers: {'X-CSRFToken': getCookie('csrftoken'), 'Content-Type': 'application/json'}
+  }).then(r => r.json()).then(data => {
+    if (data.success) {
+      document.getElementById('btn-complete').outerHTML =
+        '<span style="margin-left:auto;color:#4CAF50;font-weight:600">✅ Terminé ! +10 XP</span>';
+    }
+  });
+}
+// Progress bar lecture
+window.addEventListener('scroll', () => {
+  const el = document.getElementById('cours-contenu');
+  if (!el) return;
+  const rect = el.getBoundingClientRect();
+  const total = el.offsetHeight - window.innerHeight;
+  const pct = Math.min(100, Math.max(0, Math.round(-rect.top / total * 100)));
+  const bar = document.getElementById('reading-progress');
+  if (bar) bar.style.width = pct + '%';
+});
+// Responsive sidebar
+if (window.innerWidth <= 768) {
+  document.getElementById('cours-layout').style.gridTemplateColumns = '1fr';
+  document.querySelector('aside').style.position = 'static';
+}
+</script>
+{% endblock %}
