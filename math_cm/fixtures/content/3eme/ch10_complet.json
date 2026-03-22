@@ -1,0 +1,313 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "3eme-10-theoreme-de-pythagore",
+  "meta": {
+    "classe": "3ème",
+    "numero": 10,
+    "titre": "Théorème de Pythagore",
+    "categorie": "geometrie",
+    "difficulte": 2,
+    "description": "Le théorème de Pythagore et sa réciproque — calcul de distances, vérification d'angles droits, applications pratiques.",
+    "objectifs": [
+      "Énoncer et appliquer le théorème de Pythagore",
+      "Utiliser la réciproque pour démontrer un angle droit",
+      "Calculer une longueur inconnue dans un triangle rectangle",
+      "Résoudre des problèmes concrets faisant appel à Pythagore"
+    ],
+    "prerequis_slugs": ["3eme-9-triangles-proprietes-et-calculs"],
+    "duree_estimee": 65,
+    "points_total_exercices": 50
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Théorème de Pythagore — énoncé et démonstration",
+      "type_lecon": "definition",
+      "duree_lecture": 18,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Théorème de Pythagore :**\nDans un triangle rectangle, le carré de la longueur de l'hypoténuse est égal à la somme des carrés des longueurs des deux autres côtés (les cathètes).\n\nSi le triangle ABC est rectangle en C :\n**AB² = AC² + BC²**\n\nOù AB est l'hypoténuse (côté opposé à l'angle droit)."
+          },
+          {
+            "type": "exemple",
+            "titre": "Triplets pythagoriciens",
+            "valeur": "**Triplets pythagoriciens** (côtés entiers d'un triangle rectangle) :\n• (3, 4, 5) : 5² = 3² + 4² → 25 = 9 + 16 ✓\n• (5, 12, 13) : 13² = 5² + 12² → 169 = 25 + 144 ✓\n• (8, 15, 17) : 17² = 8² + 15² → 289 = 64 + 225 ✓\n• (6, 8, 10) : multiple de (3, 4, 5)\n• (9, 12, 15) : autre multiple"
+          },
+          {
+            "type": "exemple",
+            "titre": "Application directe",
+            "valeur": "**Trouver l'hypoténuse :**\nTriangle rectangle avec cathètes 6 cm et 8 cm.\nAB² = 6² + 8² = 36 + 64 = 100\nAB = √100 = **10 cm**\n\n**Trouver une cathète :**\nHypoténuse = 13 cm, une cathète = 5 cm.\nCathète² = 13² − 5² = 169 − 25 = 144\nCathète = √144 = **12 cm**"
+          },
+          {
+            "type": "contexte",
+            "valeur": "Les maçons camerounais utilisent le triplet (3, 4, 5) pour vérifier si un angle est droit lors de la construction. Avec une corde de 12 m marquée à 3 m, 4 m et 5 m, ils forment un triangle rectangle pour s'assurer que les murs sont perpendiculaires."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Réciproque du théorème de Pythagore",
+      "type_lecon": "definition",
+      "duree_lecture": 16,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Réciproque du théorème de Pythagore :**\nSi dans un triangle ABC on a AB² = AC² + BC², alors le triangle est rectangle en C.\n\nThis permet de **vérifier si un angle est droit** à partir de trois longueurs."
+          },
+          {
+            "type": "methode",
+            "titre": "Démontrer qu'un triangle est rectangle",
+            "valeur": "**Étape 1 :** Identifier le côté le plus long (c'est le candidat à être l'hypoténuse).\n**Étape 2 :** Calculer le carré du côté le plus long.\n**Étape 3 :** Calculer la somme des carrés des deux autres côtés.\n**Étape 4 :** Si les deux résultats sont égaux → triangle rectangle."
+          },
+          {
+            "type": "exemple",
+            "titre": "Application de la réciproque",
+            "valeur": "**Exemple 1 :** Triangle de côtés 7, 24, 25.\n25² = 625\n7² + 24² = 49 + 576 = 625\n625 = 625 ✓ → Triangle **rectangle** en l'angle opposé à 25\n\n**Exemple 2 :** Triangle de côtés 5, 6, 8.\n8² = 64\n5² + 6² = 25 + 36 = 61\n64 ≠ 61 → Triangle **non rectangle**\n(64 > 61 → triangle obtusangle)"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Contraposée :** Si AB² ≠ AC² + BC², alors le triangle n'est pas rectangle en C.\n\n**Remarque :**\n• Si AB² > AC² + BC² → angle obtus en C (triangle obtusangle)\n• Si AB² < AC² + BC² → angle aigu en C (triangle acutangle)"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Applications pratiques de Pythagore",
+      "type_lecon": "exemple",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "exemple",
+            "titre": "Problèmes classiques",
+            "valeur": "**Hauteur dans un triangle isocèle :**\nTriangle ABC avec AB = AC = 17 cm et BC = 16 cm.\nI milieu de BC → BI = 8 cm\nAI² = AB² − BI² = 289 − 64 = 225\nAI = **15 cm**\n\n**Distance entre deux points :**\nA(2 ; 3) et B(6 ; 6) dans un repère.\nAB² = (6−2)² + (6−3)² = 16 + 9 = 25\nAB = **5 unités**\n\n**Diagonale d'un rectangle :**\nRectangle 9 cm × 12 cm.\nDiagonale² = 9² + 12² = 81 + 144 = 225\nDiagonale = **15 cm**"
+          },
+          {
+            "type": "exemple",
+            "titre": "Problème de l'échelle",
+            "valeur": "Une échelle de 5 m s'appuie contre un mur. Le bas de l'échelle est à 3 m du mur. À quelle hauteur le haut de l'échelle touche-t-il le mur ?\n\nTriangle rectangle : hypoténuse = 5 m, base = 3 m\nh² = 5² − 3² = 25 − 9 = 16\nh = **4 m**\n\nLe haut de l'échelle est à 4 m de hauteur."
+          },
+          {
+            "type": "exemple",
+            "titre": "Problème de navigation",
+            "valeur": "Un bateau part de Douala et navigue 30 km vers le Nord, puis 40 km vers l'Est. Quelle est la distance directe entre le point de départ et d'arrivée ?\n\nd² = 30² + 40² = 900 + 1600 = 2500\nd = **50 km** (triplet 3-4-5 × 10)"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Pythagore dans des figures complexes",
+      "type_lecon": "methode",
+      "duree_lecture": 15,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "methode",
+            "titre": "Stratégie pour les figures complexes",
+            "valeur": "**1.** Identifier tous les triangles rectangles présents\n**2.** Utiliser Pythagore pour calculer les côtés inconnus progressivement\n**3.** Souvent nécessaire d'appliquer Pythagore plusieurs fois"
+          },
+          {
+            "type": "exemple",
+            "titre": "Calcul dans un losange",
+            "valeur": "Un losange ABCD de côté 10 cm a une diagonale AC = 12 cm. Calculer l'autre diagonale BD.\n\nLes diagonales d'un losange sont perpendiculaires et se coupent en leur milieu O.\nOA = 6 cm (moitié de AC)\nOB² = AB² − OA² = 100 − 36 = 64\nOB = 8 cm\nBD = 2 × 8 = **16 cm**"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Récapitulatif du théorème de Pythagore :**\n\nTriangle rectangle en C :\n• AB² = AC² + BC² (théorème direct)\n• Si AB² = AC² + BC² → angle droit en C (réciproque)\n\n**Formule de la distance entre deux points** A(x₁;y₁) et B(x₂;y₂) :\nAB = √[(x₂−x₁)² + (y₂−y₁)²]"
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Calculs directs",
+      "type_exercice": "calcul",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Dans chaque triangle rectangle, calculer la longueur manquante :\na) Cathètes 9 et 12, calculer l'hypoténuse.\nb) Hypoténuse 26, une cathète 10, calculer l'autre cathète.\nc) Hypoténuse 25, une cathète 7, calculer l'autre cathète."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** h² = 9² + 12² = 81 + 144 = 225\nh = **15** (triplet 3-4-5 × 3)\n\n**b)** c² = 26² − 10² = 676 − 100 = 576\nc = **24**\n\n**c)** c² = 25² − 7² = 625 − 49 = 576\nc = **24**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Réciproque — triangle rectangle ?",
+      "type_exercice": "application",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Parmi les triangles suivants, lesquels sont rectangles ? Justifier par le calcul.\na) Côtés : 9, 40, 41\nb) Côtés : 10, 12, 15\nc) Côtés : 11, 60, 61\nd) Côtés : 6, 9, 12"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** 41² = 1681 ; 9²+40² = 81+1600 = 1681 = 41² ✓ → **Rectangle** en l'angle opposé à 41\n\n**b)** 15² = 225 ; 10²+12² = 100+144 = 244 ≠ 225 → **Non rectangle**\n(244 > 225 → angle obtus)\n\n**c)** 61² = 3721 ; 11²+60² = 121+3600 = 3721 ✓ → **Rectangle**\n\n**d)** 12² = 144 ; 6²+9² = 36+81 = 117 ≠ 144 → **Non rectangle**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Distance entre deux points",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) Calculer la distance AB avec A(1 ; 2) et B(4 ; 6).\nb) Calculer la distance CD avec C(−3 ; 1) et D(5 ; 7).\nc) Vérifier que le triangle E(0 ; 0), F(3 ; 4), G(3 ; 0) est rectangle."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** AB² = (4−1)² + (6−2)² = 9 + 16 = 25\nAB = **5 unités**\n\n**b)** CD² = (5−(−3))² + (7−1)² = 64 + 36 = 100\nCD = **10 unités**\n\n**c)** EF² = 3²+4² = 9+16 = 25 → EF = 5\nEG² = 3²+0² = 9 → EG = 3\nFG² = 0²+4² = 16 → FG = 4\nEF² = EG² + FG² : 25 = 9 + 16 ✓ → **Rectangle en G**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Problème pratique",
+      "type_exercice": "probleme",
+      "niveau": "approfondissement",
+      "bareme": 8,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Le toit d'une maison à Bafoussam a une charpente en forme de triangle isocèle. La largeur du bâtiment est de 8 m, et le faîtage (sommet du toit) est à 3 m au-dessus des murs.\n\n**1.** Calculer la longueur d'un pan de toiture (côté du triangle).\n**2.** Si les tuiles coûtent 12 000 FCFA/m² et que le toit a une longueur de 10 m, calculer le coût total des tuiles (pour les 2 pans).\n**3.** Vérifier si le triangle charpente est rectangle."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** Demi-largeur = 4 m, hauteur = 3 m\nPan² = 4² + 3² = 16 + 9 = 25\nPan = **5 m**\n\n**2.** Surface d'un pan = 5 m × 10 m = 50 m²\nSurface totale (2 pans) = 100 m²\nCoût = 100 × 12 000 = **1 200 000 FCFA**\n\n**3.** Côtés du triangle : 5, 5, 8\n8² = 64 ; 5²+5² = 50 ≠ 64 → **Non rectangle** (triangle isocèle acutangle)"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Pythagore",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** Dans un triangle rectangle de cathètes 6 et 8, l'hypoténuse vaut :\n(A) 14  (B) 7  (C) 10  (D) 100\n\n**Q2.** Un triangle de côtés 8, 15, 17 est :\n(A) Équilatéral  (B) Rectangle  (C) Isocèle  (D) Obtusangle\n\n**Q3.** La diagonale d'un carré de côté 5 cm vaut :\n(A) 10 cm  (B) 5√2 cm  (C) 25 cm  (D) 7 cm"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (C) 10 : 10² = 6²+8² = 100 ✓\n\n**Q2.** (B) Rectangle : 17² = 289 = 64+225 = 8²+15² ✓\n\n**Q3.** (B) 5√2 : diag² = 5²+5² = 50, diag = √50 = 5√2"
+          }
+        ]
+      },
+      "options_qcm": [
+        ["14", "7", "10", "100"],
+        ["Équilatéral", "Rectangle", "Isocèle", "Obtusangle"],
+        ["10 cm", "5√2 cm", "25 cm", "7 cm"]
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Problème BEPC — Construction et mesures",
+      "type_exercice": "probleme",
+      "niveau": "examen",
+      "bareme": 10,
+      "duree_recommandee": 25,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Un terrain ABCD est un rectangle avec AB = 20 m et BC = 15 m. La diagonale AC divise le rectangle en deux triangles.\n\n**1.** Calculer la longueur de la diagonale AC.\n**2.** Le triangle ABC est-il rectangle ? Le démontrer par la réciproque.\n**3.** Un poteau est planté en un point E situé sur AC, à 9 m de A. Calculer la distance de E à B, sachant que BE est perpendiculaire à AC.\n**4.** Calculer l'aire du triangle ABE."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** AC² = AB² + BC² = 400 + 225 = 625\nAC = **25 m**\n\n**2.** AB²+BC² = 400+225 = 625 = AC²\nDonc triangle ABC rectangle en B (réciproque de Pythagore) ✓\n\n**3.** Dans le triangle ABE, AE = 9, AB = 20\nBE² = AB² − AE² ? Non — BE ⊥ AC donc dans triangle ABE rectangle en E :\nBE² = AB² − AE² = 400 − 81 = 319\nBE = √319 ≈ **17,9 m**\n\n**4.** Aire ABE = (AE × BE)/2 = (9 × √319)/2 ≈ (9 × 17,86)/2 ≈ **80,4 m²**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 7,
+      "titre": "Synthèse complète",
+      "type_exercice": "synthese",
+      "niveau": "approfondissement",
+      "bareme": 10,
+      "duree_recommandee": 30,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.** Dans un losange ABCD, les diagonales mesurent AC = 24 cm et BD = 10 cm.\n1. Calculer le côté AB du losange.\n2. Calculer le périmètre du losange.\n3. Calculer l'aire du losange (Aire = d₁ × d₂ / 2).\n\n**Partie B.** Un randonneur part du point O. Il marche 6 km vers l'Est jusqu'en A, puis 8 km vers le Nord jusqu'en B, puis 2 km vers l'Est jusqu'en C.\n1. Calculer la distance OB (droite directe).\n2. Calculer la distance BC.\n3. Calculer la distance OC."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.**\nLes diagonales d'un losange se coupent perpendiculairement en leur milieu O.\nOA = 12 cm, OB = 5 cm\n1. AB² = OA² + OB² = 144 + 25 = 169 → AB = **13 cm**\n2. Périmètre = 4 × 13 = **52 cm**\n3. Aire = (24 × 10)/2 = **120 cm²**\n\n**Partie B.**\nO(0;0), A(6;0), B(6;8), C(8;8)\n1. OB² = 6² + 8² = 36+64 = 100 → OB = **10 km**\n2. BC = distance de (6;8) à (8;8) = 8−6 = **2 km** (horizontal)\n3. OC² = (8−0)² + (8−0)² = 64+64 = 128\nOC = √128 = 8√2 ≈ **11,3 km**"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

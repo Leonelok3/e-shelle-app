@@ -1,0 +1,310 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "3eme-4-systemes-dequations",
+  "meta": {
+    "classe": "3ème",
+    "numero": 4,
+    "titre": "Systèmes d'équations",
+    "categorie": "algebre",
+    "difficulte": 2,
+    "description": "Résoudre des systèmes de deux équations à deux inconnues par substitution et par combinaison — compétence clé pour le BEPC.",
+    "objectifs": [
+      "Reconnaître un système de deux équations à deux inconnues",
+      "Résoudre par la méthode de substitution",
+      "Résoudre par la méthode de combinaison (addition-soustraction)",
+      "Appliquer les systèmes à la résolution de problèmes concrets"
+    ],
+    "prerequis_slugs": ["3eme-3-equations-et-inequations-du-premier-degre"],
+    "duree_estimee": 65,
+    "points_total_exercices": 50
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Introduction aux systèmes d'équations",
+      "type_lecon": "definition",
+      "duree_lecture": 15,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Un **système de deux équations à deux inconnues** est un ensemble de deux équations qu'on résout simultanément. La **solution** est le couple (x ; y) qui satisfait les deux équations en même temps.\n\nForme générale :\n{ ax + by = c\n{ dx + ey = f"
+          },
+          {
+            "type": "exemple",
+            "titre": "Vérifier une solution",
+            "valeur": "Le couple (2 ; 1) est-il solution du système ?\n{ 3x + 2y = 8\n{ x − y = 1\n\n**Test dans la 1ère équation :** 3(2) + 2(1) = 6 + 2 = 8 ✓\n**Test dans la 2ème équation :** 2 − 1 = 1 ✓\n\nOui, (2 ; 1) est bien solution du système."
+          },
+          {
+            "type": "texte",
+            "valeur": "**Interprétation graphique :**\nChaque équation représente une droite dans le plan. La solution est le point d'intersection des deux droites.\n• Deux droites qui se coupent → une solution unique\n• Deux droites parallèles → aucune solution\n• Deux droites confondues → infinité de solutions"
+          },
+          {
+            "type": "contexte",
+            "valeur": "Au marché de Ngaoundéré, deux types de sacs de riz : des sacs de 25 kg et des sacs de 50 kg. Paul achète 3 sacs de 25 kg et 2 sacs de 50 kg pour 55 000 FCFA. Marie achète 1 sac de 25 kg et 3 sacs de 50 kg pour 57 500 FCFA. Pour trouver le prix de chaque sac, on pose un système."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Méthode par substitution",
+      "type_lecon": "methode",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "methode",
+            "titre": "Étapes de la méthode de substitution",
+            "valeur": "**Étape 1 :** Dans l'une des équations, exprimer une inconnue en fonction de l'autre (isoler x ou y).\n**Étape 2 :** Substituer cette expression dans l'autre équation.\n**Étape 3 :** Résoudre l'équation obtenue à une seule inconnue.\n**Étape 4 :** Trouver la valeur de la 2ème inconnue par substitution.\n**Étape 5 :** Vérifier dans les deux équations initiales."
+          },
+          {
+            "type": "exemple",
+            "titre": "Application complète",
+            "valeur": "Résoudre : { 2x + y = 7  (1)\n             { x − y = 2  (2)\n\n**Étape 1 :** De (2) : x = 2 + y\n\n**Étape 2 :** Substituer dans (1) :\n2(2 + y) + y = 7\n4 + 2y + y = 7\n3y = 3\ny = 1\n\n**Étape 3 :** x = 2 + 1 = 3\n\n**Solution : (3 ; 1)**\n\n**Vérification :**\n(1) : 2(3) + 1 = 7 ✓\n(2) : 3 − 1 = 2 ✓"
+          },
+          {
+            "type": "exemple",
+            "titre": "Exemple avec fractions",
+            "valeur": "Résoudre : { 3x + 2y = 11  (1)\n             { x + 4y = 9   (2)\n\nDe (2) : x = 9 − 4y\nDans (1) : 3(9 − 4y) + 2y = 11\n27 − 12y + 2y = 11\n−10y = −16\ny = 8/5\n\nx = 9 − 4(8/5) = 9 − 32/5 = 45/5 − 32/5 = 13/5\n\n**Solution : (13/5 ; 8/5)**"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Méthode par combinaison (addition-soustraction)",
+      "type_lecon": "methode",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "methode",
+            "titre": "Principe de la méthode de combinaison",
+            "valeur": "On multiplie chaque équation par un coefficient choisi pour que les coefficients d'une même inconnue soient opposés, puis on additionne les deux équations pour l'éliminer.\n\n**Étape 1 :** Choisir l'inconnue à éliminer.\n**Étape 2 :** Multiplier pour rendre les coefficients opposés.\n**Étape 3 :** Additionner les deux équations.\n**Étape 4 :** Résoudre, puis trouver la 2ème inconnue."
+          },
+          {
+            "type": "exemple",
+            "titre": "Application de la combinaison",
+            "valeur": "Résoudre : { 3x + 2y = 16  (1)\n             { 2x − 3y = 5   (2)\n\n**Éliminer y :** Multiplier (1) par 3 et (2) par 2 :\n{ 9x + 6y = 48  (1×3)\n{ 4x − 6y = 10  (2×2)\n\nAdditionner : 13x = 58, x = 58/13\n\nAlternative : **Éliminer x** (plus simple ici) :\nMultiplier (1) par 2 et (2) par 3 :\n{ 6x + 4y = 32\n{ 6x − 9y = 15\n\nSoustraire : 13y = 17, y = 17/13\nx = (16 − 2×17/13)/3 = (16−34/13)/3 = (174/13)/3 = 58/13\n\n**Solution : (58/13 ; 17/13)**"
+          },
+          {
+            "type": "exemple",
+            "titre": "Cas simple",
+            "valeur": "Résoudre : { x + y = 10  (1)\n             { x − y = 4   (2)\n\nAdditionner (1)+(2) : 2x = 14, x = 7\nDe (1) : y = 10 − 7 = 3\n\n**Solution : (7 ; 3)**"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Problèmes résolus par systèmes",
+      "type_lecon": "exemple",
+      "duree_lecture": 20,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "methode",
+            "titre": "Démarche pour un problème",
+            "valeur": "1. Identifier les deux inconnues et les nommer\n2. Traduire les deux conditions en deux équations\n3. Former et résoudre le système\n4. Répondre à la question posée\n5. Vérifier que la réponse est logique (cohérence)"
+          },
+          {
+            "type": "exemple",
+            "titre": "Problème de prix au marché",
+            "valeur": "Au marché de Bafoussam, une bouteille d'huile et 2 savons coûtent 2 300 FCFA. Trois bouteilles d'huile et 1 savon coûtent 5 100 FCFA. Trouver le prix d'une bouteille d'huile et d'un savon.\n\nSoit h = prix d'une bouteille d'huile, s = prix d'un savon\n{ h + 2s = 2300  (1)\n{ 3h + s = 5100  (2)\n\nDe (1) : h = 2300 − 2s\nDans (2) : 3(2300−2s) + s = 5100\n6900 − 6s + s = 5100\n−5s = −1800\ns = 360 FCFA\nh = 2300 − 720 = 1580 FCFA"
+          },
+          {
+            "type": "exemple",
+            "titre": "Problème de vitesse",
+            "valeur": "Un bus Yaoundé–Douala part à 60 km/h. Un taxi part 30 min plus tard à 90 km/h. Au bout de combien de temps le taxi rattrape-t-il le bus ?\n\nSoit t = temps de trajet du bus (en heures) quand le taxi le rattrape.\nTemps du taxi = t − 0,5\n\nDistance parcourue égale : 60t = 90(t − 0,5)\n60t = 90t − 45\n−30t = −45\nt = 1,5 h\n\nLe taxi rattrape le bus après 1h de trajet (soit 1h30 après le départ du bus)."
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Vérification de solutions",
+      "type_exercice": "application",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Parmi les couples proposés, lequel est solution du système ?\n{ 2x + y = 5\n{ x − 2y = 0\n\n(A) (1 ; 3)   (B) (2 ; 1)   (C) (1 ; 2)   (D) (2 ; 3)"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Testons (2 ; 1) :\n2(2) + 1 = 5 ✓\n2 − 2(1) = 0 ✓\n\n**Réponse : (B) (2 ; 1)**"
+          }
+        ]
+      },
+      "options_qcm": [["(1 ; 3)", "(2 ; 1)", "(1 ; 2)", "(2 ; 3)"]]
+    },
+    {
+      "numero": 2,
+      "titre": "Substitution",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Résoudre par substitution :\na) { x + 3y = 7\n   { 2x − y = 4\n\nb) { 4x − y = 6\n   { 2x + 3y = 16"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** De (1) : x = 7 − 3y\nDans (2) : 2(7−3y) − y = 4\n14 − 6y − y = 4\n−7y = −10\ny = 10/7, x = 7 − 30/7 = 19/7\n**Solution : (19/7 ; 10/7)**\n\n**b)** De (1) : y = 4x − 6\nDans (2) : 2x + 3(4x−6) = 16\n2x + 12x − 18 = 16\n14x = 34\nx = 17/7, y = 4(17/7)−6 = 26/7\n**Solution : (17/7 ; 26/7)**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Combinaison",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Résoudre par combinaison (addition-soustraction) :\na) { 3x + 2y = 13\n   { 3x − y = 4\n\nb) { 5x + 2y = 3\n   { 3x + 4y = 1"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** Soustraire (2) de (1) :\n(3x+2y) − (3x−y) = 13 − 4\n3y = 9, y = 3\n3x = 4 + 3 = 7, x = 7/3\n**Solution : (7/3 ; 3)**\n\n**b)** Multiplier (1) par 2 : 10x + 4y = 6\nSoustraire (2) : (10x+4y) − (3x+4y) = 6 − 1\n7x = 5, x = 5/7\n2y = 3 − 5(5/7) = 3 − 25/7 = −4/7\ny = −2/7\n**Solution : (5/7 ; −2/7)**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Problème du marché",
+      "type_exercice": "probleme",
+      "niveau": "approfondissement",
+      "bareme": 8,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Au marché de Garoua, Fatima achète 3 kg d'arachides et 2 kg de mil pour 3 600 FCFA. Moussa achète 1 kg d'arachides et 4 kg de mil pour 2 800 FCFA.\n\n1. Poser le système d'équations.\n2. Résoudre par la méthode de votre choix.\n3. Quel est le prix de 1 kg d'arachides et de 1 kg de mil ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Soit a = prix du kg d'arachides, m = prix du kg de mil.\n\n**Système :**\n{ 3a + 2m = 3600  (1)\n{ a + 4m = 2800   (2)\n\n**Par substitution :** de (2) : a = 2800 − 4m\nDans (1) : 3(2800−4m) + 2m = 3600\n8400 − 12m + 2m = 3600\n−10m = −4800\nm = 480 FCFA/kg\na = 2800 − 4(480) = 2800 − 1920 = 880 FCFA/kg\n\n**Conclusion :** Arachides = 880 FCFA/kg, Mil = 480 FCFA/kg"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Systèmes",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** La solution du système { x + y = 6 / { x − y = 2 est :\n(A) (4 ; 2)  (B) (3 ; 3)  (C) (5 ; 1)  (D) (2 ; 4)\n\n**Q2.** Pour éliminer x dans { 2x + y = 5 / { 3x − 2y = 4, on multiplie la 1ère équation par :\n(A) 2  (B) 3  (C) −3  (D) −2\n\n**Q3.** Un système de 2 équations parallèles a :\n(A) Une solution  (B) Deux solutions  (C) Aucune solution  (D) Infinité de solutions"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (A) (4 ; 2) : 4+2=6 ✓ et 4−2=2 ✓\n\n**Q2.** (B) 3 : on obtient 6x+3y=15 et 6x−4y=8, puis soustraction élimine 6x\n\n**Q3.** (C) Aucune solution"
+          }
+        ]
+      },
+      "options_qcm": [
+        ["(4 ; 2)", "(3 ; 3)", "(5 ; 1)", "(2 ; 4)"],
+        ["2", "3", "−3", "−2"],
+        ["Une solution", "Deux solutions", "Aucune solution", "Infinité de solutions"]
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Problème BEPC — Âges et argent",
+      "type_exercice": "probleme",
+      "niveau": "examen",
+      "bareme": 10,
+      "duree_recommandee": 25,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "La somme des âges d'un père et de sa fille est 52 ans. Dans 4 ans, le père aura le triple de l'âge de sa fille.\n\n**1.** En appelant x l'âge du père et y l'âge de la fille, écrire le système d'équations.\n**2.** Résoudre ce système.\n**3.** Quel est l'âge actuel du père ? De la fille ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** Système :\n{ x + y = 52         (somme des âges)\n{ x + 4 = 3(y + 4)   (dans 4 ans)\n\nSimplifier (2) : x + 4 = 3y + 12 → x − 3y = 8\n\n**Système final :**\n{ x + y = 52\n{ x − 3y = 8\n\n**2.** Soustraction (1) − (2) :\n4y = 44\ny = 11 ans (fille)\nx = 52 − 11 = 41 ans (père)\n\n**3. Conclusion :** La fille a 11 ans, le père a 41 ans.\nVérification dans 4 ans : 45 = 3 × 15 = 45 ✓"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 7,
+      "titre": "Synthèse complète",
+      "type_exercice": "synthese",
+      "niveau": "approfondissement",
+      "bareme": 10,
+      "duree_recommandee": 30,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.** Résoudre par la méthode indiquée :\na) (substitution) { 2x − y = 3 / { x + 2y = 9\nb) (combinaison) { 4x + 3y = 2 / { 6x − y = 8\n\n**Partie B.** Problème de train :\nDeux trains partent de deux villes distantes de 480 km et avancent l'un vers l'autre. Le train A roule à x km/h et le train B à y km/h. Ils se rencontrent après 3 heures. Le train A roule 20 km/h plus vite que le train B.\n1. Écrire le système.\n2. Trouver les vitesses de chaque train."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.**\na) De (1) : y = 2x−3. Dans (2) : x + 2(2x−3) = 9\n5x − 6 = 9, 5x = 15, x = 3, y = 3\n**Solution : (3 ; 3)**\n\nb) Multiplier (2) par 3 : 18x − 3y = 24\nAjouter à (1) : 22x = 26, x = 13/11\n3y = 2 − 4(13/11) = 22/11 − 52/11 = −30/11\ny = −10/11\n**Solution : (13/11 ; −10/11)**\n\n**Partie B.**\nSystème : { 3x + 3y = 480  →  x + y = 160\n           { x − y = 20\n\nAddition : 2x = 180, x = 90 km/h (Train A)\ny = 70 km/h (Train B)"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

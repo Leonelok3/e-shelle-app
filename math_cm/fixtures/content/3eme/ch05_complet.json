@@ -1,0 +1,314 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "3eme-5-fonctions-numeriques-generalites",
+  "meta": {
+    "classe": "3ème",
+    "numero": 5,
+    "titre": "Fonctions numériques — généralités",
+    "categorie": "analyse",
+    "difficulte": 2,
+    "description": "Notion de fonction, tableau de valeurs, représentation graphique et lecture graphique — base indispensable de l'analyse.",
+    "objectifs": [
+      "Comprendre la notion de fonction et d'image",
+      "Calculer des images et des antécédents",
+      "Dresser un tableau de valeurs",
+      "Lire et interpréter une représentation graphique"
+    ],
+    "prerequis_slugs": ["3eme-3-equations-et-inequations-du-premier-degre"],
+    "duree_estimee": 65,
+    "points_total_exercices": 50
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Notion de fonction — vocabulaire essentiel",
+      "type_lecon": "definition",
+      "duree_lecture": 18,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Une **fonction numérique** f est une règle qui associe à chaque nombre x d'un ensemble de départ **un unique nombre** f(x), appelé **image** de x.\n\n• x est appelé **l'antécédent**\n• f(x) est appelé **l'image** de x par f\n• On note : f : x → f(x)"
+          },
+          {
+            "type": "exemple",
+            "titre": "Exemple fondamental",
+            "valeur": "Soit f définie par f(x) = 2x + 3.\n\n• Image de 4 : f(4) = 2×4 + 3 = 11\n• Image de −1 : f(−1) = 2×(−1) + 3 = 1\n• Image de 0 : f(0) = 3\n\n**Antécédent de 9 :** On cherche x tel que f(x) = 9\n2x + 3 = 9 → x = 3"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Domaine de définition :** L'ensemble des valeurs de x pour lesquelles f(x) existe.\n\nExemples :\n• f(x) = 2x + 1 → définie pour tout x ∈ ℝ\n• g(x) = 1/x → non définie en x = 0, domaine : ℝ\\{0}\n• h(x) = √x → définie pour x ≥ 0, domaine : [0 ; +∞["
+          },
+          {
+            "type": "contexte",
+            "valeur": "Un taxi à Yaoundé facture 200 FCFA de base puis 150 FCFA par km. Si x est le nombre de kilomètres, le coût total est f(x) = 150x + 200. Pour un trajet de 5 km : f(5) = 750 + 200 = 950 FCFA."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Tableau de valeurs et représentation graphique",
+      "type_lecon": "methode",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "methode",
+            "titre": "Dresser un tableau de valeurs",
+            "valeur": "**Étapes :**\n1. Choisir des valeurs de x (souvent régulièrement espacées)\n2. Calculer f(x) pour chaque valeur\n3. Remplir le tableau à deux lignes : x et f(x)\n\n**Exemple** pour f(x) = x² − 2x :\n| x    | −2 | −1 | 0 | 1  | 2 | 3 |\n|------|----|----|---|----|----|----|\n| f(x) |  8 |  3 | 0 | −1 | 0 | 3 |"
+          },
+          {
+            "type": "methode",
+            "titre": "Représentation graphique",
+            "valeur": "**Pour tracer la courbe :**\n1. Placer un repère orthogonal (Ox horizontal, Oy vertical)\n2. Placer les points (x ; f(x)) du tableau\n3. Relier les points par une courbe régulière\n\nLa **courbe représentative** de f est l'ensemble des points (x ; f(x))."
+          },
+          {
+            "type": "exemple",
+            "titre": "Lecture graphique",
+            "valeur": "Sur la courbe de f :\n\n• Trouver f(2) → repérer le point d'abscisse 2, lire l'ordonnée\n• Trouver les antécédents de 3 → repérer les points d'ordonnée 3, lire les abscisses correspondantes (il peut y en avoir plusieurs !)\n• La courbe passe par (0 ; 3) → f(0) = 3"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Sens de variation :**\n• f est **croissante** sur un intervalle si : quand x augmente, f(x) augmente\n• f est **décroissante** sur un intervalle si : quand x augmente, f(x) diminue\n• f est **constante** si f(x) ne varie pas"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Sens de variation et extrema",
+      "type_lecon": "definition",
+      "duree_lecture": 16,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Tableau de variation :** Résumé graphique du sens de variation d'une fonction.\n\n• Flèche montante ↗ : fonction croissante\n• Flèche descendante ↘ : fonction décroissante\n• On indique les valeurs importantes aux extrémités"
+          },
+          {
+            "type": "exemple",
+            "titre": "Tableau de variation de f(x) = x² − 2x",
+            "valeur": "D'après le tableau de valeurs :\n• Sur ]−∞ ; 1] : f décroissante (de +∞ à −1)\n• Sur [1 ; +∞[ : f croissante (de −1 à +∞)\n• Minimum : f(1) = −1\n\nTableau de variation :\n| x    | −∞ |   | 1  |   | +∞ |\n|------|-----|---|----|----|-----|\n| f(x) | +∞  | ↘ | −1 | ↗ | +∞  |"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Maximum et minimum :**\n• **Maximum** : la plus grande valeur atteinte par f sur un intervalle\n• **Minimum** : la plus petite valeur atteinte\n• **Extremum** : maximum ou minimum\n\nSur un graphique, un maximum correspond à un sommet, un minimum à un creux."
+          },
+          {
+            "type": "contexte",
+            "valeur": "La température T (en °C) à Maroua un jour de saison sèche peut être modélisée par une fonction du temps h (en heures). La fonction est croissante de 6h à 14h (T atteint son maximum de 42°C), puis décroissante. Minimum la nuit : 18°C."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Parité d'une fonction",
+      "type_lecon": "definition",
+      "duree_lecture": 15,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Fonction paire :** f est paire si pour tout x de son domaine, f(−x) = f(x).\nSa courbe est symétrique par rapport à l'axe Oy.\nExemple : f(x) = x² car (−x)² = x²\n\n**Fonction impaire :** f est impaire si pour tout x de son domaine, f(−x) = −f(x).\nSa courbe est symétrique par rapport à l'origine O.\nExemple : g(x) = x³ car (−x)³ = −x³"
+          },
+          {
+            "type": "exemple",
+            "titre": "Reconnaître la parité",
+            "valeur": "**h(x) = 2x² + 1 :**\nh(−x) = 2(−x)² + 1 = 2x² + 1 = h(x) → **Paire** ✓\n\n**k(x) = 3x³ − x :**\nk(−x) = 3(−x)³ − (−x) = −3x³ + x = −(3x³ − x) = −k(x) → **Impaire** ✓\n\n**m(x) = x² + x :**\nm(−x) = x² − x ≠ m(x) et ≠ −m(x) → **Ni paire ni impaire**"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Récapitulatif :**\n• Image de x → calculer f(x) en remplaçant x par sa valeur\n• Antécédent de a → résoudre f(x) = a\n• Sens de variation → comparer f(x₁) et f(x₂) quand x₁ < x₂\n• Parité → calculer f(−x) et comparer à f(x)"
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Images et antécédents",
+      "type_exercice": "application",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Soit f définie par f(x) = 3x − 5.\n\na) Calculer f(0), f(2), f(−1), f(1/3).\nb) Trouver les antécédents de 7 et de −11 par f.\nc) Quel est le nombre dont l'image par f est 0 ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** f(0) = −5 ; f(2) = 1 ; f(−1) = −8 ; f(1/3) = 1−5 = −4\n\n**b)** f(x) = 7 → 3x−5 = 7 → 3x = 12 → x = 4\nf(x) = −11 → 3x−5 = −11 → 3x = −6 → x = −2\n\n**c)** f(x) = 0 → 3x−5 = 0 → x = 5/3"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Tableau de valeurs",
+      "type_exercice": "calcul",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Pour la fonction g définie par g(x) = x² − 3x + 2 :\na) Dresser le tableau de valeurs pour x ∈ {−1 ; 0 ; 1 ; 2 ; 3 ; 4}.\nb) Pour quelles valeurs de x dans ce tableau g(x) = 0 ?\nc) Sur quel intervalle g semble-t-elle décroissante d'après le tableau ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** Tableau :\n| x    | −1 | 0 | 1 | 2 | 3 | 4 |\n|------|----|----|---|---|---|----|\n| g(x) |  6 |  2 | 0 | 0 | 2 | 6 |\n\n**b)** g(x) = 0 pour x = 1 et x = 2\n\n**c)** g semble décroissante sur [−1 ; 1,5] (approx.) car les valeurs diminuent de 6 à 0 entre x=−1 et x=1"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Lecture graphique",
+      "type_exercice": "application",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "D'après une courbe représentant f :\n• f(0) = 2, f(1) = 0, f(2) = −1, f(3) = 0, f(4) = 3\n• La courbe passe par le point (5 ; 8)\n\na) Quelles sont les images de 2 et 4 par f ?\nb) Quels sont les antécédents de 0 ?\nc) Sur quel intervalle f est-elle décroissante ?\nd) Donner le minimum de f sur [0 ; 5] et où il est atteint."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** f(2) = −1 et f(4) = 3\n\n**b)** Les antécédents de 0 sont x = 1 et x = 3 (la courbe coupe l'axe des x en ces points)\n\n**c)** f est décroissante sur [0 ; 2] (les valeurs passent de 2 à −1)\n\n**d)** Le minimum est f(2) = −1, atteint en x = 2"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Parité des fonctions",
+      "type_exercice": "application",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Étudier la parité des fonctions suivantes :\na) f(x) = x⁴ − 3x²\nb) g(x) = 2x³ + x\nc) h(x) = x² + x + 1\nd) k(x) = |x| (valeur absolue)"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** f(−x) = (−x)⁴ − 3(−x)² = x⁴ − 3x² = f(x) → **Paire** (symétrie par rapport à Oy)\n\n**b)** g(−x) = 2(−x)³ + (−x) = −2x³ − x = −(2x³+x) = −g(x) → **Impaire** (symétrie par rapport à O)\n\n**c)** h(−x) = x² − x + 1 ≠ h(x) et ≠ −h(x) → **Ni paire ni impaire**\n\n**d)** k(−x) = |−x| = |x| = k(x) → **Paire**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Fonctions",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** Si f(x) = 2x − 4, l'antécédent de 0 est :\n(A) 0  (B) 2  (C) −4  (D) 4\n\n**Q2.** La fonction f(x) = x² est :\n(A) Croissante sur ℝ  (B) Décroissante sur ℝ  (C) Paire  (D) Impaire\n\n**Q3.** Le domaine de définition de f(x) = 1/(x−3) est :\n(A) ℝ  (B) ℝ\\{3}  (C) ℝ\\{0}  (D) [3 ; +∞["
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (B) 2 : 2(2)−4 = 0 ✓\n\n**Q2.** (C) Paire : f(−x) = (−x)² = x² = f(x)\n\n**Q3.** (B) ℝ\\{3} : x−3 ≠ 0 donc x ≠ 3"
+          }
+        ]
+      },
+      "options_qcm": [
+        ["0", "2", "−4", "4"],
+        ["Croissante sur ℝ", "Décroissante sur ℝ", "Paire", "Impaire"],
+        ["ℝ", "ℝ\\{3}", "ℝ\\{0}", "[3 ; +∞["]
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Problème BEPC — Facture d'eau",
+      "type_exercice": "probleme",
+      "niveau": "examen",
+      "bareme": 10,
+      "duree_recommandee": 25,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "La CDE (Camerounaise Des Eaux) facture l'eau selon la formule suivante : pour les x premiers m³ d'eau consommés, le prix total est f(x) = 450x + 1500 (en FCFA), avec 1500 FCFA d'abonnement fixe.\n\n**1.** Calculer f(0), f(5), f(10).\n**2.** Quelle quantité d'eau peut-on consommer avec 9000 FCFA ?\n**3.** Dresser le tableau de valeurs pour x ∈ {0 ; 2 ; 4 ; 6 ; 8 ; 10}.\n**4.** La fonction f est-elle croissante ou décroissante ? Justifier."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** f(0) = 1500 FCFA (abonnement seul)\nf(5) = 2250 + 1500 = 3750 FCFA\nf(10) = 4500 + 1500 = 6000 FCFA\n\n**2.** f(x) = 9000 → 450x + 1500 = 9000 → 450x = 7500 → x = 16,67 m³\nOn peut consommer 16 m³ (arrondi à l'entier inférieur).\n\n**3.** Tableau :\n| x    | 0    | 2    | 4    | 6    | 8    | 10   |\n|------|------|------|------|------|------|------|\n| f(x) | 1500 | 2400 | 3300 | 4200 | 5100 | 6000 |\n\n**4.** f est **croissante** : quand x augmente, f(x) augmente (coefficient de x = 450 > 0)"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 7,
+      "titre": "Synthèse complète",
+      "type_exercice": "synthese",
+      "niveau": "approfondissement",
+      "bareme": 14,
+      "duree_recommandee": 35,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Soit f définie par f(x) = −x² + 4x (pour x ∈ [−1 ; 5]).\n\n**1.** Calculer f(−1), f(0), f(1), f(2), f(3), f(4), f(5).\n**2.** Dresser le tableau de valeurs.\n**3.** Sur quel intervalle f est-elle croissante ? Décroissante ?\n**4.** Quel est le maximum de f ? Pour quelle valeur de x est-il atteint ?\n**5.** f est-elle paire, impaire, ou ni l'une ni l'autre ?\n**6.** Résoudre f(x) = 0. Interpréter graphiquement."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** f(−1) = −1−4 = −5 ; f(0) = 0 ; f(1) = 3 ; f(2) = 4 ; f(3) = 3 ; f(4) = 0 ; f(5) = −5\n\n**2.** Tableau :\n| x    | −1 | 0 | 1 | 2 | 3 | 4 | 5  |\n|------|----|----|---|---|---|---|----|  \n| f(x) | −5 |  0 | 3 | 4 | 3 | 0 | −5 |\n\n**3.** f croissante sur [−1 ; 2], décroissante sur [2 ; 5]\n\n**4.** Maximum : f(2) = 4\n\n**5.** Domaine = [−1 ; 5] non symétrique par rapport à 0 → **ni paire ni impaire**\n\n**6.** f(x) = 0 → −x² + 4x = 0 → x(−x+4) = 0 → x = 0 ou x = 4\nLa courbe coupe l'axe des x en x = 0 et x = 4."
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

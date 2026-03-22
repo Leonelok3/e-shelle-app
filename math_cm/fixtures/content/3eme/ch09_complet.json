@@ -1,0 +1,313 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "3eme-9-triangles-proprietes-et-calculs",
+  "meta": {
+    "classe": "3ème",
+    "numero": 9,
+    "titre": "Triangles — propriétés et calculs",
+    "categorie": "geometrie",
+    "difficulte": 2,
+    "description": "Propriétés fondamentales des triangles, conditions d'existence, triangles particuliers et calculs de périmètres et aires.",
+    "objectifs": [
+      "Connaître la somme des angles d'un triangle",
+      "Identifier les différents types de triangles",
+      "Calculer périmètre et aire d'un triangle",
+      "Utiliser les propriétés des triangles particuliers"
+    ],
+    "prerequis_slugs": ["3eme-7-proportionnalite-et-pourcentages"],
+    "duree_estimee": 65,
+    "points_total_exercices": 50
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Définitions et types de triangles",
+      "type_lecon": "definition",
+      "duree_lecture": 16,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Un **triangle** est une figure géométrique à trois côtés et trois angles. On note un triangle ABC avec ses sommets A, B, C.\n\n**Types de triangles selon les côtés :**\n• **Scalène** : les 3 côtés ont des longueurs différentes\n• **Isocèle** : 2 côtés égaux (la base et les deux côtés égaux)\n• **Équilatéral** : 3 côtés égaux\n\n**Types selon les angles :**\n• **Acutangle** : les 3 angles sont aigus (< 90°)\n• **Rectangle** : un angle droit (= 90°)\n• **Obtusangle** : un angle obtus (> 90°)"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Condition d'existence d'un triangle :**\nTrois longueurs a, b, c forment un triangle si et seulement si chaque côté est inférieur à la somme des deux autres :\n• a < b + c\n• b < a + c\n• c < a + b\n\n**Exemple :** 3, 4, 5 → forment un triangle car 5 < 3+4=7 ✓\n**Contre-exemple :** 1, 2, 5 → ne forment pas un triangle car 5 > 1+2=3 ✗"
+          },
+          {
+            "type": "exemple",
+            "titre": "Propriété fondamentale",
+            "valeur": "**La somme des angles d'un triangle est 180°**\n\nDans le triangle ABC : Â + B̂ + Ĉ = 180°\n\n**Application :** Dans un triangle, Â = 65° et B̂ = 80°.\nĈ = 180° − 65° − 80° = **35°**\n\n**Triangle équilatéral :** Chaque angle = 180°/3 = **60°**\n**Triangle rectangle isocèle :** angles 90°, 45°, 45°"
+          },
+          {
+            "type": "contexte",
+            "valeur": "Les toits des maisons camerounaises traditionnelles en forme de triangle (cases rondes du Bamiléké, tchouk du Nord-Cameroun) utilisent des propriétés géométriques pour assurer solidité et évacuation des eaux de pluie."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Périmètre et aire d'un triangle",
+      "type_lecon": "methode",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Périmètre :** P = a + b + c (somme des trois côtés)\n\n**Aire (Surface) :**\n\n**Formule générale :** A = (base × hauteur) / 2\n\nLa **hauteur** est la droite perpendiculaire à la base passant par le sommet opposé."
+          },
+          {
+            "type": "exemple",
+            "titre": "Calculs d'aire",
+            "valeur": "**Triangle de base 8 cm, hauteur 5 cm :**\nA = (8 × 5)/2 = **20 cm²**\n\n**Triangle équilatéral de côté a :**\nHauteur h = a√3/2\nA = (a × a√3/2)/2 = **a²√3/4**\n\nPour a = 6 cm : A = 36√3/4 = 9√3 ≈ 15,6 cm²\n\n**Triangle rectangle de cathètes a et b :**\nA = (a × b)/2\nPour a = 5, b = 12 : A = 60/2 = **30 cm²**"
+          },
+          {
+            "type": "methode",
+            "titre": "Trouver la hauteur",
+            "valeur": "Si on connaît l'aire et la base, on peut trouver la hauteur :\nh = 2A / base\n\n**Exemple :** Un triangle a une aire de 24 cm² et une base de 8 cm.\nh = 2×24/8 = **6 cm**"
+          },
+          {
+            "type": "contexte",
+            "valeur": "Un champ triangulaire au bord du fleuve Sanaga a des côtés de 50 m, 60 m et 70 m et une hauteur de 42,4 m par rapport au côté de 70 m. Son aire = (70 × 42,4)/2 = 1 484 m². Ce champ peut accueillir environ 1 484 m² de culture de manioc."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Triangle isocèle et ses propriétés",
+      "type_lecon": "definition",
+      "duree_lecture": 16,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Triangle isocèle :** deux côtés égaux (les côtés égaux s'appellent les côtés principaux, et le 3ème côté est la base).\n\n**Propriétés du triangle isocèle ABC (AB = AC) :**\n1. Les angles à la base sont égaux : B̂ = Ĉ\n2. La médiatrice de la base, la médiane issue de A, et la hauteur issue de A sont **confondues**\n3. L'axe de symétrie est la droite passant par A et le milieu de BC"
+          },
+          {
+            "type": "exemple",
+            "titre": "Calculs dans un triangle isocèle",
+            "valeur": "Triangle ABC avec AB = AC = 10 cm et B̂ = 50°.\n\n**Angle en A :** Ĉ = B̂ = 50° (angles à la base égaux)\nÂ = 180° − 50° − 50° = **80°**\n\n**Hauteur AI** (I milieu de BC) :\nSi BC = 12 cm, alors BI = 6 cm\nAI = √(AB² − BI²) = √(100 − 36) = √64 = **8 cm**\n\n**Aire = (BC × AI)/2 = (12 × 8)/2 = 48 cm²**"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Médiane, médiatrice, hauteur, bissectrice :**\n• **Médiane** : relie un sommet au milieu du côté opposé\n• **Médiatrice** : perpendiculaire au milieu d'un côté\n• **Hauteur** : perpendiculaire à un côté par le sommet opposé\n• **Bissectrice** : partage un angle en deux angles égaux\n\nDans un triangle isocèle, ces 4 droites issues du sommet principal sont confondues."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Angles et propriétés avancées",
+      "type_lecon": "methode",
+      "duree_lecture": 16,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Angle extérieur d'un triangle :**\nL'angle extérieur d'un triangle est égal à la somme des deux angles intérieurs non adjacents.\n\nSi on prolonge BC au-delà de C, l'angle extérieur en C = Â + B̂"
+          },
+          {
+            "type": "exemple",
+            "titre": "Application angles extérieurs",
+            "valeur": "Dans un triangle ABC : Â = 40°, B̂ = 65°\nAngle extérieur en C = 40° + 65° = **105°**\nVérification : Ĉ = 180° − 40° − 65° = 75°\nAngle extérieur = 180° − 75° = 105° ✓"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Points remarquables d'un triangle :**\n• **Centroïde G** (centre de gravité) : intersection des 3 médianes — G divise chaque médiane dans le rapport 2:1 depuis le sommet\n• **Orthocentre H** : intersection des 3 hauteurs\n• **Circumcentre O** : intersection des 3 médiatrices (centre du cercle circonscrit)\n• **Incentre I** : intersection des 3 bissectrices (centre du cercle inscrit)"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Récapitulatif :**\n• Somme des angles = 180°\n• Aire = (base × hauteur)/2\n• Triangle isocèle : angles à la base égaux\n• Triangle équilatéral : tous les angles = 60°, tous les côtés égaux\n• Angle extérieur = somme des 2 angles non adjacents"
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Types et angles",
+      "type_exercice": "application",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) Dans le triangle ABC, Â = 55° et B̂ = 70°. Calculer Ĉ. Quel type de triangle est-ce ?\nb) Un triangle isocèle a un angle au sommet de 40°. Calculer les angles à la base.\nc) Les longueurs 5, 8, 14 peuvent-elles former un triangle ? Justifier."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** Ĉ = 180° − 55° − 70° = **55°**\nComme deux angles sont égaux (Â = Ĉ = 55°), c'est un triangle **isocèle** (et acutangle)\n\n**b)** Angles à la base : (180° − 40°)/2 = 140°/2 = **70°** chacun\n\n**c)** Test : 14 < 5 + 8 = 13 ? Non ! 14 > 13\n**Ces longueurs ne forment pas un triangle.**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Périmètres et aires",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) Calculer l'aire et le périmètre d'un triangle de côtés 6 cm, 8 cm et 10 cm, sachant que la hauteur relative au côté de 10 cm vaut 4,8 cm.\nb) Un triangle équilatéral a une hauteur de 6√3 cm. Calculer son côté, son périmètre et son aire."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** Périmètre = 6 + 8 + 10 = **24 cm**\nAire = (10 × 4,8)/2 = **24 cm²**\n(Note : c'est un triangle rectangle car 10² = 6²+8² = 36+64 = 100 ✓)\n\n**b)** Hauteur h = a√3/2 = 6√3\na = 6√3 × 2/√3 = **12 cm**\nPérimètre = 3 × 12 = **36 cm**\nAire = a²√3/4 = 144√3/4 = **36√3 ≈ 62,4 cm²**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Triangle isocèle — calculs",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Triangle ABC isocèle en A avec AB = AC = 13 cm et BC = 10 cm.\n\na) Calculer les angles à la base (en utilisant le fait que tan(B̂) = AI/BI, sachant que AI = 12 cm).\nb) Calculer l'aire du triangle ABC.\nc) Calculer l'angle au sommet A."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** I milieu de BC → BI = 5 cm\nAI = √(13² − 5²) = √(169−25) = √144 = **12 cm** (vérifié)\ntan(B̂) = AI/BI = 12/5 = 2,4\nB̂ = arctan(2,4) ≈ **67,4°** et Ĉ = 67,4°\n\n**b)** Aire = (BC × AI)/2 = (10 × 12)/2 = **60 cm²**\n\n**c)** Â = 180° − 67,4° − 67,4° = **45,2°**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Problème géométrique",
+      "type_exercice": "probleme",
+      "niveau": "approfondissement",
+      "bareme": 8,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Un terrain triangulaire à Yaoundé a des angles de 65°, 75° et x°. Un côté mesure 40 m et la hauteur correspondante est 25 m.\n\n1. Calculer l'angle x.\n2. Calculer l'aire du terrain en m².\n3. Si le propriétaire veut construire une clôture tout autour (périmètre), sachant que les deux autres côtés mesurent 30 m et 36 m, quelle longueur de grillage faut-il ?\n4. Le grillage coûte 3 500 FCFA le mètre. Quel est le budget clôture ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** x = 180° − 65° − 75° = **40°**\n\n**2.** Aire = (40 × 25)/2 = **500 m²**\n\n**3.** Périmètre = 40 + 30 + 36 = **106 m**\n\n**4.** Budget = 106 × 3500 = **371 000 FCFA**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Triangles",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** Un triangle rectangle a deux angles de 90° et 30°. Le troisième vaut :\n(A) 30°  (B) 60°  (C) 45°  (D) 120°\n\n**Q2.** L'aire d'un triangle de base 12 cm et de hauteur 7 cm est :\n(A) 84 cm²  (B) 42 cm²  (C) 38 cm²  (D) 21 cm²\n\n**Q3.** Dans un triangle isocèle, les angles à la base mesurent 50° chacun. L'angle au sommet est :\n(A) 50°  (B) 80°  (C) 100°  (D) 130°"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (B) 60° : 180° − 90° − 30° = 60°\n\n**Q2.** (B) 42 cm² : A = (12×7)/2 = 42\n\n**Q3.** (B) 80° : Â = 180° − 50° − 50° = 80°"
+          }
+        ]
+      },
+      "options_qcm": [
+        ["30°", "60°", "45°", "120°"],
+        ["84 cm²", "42 cm²", "38 cm²", "21 cm²"],
+        ["50°", "80°", "100°", "130°"]
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Problème BEPC — Angles et construction",
+      "type_exercice": "probleme",
+      "niveau": "examen",
+      "bareme": 10,
+      "duree_recommandee": 25,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Dans un triangle ABC, on a Â = 2B̂ et Ĉ = Â + 30°.\n\n**1.** Exprimer tous les angles en fonction de B̂.\n**2.** En utilisant la somme des angles, trouver B̂, Â et Ĉ.\n**3.** Quel type de triangle est ABC ?\n**4.** L'angle extérieur en C vaut combien ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** Â = 2B̂ ; Ĉ = Â + 30° = 2B̂ + 30°\n\n**2.** Â + B̂ + Ĉ = 180°\n2B̂ + B̂ + 2B̂ + 30° = 180°\n5B̂ = 150°\nB̂ = **30°**\nÂ = **60°**\nĈ = **90°**\n\n**3.** Ĉ = 90° → Triangle **rectangle** en C\n\n**4.** Angle extérieur en C = Â + B̂ = 60° + 30° = **90°** (ou 180° − 90° = 90°)"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 7,
+      "titre": "Synthèse complète",
+      "type_exercice": "synthese",
+      "niveau": "approfondissement",
+      "bareme": 10,
+      "duree_recommandee": 30,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.** Déterminer si les triplets suivants forment des triangles. Pour ceux qui forment un triangle, préciser son type :\na) (6 ; 8 ; 10)   b) (5 ; 5 ; 5)   c) (4 ; 7 ; 12)   d) (7 ; 7 ; 10)\n\n**Partie B.** Un terrain en forme de triangle isocèle ABC (AB = AC) a un périmètre de 100 m. La base BC = 30 m et la hauteur issue de A vaut 32 m.\n1. Calculer AB et AC.\n2. Calculer l'aire du terrain.\n3. Si le prix du terrain est 8 000 FCFA/m², calculer sa valeur totale."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.**\na) 10 < 6+8=14 ✓ → Triangle. 6²+8²=100=10² → **Triangle rectangle**\nb) 5 < 5+5=10 ✓ → **Triangle équilatéral** (3 côtés égaux)\nc) 12 < 4+7=11 ? Non → **Pas un triangle**\nd) 10 < 7+7=14 ✓, 7 < 7+10=17 ✓ → **Triangle isocèle** (AB=AC=7)\n\n**Partie B.**\n1. Périmètre = AB + AC + BC = 100\nAB + AC = 100 − 30 = 70\nAB = AC = 70/2 = **35 m**\n\n2. Aire = (30 × 32)/2 = **480 m²**\n\n3. Valeur = 480 × 8000 = **3 840 000 FCFA**"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

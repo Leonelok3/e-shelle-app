@@ -1,0 +1,302 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "3eme-14-aires-et-volumes",
+  "meta": {
+    "classe": "3ème",
+    "numero": 14,
+    "titre": "Aires et volumes",
+    "categorie": "geometrie",
+    "difficulte": 2,
+    "description": "Calcul d'aires des figures planes et de volumes des solides usuels — formules essentielles au BEPC.",
+    "objectifs": [
+      "Calculer l'aire des figures planes usuelles",
+      "Calculer le volume et la surface des solides usuels",
+      "Convertir les unités d'aire et de volume",
+      "Résoudre des problèmes concrets de mesure"
+    ],
+    "prerequis_slugs": ["3eme-9-triangles-proprietes-et-calculs", "3eme-13-cercles-et-angles-inscrits"],
+    "duree_estimee": 65,
+    "points_total_exercices": 50
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Aires des figures planes",
+      "type_lecon": "definition",
+      "duree_lecture": 18,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Formules d'aires (surfaces) :**\n\n| Figure | Formule | Variables |\n|--------|---------|----------|\n| Carré | A = c² | c = côté |\n| Rectangle | A = L × l | L = longueur, l = largeur |\n| Triangle | A = (b × h)/2 | b = base, h = hauteur |\n| Parallélogramme | A = b × h | b = base, h = hauteur |\n| Trapèze | A = (B+b)/2 × h | B, b = bases, h = hauteur |\n| Cercle | A = πr² | r = rayon |\n| Losange | A = d₁ × d₂ / 2 | d = diagonales |"
+          },
+          {
+            "type": "exemple",
+            "titre": "Calculs d'aires",
+            "valeur": "**Trapèze** de grandes base B = 12 cm, petite base b = 8 cm, hauteur h = 5 cm :\nA = (12+8)/2 × 5 = 10 × 5 = **50 cm²**\n\n**Cercle** de diamètre 14 cm (r = 7 cm) :\nA = π × 49 ≈ 3,14 × 49 ≈ **153,9 cm²**\n\n**Losange** de diagonales 10 cm et 16 cm :\nA = 10 × 16 / 2 = **80 cm²**"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Conversion des unités d'aire :**\n• 1 m² = 100 dm² = 10 000 cm² = 1 000 000 mm²\n• 1 ha = 10 000 m² (unité agricole)\n• 1 km² = 1 000 000 m² = 100 ha\n\n**Exemple :** 45 000 m² = 4,5 ha = 0,045 km²"
+          },
+          {
+            "type": "contexte",
+            "valeur": "Au Cameroun, les terres agricoles sont souvent mesurées en hectares. Un champ de cacao de forme rectangulaire de 200 m × 500 m = 100 000 m² = 10 ha. Avec un rendement de 800 kg/ha, ce champ produit 8 tonnes de cacao."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Volumes des solides",
+      "type_lecon": "definition",
+      "duree_lecture": 20,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Formules de volumes :**\n\n| Solide | Volume | Surface latérale |\n|--------|--------|------------------|\n| Cube | V = a³ | S = 6a² |\n| Pavé droit (cuboid) | V = L×l×h | 2(Ll+Lh+lh) |\n| Prisme | V = B × h | périmètre base × h |\n| Cylindre | V = πr²h | S_lat = 2πrh |\n| Cône | V = (1/3)πr²h | S_lat = πrl |\n| Sphère | V = (4/3)πr³ | S = 4πr² |\n| Pyramide | V = (1/3)B × h | — |"
+          },
+          {
+            "type": "exemple",
+            "titre": "Calculs de volumes",
+            "valeur": "**Cylindre** r = 5 cm, h = 12 cm :\nV = π × 25 × 12 = 300π ≈ **942 cm³**\nS_lat = 2π × 5 × 12 = 120π ≈ **377 cm²**\n\n**Cône** r = 4 cm, h = 9 cm :\nV = (1/3) × π × 16 × 9 = 48π ≈ **150,8 cm³**\nGénératrice l = √(r²+h²) = √(16+81) = √97 ≈ 9,85 cm\nS_lat = π × 4 × 9,85 ≈ **123,7 cm²**\n\n**Sphère** r = 6 cm :\nV = (4/3) × π × 216 = 288π ≈ **904,8 cm³**\nS = 4π × 36 = 144π ≈ **452,4 cm²**"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Surface totale des solides",
+      "type_lecon": "methode",
+      "duree_lecture": 15,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Surface totale** = surface latérale + surface des bases\n\n**Cylindre :**\nS_totale = 2πrh + 2πr² = 2πr(h + r)\n\n**Cône :**\nS_totale = πrl + πr² = πr(l + r)\n(l = génértatrice = √(r²+h²))\n\n**Cube :** S_totale = 6a²\n**Pavé :** S_totale = 2(Ll + Lh + lh)"
+          },
+          {
+            "type": "exemple",
+            "titre": "Surface d'un réservoir",
+            "valeur": "Réservoir cylindrique fermé : r = 2 m, h = 5 m\nS_totale = 2π × 2 × (5 + 2) = 4π × 7 = 28π ≈ **87,96 m²**\n\nVolume = π × 4 × 5 = 20π ≈ **62,83 m³** = 62 830 litres (1 m³ = 1000 L)"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Conversion des unités de volume :**\n• 1 m³ = 1000 L = 1 000 000 cm³\n• 1 L = 1 dm³ = 1000 cm³\n• 1 cm³ = 1 mL\n\n**Exemple :** Réservoir de 25 000 cm³ = 25 L = 0,025 m³"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Figures composées et problèmes pratiques",
+      "type_lecon": "exemple",
+      "duree_lecture": 14,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "methode",
+            "titre": "Figures composées",
+            "valeur": "Pour une figure composée de plusieurs formes simples :\n1. Identifier les formes simples\n2. Calculer l'aire (ou le volume) de chacune\n3. Additionner (ou soustraire) selon la configuration"
+          },
+          {
+            "type": "exemple",
+            "titre": "Terrain avec bassin circulaire",
+            "valeur": "Un terrain rectangulaire de 20 m × 15 m = 300 m²\nOn creuse un bassin circulaire de rayon 3 m.\n\nAire restante (pelouse) = 300 − π × 9 = 300 − 28,27 ≈ **271,7 m²**\nVolume du bassin (profondeur 1,5 m) = π × 9 × 1,5 = 13,5π ≈ **42,4 m³** = 42 400 litres"
+          },
+          {
+            "type": "exemple",
+            "titre": "Toiture en forme de pyramide",
+            "valeur": "Maison à Yaoundé : base carrée 8 m × 8 m, hauteur de la pyramide 3 m.\n\nSurface de la base = 64 m²\nApothème a = √(4² + 3²) = √25 = 5 m\nSurface latérale = 4 × (1/2 × 8 × 5) = 4 × 20 = 80 m²\n\nVolume de la pyramide = (1/3) × 64 × 3 = **64 m³**"
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Aires des figures planes",
+      "type_exercice": "calcul",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Calculer l'aire de chaque figure :\na) Triangle de base 14 cm et hauteur 9 cm\nb) Trapèze : grande base 18 cm, petite base 12 cm, hauteur 7 cm\nc) Cercle de diamètre 20 cm\nd) Losange de diagonales 15 cm et 8 cm"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** A = (14 × 9)/2 = **63 cm²**\n\n**b)** A = (18+12)/2 × 7 = 15 × 7 = **105 cm²**\n\n**c)** r = 10 cm, A = π × 100 ≈ **314,2 cm²**\n\n**d)** A = (15 × 8)/2 = **60 cm²**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Volumes des solides",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Calculer le volume de chaque solide :\na) Cube de côté 5 cm\nb) Cylindre de rayon 4 cm et hauteur 10 cm\nc) Sphère de rayon 3 cm\nd) Cône de rayon 6 cm et hauteur 8 cm"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** V = 5³ = **125 cm³**\n\n**b)** V = π × 16 × 10 = 160π ≈ **502,7 cm³**\n\n**c)** V = (4/3) × π × 27 = 36π ≈ **113,1 cm³**\n\n**d)** V = (1/3) × π × 36 × 8 = 96π ≈ **301,6 cm³**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Surface totale et conversions",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) Calculer la surface totale d'un cylindre fermé de rayon 3 cm et hauteur 8 cm.\nb) Un champ carré a une superficie de 25 hectares. Quelle est la longueur de son côté (en m) ?\nc) Un réservoir sphérique de rayon 1,5 m. Calculer son volume en litres.\nd) Convertir : 4,5 m³ = ? litres = ? cm³"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** S = 2π × 3 × (8+3) = 6π × 11 = 66π ≈ **207,3 cm²**\n\n**b)** 25 ha = 250 000 m²\ncôté = √250 000 = 500 m → **500 m**\n\n**c)** V = (4/3) × π × 1,5³ = (4/3) × π × 3,375 = 4,5π m³ ≈ 14,14 m³\n= 14,14 × 1000 ≈ **14 137 litres**\n\n**d)** 4,5 m³ = **4 500 litres** = **4 500 000 cm³**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Problème pratique — Construction",
+      "type_exercice": "probleme",
+      "niveau": "approfondissement",
+      "bareme": 8,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "À Douala, on construit une piscine rectangulaire de 25 m × 10 m avec une profondeur uniforme de 1,8 m. La piscine est surmontée d'un enclos circulaire de 5 m de rayon autour de son centre.\n\n**1.** Calculer le volume d'eau dans la piscine.\n**2.** Si on remplit la piscine avec un débit de 500 litres/minute, combien de temps faut-il ?\n**3.** Calculer la surface totale à carreler (fond + 4 parois).\n**4.** Un carreau fait 0,04 m². Combien de carreaux faut-il ? (Sans les joints)"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** V = 25 × 10 × 1,8 = **450 m³** = 450 000 litres\n\n**2.** t = 450 000 / 500 = 900 minutes = **15 heures**\n\n**3.** Fond = 25 × 10 = 250 m²\nParois longues (2) = 2 × (25 × 1,8) = 90 m²\nParois courtes (2) = 2 × (10 × 1,8) = 36 m²\nSurface totale = 250 + 90 + 36 = **376 m²**\n\n**4.** Nombre de carreaux = 376 / 0,04 = **9 400 carreaux**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Aires et volumes",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** L'aire d'un disque de rayon 7 cm est approximativement :\n(A) 154 cm²  (B) 44 cm²  (C) 22 cm²  (D) 308 cm²\n\n**Q2.** Le volume d'un cube de côté 4 cm est :\n(A) 16 cm³  (B) 48 cm³  (C) 64 cm³  (D) 96 cm³\n\n**Q3.** Un cylindre de rayon 5 cm et hauteur 6 cm a un volume de :\n(A) 30π cm³  (B) 150π cm³  (C) 60π cm³  (D) 300π cm³"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (A) 154 cm² : π × 49 ≈ 3,14 × 49 ≈ 153,9 ≈ 154\n\n**Q2.** (C) 64 cm³ : V = 4³ = 64\n\n**Q3.** (B) 150π cm³ : V = π × 25 × 6 = 150π"
+          }
+        ]
+      },
+      "options_qcm": [
+        ["154 cm²", "44 cm²", "22 cm²", "308 cm²"],
+        ["16 cm³", "48 cm³", "64 cm³", "96 cm³"],
+        ["30π cm³", "150π cm³", "60π cm³", "300π cm³"]
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Problème BEPC — Emballage et remplissage",
+      "type_exercice": "probleme",
+      "niveau": "examen",
+      "bareme": 10,
+      "duree_recommandee": 25,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Une usine à Bafoussam produit des boîtes de conserve cylindriques de rayon 4 cm et hauteur 12 cm.\n\n**1.** Calculer le volume d'une boîte.\n**2.** Calculer la surface totale de métal nécessaire pour une boîte.\n**3.** On range ces boîtes dans des cartons de 40 cm × 32 cm × 25 cm. Combien de boîtes (debout, sur une couche) peut-on ranger dans une rangée de 40 cm ? De 32 cm ?\n**4.** Combien de couches peut-on empiler dans un carton de 25 cm ?\n**5.** Combien de boîtes au total dans un carton ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** V = π × 16 × 12 = 192π ≈ **603,2 cm³** ≈ 603 mL\n\n**2.** S = 2π × 4 × (12+4) = 8π × 16 = 128π ≈ **402,1 cm²**\n\n**3.** Diamètre d'une boîte = 2 × 4 = 8 cm\nRangée de 40 cm : 40/8 = **5 boîtes**\nRangée de 32 cm : 32/8 = **4 boîtes**\n\n**4.** Hauteur boîte = 12 cm\nNombre de couches : 25/12 = 2,08... → **2 couches** (hauteur = 24 cm < 25 cm)\n\n**5.** Total = 5 × 4 × 2 = **40 boîtes par carton**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 7,
+      "titre": "Synthèse complète",
+      "type_exercice": "synthese",
+      "niveau": "approfondissement",
+      "bareme": 10,
+      "duree_recommandee": 30,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Un château d'eau à Yaoundé a la forme d'un cylindre surmonté d'un hémisphère (demi-sphère). Le cylindre a un rayon de 3 m et une hauteur de 8 m. L'hémisphère a le même rayon.\n\n**1.** Calculer le volume du cylindre.\n**2.** Calculer le volume de l'hémisphère.\n**3.** Calculer le volume total d'eau que peut contenir le château d'eau.\n**4.** Exprimer ce volume en litres et en m³.\n**5.** Calculer la surface extérieure à peindre (surface latérale du cylindre + surface de l'hémisphère, sans la base)."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** V_cylindre = π × 9 × 8 = 72π ≈ **226,2 m³**\n\n**2.** V_hémisphère = (1/2) × (4/3)π × 27 = (2/3) × 27π = 18π ≈ **56,5 m³**\n\n**3.** V_total = 72π + 18π = 90π ≈ **282,7 m³**\n\n**4.** 90π m³ ≈ 282,7 m³ = **282 700 litres** ≈ 283 m³\n\n**5.** Surface latérale cylindre = 2π × 3 × 8 = 48π ≈ 150,8 m²\nSurface hémisphère = (1/2) × 4π × 9 = 18π ≈ 56,5 m²\nSurface totale à peindre = 48π + 18π = 66π ≈ **207,3 m²**"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

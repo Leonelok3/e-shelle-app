@@ -1,0 +1,615 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "3eme-2-nombres-relatifs-et-calcul-litteral",
+  "chapitre_titre": "Nombres relatifs et calcul littéral",
+  "classe": "Troisième",
+  "programme": "MINESEC Cameroun",
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Les nombres relatifs et la droite numérique",
+      "type_lecon": "definition",
+      "duree_lecture": 20,
+      "is_free": true,
+      "contenu": {
+        "introduction": "Au marché de Mfoundi à Yaoundé, un commerçant peut avoir un bénéfice (nombre positif) ou une perte (nombre négatif). La température peut être au-dessus (positive) ou en dessous de zéro (négative). Les nombres relatifs permettent de représenter toutes ces situations de la vie courante.",
+        "sections": [
+          {
+            "titre": "I. Définition des nombres relatifs",
+            "type": "definition",
+            "contenu": "Un nombre relatif est un nombre accompagné d'un signe + ou -. Les nombres positifs sont supérieurs à 0 (ex: +5, +3,7). Les nombres négatifs sont inférieurs à 0 (ex: -3, -7,5). Le nombre 0 n'est ni positif ni négatif. L'ensemble des nombres relatifs est noté ℤ (pour les entiers relatifs) ou ℝ (pour tous les réels relatifs). La valeur absolue d'un nombre relatif a, notée |a|, est sa distance à 0 : c'est toujours un nombre positif.",
+            "formules": [
+              "|+5| = 5 et |-5| = 5",
+              "|a| = a si a ≥ 0 et |a| = -a si a < 0",
+              "Opposé de a : -a (si a = +3 alors -a = -3)"
+            ],
+            "exemples": [
+              {
+                "enonce": "Martial doit 2500 FCFA à Amina. Représenter cette situation par un nombre relatif.",
+                "solution": "-2500 FCFA (dette = nombre négatif)",
+                "etapes": [
+                  "Une dette représente un manque d'argent",
+                  "On choisit les gains comme positifs et les dettes comme négatifs",
+                  "La dette de 2500 FCFA s'écrit : -2500 FCFA"
+                ]
+              },
+              {
+                "enonce": "Calculer |-7| et |+4|. Quel est l'opposé de -6 ?",
+                "solution": "|-7| = 7 ; |+4| = 4 ; opposé de -6 est +6",
+                "etapes": [
+                  "La valeur absolue supprime le signe : |-7| = 7",
+                  "|+4| = 4 (déjà positif)",
+                  "L'opposé change le signe : opposé de -6 est -(-6) = +6"
+                ]
+              }
+            ],
+            "remarques": [
+              "Au BEPC, savoir comparer deux nombres relatifs est souvent demandé",
+              "Tout nombre négatif est inférieur à tout nombre positif"
+            ]
+          },
+          {
+            "titre": "II. Ordre et comparaison sur la droite numérique",
+            "type": "methode",
+            "contenu": "Sur la droite numérique, les nombres sont rangés de gauche à droite dans l'ordre croissant. Un nombre est d'autant plus grand qu'il est à droite. Pour comparer deux nombres relatifs : si les deux sont positifs, le plus grand est celui avec la plus grande valeur absolue. Si les deux sont négatifs, le plus grand est celui avec la plus petite valeur absolue. Tout nombre positif est supérieur à tout nombre négatif.",
+            "formules": [
+              "... < -3 < -2 < -1 < 0 < 1 < 2 < 3 < ...",
+              "Si a < 0 et b > 0 alors a < b",
+              "Si a < 0 et b < 0 alors : a < b ⟺ |a| > |b|"
+            ],
+            "exemples": [
+              {
+                "enonce": "Ranger dans l'ordre croissant : -5 ; +3 ; -1 ; 0 ; +7 ; -8",
+                "solution": "-8 < -5 < -1 < 0 < +3 < +7",
+                "etapes": [
+                  "Les négatifs sont à gauche de 0, les positifs à droite",
+                  "Parmi les négatifs : -8 < -5 < -1 (plus la valeur absolue est grande, plus c'est petit)",
+                  "Parmi les positifs : +3 < +7",
+                  "Ordre final : -8 < -5 < -1 < 0 < +3 < +7"
+                ]
+              }
+            ],
+            "remarques": [
+              "-100 < -1 : attention, en nombres négatifs, le 'plus grand en valeur absolue' est le plus PETIT"
+            ]
+          },
+          {
+            "titre": "III. Addition et soustraction de nombres relatifs",
+            "type": "methode",
+            "contenu": "Règles d'addition : si les deux nombres ont le même signe, on additionne les valeurs absolues et on garde le signe commun. Si les signes sont différents, on soustrait les valeurs absolues et on garde le signe du nombre avec la plus grande valeur absolue. La soustraction se ramène à l'addition de l'opposé : a - b = a + (-b).",
+            "formules": [
+              "(+a) + (+b) = +(a+b)",
+              "(-a) + (-b) = -(a+b)",
+              "(+a) + (-b) = +(a-b) si a > b, ou -(b-a) si b > a",
+              "a - b = a + (-b)"
+            ],
+            "exemples": [
+              {
+                "enonce": "Calculer : a) (-7) + (-3)   b) (+8) + (-5)   c) (-4) - (+6)",
+                "solution": "a) -10   b) +3   c) -10",
+                "etapes": [
+                  "a) Même signe (négatif) : (-7)+(-3) = -(7+3) = -10",
+                  "b) Signes différents : |+8|=8 > |-5|=5, signe de +8 : (+8)+(-5) = +(8-5) = +3",
+                  "c) On transforme en addition : (-4)-(+6) = (-4)+(-6) = -(4+6) = -10"
+                ]
+              }
+            ],
+            "remarques": [
+              "BEPC : toujours transformer une soustraction en addition de l'opposé avant de calculer"
+            ]
+          }
+        ],
+        "retenir": [
+          "Les nombres relatifs ont un signe + ou - et permettent de représenter des situations opposées",
+          "La valeur absolue |a| est toujours positive et représente la distance à 0",
+          "Sur la droite numérique : de gauche à droite = ordre croissant",
+          "Soustraction : a - b = a + (-b) — toujours transformer en addition"
+        ],
+        "mots_cles": ["nombre relatif", "valeur absolue", "opposé", "droite numérique", "nombre positif", "nombre négatif"]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Multiplication, division et priorités opératoires",
+      "type_lecon": "methode",
+      "duree_lecture": 20,
+      "is_free": false,
+      "contenu": {
+        "introduction": "Si un commerçant de Sandaga perd 500 FCFA par jour pendant 3 jours, sa perte totale est 3 × (-500) = -1500 FCFA. La multiplication de nombres relatifs suit des règles de signes précises que tout élève de 3ème doit maîtriser parfaitement pour le BEPC.",
+        "sections": [
+          {
+            "titre": "I. Règles de signes pour la multiplication",
+            "type": "theoreme",
+            "contenu": "La règle fondamentale est simple : le produit de deux nombres de même signe est positif. Le produit de deux nombres de signes contraires est négatif. Pour un produit de plusieurs facteurs : on compte le nombre de facteurs négatifs. Si ce nombre est pair, le produit est positif. S'il est impair, le produit est négatif.",
+            "formules": [
+              "(+) × (+) = (+)  et  (-) × (-) = (+)",
+              "(+) × (-) = (-)  et  (-) × (+) = (-)",
+              "(-a) × (-b) = +ab",
+              "(-a)² = +a² mais -(a²) = -a²"
+            ],
+            "exemples": [
+              {
+                "enonce": "Calculer : a) (-4) × (+5)   b) (-3) × (-7)   c) (-2) × (+3) × (-5)",
+                "solution": "a) -20   b) +21   c) +30",
+                "etapes": [
+                  "a) Signes contraires → négatif : (-4)×(+5) = -20",
+                  "b) Même signe (négatif) → positif : (-3)×(-7) = +21",
+                  "c) 2 facteurs négatifs (pair) → positif : (-2)×(+3)×(-5) = +30. Vérif: 2×3×5=30, 2 signes - → +"
+                ]
+              },
+              {
+                "enonce": "Calculer (-3)² et -3²",
+                "solution": "(-3)² = +9 mais -3² = -9",
+                "etapes": [
+                  "(-3)² = (-3)×(-3) = +9 (le carré de -3)",
+                  "-3² = -(3²) = -(9) = -9 (on élève 3 au carré, puis on prend l'opposé)",
+                  "Attention : (-3)² ≠ -3² !"
+                ]
+              }
+            ],
+            "remarques": [
+              "Erreur fréquente BEPC : confondre (-3)² = 9 et -3² = -9",
+              "Le carré d'un nombre négatif est TOUJOURS positif"
+            ]
+          },
+          {
+            "titre": "II. Division de nombres relatifs",
+            "type": "methode",
+            "contenu": "Les mêmes règles de signes s'appliquent pour la division : quotient de même signe = positif, quotient de signes contraires = négatif. On ne peut pas diviser par zéro.",
+            "formules": [
+              "(+a) ÷ (+b) = +(a÷b)",
+              "(-a) ÷ (-b) = +(a÷b)",
+              "(+a) ÷ (-b) = -(a÷b)",
+              "(-a) ÷ (+b) = -(a÷b)"
+            ],
+            "exemples": [
+              {
+                "enonce": "Calculer : a) (-18) ÷ (+3)   b) (-20) ÷ (-4)   c) (+15) ÷ (-5)",
+                "solution": "a) -6   b) +5   c) -3",
+                "etapes": [
+                  "a) Signes contraires → négatif : 18÷3=6, résultat = -6",
+                  "b) Même signe → positif : 20÷4=5, résultat = +5",
+                  "c) Signes contraires → négatif : 15÷5=3, résultat = -3"
+                ]
+              }
+            ],
+            "remarques": ["La division par 0 est IMPOSSIBLE et non définie"]
+          },
+          {
+            "titre": "III. Priorités des opérations",
+            "type": "methode",
+            "contenu": "L'ordre de priorité des opérations : 1) Parenthèses (de l'intérieur vers l'extérieur) 2) Puissances 3) Multiplication et division (de gauche à droite) 4) Addition et soustraction (de gauche à droite).",
+            "formules": [
+              "Priorité : ( ) > puissances > × et ÷ > + et -"
+            ],
+            "exemples": [
+              {
+                "enonce": "Calculer : A = -3 + 4 × (-2) - (-6) ÷ 2",
+                "solution": "A = -3 + (-8) - (-3) = -3 - 8 + 3 = -8",
+                "etapes": [
+                  "D'abord les multiplications/divisions : 4×(-2) = -8 et (-6)÷2 = -3",
+                  "On remplace : A = -3 + (-8) - (-3)",
+                  "Transformation : A = -3 - 8 + 3",
+                  "Calcul de gauche à droite : -3 - 8 = -11, puis -11 + 3 = -8"
+                ]
+              }
+            ],
+            "remarques": ["BEPC : toujours respecter les priorités, sinon on perd tous les points"]
+          }
+        ],
+        "retenir": [
+          "Même signe → résultat positif ; Signes contraires → résultat négatif",
+          "(-a)² = a² (positif) mais -a² = -(a²) (négatif)",
+          "Ordre : parenthèses, puissances, ×÷, +-",
+          "Ne JAMAIS diviser par zéro"
+        ],
+        "mots_cles": ["règle des signes", "produit", "quotient", "priorités opératoires", "puissance"]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Calcul littéral : expressions et réduction",
+      "type_lecon": "methode",
+      "duree_lecture": 25,
+      "is_free": false,
+      "contenu": {
+        "introduction": "Le calcul littéral permet de représenter des situations générales avec des lettres. Au lieu de dire 'le prix d'un kg de maïs est 300 FCFA et j'en achète 5 kg', on peut écrire p×n où p est le prix unitaire et n la quantité. Cette généralisation est au cœur des mathématiques du secondaire.",
+        "sections": [
+          {
+            "titre": "I. Vocabulaire du calcul littéral",
+            "type": "definition",
+            "contenu": "Une expression littérale contient des lettres (variables) et des nombres (coefficients). Un monôme est une expression sans addition ni soustraction (ex: 3x, -5x², 7). Un polynôme est une somme de monômes (ex: 3x + 5, 2x² - 3x + 1). Le degré d'un monôme est la somme des exposants des variables. Des termes semblables ont les mêmes variables avec les mêmes exposants.",
+            "formules": [
+              "Monôme : coefficient × lettre(s) — ex: 3x, -2y², 5xy",
+              "Polynôme : somme de monômes — ex: 2x + 3y - 5",
+              "Termes semblables : 3x et -5x (même variable x, même exposant 1)"
+            ],
+            "exemples": [
+              {
+                "enonce": "Nkolo achète n mangues à 150 FCFA chacune et m oranges à 75 FCFA chacune. Écrire le montant total.",
+                "solution": "Montant total = 150n + 75m FCFA",
+                "etapes": [
+                  "Prix des mangues : 150 × n = 150n",
+                  "Prix des oranges : 75 × m = 75m",
+                  "Total : 150n + 75m FCFA"
+                ]
+              }
+            ],
+            "remarques": ["En calcul littéral, on écrit 3x et non 3×x. Le signe × est omis devant une lettre"]
+          },
+          {
+            "titre": "II. Réduction d'expressions",
+            "type": "methode",
+            "contenu": "Réduire une expression, c'est regrouper les termes semblables. On additionne ou soustrait les coefficients des termes qui ont exactement les mêmes parties littérales.",
+            "formules": [
+              "ax + bx = (a+b)x",
+              "ax² + bx² = (a+b)x²",
+              "ax + by ne peut pas être réduit davantage (termes différents)"
+            ],
+            "exemples": [
+              {
+                "enonce": "Réduire : A = 3x + 5y - 2x + 7 - 3y + 1",
+                "solution": "A = x + 2y + 8",
+                "etapes": [
+                  "Regrouper les termes en x : 3x - 2x = (3-2)x = x",
+                  "Regrouper les termes en y : 5y - 3y = (5-3)y = 2y",
+                  "Regrouper les constantes : 7 + 1 = 8",
+                  "Résultat : A = x + 2y + 8"
+                ]
+              }
+            ],
+            "remarques": ["On ne peut réduire que des termes semblables : 3x et 5y ne sont PAS semblables"]
+          },
+          {
+            "titre": "III. Développement et factorisation",
+            "type": "methode",
+            "contenu": "Développer : supprimer les parenthèses en utilisant la distributivité. k(a+b) = ka+kb. Factoriser : mettre un facteur commun en évidence — l'opération inverse du développement. Les identités remarquables sont des formules à mémoriser absolument.",
+            "formules": [
+              "k(a+b) = ka + kb",
+              "k(a-b) = ka - kb",
+              "(a+b)² = a² + 2ab + b²",
+              "(a-b)² = a² - 2ab + b²",
+              "(a+b)(a-b) = a² - b²"
+            ],
+            "exemples": [
+              {
+                "enonce": "Développer : A = 3(2x - 5) + 2(x + 4)",
+                "solution": "A = 8x - 7",
+                "etapes": [
+                  "3(2x-5) = 6x - 15",
+                  "2(x+4) = 2x + 8",
+                  "A = 6x - 15 + 2x + 8",
+                  "Réduire : A = (6+2)x + (-15+8) = 8x - 7"
+                ]
+              },
+              {
+                "enonce": "Développer puis réduire : (x+3)²",
+                "solution": "(x+3)² = x² + 6x + 9",
+                "etapes": [
+                  "Identité (a+b)² = a²+2ab+b² avec a=x et b=3",
+                  "(x+3)² = x² + 2×x×3 + 3²",
+                  "= x² + 6x + 9"
+                ]
+              }
+            ],
+            "remarques": ["BEPC : les identités remarquables rapportent souvent 4 à 6 points. Les mémoriser !"]
+          }
+        ],
+        "retenir": [
+          "Termes semblables = même variable, même exposant — on peut les additionner",
+          "Distributivité : k(a+b) = ka + kb",
+          "(a+b)² = a² + 2ab + b²  ;  (a-b)² = a² - 2ab + b²  ;  (a+b)(a-b) = a²-b²",
+          "Développer ≠ Factoriser : développer = supprimer les (), factoriser = créer des ()"
+        ],
+        "mots_cles": ["expression littérale", "monôme", "polynôme", "réduction", "développement", "factorisation", "identité remarquable"]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Récapitulatif et méthodes BEPC",
+      "type_lecon": "recapitulatif",
+      "duree_lecture": 20,
+      "is_free": false,
+      "contenu": {
+        "introduction": "Ce chapitre sur les nombres relatifs et le calcul littéral est l'un des plus testés au BEPC. Les calculs sur les nombres relatifs (règles de signes) et les identités remarquables reviennent dans presque tous les sujets. Voici un récapitulatif complet pour consolider tes acquis.",
+        "sections": [
+          {
+            "titre": "I. Tableau des règles de signes",
+            "type": "texte",
+            "contenu": "Résumé complet de toutes les règles de signes pour les 4 opérations.",
+            "formules": [
+              "(+)+(+)=+ | (-)+(-) = - | (+)+(-) = signe du plus grand |a|",
+              "(+)×(+)=+ | (-)×(-) = + | (+)×(-) = - | (-)×(+) = -",
+              "Même règle pour la division",
+              "Nombre pair de (-) dans un produit → résultat positif"
+            ],
+            "exemples": [],
+            "remarques": ["Ces règles s'appliquent aussi aux puissances : (-2)³ = -8 (impair) ; (-2)⁴ = +16 (pair)"]
+          },
+          {
+            "titre": "II. Méthode type BEPC — Calcul d'expressions",
+            "type": "methode",
+            "contenu": "Méthode en 4 étapes pour calculer une expression algébrique complexe.",
+            "formules": [
+              "Étape 1 : Identifier les parenthèses et les calculer en premier",
+              "Étape 2 : Effectuer puissances et racines",
+              "Étape 3 : Effectuer × et ÷ (de gauche à droite)",
+              "Étape 4 : Effectuer + et - (de gauche à droite)"
+            ],
+            "exemples": [
+              {
+                "enonce": "Calculer : B = (−3 + 7) × (−2)² − 18 ÷ (−3)",
+                "solution": "B = 22",
+                "etapes": [
+                  "Parenthèse : (-3+7) = 4",
+                  "Puissance : (-2)² = 4",
+                  "Multiplication : 4 × 4 = 16",
+                  "Division : 18 ÷ (-3) = -6",
+                  "Addition : 16 - (-6) = 16 + 6 = 22"
+                ]
+              }
+            ],
+            "remarques": ["BEPC : montrer toutes les étapes intermédiaires même si le calcul semble simple"]
+          },
+          {
+            "titre": "III. Erreurs les plus fréquentes",
+            "type": "remarque",
+            "contenu": "Les 5 erreurs que font le plus souvent les élèves camerounais.",
+            "formules": [],
+            "exemples": [],
+            "remarques": [
+              "ERREUR 1 : (-3)² = 9 mais -3² = -9 — ne pas les confondre",
+              "ERREUR 2 : (a+b)² ≠ a²+b² — il faut le terme 2ab au milieu",
+              "ERREUR 3 : -3+4×2 ≠ -3+4=1 puis ×2=2 — les × avant les +",
+              "ERREUR 4 : 3(x+2) ≠ 3x+2 — distribuer sur TOUS les termes",
+              "ERREUR 5 : 3x + 5y ne se réduit pas — ce ne sont pas des termes semblables"
+            ]
+          }
+        ],
+        "retenir": [
+          "Règle des signes : même signe → +, signes différents → -",
+          "Priorités : ( ) → puissances → × ÷ → + -",
+          "Identités : (a±b)² et (a+b)(a-b) = a²-b² — à mémoriser absolument",
+          "Distributivité sur TOUS les termes de la parenthèse"
+        ],
+        "mots_cles": ["règles de signes", "priorités", "identités remarquables", "distributivité", "BEPC"]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Opérations sur les nombres relatifs",
+      "type_exercice": "calcul",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 10,
+      "enonce": {
+        "texte": "Calculer les expressions suivantes.",
+        "donnees": [],
+        "questions": [
+          {"numero": "1", "texte": "A = (-5) + (+3) + (-8)", "points": 1},
+          {"numero": "2", "texte": "B = (-6) × (+4)", "points": 1},
+          {"numero": "3", "texte": "C = (-15) ÷ (-3)", "points": 1},
+          {"numero": "4", "texte": "D = (-2)³", "points": 1}
+        ]
+      },
+      "correction": {
+        "methode": "Appliquer les règles de signes pour chaque opération.",
+        "etapes": [
+          {"numero": 1, "texte": "A = (-5)+(+3)+(-8) = -5+3-8 = -2-8 = -10", "justification": "Même signe: -5-8=-13, puis -13+3=-10"},
+          {"numero": 2, "texte": "B = (-6)×(+4) = -24", "justification": "Signes contraires → négatif : 6×4=24"},
+          {"numero": 3, "texte": "C = (-15)÷(-3) = +5", "justification": "Même signe (négatif÷négatif) → positif : 15÷3=5"},
+          {"numero": 4, "texte": "D = (-2)³ = (-2)×(-2)×(-2) = 4×(-2) = -8", "justification": "3 facteurs négatifs (impair) → résultat négatif"}
+        ],
+        "reponses": {"1": "-10", "2": "-24", "3": "+5", "4": "-8"},
+        "piege": "Pour (-2)³, les élèves calculent souvent (-2)³ = -(2³) = -8, ce qui donne le bon résultat mais par erreur de raisonnement. Montrer les 3 multiplications étape par étape.",
+        "points_total": 4
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Rangement et comparaison",
+      "type_exercice": "application",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 10,
+      "enonce": {
+        "texte": "Les relevés de température à Yaoundé sur une semaine sont (en °C) : +28 ; -2 ; +15 ; 0 ; -8 ; +31 ; -1.",
+        "donnees": ["Températures : +28 ; -2 ; +15 ; 0 ; -8 ; +31 ; -1"],
+        "questions": [
+          {"numero": "1", "texte": "Ranger ces températures dans l'ordre croissant.", "points": 2},
+          {"numero": "2", "texte": "Calculer la différence entre la température maximale et la température minimale.", "points": 1},
+          {"numero": "3", "texte": "Calculer la valeur absolue de la température minimale.", "points": 1}
+        ]
+      },
+      "correction": {
+        "methode": "Placer les nombres sur une droite numérique mentalement puis comparer.",
+        "etapes": [
+          {"numero": 1, "texte": "Ordre croissant : -8 < -2 < -1 < 0 < +15 < +28 < +31", "justification": "Les négatifs d'abord (les plus petits), puis 0, puis les positifs"},
+          {"numero": 2, "texte": "Différence = max - min = (+31) - (-8) = 31 + 8 = 39°C", "justification": "Soustraction d'un négatif = addition"},
+          {"numero": 3, "texte": "|-8| = 8°C", "justification": "La valeur absolue d'un nombre négatif = son opposé positif"}
+        ],
+        "reponses": {"1": "-8 < -2 < -1 < 0 < +15 < +28 < +31", "2": "39°C", "3": "8°C"},
+        "piege": "Pour la différence, les élèves écrivent (+31)-(-8) = 31-8 = 23. Erreur ! Soustraire un négatif = ajouter le positif : 31-(-8) = 31+8 = 39.",
+        "points_total": 4
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Développement et réduction",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "texte": "Développer et réduire les expressions suivantes.",
+        "donnees": [],
+        "questions": [
+          {"numero": "1", "texte": "A = 3(2x - 4) - 2(x + 5)", "points": 2},
+          {"numero": "2", "texte": "B = (x + 5)²", "points": 2},
+          {"numero": "3", "texte": "C = (2x - 3)(2x + 3)", "points": 2}
+        ]
+      },
+      "correction": {
+        "methode": "Appliquer la distributivité et les identités remarquables.",
+        "etapes": [
+          {"numero": 1, "texte": "A = 6x-12-2x-10 = 4x-22", "justification": "3×2x=6x, 3×(-4)=-12, -2×x=-2x, -2×5=-10. Puis réduire."},
+          {"numero": 2, "texte": "B = x²+10x+25", "justification": "(a+b)²=a²+2ab+b² avec a=x, b=5 : x²+2×x×5+5²=x²+10x+25"},
+          {"numero": 3, "texte": "C = 4x²-9", "justification": "(a+b)(a-b)=a²-b² avec a=2x, b=3 : (2x)²-3²=4x²-9"}
+        ],
+        "reponses": {"1": "4x - 22", "2": "x² + 10x + 25", "3": "4x² - 9"},
+        "piege": "Pour B, les élèves écrivent (x+5)² = x²+25 en oubliant le terme 2ab = 2×x×5 = 10x. L'identité complète est INDISPENSABLE.",
+        "points_total": 6
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Calcul d'expressions avec priorités",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "texte": "Calculer en respectant les priorités opératoires.",
+        "donnees": [],
+        "questions": [
+          {"numero": "1", "texte": "A = -4 + 3 × (-2) - 8 ÷ (-4)", "points": 2},
+          {"numero": "2", "texte": "B = (-3 + 5)² × (-2) + 6", "points": 2},
+          {"numero": "3", "texte": "C = [(-2) × 3 - (-4)] ÷ (-2)", "points": 2}
+        ]
+      },
+      "correction": {
+        "methode": "Respecter l'ordre : parenthèses → puissances → ×÷ → +-",
+        "etapes": [
+          {"numero": 1, "texte": "A = -4+(-6)-(-2) = -4-6+2 = -8", "justification": "3×(-2)=-6 ; 8÷(-4)=-2. Puis: -4-6+2=-8"},
+          {"numero": 2, "texte": "B = (2)²×(-2)+6 = 4×(-2)+6 = -8+6 = -2", "justification": "(-3+5)=2, 2²=4, 4×(-2)=-8, -8+6=-2"},
+          {"numero": 3, "texte": "C = [-6-(-4)]÷(-2) = [-6+4]÷(-2) = (-2)÷(-2) = +1", "justification": "(-2)×3=-6 ; -(-4)=+4 ; -6+4=-2 ; (-2)÷(-2)=+1"}
+        ],
+        "reponses": {"1": "-8", "2": "-2", "3": "+1"},
+        "piege": "Pour A, les élèves font souvent -4+3=-1 puis ×(-2)=+2 avant de continuer. Erreur : la multiplication est prioritaire sur l'addition.",
+        "points_total": 6
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "Factorisation",
+      "type_exercice": "calcul",
+      "niveau": "approfondissement",
+      "bareme": 8,
+      "duree_recommandee": 20,
+      "enonce": {
+        "texte": "Factoriser les expressions suivantes.",
+        "donnees": [],
+        "questions": [
+          {"numero": "1", "texte": "A = 6x² - 4x", "points": 2},
+          {"numero": "2", "texte": "B = x² - 16", "points": 2},
+          {"numero": "3", "texte": "C = x² + 6x + 9", "points": 2},
+          {"numero": "4", "texte": "D = 3(x+2) - 5(x+2)", "points": 2}
+        ]
+      },
+      "correction": {
+        "methode": "Chercher le facteur commun ou reconnaître une identité remarquable.",
+        "etapes": [
+          {"numero": 1, "texte": "A = 2x(3x - 2)", "justification": "Facteur commun : 2x. Vérif: 2x×3x=6x², 2x×(-2)=-4x ✓"},
+          {"numero": 2, "texte": "B = (x-4)(x+4)", "justification": "x²-16 = x²-4². Identité a²-b²=(a-b)(a+b) avec a=x, b=4"},
+          {"numero": 3, "texte": "C = (x+3)²", "justification": "x²+6x+9 = x²+2×x×3+3². Identité (a+b)² avec a=x, b=3"},
+          {"numero": 4, "texte": "D = (x+2)(3-5) = -2(x+2)", "justification": "Facteur commun (x+2) : 3(x+2)-5(x+2) = (x+2)(3-5) = -2(x+2)"}
+        ],
+        "reponses": {"1": "2x(3x-2)", "2": "(x-4)(x+4)", "3": "(x+3)²", "4": "-2(x+2)"},
+        "piege": "Pour B, les élèves tentent de factoriser par x alors que 16 n'est pas un multiple de x. Il faut reconnaître la différence de carrés a²-b².",
+        "points_total": 8
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 6,
+      "titre": "Problème style BEPC — Gestion financière",
+      "type_exercice": "probleme",
+      "niveau": "examen",
+      "bareme": 10,
+      "duree_recommandee": 30,
+      "enonce": {
+        "texte": "Amina tient un commerce de pagnes au marché de Sandaga. En janvier, elle réalise un bénéfice de 35 000 FCFA. En février, elle subit une perte de 12 000 FCFA. En mars, son bénéfice est le double de celui de janvier. En avril, sa perte est 3 fois celle de février.",
+        "donnees": [
+          "Bénéfice janvier : +35 000 FCFA",
+          "Perte février : -12 000 FCFA",
+          "Bénéfice mars = 2 × bénéfice janvier",
+          "Perte avril = 3 × perte février"
+        ],
+        "questions": [
+          {"numero": "1", "texte": "Calculer le résultat (bénéfice ou perte) du mois de mars.", "points": 1},
+          {"numero": "2", "texte": "Calculer le résultat du mois d'avril.", "points": 1},
+          {"numero": "3", "texte": "Calculer le résultat total sur les 4 mois.", "points": 2},
+          {"numero": "4", "texte": "Si Amina souhaite équilibrer ses comptes sur l'année, quel bénéfice mensuel moyen doit-elle réaliser sur les 8 mois restants ?", "points": 3},
+          {"numero": "5", "texte": "Exprimer le bénéfice total B en fonction du bénéfice b d'un mois quelconque si tous les mois ont le même bénéfice b.", "points": 3}
+        ]
+      },
+      "correction": {
+        "methode": "Utiliser les opérations sur les nombres relatifs et le calcul littéral.",
+        "etapes": [
+          {"numero": 1, "texte": "Mars = 2 × 35 000 = +70 000 FCFA", "justification": "Bénéfice mars = 2 × bénéfice janvier"},
+          {"numero": 2, "texte": "Avril = 3 × (-12 000) = -36 000 FCFA", "justification": "Perte avril = 3 × perte février (3 × négatif = négatif)"},
+          {"numero": 3, "texte": "Total = 35 000 + (-12 000) + 70 000 + (-36 000) = +57 000 FCFA", "justification": "Bénéfice net sur 4 mois"},
+          {"numero": 4, "texte": "Pour équilibrer l'année : total annuel = 0. Donc 57 000 + 8×x = 0 → x = -57 000/8 = -7 125 FCFA/mois", "justification": "Ce résultat négatif signifie qu'elle a déjà un bénéfice, elle peut perdre 7 125 FCFA/mois"},
+          {"numero": 5, "texte": "B = 12b (bénéfice total sur 12 mois à b FCFA/mois)", "justification": "12 mois × b FCFA chaque mois = 12b"}
+        ],
+        "reponses": {"1": "+70 000 FCFA", "2": "-36 000 FCFA", "3": "+57 000 FCFA", "4": "-7 125 FCFA (peut perdre jusqu'à 7 125 FCFA/mois)", "5": "B = 12b"},
+        "piege": "Pour la question 4, beaucoup d'élèves cherchent un bénéfice positif. Or le total des 4 premiers mois étant déjà positif (57 000), elle peut se permettre des pertes sur les 8 mois restants.",
+        "points_total": 10
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 7,
+      "titre": "Synthèse — Calcul littéral et nombres relatifs",
+      "type_exercice": "synthese",
+      "niveau": "examen",
+      "bareme": 12,
+      "duree_recommandee": 40,
+      "enonce": {
+        "texte": "PARTIE A — Calcul numérique. PARTIE B — Calcul littéral.",
+        "donnees": ["Partie A : Calcul avec nombres relatifs", "Partie B : Expressions algébriques"],
+        "questions": [
+          {"numero": "A1", "texte": "Calculer : E = (-2)⁴ + (-3)² - |(-7)| + (-1)⁵", "points": 3},
+          {"numero": "A2", "texte": "Calculer : F = [(-5)+3] × (-4) ÷ (-2) - 7", "points": 3},
+          {"numero": "B1", "texte": "Développer et réduire : G = (3x-2)² - (3x+2)(3x-2)", "points": 3},
+          {"numero": "B2", "texte": "Factoriser : H = 4x² - 12x + 9", "points": 3}
+        ]
+      },
+      "correction": {
+        "methode": "Partie A : priorités opératoires. Partie B : identités remarquables.",
+        "etapes": [
+          {"numero": 1, "texte": "E : (-2)⁴=16, (-3)²=9, |(-7)|=7, (-1)⁵=-1. Donc E = 16+9-7+(-1) = 17", "justification": "(-2)⁴ pair → positif ; (-1)⁵ impair → négatif"},
+          {"numero": 2, "texte": "F : (-5+3)=(-2), (-2)×(-4)=8, 8÷(-2)=-4, -4-7=-11", "justification": "Parenthèse d'abord, puis ×, puis ÷, puis -"},
+          {"numero": 3, "texte": "G = (9x²-12x+4)-(9x²-4) = 9x²-12x+4-9x²+4 = -12x+8", "justification": "(3x-2)²=9x²-12x+4 ; (3x+2)(3x-2)=9x²-4 (identité a²-b²)"},
+          {"numero": 4, "texte": "H = (2x-3)²", "justification": "4x²-12x+9 = (2x)²-2×2x×3+3². Identité (a-b)² avec a=2x, b=3"}
+        ],
+        "reponses": {"A1": "17", "A2": "-11", "B1": "-12x+8", "B2": "(2x-3)²"},
+        "piege": "Pour G, les élèves oublient de distribuer le signe moins sur TOUT (3x+2)(3x-2) : -(9x²-4) = -9x²+4 et non -9x²-4.",
+        "points_total": 12
+      },
+      "options_qcm": []
+    }
+  ],
+  "meta": {
+    "total_lecons": 4,
+    "total_exercices": 7,
+    "points_total_exercices": 50,
+    "niveaux_couverts": ["decouverte", "entrainement", "approfondissement", "examen"],
+    "competences_visees": [
+      "Maîtriser les règles de signes pour les 4 opérations",
+      "Appliquer les priorités opératoires correctement",
+      "Développer et factoriser des expressions algébriques",
+      "Utiliser les identités remarquables"
+    ],
+    "liens_bepc": [
+      "Les règles de signes et calcul littéral représentent 20-25% du BEPC",
+      "Les identités remarquables apparaissent dans presque tous les sujets de BEPC"
+    ]
+  }
+}

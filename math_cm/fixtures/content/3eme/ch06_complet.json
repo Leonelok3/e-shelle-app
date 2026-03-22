@@ -1,0 +1,310 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "3eme-6-fonction-lineaire-et-affine",
+  "meta": {
+    "classe": "3ème",
+    "numero": 6,
+    "titre": "Fonction linéaire et affine",
+    "categorie": "analyse",
+    "difficulte": 2,
+    "description": "Étude des fonctions linéaires y = ax et affines y = ax + b — droites, pentes et applications concrètes.",
+    "objectifs": [
+      "Reconnaître et définir une fonction linéaire et affine",
+      "Calculer et interpréter le coefficient directeur et l'ordonnée à l'origine",
+      "Tracer la droite représentative",
+      "Résoudre des problèmes de proportionnalité et de modélisation"
+    ],
+    "prerequis_slugs": ["3eme-5-fonctions-numeriques-generalites"],
+    "duree_estimee": 65,
+    "points_total_exercices": 50
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Fonction linéaire — f(x) = ax",
+      "type_lecon": "definition",
+      "duree_lecture": 15,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Une **fonction linéaire** est une fonction de la forme **f(x) = ax** où a est un nombre réel non nul appelé **coefficient directeur** ou **pente**.\n\nSa représentation graphique est une **droite passant par l'origine** O(0 ; 0)."
+          },
+          {
+            "type": "exemple",
+            "titre": "Exemples de fonctions linéaires",
+            "valeur": "• f(x) = 3x : pente = 3, droite montante\n• g(x) = −2x : pente = −2, droite descendante\n• h(x) = x/2 = 0,5x : pente = 0,5, droite peu inclinée\n\nPoints caractéristiques pour f(x) = 3x :\n(0 ; 0), (1 ; 3), (2 ; 6), (−1 ; −3)"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Propriétés de la fonction linéaire f(x) = ax :**\n• Passe toujours par O(0 ; 0)\n• Si a > 0 : droite croissante (monte de gauche à droite)\n• Si a < 0 : droite décroissante (descend de gauche à droite)\n• |a| grand → droite très inclinée\n• |a| petit → droite peu inclinée"
+          },
+          {
+            "type": "contexte",
+            "valeur": "Un ouvrier à Douala gagne 3 500 FCFA par jour travaillé. Si x est le nombre de jours, son salaire est f(x) = 3500x (fonction linéaire). Après 10 jours : f(10) = 35 000 FCFA."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Fonction affine — f(x) = ax + b",
+      "type_lecon": "definition",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Une **fonction affine** est une fonction de la forme **f(x) = ax + b** où :\n• **a** est le **coefficient directeur** (pente de la droite)\n• **b** est l'**ordonnée à l'origine** (valeur de f quand x = 0)\n\nSa représentation graphique est une **droite** (pas forcément par l'origine)."
+          },
+          {
+            "type": "exemple",
+            "titre": "Tracer une droite affine",
+            "valeur": "Tracer f(x) = 2x − 3\n\n**Méthode 1 (table de valeurs) :**\nf(0) = −3 → point (0 ; −3)\nf(2) = 1 → point (2 ; 1)\nOn trace la droite passant par ces deux points.\n\n**Méthode 2 (ordonnée à l'origine + pente) :**\n• Placer (0 ; −3) sur l'axe Oy\n• La pente est 2 : pour chaque +1 en x, on monte de 2 en y\n• Placer (1 ; −1), (2 ; 1), etc."
+          },
+          {
+            "type": "methode",
+            "titre": "Trouver l'équation d'une droite",
+            "valeur": "Si une droite passe par les points A(x₁ ; y₁) et B(x₂ ; y₂) :\n\n**Coefficient directeur :** a = (y₂ − y₁)/(x₂ − x₁)\n\n**Ordonnée à l'origine :** b = y₁ − a × x₁\n\n**Exemple :** Droite passant par A(1 ; 3) et B(3 ; 7)\na = (7−3)/(3−1) = 4/2 = 2\nb = 3 − 2×1 = 1\nÉquation : f(x) = 2x + 1"
+          },
+          {
+            "type": "contexte",
+            "valeur": "Une boulangerie de Bafoussam facture 500 FCFA de livraison + 250 FCFA par baguette. Si x est le nombre de baguettes : f(x) = 250x + 500. L'ordonnée à l'origine (500) représente le coût fixe de livraison."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Sens de variation et coefficient directeur",
+      "type_lecon": "methode",
+      "duree_lecture": 15,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Pour f(x) = ax + b :\n• Si **a > 0** : f est **croissante** sur ℝ\n• Si **a < 0** : f est **décroissante** sur ℝ\n• Si **a = 0** : f est **constante** (droite horizontale)\n\nLe coefficient directeur a mesure l'**inclinaison** de la droite."
+          },
+          {
+            "type": "exemple",
+            "titre": "Interprétation du coefficient directeur",
+            "valeur": "f(x) = 3x + 2 vs g(x) = 0,5x + 2 :\n• f a un coefficient 3 → monte rapidement\n• g a un coefficient 0,5 → monte lentement\n• Toutes les deux passent par (0 ; 2)\n\nf(x) = −2x + 5 :\n• a = −2 < 0 → décroissante\n• Pour x = 0 : y = 5\n• Pour x = 2 : y = 1 (descente de 4)"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Droites parallèles et perpendiculaires :**\n• Deux droites y = ax + b et y = a'x + b' sont **parallèles** si a = a'\n• Elles sont **perpendiculaires** si a × a' = −1\n\n**Position relative :** Deux droites non parallèles se coupent en un point. Ce point est la solution du système formé par leurs équations."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Applications — Problèmes de modélisation",
+      "type_lecon": "exemple",
+      "duree_lecture": 17,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "exemple",
+            "titre": "Modèle de tarification",
+            "valeur": "Deux opérateurs téléphoniques au Cameroun :\n• **Orange** : 50 FCFA/min + abonnement 2000 FCFA\n• **MTN** : 70 FCFA/min + abonnement 1000 FCFA\n\nf(x) = 50x + 2000 (Orange)\ng(x) = 70x + 1000 (MTN)\n\n**À partir de quel nombre de minutes Orange est-il moins cher ?**\nf(x) < g(x)\n50x + 2000 < 70x + 1000\n1000 < 20x\nx > 50 minutes\n\nOrange devient moins cher à partir de **50 minutes** d'appels."
+          },
+          {
+            "type": "exemple",
+            "titre": "Trouver les coordonnées d'un point d'intersection",
+            "valeur": "Droites : y = 3x − 1 et y = −x + 7\n3x − 1 = −x + 7\n4x = 8\nx = 2, y = 5\n\nLes droites se coupent en **(2 ; 5)**."
+          },
+          {
+            "type": "texte",
+            "valeur": "**Récapitulatif du chapitre :**\n\n| Type | Forme | Graphe | Propriété |\n|------|-------|--------|-----------|\n| Linéaire | ax | Droite par O | Proportionnalité |\n| Affine | ax+b | Droite | a>0 croissante |\n| Constante | b | Droite horizontale | f(x) = b |\n\nLa pente a = (Δy)/(Δx) : variation de y pour une variation de x."
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Identifier et calculer",
+      "type_exercice": "application",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Pour chaque fonction, préciser si elle est linéaire, affine ou ni l'une ni l'autre, puis calculer f(3) et f(−2) :\na) f(x) = 4x\nb) g(x) = −3x + 7\nc) h(x) = x² + 1\nd) k(x) = 5x − 5"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** f(x) = 4x : **Linéaire** (a=4, b=0)\nf(3) = 12 ; f(−2) = −8\n\n**b)** g(x) = −3x + 7 : **Affine** (a=−3, b=7)\ng(3) = −9+7 = −2 ; g(−2) = 6+7 = 13\n\n**c)** h(x) = x² + 1 : **Ni l'une ni l'autre** (degré 2)\nh(3) = 10 ; h(−2) = 5\n\n**d)** k(x) = 5x − 5 : **Affine** (a=5, b=−5)\nk(3) = 10 ; k(−2) = −15"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Équation d'une droite",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Trouver l'équation de la droite (D) passant par :\na) A(0 ; 3) et B(2 ; 7)\nb) C(−1 ; 4) et D(3 ; 0)\nc) E(2 ; 5) et F(2 ; 8) (cas particulier !)"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** a = (7−3)/(2−0) = 2 ; b = 3\n→ D : y = 2x + 3\n\n**b)** a = (0−4)/(3−(−1)) = −4/4 = −1\nb = 4 − (−1)(−1) = 4 − 1 = 3\n→ D : y = −x + 3\n\n**c)** Les abscisses sont identiques (x=2) → droite **verticale**\n→ D : x = 2 (pas une fonction !)"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Point d'intersection de deux droites",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) Trouver les coordonnées du point d'intersection de y = 2x + 1 et y = −x + 7.\nb) Les droites y = 3x − 2 et y = 3x + 5 se coupent-elles ? Justifier.\nc) Vérifier que (3 ; 4) est le point d'intersection de y = x + 1 et y = −x + 7."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** 2x + 1 = −x + 7\n3x = 6, x = 2\ny = 2(2)+1 = 5\n**Intersection en (2 ; 5)**\n\n**b)** Les deux droites ont le même coefficient directeur (a=3) → elles sont **parallèles** (et distinctes car b=−2 ≠ 5) → **pas d'intersection**\n\n**c)** y = 3+1 = 4 ✓ et y = −3+7 = 4 ✓\nOui, (3 ; 4) est bien le point d'intersection."
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Problème de tarification",
+      "type_exercice": "probleme",
+      "niveau": "approfondissement",
+      "bareme": 8,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Deux garages à Douala proposent des révisions auto :\n• **Garage Joss** : 15 000 FCFA fixe + 3 000 FCFA par heure de travail\n• **Garage Mballa** : 5 000 FCFA fixe + 6 000 FCFA par heure de travail\n\n1. Exprimer le coût de chaque garage en fonction du nombre d'heures x.\n2. Pour combien d'heures les deux garages coûtent-ils la même chose ?\n3. Pour une révision de 2 heures, quel garage est moins cher ?\n4. Et pour 6 heures ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** Joss : J(x) = 3000x + 15000\nMballa : M(x) = 6000x + 5000\n\n**2.** J(x) = M(x)\n3000x + 15000 = 6000x + 5000\n10000 = 3000x\nx = 10/3 ≈ 3h20 → même prix\n\n**3.** Pour x = 2 :\nJ(2) = 6000 + 15000 = 21000 FCFA\nM(2) = 12000 + 5000 = 17000 FCFA\n**Mballa moins cher** pour 2h\n\n**4.** Pour x = 6 :\nJ(6) = 18000 + 15000 = 33000 FCFA\nM(6) = 36000 + 5000 = 41000 FCFA\n**Joss moins cher** pour 6h"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Fonctions affines",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** La droite y = −3x + 2 coupe l'axe Oy en :\n(A) (−3 ; 0)  (B) (0 ; 2)  (C) (2 ; 0)  (D) (0 ; −3)\n\n**Q2.** Le coefficient directeur de la droite passant par (1 ; 3) et (3 ; 9) est :\n(A) 3  (B) 2  (C) 6  (D) 1\n\n**Q3.** Les droites y = 2x + 5 et y = 2x − 3 sont :\n(A) Confondues  (B) Parallèles  (C) Perpendiculaires  (D) Sécantes"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (B) (0 ; 2) : en x=0, y=2\n\n**Q2.** (A) 3 : a = (9−3)/(3−1) = 6/2 = 3\n\n**Q3.** (B) Parallèles : même coefficient directeur a=2, ordonnées à l'origine différentes"
+          }
+        ]
+      },
+      "options_qcm": [
+        ["(−3 ; 0)", "(0 ; 2)", "(2 ; 0)", "(0 ; −3)"],
+        ["3", "2", "6", "1"],
+        ["Confondues", "Parallèles", "Perpendiculaires", "Sécantes"]
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Problème BEPC — Données graphiques",
+      "type_exercice": "probleme",
+      "niveau": "examen",
+      "bareme": 10,
+      "duree_recommandee": 25,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "On sait que la droite (D) représentant une fonction affine f passe par A(0 ; −1) et B(3 ; 5).\n\n**1.** Calculer le coefficient directeur de (D).\n**2.** Écrire l'équation de la droite (D).\n**3.** Calculer f(6) et l'antécédent de 11.\n**4.** La droite (D') d'équation y = 2x + k passe par C(1 ; 5). Trouver k.\n**5.** (D) et (D') sont-elles parallèles ou sécantes ? Si sécantes, trouver leur point d'intersection."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** a = (5−(−1))/(3−0) = 6/3 = **2**\n\n**2.** f(x) = 2x − 1\n\n**3.** f(6) = 12 − 1 = 11\nAntécédent de 11 : 2x − 1 = 11 → 2x = 12 → x = 6\n\n**4.** C(1 ; 5) sur (D') : 5 = 2(1) + k → k = 3\n(D') : y = 2x + 3\n\n**5.** (D) et (D') ont le même coefficient directeur a=2 → **Parallèles** (et distinctes car −1 ≠ 3)"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 7,
+      "titre": "Synthèse complète",
+      "type_exercice": "synthese",
+      "niveau": "approfondissement",
+      "bareme": 10,
+      "duree_recommandee": 30,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.** Soit les droites (D₁) : y = 2x − 3, (D₂) : y = −x + 6, (D₃) : y = 2x + 1.\n1. Parmi ces droites, lesquelles sont parallèles ?\n2. Trouver les intersections (D₁)∩(D₂) et (D₁)∩(D₃).\n\n**Partie B.** Un agent de recrutement perçoit un salaire fixe de 120 000 FCFA plus une commission de 8 000 FCFA par contrat signé.\n1. Exprimer son salaire mensuel S en fonction du nombre n de contrats.\n2. Quel salaire pour 5 contrats ? Pour 15 ?\n3. Combien de contrats pour gagner au moins 200 000 FCFA ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.**\n1. (D₁) et (D₃) ont le même coefficient directeur a=2 → **Parallèles**\n2. (D₁)∩(D₂) : 2x−3 = −x+6 → 3x=9 → x=3, y=3 → **(3 ; 3)**\n(D₁)∩(D₃) : 2x−3 = 2x+1 → −3=1 → Contradiction ! (droites parallèles, pas d'intersection)\n\n**Partie B.**\n1. S(n) = 8000n + 120000\n2. S(5) = 40000 + 120000 = **160 000 FCFA**\nS(15) = 120000 + 120000 = **240 000 FCFA**\n3. S(n) ≥ 200000\n8000n ≥ 80000\nn ≥ 10 contrats"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

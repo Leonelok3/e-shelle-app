@@ -1,0 +1,339 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "3eme-3-equations-et-inequations-du-premier-degre",
+  "meta": {
+    "classe": "3ème",
+    "numero": 3,
+    "titre": "Équations et inéquations du premier degré",
+    "categorie": "algebre",
+    "difficulte": 2,
+    "description": "Résoudre des équations et inéquations du premier degré à une inconnue — outils essentiels pour les examens BEPC.",
+    "objectifs": [
+      "Résoudre une équation du premier degré à une inconnue",
+      "Résoudre une inéquation du premier degré",
+      "Représenter les solutions sur une droite numérique",
+      "Résoudre des problèmes concrets par mise en équation"
+    ],
+    "prerequis_slugs": ["3eme-2-nombres-relatifs-et-calcul-litteral"],
+    "duree_estimee": 70,
+    "points_total_exercices": 50
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Équations du premier degré — définitions et méthode",
+      "type_lecon": "definition",
+      "duree_lecture": 18,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Une **équation du premier degré** à une inconnue x est une égalité de la forme **ax + b = 0** (avec a ≠ 0). La valeur de x qui rend l'égalité vraie s'appelle la **solution** ou **racine** de l'équation."
+          },
+          {
+            "type": "exemple",
+            "titre": "Exemple de base",
+            "valeur": "Soit l'équation : 3x − 7 = 2\n\n**Étape 1 :** On isole le terme en x\n3x = 2 + 7\n3x = 9\n\n**Étape 2 :** On divise par le coefficient de x\nx = 9 ÷ 3\nx = **3**\n\n**Vérification :** 3 × 3 − 7 = 9 − 7 = 2 ✓"
+          },
+          {
+            "type": "methode",
+            "titre": "Règles de base — ce qui est permis",
+            "valeur": "Pour résoudre une équation, on peut :\n• **Ajouter ou soustraire** un même nombre des deux membres\n• **Multiplier ou diviser** les deux membres par un même nombre **non nul**\n\nCes opérations conservent l'égalité."
+          },
+          {
+            "type": "exemple",
+            "titre": "Cas avec parenthèses",
+            "valeur": "Résoudre : 2(3x + 1) − 4 = 5x − 7\n\n**Développement :** 6x + 2 − 4 = 5x − 7\n**Simplification :** 6x − 2 = 5x − 7\n**Isolation de x :** 6x − 5x = −7 + 2\n**Résultat :** x = −5"
+          },
+          {
+            "type": "contexte",
+            "valeur": "Au Cameroun, Jean vend des mangues au marché de Bafoussam. Une mangue coûte x francs CFA. S'il vend 5 mangues et perd 200 FCFA de transport, il gagne 800 FCFA. Cela donne : 5x − 200 = 800, donc 5x = 1000, x = 200 FCFA par mangue."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Équations à fractions et avec dénominateur",
+      "type_lecon": "methode",
+      "duree_lecture": 20,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Lorsqu'une équation contient des fractions, on **multiplie tous les membres par le PPCM des dénominateurs** pour les éliminer."
+          },
+          {
+            "type": "methode",
+            "titre": "Méthode — Équation avec fractions",
+            "valeur": "Pour résoudre : x/2 + (x−1)/3 = 5/6\n\n**Étape 1 :** Identifier le PPCM des dénominateurs : PPCM(2, 3, 6) = 6\n\n**Étape 2 :** Multiplier chaque terme par 6 :\n6 × x/2 + 6 × (x−1)/3 = 6 × 5/6\n3x + 2(x−1) = 5\n\n**Étape 3 :** Développer et simplifier :\n3x + 2x − 2 = 5\n5x = 7\nx = 7/5 = 1,4"
+          },
+          {
+            "type": "exemple",
+            "titre": "Exercice résolu",
+            "valeur": "Résoudre : (2x+1)/4 − (x−3)/2 = 1\n\nPPCM(4, 2) = 4. Multiplier par 4 :\n(2x+1) − 2(x−3) = 4\n2x + 1 − 2x + 6 = 4\n7 = 4 → Contradiction !\n\n**Conclusion :** L'équation n'a **pas de solution** (équation impossible)."
+          },
+          {
+            "type": "texte",
+            "valeur": "**Cas particuliers :**\n• Si on aboutit à **0 = 0** : l'équation a une infinité de solutions\n• Si on aboutit à **k = 0** (k ≠ 0) : pas de solution\n• Cas général : une unique solution"
+          },
+          {
+            "type": "contexte",
+            "valeur": "Marie paye sa facture de réseau Orange Cameroun en deux versements. Le premier versement est les 2/5 du total, le second est 3000 FCFA. Si le total est T, alors : 2T/5 + 3000 = T. On résout : 3000 = T − 2T/5 = 3T/5, donc T = 5000 FCFA."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Inéquations du premier degré",
+      "type_lecon": "definition",
+      "duree_lecture": 20,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Une **inéquation** est une inégalité contenant une inconnue. On cherche l'ensemble des valeurs de x vérifiant l'inégalité. Cet ensemble est l'**ensemble solution**."
+          },
+          {
+            "type": "methode",
+            "titre": "Règle importante sur le signe",
+            "valeur": "⚠️ **Attention :** Quand on **multiplie ou divise** les deux membres d'une inéquation par un nombre **négatif**, le sens de l'inégalité **s'inverse** !\n\n• a < b → −a > −b\n• Si 2x < 6, alors x < 3\n• Si −2x < 6, alors x > −3 (division par −2 → inversion)"
+          },
+          {
+            "type": "exemple",
+            "titre": "Résolution d'une inéquation",
+            "valeur": "Résoudre : 3x − 5 > 2x + 1\n\n3x − 2x > 1 + 5\nx > 6\n\n**Ensemble solution :** S = ]6 ; +∞[\n**Sur la droite numérique :** parenthèse ouverte en 6, flèche vers la droite"
+          },
+          {
+            "type": "exemple",
+            "titre": "Avec multiplication par négatif",
+            "valeur": "Résoudre : −3x + 2 ≤ 8\n\n−3x ≤ 8 − 2\n−3x ≤ 6\nx ≥ 6/(−3) → on divise par −3 : **le signe s'inverse**\nx ≥ −2\n\n**Ensemble solution :** S = [−2 ; +∞["
+          },
+          {
+            "type": "contexte",
+            "valeur": "Un taxi à Yaoundé coûte 150 FCFA le premier km et 100 FCFA par km supplémentaire. Paul a 1250 FCFA. Combien de km peut-il parcourir au maximum ?\n150 + 100(n−1) ≤ 1250\n100n + 50 ≤ 1250\n100n ≤ 1200\nn ≤ 12 km"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Mise en équation — Résolution de problèmes",
+      "type_lecon": "methode",
+      "duree_lecture": 22,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "La **mise en équation** consiste à traduire un problème écrit en une équation mathématique. C'est une compétence fondamentale pour le BEPC."
+          },
+          {
+            "type": "methode",
+            "titre": "Démarche en 4 étapes",
+            "valeur": "**1.** Choisir et nommer l'inconnue (ex : soit x le nombre cherché)\n**2.** Traduire les conditions en équation\n**3.** Résoudre l'équation\n**4.** Vérifier et conclure en répondant à la question posée"
+          },
+          {
+            "type": "exemple",
+            "titre": "Problème de l'âge",
+            "valeur": "Le père de Kouam a 3 fois l'âge de son fils. Dans 8 ans, le père aura deux fois l'âge du fils. Quel est l'âge actuel de Kouam ?\n\n**Soit x** = âge actuel de Kouam.\nÂge du père = 3x\nDans 8 ans : 3x + 8 = 2(x + 8)\n3x + 8 = 2x + 16\nx = 8 ans\n\n**Conclusion :** Kouam a actuellement 8 ans, son père en a 24."
+          },
+          {
+            "type": "exemple",
+            "titre": "Problème de mélange",
+            "valeur": "Un commerçant de Bafoussam mélange du café à 5000 FCFA/kg et du café à 8000 FCFA/kg pour obtenir 60 kg d'un mélange à 6500 FCFA/kg. Quelle quantité de chaque café utilise-t-il ?\n\nSoit x = quantité à 5000 FCFA, alors (60−x) = quantité à 8000 FCFA\n5000x + 8000(60−x) = 6500 × 60\n5000x + 480000 − 8000x = 390000\n−3000x = −90000\nx = 30 kg\n\n30 kg à 5000 et 30 kg à 8000."
+          },
+          {
+            "type": "texte",
+            "valeur": "**Récapitulatif :**\nUne équation du premier degré ax + b = 0 a toujours exactement une solution quand a ≠ 0 : x = −b/a\n\nUne inéquation ax + b > 0 a pour solution :\n• Si a > 0 : x > −b/a\n• Si a < 0 : x < −b/a (inversion)"
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Équations simples",
+      "type_exercice": "calcul",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Résoudre chacune des équations suivantes et vérifier le résultat :\na) 4x − 3 = 9\nb) 2x + 7 = −1\nc) 3(x − 2) = x + 4"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** 4x − 3 = 9\n4x = 12\nx = 3 ✓ : 4(3)−3 = 9 ✓\n\n**b)** 2x + 7 = −1\n2x = −8\nx = −4 ✓ : 2(−4)+7 = −1 ✓\n\n**c)** 3(x−2) = x+4\n3x − 6 = x + 4\n2x = 10\nx = 5 ✓ : 3(3) = 9 = 5+4 ✓"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Équations avec fractions",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Résoudre les équations suivantes :\na) x/3 + x/2 = 5\nb) (2x−1)/4 = (x+3)/2\nc) (x+1)/3 − (x−2)/6 = 1"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** x/3 + x/2 = 5, PPCM = 6\n2x + 3x = 30\n5x = 30, x = 6\n\n**b)** (2x−1)/4 = (x+3)/2, PPCM = 4\n2x − 1 = 2(x+3)\n2x − 1 = 2x + 6\n−1 = 6 → Pas de solution\n\n**c)** (x+1)/3 − (x−2)/6 = 1, PPCM = 6\n2(x+1) − (x−2) = 6\n2x + 2 − x + 2 = 6\nx + 4 = 6\nx = 2"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Inéquations",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Résoudre les inéquations et représenter les solutions sur une droite numérique :\na) 2x + 3 > 7\nb) −4x + 1 ≤ 9\nc) 3(x + 1) < 2x − 4"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** 2x + 3 > 7\n2x > 4\nx > 2 → S = ]2 ; +∞[\n\n**b)** −4x + 1 ≤ 9\n−4x ≤ 8\nx ≥ −2 (division par −4, inversion) → S = [−2 ; +∞[\n\n**c)** 3(x+1) < 2x − 4\n3x + 3 < 2x − 4\nx < −7 → S = ]−∞ ; −7["
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Problème de mise en équation",
+      "type_exercice": "probleme",
+      "niveau": "approfondissement",
+      "bareme": 8,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Problème 1 :** Le double d'un nombre augmenté de 5 est égal au triple de ce nombre diminué de 3. Trouver ce nombre.\n\n**Problème 2 :** Dans un lycée de Yaoundé, il y a 840 élèves. Le nombre de filles dépasse le nombre de garçons de 120. Combien y a-t-il de filles et de garçons ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Problème 1 :**\nSoit x le nombre cherché.\n2x + 5 = 3x − 3\n5 + 3 = 3x − 2x\nx = 8\n\n**Problème 2 :**\nSoit g = nombre de garçons\nNombre de filles = g + 120\ng + (g + 120) = 840\n2g = 720\ng = 360 garçons\nFilles = 480\n\n**Vérification :** 360 + 480 = 840 ✓ et 480 − 360 = 120 ✓"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Équations et inéquations",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Choisissez la bonne réponse pour chaque question :\n\n**Q1.** La solution de 5x − 2 = 13 est :\n(A) x = 2  (B) x = 3  (C) x = 4  (D) x = 5\n\n**Q2.** L'ensemble solution de 2x + 1 > 5 est :\n(A) ]−∞ ; 2[  (B) ]2 ; +∞[  (C) [2 ; +∞[  (D) ]−∞ ; 2]\n\n**Q3.** En divisant −3x < 12, on obtient :\n(A) x < −4  (B) x > −4  (C) x < 4  (D) x > 4"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (B) x = 3 : 5(3)−2 = 13 ✓\n\n**Q2.** (B) ]2 ; +∞[ : 2x > 4, x > 2\n\n**Q3.** (B) x > −4 : division par −3 → inversion du signe"
+          }
+        ]
+      },
+      "options_qcm": [
+        ["x = 2", "x = 3", "x = 4", "x = 5"],
+        ["]−∞ ; 2[", "]2 ; +∞[", "[2 ; +∞[", "]−∞ ; 2]"],
+        ["x < −4", "x > −4", "x < 4", "x > 4"]
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Problème BEPC — Prix et budget",
+      "type_exercice": "probleme",
+      "niveau": "examen",
+      "bareme": 10,
+      "duree_recommandee": 25,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Un commerçant de Douala vend des pagnes. Un pagne coûte x FCFA. Il vend 4 pagnes et reçoit en plus un billet de 5000 FCFA de son ami. Au total il a 57 000 FCFA.\n\n**1.** Écrire une équation en x modélisant cette situation.\n**2.** Résoudre l'équation et donner le prix d'un pagne.\n**3.** Si le commerçant veut dépenser au moins 100 000 FCFA en pagnes, combien en doit-il acheter au minimum ? (Écrire et résoudre une inéquation.)"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** Équation : 4x + 5000 = 57 000\n\n**2.** 4x = 52 000\nx = 13 000 FCFA par pagne\n\n**3.** Inéquation : 13 000 × n ≥ 100 000\nn ≥ 100 000/13 000\nn ≥ 7,69...\n\nDonc le commerçant doit acheter au minimum **8 pagnes**."
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 7,
+      "titre": "Synthèse — Équations, inéquations et problèmes",
+      "type_exercice": "synthese",
+      "niveau": "approfondissement",
+      "bareme": 10,
+      "duree_recommandee": 30,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.** Résoudre les équations et inéquations :\na) (3x+5)/2 − (x−1)/3 = 4\nb) 2(x−3) + 5 ≥ 3x − 1\n\n**Partie B.** Problème :\nDeux amis Brice et Arnaud ont économisé de l'argent. Brice a 3 fois plus qu'Arnaud. Si Brice donne 4000 FCFA à Arnaud, ils auront la même somme.\n1. Soit x la somme d'Arnaud. Exprimer celle de Brice en fonction de x.\n2. Écrire et résoudre l'équation.\n3. Quelle est la somme totale des deux amis ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.**\na) PPCM(2,3) = 6 : 3(3x+5) − 2(x−1) = 24\n9x + 15 − 2x + 2 = 24\n7x = 7\nx = 1\n\nb) 2x − 6 + 5 ≥ 3x − 1\n2x − 1 ≥ 3x − 1\n−x ≥ 0\nx ≤ 0 → S = ]−∞ ; 0]\n\n**Partie B.**\n1. Arnaud : x, Brice : 3x\n2. Après le don : Brice = 3x − 4000, Arnaud = x + 4000\n3x − 4000 = x + 4000\n2x = 8000\nx = 4000 FCFA (Arnaud), Brice = 12 000 FCFA\n3. Total = 4000 + 12 000 = **16 000 FCFA**"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

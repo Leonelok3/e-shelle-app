@@ -1,0 +1,305 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "3eme-13-cercles-et-angles-inscrits",
+  "meta": {
+    "classe": "3ème",
+    "numero": 13,
+    "titre": "Cercles et angles inscrits",
+    "categorie": "geometrie",
+    "difficulte": 3,
+    "description": "Propriétés du cercle, angles inscrits et angles au centre — relations fondamentales et constructions géométriques.",
+    "objectifs": [
+      "Connaître les éléments d'un cercle (rayon, diamètre, corde, arc)",
+      "Énoncer la relation entre angle inscrit et angle au centre",
+      "Calculer des angles inscrits et des arcs",
+      "Utiliser le théorème de l'angle inscrit dans un demi-cercle"
+    ],
+    "prerequis_slugs": ["3eme-9-triangles-proprietes-et-calculs"],
+    "duree_estimee": 65,
+    "points_total_exercices": 50
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Éléments du cercle",
+      "type_lecon": "definition",
+      "duree_lecture": 16,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Définitions fondamentales :**\n\n• **Cercle** : ensemble des points situés à une distance fixe r (le rayon) d'un point O (le centre)\n• **Rayon** : segment reliant le centre à un point du cercle\n• **Diamètre** : corde passant par le centre (d = 2r)\n• **Corde** : segment reliant deux points du cercle\n• **Arc** : portion du cercle entre deux points\n• **Secteur circulaire** : région délimitée par deux rayons et un arc\n• **Tangente** : droite touchant le cercle en un seul point"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Propriétés importantes :**\n\n1. La médiatrice de toute corde passe par le centre du cercle\n2. Le rayon vers le point de tangence est perpendiculaire à la tangente\n3. Un diamètre qui coupe une corde perpendiculairement la coupe en son milieu\n4. Toutes les cordes de même longueur sont équidistantes du centre"
+          },
+          {
+            "type": "exemple",
+            "titre": "Périmètre et aire d'un cercle",
+            "valeur": "**Périmètre (Circonférence) :** C = 2πr = πd\n**Aire :** A = πr²\n\nAvec π ≈ 3,14159 ≈ 22/7\n\nExemple : Cercle de rayon 7 cm\nC = 2π × 7 = 14π ≈ **44 cm**\nA = π × 49 ≈ **154 cm²**"
+          },
+          {
+            "type": "contexte",
+            "valeur": "Les cases rondes traditionnelles camerounaises (notamment chez les Bamiléké) ont une base circulaire. Pour construire une case de 4 m de rayon, il faut une clôture de 2π × 4 ≈ 25,1 m et une surface au sol de π × 16 ≈ 50,3 m²."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Angle au centre et angle inscrit",
+      "type_lecon": "definition",
+      "duree_lecture": 20,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Angle au centre :** angle dont le sommet est le centre O du cercle et dont les côtés passent par deux points A et B du cercle.\nL'angle au centre AOB intercepte l'arc AB.\n\n**Angle inscrit :** angle dont le sommet est un point M du cercle et dont les côtés passent par deux autres points A et B du cercle.\nL'angle AMB est inscrit dans le cercle et intercepte le même arc AB."
+          },
+          {
+            "type": "texte",
+            "valeur": "**Théorème fondamental :**\n**L'angle inscrit est la moitié de l'angle au centre** interceptant le même arc.\n\nAngle AMB = (1/2) × Angle AOB\n\nConséquence : Tous les angles inscrits interceptant le même arc sont égaux !"
+          },
+          {
+            "type": "exemple",
+            "titre": "Applications du théorème",
+            "valeur": "**Exemple 1 :** Angle au centre AOB = 80°.\nTout angle inscrit interceptant le même arc AB = 80°/2 = **40°**\n\n**Exemple 2 :** Angle inscrit AMB = 55°.\nAngle au centre AOB = 2 × 55° = **110°**\n\n**Exemple 3 :** Deux angles inscrits AMB et ANB interceptent le même arc.\nAngle AMB = 45° → Angle ANB = **45°** aussi !"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Angle inscrit dans un demi-cercle",
+      "type_lecon": "definition",
+      "duree_lecture": 16,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Théorème de l'angle dans un demi-cercle :**\nSi [AB] est un diamètre du cercle et M est un point sur le cercle (M ≠ A, M ≠ B), alors l'angle AMB est un **angle droit**.\n\nAngle AMB = 90°\n\n**Réciproque :** Si l'angle AMB = 90° et que M est sur le cercle de diamètre AB, alors AB est un diamètre."
+          },
+          {
+            "type": "exemple",
+            "titre": "Applications",
+            "valeur": "**Utiliser le théorème :**\nDans un cercle de centre O, [AB] est un diamètre. M est sur le cercle.\nTriangle AMB rectangle en M.\n\nSi AB = 20 cm et AM = 16 cm :\nBM² = AB² − AM² = 400 − 256 = 144\nBM = **12 cm**\n\n**Construction d'un angle droit :**\nOn peut construire un angle droit en inscrivant le sommet sur un demi-cercle !"
+          },
+          {
+            "type": "exemple",
+            "titre": "Calculs d'angles dans un cercle",
+            "valeur": "Dans un cercle de centre O :\n• Arc AB = 100° (angle au centre AOB = 100°)\n• Angle inscrit AMB = 50° pour tout M sur l'arc majeur\n• Angle inscrit sur l'arc mineur ANB = 180° − 50° = 130°\n\n(Si M est sur l'arc mineur, l'angle est supplément de 50°)"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Longueur d'arc et aire de secteur",
+      "type_lecon": "methode",
+      "duree_lecture": 15,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Longueur d'un arc** correspondant à un angle au centre α (en degrés) :\nl = (α/360) × 2πr\n\n**Aire d'un secteur** correspondant à un angle au centre α :\nA = (α/360) × πr²"
+          },
+          {
+            "type": "exemple",
+            "titre": "Calculs",
+            "valeur": "Cercle de rayon 12 cm, angle au centre 60°.\n\nLongueur d'arc = (60/360) × 2π × 12 = (1/6) × 24π = 4π ≈ **12,6 cm**\n\nAire du secteur = (60/360) × π × 144 = (1/6) × 144π = 24π ≈ **75,4 cm²**\n\n**Autre exemple :** Arc de longueur 15,7 cm dans un cercle de rayon 10 cm.\nα = l × 360 / (2πr) = 15,7 × 360 / (62,8) ≈ **90°**"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Récapitulatif :**\n\n• Angle inscrit = (1/2) × angle au centre (même arc)\n• Angle dans un demi-cercle = 90°\n• Tous les angles inscrits dans le même arc sont égaux\n• Longueur d'arc = (α/360°) × 2πr\n• Aire secteur = (α/360°) × πr²"
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Angles inscrits et angle au centre",
+      "type_exercice": "application",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Dans un cercle de centre O :\na) L'angle au centre AOB = 120°. Calculer l'angle inscrit AMB.\nb) L'angle inscrit PQR = 35°. Calculer l'angle au centre POR.\nc) AB est un diamètre et M est sur le cercle. Que vaut l'angle AMB ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** AMB = AOB/2 = 120°/2 = **60°**\n\n**b)** POR = 2 × PQR = 2 × 35° = **70°**\n\n**c)** AB est un diamètre → l'arc correspondant est un demi-cercle (180°)\nAngle inscrit AMB = 180°/2 = **90°** (angle droit)"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Triangle inscrit dans un cercle",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Le triangle ABC est inscrit dans un cercle de centre O et de rayon 10 cm. L'arc BC (du côté d'A) correspond à un angle au centre de 100°.\n\na) Calculer l'angle BAC inscrit.\nb) On sait que l'arc AC = 140°. Calculer l'angle ABC inscrit.\nc) Calculer l'angle ACB.\nd) Vérifier que la somme des angles est 180°."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** Angle BAC = arc BC / 2 = 100°/2 = **50°**\n\n**b)** Angle ABC = arc AC / 2 = 140°/2 = **70°**\n\n**c)** Arc AB = 360° − 100° − 140° = 120°\nAngle ACB = 120°/2 = **60°**\n\n**d)** 50° + 70° + 60° = **180°** ✓"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Angle dans le demi-cercle",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Le triangle ABC est rectangle en C et inscrit dans un cercle. AB est le diamètre = 26 cm. AC = 10 cm.\n\na) Justifier que AB est bien le diamètre (théorème réciproque).\nb) Calculer BC.\nc) Calculer les angles A et B (en degrés, arrondir au degré).\nd) Calculer la longueur de l'arc BC."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** Angle ACB = 90° et C est sur le cercle → par la réciproque, AB est un **diamètre** ✓\n\n**b)** BC² = AB² − AC² = 676 − 100 = 576\nBC = **24 cm**\n\n**c)** sin(A) = BC/AB = 24/26 = 12/13 ≈ 0,923\nA = arcsin(0,923) ≈ **67°**\nB = 90° − 67° = **23°**\n\n**d)** Angle au centre pour arc BC = 2 × angle A = 2 × 67° = 134°\nRayon = 26/2 = 13 cm\nLongueur arc BC = (134/360) × 2π × 13 = (134/360) × 81,7 ≈ **30,4 cm**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Longueur d'arc et aire de secteur",
+      "type_exercice": "calcul",
+      "niveau": "approfondissement",
+      "bareme": 8,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Un secteur circulaire a un angle de 72° et un rayon de 15 cm.\n\na) Calculer la longueur de l'arc.\nb) Calculer l'aire du secteur.\nc) Calculer le périmètre complet du secteur (deux rayons + arc).\nd) Un disque de 15 cm de rayon est découpé en secteurs de 72° chacun. Combien de secteurs obtient-on ? Calculer l'aire de chaque secteur et vérifier que leur somme = aire du disque."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** l = (72/360) × 2π × 15 = (1/5) × 30π = 6π ≈ **18,85 cm**\n\n**b)** A = (72/360) × π × 225 = (1/5) × 225π = 45π ≈ **141,4 cm²**\n\n**c)** Périmètre = 2 × 15 + 18,85 = 30 + 18,85 = **48,85 cm**\n\n**d)** Nombre de secteurs = 360°/72° = **5 secteurs**\nAire de chaque secteur = 45π cm²\nSomme = 5 × 45π = 225π = aire du disque (π × 15²) ✓"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Cercle et angles",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** Un angle inscrit interceptant le même arc qu'un angle au centre de 80° vaut :\n(A) 80°  (B) 160°  (C) 40°  (D) 20°\n\n**Q2.** Un point M est sur un cercle de diamètre [AB]. L'angle AMB vaut :\n(A) 45°  (B) 60°  (C) 90°  (D) 180°\n\n**Q3.** Deux angles inscrits dans le même arc d'un cercle sont :\n(A) Supplémentaires  (B) Complémentaires  (C) Égaux  (D) Différents"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (C) 40° : angle inscrit = angle au centre / 2 = 80°/2 = 40°\n\n**Q2.** (C) 90° : angle inscrit dans un demi-cercle\n\n**Q3.** (C) Égaux : tous les angles inscrits dans le même arc sont égaux"
+          }
+        ]
+      },
+      "options_qcm": [
+        ["80°", "160°", "40°", "20°"],
+        ["45°", "60°", "90°", "180°"],
+        ["Supplémentaires", "Complémentaires", "Égaux", "Différents"]
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Problème BEPC — Construction et calcul",
+      "type_exercice": "probleme",
+      "niveau": "examen",
+      "bareme": 10,
+      "duree_recommandee": 25,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "ABCD est un quadrilatère inscrit dans un cercle de centre O et de rayon 8 cm. Les angles au centre valent : AOB = 80°, BOC = 110°, COD = 90°.\n\n**1.** Calculer l'angle AOD.\n**2.** Calculer les angles inscrits : angle ACB, angle ADB, angle BDC.\n**3.** Le quadrilatère ABCD est-il un rectangle ? Pourquoi ?\n**4.** Calculer la longueur de l'arc AB et l'aire du secteur AOB."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** AOD = 360° − 80° − 110° − 90° = **80°**\n\n**2.** Angle inscrit ACB (intercepte arc AB) = 80°/2 = **40°**\nAngle inscrit ADB (intercepte arc AB depuis l'autre côté) = 40° (même arc)\nAngle inscrit BDC (intercepte arc BC) = 110°/2 = **55°**\n\n**3.** Pour que ABCD soit un rectangle, les angles aux sommets = 90°.\nAngle DAB (inscrit, arc BCD) : arc BCD = 110°+90° = 200° → angle = 100°\nAngle DAB = 100° ≠ 90° → **ABCD n'est pas un rectangle**\n\n**4.** Arc AB = (80/360) × 2π × 8 = (2/9) × 16π ≈ 11,17 cm\nAire secteur AOB = (80/360) × π × 64 = (2/9) × 64π ≈ **44,7 cm²**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 7,
+      "titre": "Synthèse complète",
+      "type_exercice": "synthese",
+      "niveau": "approfondissement",
+      "bareme": 10,
+      "duree_recommandee": 30,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.** Un cercle de rayon 12 cm est divisé en 6 secteurs égaux.\n1. Quel est l'angle de chaque secteur ?\n2. Calculer la longueur de l'arc de chaque secteur.\n3. Calculer l'aire de chaque secteur.\n4. Quelle est la longueur de la corde qui délimite chaque secteur ?\n\n**Partie B.** Dans un cercle de centre O et de rayon 5 cm, [AB] est une corde de longueur 8 cm.\n1. Calculer la distance du centre O à la corde AB (soit la longueur du segment perpendiculaire de O à AB).\n2. Calculer l'angle au centre AOB.\n3. Calculer l'angle inscrit AMB pour M sur le grand arc."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.**\n1. Angle = 360°/6 = **60°**\n2. Arc = (60/360) × 2π × 12 = (1/6) × 24π = 4π ≈ **12,6 cm**\n3. Aire = (60/360) × π × 144 = 24π ≈ **75,4 cm²**\n4. Les 6 secteurs égaux : chaque corde = côté d'un hexagone régulier = rayon = **12 cm**\n(Dans un hexagone régulier inscrit, la corde = rayon quand l'angle = 60°)\nVérification : corde = 2r×sin(30°) = 2×12×0,5 = 12 cm ✓\n\n**Partie B.**\n1. I = milieu de AB → BI = 4 cm\nd(O,AB) = √(OB²−BI²) = √(25−16) = √9 = **3 cm**\n\n2. Dans triangle OIB : cos(angle BOI) = BI/OB = 4/5 = 0,8\nAngle BOI = 36,9° → Angle AOB = 2 × 36,9° ≈ **73,8° ≈ 74°**\n\n3. Angle AMB = AOB/2 ≈ 74°/2 = **37°**"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

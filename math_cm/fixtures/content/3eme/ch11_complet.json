@@ -1,0 +1,308 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "3eme-11-theoreme-de-thales",
+  "meta": {
+    "classe": "3ème",
+    "numero": 11,
+    "titre": "Théorème de Thalès",
+    "categorie": "geometrie",
+    "difficulte": 3,
+    "description": "Théorème de Thalès et sa réciproque — droites parallèles, rapports de longueurs et agrandissement/réduction de figures.",
+    "objectifs": [
+      "Énoncer le théorème de Thalès dans un triangle",
+      "Appliquer le théorème pour calculer des longueurs",
+      "Utiliser la réciproque pour montrer des droites parallèles",
+      "Résoudre des problèmes de grandissement et réduction"
+    ],
+    "prerequis_slugs": ["3eme-9-triangles-proprietes-et-calculs", "3eme-7-proportionnalite-et-pourcentages"],
+    "duree_estimee": 70,
+    "points_total_exercices": 50
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Théorème de Thalès — énoncé",
+      "type_lecon": "definition",
+      "duree_lecture": 20,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Théorème de Thalès :**\nSi deux droites sécantes en A sont coupées par deux droites parallèles, alors les rapports des longueurs des segments correspondants sont égaux.\n\nDans le triangle ABC, si (DE) ∥ (BC) avec D sur [AB] et E sur [AC], alors :\n\n**AD/AB = AE/AC = DE/BC**\n\nCes rapports sont tous égaux au coefficient de réduction/agrandissement k."
+          },
+          {
+            "type": "exemple",
+            "titre": "Application immédiate",
+            "valeur": "Dans le triangle ABC, (DE) ∥ (BC) avec :\nAD = 4 cm, AB = 10 cm, BC = 15 cm\n\nD'après Thalès : AD/AB = DE/BC\n4/10 = DE/15\nDE = 15 × 4/10 = **6 cm**\n\nAussi : AE/AC = 4/10 donc AE = 0,4 × AC"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Configuration papillon (cas particulier) :**\nQuand les deux triangles ont leur sommet en commun mais sont disposés de part et d'autre, le théorème reste valable.\n\nSi O est le sommet commun, A et A' sur une droite, B et B' sur une autre, et (AB) ∥ (A'B') :\nOA/OA' = OB/OB' = AB/A'B'"
+          },
+          {
+            "type": "contexte",
+            "valeur": "Thalès de Milet (640-546 av. J.-C.) a mesuré la hauteur de la Grande Pyramide en Égypte grâce aux ombres. En plaçant un bâton de hauteur connue et comparant son ombre à celle de la pyramide, il a utilisé la proportionnalité des ombres — principe du théorème de Thalès."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Réciproque du théorème de Thalès",
+      "type_lecon": "definition",
+      "duree_lecture": 16,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Réciproque du théorème de Thalès :**\nSi D est un point de [AB] et E un point de [AC] tels que :\nAD/AB = AE/AC\nalors la droite (DE) est parallèle à (BC)."
+          },
+          {
+            "type": "methode",
+            "titre": "Démontrer des droites parallèles",
+            "valeur": "**Étape 1 :** Vérifier que les points D et E sont bien sur les côtés [AB] et [AC].\n**Étape 2 :** Calculer les rapports AD/AB et AE/AC.\n**Étape 3 :** Vérifier si ces rapports sont égaux.\n**Étape 4 :** Conclure par la réciproque de Thalès."
+          },
+          {
+            "type": "exemple",
+            "titre": "Application",
+            "valeur": "Dans le triangle ABC : AB = 15 cm, AC = 12 cm.\nD sur [AB] avec AD = 6 cm ; E sur [AC] avec AE = 4,8 cm.\n\nAD/AB = 6/15 = 2/5\nAE/AC = 4,8/12 = 2/5\n\nComme AD/AB = AE/AC = 2/5, par la **réciproque de Thalès**, (DE) ∥ (BC). ✓"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Calculs avec le théorème de Thalès",
+      "type_lecon": "methode",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "methode",
+            "titre": "Méthode de calcul",
+            "valeur": "Quand (DE) ∥ (BC) dans le triangle ABC (D ∈ [AB], E ∈ [AC]) :\n\n1. Écrire la proportion : AD/AB = AE/AC = DE/BC\n2. Identifier les valeurs connues\n3. Appliquer le produit en croix pour trouver l'inconnue\n\n**Cas particulier :** Si k = AD/AB est le coefficient d'homothétie :\n• DE = k × BC\n• AE = k × AC\n• AD = k × AB"
+          },
+          {
+            "type": "exemple",
+            "titre": "Exemple complet",
+            "valeur": "Triangle ABC avec AB = 12, AC = 9, BC = 15.\n(DE) ∥ (BC) avec AD = 8 cm. Calculer AE et DE.\n\nk = AD/AB = 8/12 = 2/3\n\nAE = k × AC = 2/3 × 9 = **6 cm**\nDE = k × BC = 2/3 × 15 = **10 cm**\n\nVérification : 8/12 = 6/9 = 10/15 = 2/3 ✓"
+          },
+          {
+            "type": "exemple",
+            "titre": "Trouver un côté du grand triangle",
+            "valeur": "Triangle ABC. (DE) ∥ (BC) avec D sur AB, E sur AC.\nAD = 5, AB = ?, AE = 4, AC = 10, BC = 12.\n\nAE/AC = 4/10 = 2/5 = AD/AB\nAB = AD × AC/AE = 5 × 10/4 = **12,5 cm**\nDE = 2/5 × 12 = **4,8 cm**"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Applications — Mesures indirectes",
+      "type_lecon": "exemple",
+      "duree_lecture": 16,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "exemple",
+            "titre": "Hauteur d'un arbre par les ombres",
+            "valeur": "Un arbre projette une ombre de 12 m. Un poteau de 2 m projette une ombre de 3 m au même moment.\n\nLes rayons du soleil sont parallèles → configuration de Thalès.\nhauteur_arbre/2 = 12/3\nhauteur_arbre = 2 × 12/3 = **8 m**"
+          },
+          {
+            "type": "exemple",
+            "titre": "Largeur d'une rivière",
+            "valeur": "Pour mesurer la largeur BC d'une rivière à Yaoundé, on place des jalons :\n• A = point sur la berge en face de B\n• O = point d'où on voit simultanément A et C sur la même droite\n• D sur OA avec OD = 8 m, OB = 20 m, OA = 10 m\n• DE ∥ BC avec DE = 5 m (mesurable)\n\nD'après Thalès : DE/BC = OD/OB\n5/BC = 8/20\nBC = 5 × 20/8 = **12,5 m**"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Récapitulatif :**\n\n• **Thalès direct :** (DE) ∥ (BC) → AD/AB = AE/AC = DE/BC\n• **Thalès réciproque :** AD/AB = AE/AC → (DE) ∥ (BC)\n• **Homothétie :** coefficient k = AD/AB — tous les segments du petit triangle sont k fois ceux du grand\n• **Mesures indirectes :** utiliser des ombres, des reflets, ou des jalonnements pour mesurer des distances inaccessibles"
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Calcul de longueurs",
+      "type_exercice": "calcul",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Dans le triangle ABC, (DE) ∥ (BC) avec D sur [AB] et E sur [AC].\n\nCas a) : AD = 3, AB = 9, BC = 12. Calculer DE.\nCas b) : AD = 6, DB = 4, AE = 9. Calculer AC.\nCas c) : AB = 15, AE = 8, AC = 12. Calculer AD et DE, sachant que BC = 18."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** k = AD/AB = 3/9 = 1/3\nDE = k × BC = 1/3 × 12 = **4**\n\n**b)** AB = AD + DB = 6 + 4 = 10\nAE/AC = AD/AB → 9/AC = 6/10\nAC = 9 × 10/6 = **15**\n\n**c)** k = AE/AC = 8/12 = 2/3\nAD = k × AB = 2/3 × 15 = **10**\nDE = k × BC = 2/3 × 18 = **12**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Réciproque — droites parallèles",
+      "type_exercice": "application",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Dans chaque cas, déterminer si (DE) ∥ (BC). Justifier avec la réciproque de Thalès.\n\na) AB = 20, AD = 12, AC = 15, AE = 9\nb) AB = 18, AD = 6, AC = 21, AE = 7\nc) AB = 16, DB = 10, AC = 12, EC = 7,5"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** AD/AB = 12/20 = 3/5\nAE/AC = 9/15 = 3/5\nÉgaux → **(DE) ∥ (BC)** ✓\n\n**b)** AD/AB = 6/18 = 1/3\nAE/AC = 7/21 = 1/3\nÉgaux → **(DE) ∥ (BC)** ✓\n\n**c)** AD = AB − DB = 16 − 10 = 6\nAE = AC − EC = 12 − 7,5 = 4,5\nAD/AB = 6/16 = 3/8\nAE/AC = 4,5/12 = 3/8\nÉgaux → **(DE) ∥ (BC)** ✓"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Problème d'ombre",
+      "type_exercice": "probleme",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "À Yaoundé, un élève de taille 1,6 m projette une ombre de 2 m sur un sol horizontal.\n\n**1.** Au même moment, un arbre projette une ombre de 7,5 m. Calculer la hauteur de l'arbre.\n**2.** Un poteau de hauteur h projette une ombre de 4 m. Calculer h.\n**3.** Plus tard dans la journée, l'ombre de l'élève est de 0,8 m. Si un bâtiment projette une ombre de 15 m, quelle est sa hauteur ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** 1,6/2 = H/7,5\nH = 1,6 × 7,5/2 = **6 m**\n\n**2.** 1,6/2 = h/4\nh = 1,6 × 4/2 = **3,2 m**\n\n**3.** 1,6/0,8 = H/15\nH = 1,6 × 15/0,8 = **30 m**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Configuration papillon",
+      "type_exercice": "calcul",
+      "niveau": "approfondissement",
+      "bareme": 8,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Deux droites se coupent en O. Sur l'une, on place A et A' de part et d'autre de O avec OA = 6 cm et OA' = 9 cm. Sur l'autre, on place B et B' avec OB = 4 cm.\nOn sait que (AB) ∥ (A'B').\n\n**1.** Calculer OB'.\n**2.** Si AB = 8 cm, calculer A'B'.\n**3.** Démontrer que OA × OA' ≠ OB × OB' (ou vérifier l'égalité)."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** Par Thalès : OA/OA' = OB/OB'\n6/9 = 4/OB'\nOB' = 4 × 9/6 = **6 cm**\n\n**2.** AB/A'B' = OA/OA' = 6/9 = 2/3\nA'B' = AB × 3/2 = 8 × 3/2 = **12 cm**\n\n**3.** OA/OA' = OB/OB' → OA × OB' = OA' × OB\n6 × 6 = 36 et 9 × 4 = 36 → **Égaux !**\n(C'est la propriété des rapports : produits croisés égaux)"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Théorème de Thalès",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** Dans un triangle, (DE)∥(BC) avec AD=4, AB=10, BC=15. Alors DE = :\n(A) 37,5  (B) 6  (C) 4  (D) 9\n\n**Q2.** Si AD/AB = AE/AC, alors par la réciproque de Thalès :\n(A) (DE) ⊥ (BC)  (B) (DE) ∥ (BC)  (C) AD = AE  (D) Triangle ABC est rectangle\n\n**Q3.** Un bâton de 2 m projette une ombre de 3 m. Un arbre projette une ombre de 21 m. Sa hauteur est :\n(A) 31,5 m  (B) 14 m  (C) 42 m  (D) 7 m"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (B) 6 : k = 4/10 = 0,4 ; DE = 0,4 × 15 = 6\n\n**Q2.** (B) (DE) ∥ (BC)\n\n**Q3.** (B) 14 m : 2/3 = H/21 → H = 2×21/3 = 14 m"
+          }
+        ]
+      },
+      "options_qcm": [
+        ["37,5", "6", "4", "9"],
+        ["(DE) ⊥ (BC)", "(DE) ∥ (BC)", "AD = AE", "Triangle ABC est rectangle"],
+        ["31,5 m", "14 m", "42 m", "7 m"]
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Problème BEPC — Triangle et proportions",
+      "type_exercice": "probleme",
+      "niveau": "examen",
+      "bareme": 10,
+      "duree_recommandee": 25,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Dans le triangle ABC, AB = 18 cm, BC = 24 cm et AC = 15 cm. La droite (DE) est parallèle à (BC) avec D sur [AB] et E sur [AC], et AD = 6 cm.\n\n**1.** Calculer AE et DE.\n**2.** Calculer DB et EC.\n**3.** Vérifier que BCED est un trapèze en calculant BC et DE.\n**4.** Calculer l'aire du triangle ADE, sachant que la hauteur issue de A dans le triangle ABC vaut h, et que l'aire de ABC = (1/2) × BC × h."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** k = AD/AB = 6/18 = 1/3\nAE = k × AC = 1/3 × 15 = **5 cm**\nDE = k × BC = 1/3 × 24 = **8 cm**\n\n**2.** DB = AB − AD = 18 − 6 = **12 cm**\nEC = AC − AE = 15 − 5 = **10 cm**\n\n**3.** BC = 24 cm et DE = 8 cm, DE ∥ BC → BCED est bien un **trapèze** (deux côtés parallèles)\n\n**4.** Aire ADE / Aire ABC = k² = (1/3)² = 1/9\nAire ADE = (1/9) × Aire ABC\nAire ABC = (1/2) × 24 × h = 12h\nAire ADE = 12h/9 = **4h/3**\n\nSi on connaît h : ex h = 12 → Aire ABC = 144 cm² → Aire ADE = 16 cm²"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 7,
+      "titre": "Synthèse complète",
+      "type_exercice": "synthese",
+      "niveau": "approfondissement",
+      "bareme": 10,
+      "duree_recommandee": 30,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.** Dans le triangle OAB, (CD) ∥ (AB) avec C sur [OA] et D sur [OB].\nOC = 5, CA = 7, OD = 4.\n\n1. Calculer OA et DB.\n2. Calculer AB si CD = 6.\n\n**Partie B.** Pour mesurer la largeur d'un lac, un géomètre utilise la méthode suivante :\nIl choisit un point O hors du lac. Il pose des jalons : A et B sur les berges du lac, sur la droite (OA) et (OB). Il choisit C sur [OA] avec OC = 30 m et D sur [OB] avec OD = 20 m, de manière que (CD) ∥ (AB). Il mesure CD = 45 m.\n\n1. Calculer OA.\n2. Calculer AB.\n3. Si OA = 75 m, vérifier que les calculs sont cohérents."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.**\n1. OA = OC + CA = 5 + 7 = **12 cm**\nk = OC/OA = 5/12\nOB = OD/k = 4/(5/12) = 4 × 12/5 = 48/5 = **9,6 cm**\nDB = OB − OD = 9,6 − 4 = **5,6 cm**\n\n2. AB = OA/OC × CD = 12/5 × 6 = **14,4 cm**\n\n**Partie B.**\n1. OC/OA = OD/OB\n30/OA = 20/OB → OA/OB = 30/20 = 3/2\nAussi : CD/AB = OC/OA\n45/AB = 30/OA → on a besoin d'une valeur.\nAvec OA = 75 : k = OC/OA = 30/75 = 2/5\n2. AB = CD/k = 45/(2/5) = 45 × 5/2 = **112,5 m**\n3. OB = OD/k = 20/(2/5) = 20×5/2 = 50 m\nVérification : OC/OA = 30/75 = 2/5 et OD/OB = 20/50 = 2/5 ✓"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

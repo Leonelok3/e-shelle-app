@@ -1,0 +1,317 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "3eme-8-statistiques-descriptives",
+  "meta": {
+    "classe": "3ème",
+    "numero": 8,
+    "titre": "Statistiques descriptives",
+    "categorie": "statistiques",
+    "difficulte": 2,
+    "description": "Collecter, organiser et analyser des données — moyenne, médiane, mode, diagrammes et interprétation de résultats.",
+    "objectifs": [
+      "Organiser des données en tableaux et diagrammes",
+      "Calculer la moyenne, la médiane et le mode",
+      "Construire et interpréter des diagrammes",
+      "Analyser des situations statistiques concrètes"
+    ],
+    "prerequis_slugs": ["3eme-7-proportionnalite-et-pourcentages"],
+    "duree_estimee": 60,
+    "points_total_exercices": 50
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Vocabulaire statistique et organisation des données",
+      "type_lecon": "definition",
+      "duree_lecture": 16,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "La **statistique descriptive** a pour but de collecter, organiser et résumer des données.\n\n**Vocabulaire :**\n• **Population** : ensemble étudié (ex : tous les élèves d'un lycée)\n• **Individu** : élément de la population (ex : un élève)\n• **Caractère** : propriété observée (ex : note, taille, âge)\n• **Effectif** : nombre d'individus ayant un caractère donné\n• **Fréquence** : effectif / effectif total (souvent exprimée en %)"
+          },
+          {
+            "type": "exemple",
+            "titre": "Tableau statistique",
+            "valeur": "Notes obtenues par 30 élèves d'une 3ème à Yaoundé :\n\n| Note | Effectif | Fréquence |\n|------|----------|-----------|\n| 5    | 2        | 6,7%      |\n| 6    | 3        | 10%       |\n| 7    | 5        | 16,7%     |\n| 8    | 8        | 26,7%     |\n| 9    | 7        | 23,3%     |\n| 10   | 5        | 16,7%     |\n| **Total** | **30** | **100%** |\n\nFréquence de la note 8 = 8/30 = 26,7%"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Effectif cumulé croissant** : somme des effectifs jusqu'à une valeur donnée.\n\n**Fréquence cumulée croissante** : somme des fréquences jusqu'à une valeur donnée.\n\nExemple : Fréquence cumulée jusqu'à 8 = 6,7+10+16,7+26,7 = 60,1% → 60% des élèves ont une note ≤ 8."
+          },
+          {
+            "type": "contexte",
+            "valeur": "Les statistiques permettent d'analyser les résultats scolaires dans les établissements du Cameroun. Le ministère MINESEC utilise des statistiques pour évaluer les taux de réussite au BEPC par région (Littoral, Centre, Adamaoua, etc.)."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Moyenne, médiane et mode",
+      "type_lecon": "definition",
+      "duree_lecture": 20,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**La moyenne (x̄) :** somme des valeurs divisée par leur nombre.\n\nFormule : x̄ = (Σ xᵢ × nᵢ) / N\n\noù xᵢ sont les valeurs, nᵢ leurs effectifs, N l'effectif total."
+          },
+          {
+            "type": "exemple",
+            "titre": "Calcul de la moyenne",
+            "valeur": "Avec le tableau ci-dessus :\nx̄ = (5×2 + 6×3 + 7×5 + 8×8 + 9×7 + 10×5) / 30\n= (10 + 18 + 35 + 64 + 63 + 50) / 30\n= 240 / 30\n= **8**\n\nLa moyenne de la classe est 8/10."
+          },
+          {
+            "type": "texte",
+            "valeur": "**La médiane (Me) :** valeur qui partage la série en deux moitiés égales.\n\n• Si N est impair : Me = valeur du rang (N+1)/2\n• Si N est pair : Me = moyenne des valeurs de rang N/2 et N/2+1\n\n**Le mode (Mo) :** valeur (ou classe) la plus fréquente — celle avec le plus grand effectif."
+          },
+          {
+            "type": "exemple",
+            "titre": "Médiane et mode",
+            "valeur": "Pour notre série de 30 élèves :\n\n**Mode :** Note 8 (effectif 8, le plus élevé) → Mo = **8**\n\n**Médiane :** N = 30 (pair), on prend les rangs 15 et 16.\nEff. cumulés : note ≤ 6 : 5, ≤ 7 : 10, ≤ 8 : 18\nLes rangs 15 et 16 correspondent à la note 8.\n→ Me = **8**\n\nIci moyenne = médiane = mode = 8 (distribution symétrique)"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Comparaison des indicateurs :**\n• La **moyenne** est sensible aux valeurs extrêmes\n• La **médiane** est plus robuste (insensible aux extremes)\n• Le **mode** indique la valeur la plus courante\n\nExemple : Salaires 50 000, 50 000, 50 000, 50 000, 500 000\nMoyenne = 140 000 (influencée par la valeur extrême)\nMédiane = 50 000 (plus représentative ici)"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Diagrammes statistiques",
+      "type_lecon": "methode",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Types de diagrammes :**\n\n• **Diagramme en bâtons** : barres verticales dont la hauteur = effectif (pour données discrètes)\n• **Histogramme** : rectangles jointifs (pour données groupées en classes)\n• **Diagramme circulaire (camembert)** : secteurs angulaires proportionnels aux fréquences\n• **Polygone des fréquences** : courbe reliant les milieux des barres"
+          },
+          {
+            "type": "methode",
+            "titre": "Construire un diagramme circulaire",
+            "valeur": "Angle d'un secteur = (Effectif / Total) × 360°\n\n**Exemple** (répartition des élèves de 3ème au Cameroun par filière) :\n• Scientifique : 45% → 0,45 × 360 = **162°**\n• Littéraire : 35% → 0,35 × 360 = **126°**\n• Technique : 20% → 0,20 × 360 = **72°**\nTotal = 162 + 126 + 72 = 360° ✓"
+          },
+          {
+            "type": "exemple",
+            "titre": "Lire un histogramme",
+            "valeur": "**Histogramme des tailles d'élèves (cm) :**\n[150;155[ : 3 élèves\n[155;160[ : 8 élèves\n[160;165[ : 12 élèves\n[165;170[ : 9 élèves\n[170;175[ : 5 élèves\n[175;180[ : 3 élèves\n\nLa classe modale est [160;165[ (effectif max = 12)\nMilieu = 162,5 cm → Taille la plus courante"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Étendue et interprétation des données",
+      "type_lecon": "recapitulatif",
+      "duree_lecture": 14,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**L'étendue** d'une série est la différence entre la valeur maximale et la valeur minimale.\nÉtendue = max − min\n\nElle mesure la **dispersion** des données.\n\n**Exemple :** Notes entre 5 et 10 → Étendue = 10 − 5 = 5"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Interprétation :**\n• **Étendue petite** : les données sont groupées, peu dispersées\n• **Étendue grande** : les données sont très dispersées\n• La moyenne seule ne suffit pas pour analyser une série\n\n**Exemple :** Deux classes ont la même moyenne de 12/20 mais :\n• Classe A : notes entre 11 et 13 (étendue = 2, homogène)\n• Classe B : notes entre 0 et 20 (étendue = 20, très hétérogène)"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Récapitulatif des indicateurs :**\n\n| Indicateur | Formule / Définition | Usage |\n|------------|---------------------|-------|\n| Moyenne | Σ(xᵢ×nᵢ)/N | Position centrale |\n| Médiane | Valeur du milieu | Position robuste |\n| Mode | Valeur la plus fréquente | Valeur courante |\n| Étendue | max − min | Dispersion |"
+          },
+          {
+            "type": "contexte",
+            "valeur": "L'Office National des Statistiques du Cameroun (INS) utilise ces outils pour analyser les données de recensement, les revenus des ménages et les indicateurs de développement dans les 10 régions du pays."
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Tableau et fréquences",
+      "type_exercice": "application",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Les résultats d'un test (sur 10) de 25 élèves de 3ème à Yaoundé sont :\n4, 5, 5, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10\n\na) Dresser le tableau des effectifs et des fréquences.\nb) Quelle est la fréquence des élèves ayant obtenu plus de 7 ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** Tableau :\n| Note | Eff. | Fréq. |\n|------|------|-------|\n| 4    | 1    | 4%    |\n| 5    | 2    | 8%    |\n| 6    | 3    | 12%   |\n| 7    | 4    | 16%   |\n| 8    | 5    | 20%   |\n| 9    | 4    | 16%   |\n| 10   | 6    | 24%   |\n| Total| 25   | 100%  |\n\n**b)** Élèves avec note > 7 : effectifs 5+4+6 = 15\nFréquence = 15/25 = **60%**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Calcul des indicateurs",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Pour la série du tableau ci-dessus (exercice 1) :\na) Calculer la moyenne.\nb) Déterminer la médiane.\nc) Déterminer le mode.\nd) Calculer l'étendue."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** Moyenne = (4×1 + 5×2 + 6×3 + 7×4 + 8×5 + 9×4 + 10×6) / 25\n= (4 + 10 + 18 + 28 + 40 + 36 + 60) / 25\n= 196 / 25\n= **7,84**\n\n**b)** N = 25 (impair), médiane = valeur de rang 13\nEff. cumulés : ≤4:1, ≤5:3, ≤6:6, ≤7:10, ≤8:15\nRang 13 est dans la note 8 → **Médiane = 8**\n\n**c)** Mode = **10** (effectif 6, le plus grand)\n\n**d)** Étendue = 10 − 4 = **6**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Diagramme circulaire",
+      "type_exercice": "application",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Dans un lycée de Douala, une enquête sur les activités extra-scolaires de 200 élèves donne :\n• Football : 80 élèves\n• Musique : 50 élèves\n• Arts plastiques : 30 élèves\n• Informatique : 40 élèves\n\na) Calculer les fréquences en %.\nb) Calculer les angles pour un diagramme circulaire.\nc) Identifier l'activité la plus pratiquée."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** Fréquences :\nFootball : 80/200 = 40%\nMusique : 50/200 = 25%\nArts plastiques : 30/200 = 15%\nInformatique : 40/200 = 20%\nTotal = 100% ✓\n\n**b)** Angles :\nFootball : 0,40 × 360 = **144°**\nMusique : 0,25 × 360 = **90°**\nArts plastiques : 0,15 × 360 = **54°**\nInformatique : 0,20 × 360 = **72°**\nTotal = 360° ✓\n\n**c)** L'activité la plus pratiquée est le **Football** (40%)"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Analyse de données groupées",
+      "type_exercice": "probleme",
+      "niveau": "approfondissement",
+      "bareme": 8,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Les revenus mensuels (en milliers de FCFA) de 40 familles d'un quartier de Yaoundé :\n\n| Revenu [milliers FCFA] | [50;100[ | [100;150[ | [150;200[ | [200;300[ | [300;500[ |\n|------------------------|---------|----------|----------|----------|----------|\n| Effectif               | 8       | 12       | 10       | 7        | 3        |\n\n1. Calculer les fréquences.\n2. Calculer la moyenne (utiliser le milieu de chaque classe).\n3. Quelle est la classe modale ?\n4. Calculer l'étendue des revenus."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** Fréquences : 8/40=20%, 12/40=30%, 10/40=25%, 7/40=17,5%, 3/40=7,5%\n\n**2.** Milieux : 75, 125, 175, 250, 400\nMoyenne = (75×8 + 125×12 + 175×10 + 250×7 + 400×3) / 40\n= (600 + 1500 + 1750 + 1750 + 1200) / 40\n= 6800 / 40\n= **170 milliers de FCFA = 170 000 FCFA**\n\n**3.** Classe modale = **[100 ; 150[** (effectif 12, le plus grand)\n\n**4.** Étendue ≈ 500 − 50 = **450 milliers de FCFA**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Statistiques",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** Pour la série 3, 5, 7, 7, 9, 11, le mode est :\n(A) 7  (B) 7 et 5  (C) 9  (D) Pas de mode\n\n**Q2.** La médiane de la série 2, 4, 6, 8, 10 est :\n(A) 5  (B) 6  (C) 4  (D) 7\n\n**Q3.** L'angle d'un secteur représentant 30% dans un diagramme circulaire est :\n(A) 30°  (B) 90°  (C) 108°  (D) 120°"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (A) 7 (seule valeur répétée 2 fois)\n\n**Q2.** (B) 6 : série ordonnée, N=5 (impair), médiane au rang 3 = valeur 6\n\n**Q3.** (C) 108° : 0,30 × 360 = 108°"
+          }
+        ]
+      },
+      "options_qcm": [
+        ["7", "7 et 5", "9", "Pas de mode"],
+        ["5", "6", "4", "7"],
+        ["30°", "90°", "108°", "120°"]
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Problème BEPC — Résultats scolaires",
+      "type_exercice": "probleme",
+      "niveau": "examen",
+      "bareme": 10,
+      "duree_recommandee": 25,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Dans un lycée de Ngaoundéré, les moyennes annuelles (sur 20) de 36 élèves d'une 3ème sont :\n\n| Moyenne | [6;8[ | [8;10[ | [10;12[ | [12;14[ | [14;16[ | [16;18] |\n|---------|-------|--------|---------|---------|---------|--------|\n| Effectif | 3     | 7      | 10      | 8       | 5       | 3      |\n\n**1.** Calculer la fréquence des élèves ayant une moyenne ≥ 10.\n**2.** Calculer la moyenne de la classe.\n**3.** Quelle est la classe modale ?\n**4.** Calculer les angles pour représenter les 4 premières classes dans un diagramme circulaire."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** Élèves ≥ 10 : 10+8+5+3 = 26\nFréquence = 26/36 × 100 ≈ **72,2%**\n\n**2.** Milieux : 7, 9, 11, 13, 15, 17\nMoyenne = (7×3 + 9×7 + 11×10 + 13×8 + 15×5 + 17×3) / 36\n= (21 + 63 + 110 + 104 + 75 + 51) / 36\n= 424 / 36\n≈ **11,78 ≈ 11,8/20**\n\n**3.** Classe modale = **[10 ; 12[** (effectif 10)\n\n**4.** Pour les 4 premières classes (3+7+10+8 = 28 élèves) :\n[6;8[ : 3/36 × 360 = **30°**\n[8;10[ : 7/36 × 360 = **70°**\n[10;12[ : 10/36 × 360 = **100°**\n[12;14[ : 8/36 × 360 = **80°**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 7,
+      "titre": "Synthèse complète",
+      "type_exercice": "synthese",
+      "niveau": "approfondissement",
+      "bareme": 12,
+      "duree_recommandee": 30,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Le nombre de buts marqués par 20 équipes de football lors d'un tournoi de la région du Centre est :\n0, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 7, 8, 10\n\n**1.** Dresser le tableau des effectifs et des fréquences cumulées.\n**2.** Calculer la moyenne, la médiane, le mode et l'étendue.\n**3.** Calculer les angles pour un diagramme circulaire (regrouper 0-1, 2-3, 4-5, 6+).\n**4.** La fédération qualifie les équipes marquant plus de 4 buts. Quel pourcentage est qualifié ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** Tableau :\n| Buts | Eff | F% | F.cum% |\n|------|-----|-----|--------|\n| 0    | 1   | 5%  | 5%     |\n| 1    | 2   | 10% | 15%    |\n| 2    | 3   | 15% | 30%    |\n| 3    | 4   | 20% | 50%    |\n| 4    | 3   | 15% | 65%    |\n| 5    | 3   | 15% | 80%    |\n| 6    | 1   | 5%  | 85%    |\n| 7    | 1   | 5%  | 90%    |\n| 8    | 1   | 5%  | 95%    |\n| 10   | 1   | 5%  | 100%   |\n\n**2.** Moyenne = (0+2+3+6+9+12+12+12+15+5+5+6+7+8+10)/20\n= (0×1+1×2+2×3+3×4+4×3+5×3+6×1+7×1+8×1+10×1)/20\n= (0+2+6+12+12+15+6+7+8+10)/20 = 78/20 = **3,9**\n\nMédiane : N=20, rang 10 et 11 → valeurs 3 et 3 → **Me = 3**\nMode : **3** (effectif 4)\nÉtendue : 10−0 = **10**\n\n**3.** Groupes : 0-1: 3 (54°), 2-3: 7 (126°), 4-5: 6 (108°), 6+: 4 (72°)\n\n**4.** Équipes > 4 buts : 3+1+1+1 = 6\n6/20 × 100 = **30% qualifiées**"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

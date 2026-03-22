@@ -1,0 +1,305 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "3eme-15-puissances-et-notation-scientifique",
+  "meta": {
+    "classe": "3ème",
+    "numero": 15,
+    "titre": "Puissances et notation scientifique",
+    "categorie": "arithmetique",
+    "difficulte": 2,
+    "description": "Calcul avec les puissances entières et fractionnaires, notation scientifique et ordre de grandeur — compétences essentielles pour les sciences.",
+    "objectifs": [
+      "Maîtriser les propriétés des puissances à exposant entier",
+      "Calculer avec les puissances de 10",
+      "Écrire et utiliser la notation scientifique",
+      "Comparer des ordres de grandeur"
+    ],
+    "prerequis_slugs": ["3eme-2-nombres-relatifs-et-calcul-litteral"],
+    "duree_estimee": 60,
+    "points_total_exercices": 50
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Puissances à exposant entier",
+      "type_lecon": "definition",
+      "duree_lecture": 18,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Définition :** Pour tout nombre a non nul et tout entier n > 0 :\naⁿ = a × a × a × ... × a (n fois)\n\nExemples : 2³ = 8, (−3)² = 9, 5⁰ = 1, 10⁴ = 10 000\n\n**Puissances négatives :** a⁻ⁿ = 1/aⁿ\nExemples : 2⁻³ = 1/8, 10⁻² = 1/100 = 0,01"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Propriétés fondamentales des puissances** (a ≠ 0, b ≠ 0) :\n\n1. **Produit :** aᵐ × aⁿ = aᵐ⁺ⁿ\n2. **Quotient :** aᵐ / aⁿ = aᵐ⁻ⁿ\n3. **Puissance de puissance :** (aᵐ)ⁿ = aᵐˣⁿ\n4. **Produit sous même exposant :** aⁿ × bⁿ = (ab)ⁿ\n5. **Quotient sous même exposant :** aⁿ / bⁿ = (a/b)ⁿ\n6. **Exposant zéro :** a⁰ = 1 (pour a ≠ 0)"
+          },
+          {
+            "type": "exemple",
+            "titre": "Applications des propriétés",
+            "valeur": "**Simplifier :**\n• 2⁵ × 2³ = 2⁸ = 256\n• 3⁷ / 3⁴ = 3³ = 27\n• (2³)⁴ = 2¹² = 4096\n• 4⁻² = 1/16\n• (2/3)⁻² = (3/2)² = 9/4\n\n**Attention :** (2+3)² = 5² = 25 ≠ 2² + 3² = 4 + 9 = 13"
+          },
+          {
+            "type": "contexte",
+            "valeur": "La population du Cameroun en 2024 est d'environ 3 × 10⁷ habitants. Le fleuve Congo a un débit de 4 × 10⁴ m³/s. Ces grands nombres sont plus faciles à écrire en notation scientifique qu'en écriture standard."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Puissances de 10 et notation scientifique",
+      "type_lecon": "definition",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Puissances de 10 :**\n10⁰ = 1\n10¹ = 10\n10² = 100\n10³ = 1 000\n10⁶ = 1 000 000 (un million)\n10⁻¹ = 0,1\n10⁻² = 0,01\n10⁻³ = 0,001\n10⁻⁶ = 0,000001 (un millionième)"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Notation scientifique :** Un nombre est écrit sous la forme **a × 10ⁿ** où 1 ≤ |a| < 10 et n est un entier.\n\n**Convertir en notation scientifique :**\n• Déplacer la virgule jusqu'à avoir un seul chiffre avant la virgule\n• L'exposant = nombre de déplacements (positif vers la gauche, négatif vers la droite)"
+          },
+          {
+            "type": "exemple",
+            "titre": "Conversions",
+            "valeur": "**Grand vers notation scientifique :**\n• 45 000 = 4,5 × 10⁴\n• 328 000 000 = 3,28 × 10⁸\n• 7 000 = 7 × 10³\n\n**Petit vers notation scientifique :**\n• 0,0035 = 3,5 × 10⁻³\n• 0,000000072 = 7,2 × 10⁻⁸\n• 0,42 = 4,2 × 10⁻¹\n\n**Notation scientifique vers standard :**\n• 6,2 × 10⁵ = 620 000\n• 8 × 10⁻⁴ = 0,0008"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Calculs avec la notation scientifique",
+      "type_lecon": "methode",
+      "duree_lecture": 16,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "methode",
+            "titre": "Opérations en notation scientifique",
+            "valeur": "**Multiplication :** (a × 10ⁿ) × (b × 10ᵐ) = (a×b) × 10ⁿ⁺ᵐ\n\n**Division :** (a × 10ⁿ) / (b × 10ᵐ) = (a/b) × 10ⁿ⁻ᵐ\n\n**Addition/Soustraction :** Mettre d'abord au même exposant, puis additionner les parties décimales\n\n⚠️ Toujours vérifier que le résultat est bien en notation scientifique (1 ≤ |a| < 10)"
+          },
+          {
+            "type": "exemple",
+            "titre": "Exemples de calculs",
+            "valeur": "**Multiplication :**\n(3 × 10⁴) × (2 × 10³) = 6 × 10⁷ ✓\n(5 × 10⁶) × (4 × 10²) = 20 × 10⁸ = **2 × 10⁹** (remettre en notation scientifique)\n\n**Division :**\n(8,4 × 10⁵) / (2 × 10²) = 4,2 × 10³ ✓\n\n**Addition :**\n(3,2 × 10⁵) + (4 × 10⁴)\n= (3,2 × 10⁵) + (0,4 × 10⁵)\n= 3,6 × 10⁵ ✓"
+          },
+          {
+            "type": "contexte",
+            "valeur": "La vitesse de la lumière est c = 3 × 10⁸ m/s. La distance Terre-Soleil est D = 1,5 × 10¹¹ m. Le temps pour que la lumière parcourt cette distance :\nt = D/c = (1,5 × 10¹¹) / (3 × 10⁸) = 0,5 × 10³ = 5 × 10² = **500 secondes ≈ 8 minutes**"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Racines carrées et puissances fractionnaires",
+      "type_lecon": "definition",
+      "duree_lecture": 15,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Racine carrée :** √a est le nombre positif dont le carré vaut a (pour a ≥ 0).\n√a = a^(1/2)\n\n**Propriétés des racines carrées :**\n• √(a×b) = √a × √b\n• √(a/b) = √a / √b\n• (√a)² = a\n• √(a²) = |a|\n\n**Simplification de racines :**\n√12 = √(4×3) = 2√3\n√50 = √(25×2) = 5√2\n√72 = √(36×2) = 6√2"
+          },
+          {
+            "type": "exemple",
+            "titre": "Calculs de racines",
+            "valeur": "**Valeurs exactes :**\n√0 = 0, √1 = 1, √4 = 2, √9 = 3, √16 = 4\n√25 = 5, √36 = 6, √49 = 7, √64 = 8, √81 = 9, √100 = 10\n\n**Simplification :**\n√48 = √(16×3) = 4√3\n√(3/4) = √3/2\n\n**Calcul numérique :** √2 ≈ 1,414 ; √3 ≈ 1,732 ; √5 ≈ 2,236"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Récapitulatif du chapitre :**\n\n| Propriété | Formule |\n|-----------|--------|\n| Produit | aᵐ × aⁿ = aᵐ⁺ⁿ |\n| Quotient | aᵐ / aⁿ = aᵐ⁻ⁿ |\n| Puissance | (aᵐ)ⁿ = aᵐⁿ |\n| Notation sci. | a × 10ⁿ, 1≤|a|<10 |\n| Racine | √a × √b = √(ab) |"
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Calculs de puissances",
+      "type_exercice": "calcul",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Calculer et simplifier :\na) 3⁴ × 3² ÷ 3³\nb) (2³)² × 2⁻⁴\nc) (5²)⁰\nd) 4⁻² × 4³"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** 3⁴ × 3² ÷ 3³ = 3^(4+2-3) = 3³ = **27**\n\n**b)** (2³)² × 2⁻⁴ = 2⁶ × 2⁻⁴ = 2² = **4**\n\n**c)** (5²)⁰ = 5⁰ = **1**\n\n**d)** 4⁻² × 4³ = 4^(-2+3) = 4¹ = **4**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Notation scientifique",
+      "type_exercice": "application",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) Écrire en notation scientifique : 93 000 000 ; 0,00043 ; 7 800 000\nb) Écrire en écriture décimale standard : 2,5 × 10⁴ ; 6,7 × 10⁻³ ; 1 × 10⁶"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** 93 000 000 = **9,3 × 10⁷**\n0,00043 = **4,3 × 10⁻⁴**\n7 800 000 = **7,8 × 10⁶**\n\n**b)** 2,5 × 10⁴ = **25 000**\n6,7 × 10⁻³ = **0,0067**\n1 × 10⁶ = **1 000 000**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Opérations en notation scientifique",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Effectuer les calculs et donner les résultats en notation scientifique :\na) (3 × 10⁵) × (4 × 10³)\nb) (9 × 10⁸) ÷ (3 × 10⁵)\nc) (5 × 10⁴) + (2 × 10³)\nd) (7,2 × 10⁶) − (5 × 10⁵)"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** (3 × 4) × 10^(5+3) = 12 × 10⁸ = **1,2 × 10⁹**\n\n**b)** (9/3) × 10^(8-5) = 3 × 10³ = **3 × 10³**\n\n**c)** 5 × 10⁴ = 50 × 10³\n50 × 10³ + 2 × 10³ = 52 × 10³ = **5,2 × 10⁴**\n\n**d)** 7,2 × 10⁶ = 72 × 10⁵\n72 × 10⁵ − 5 × 10⁵ = 67 × 10⁵ = **6,7 × 10⁶**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Racines carrées",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Simplifier les expressions suivantes (donner une forme exacte) :\na) √75\nb) √(8 × 18)\nc) √200 / √2\nd) (3√2)² + (2√3)²\ne) √(49/4)"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** √75 = √(25×3) = **5√3**\n\n**b)** √(8 × 18) = √144 = **12**\n\n**c)** √200 / √2 = √(200/2) = √100 = **10**\n\n**d)** (3√2)² + (2√3)² = 9×2 + 4×3 = 18 + 12 = **30**\n\n**e)** √(49/4) = √49/√4 = 7/2 = **3,5**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Puissances et notation scientifique",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** 2⁵ × 2³ ÷ 2⁶ = :\n(A) 2  (B) 4  (C) 8  (D) 16\n\n**Q2.** La notation scientifique de 0,00056 est :\n(A) 5,6 × 10⁻³  (B) 5,6 × 10⁻⁴  (C) 56 × 10⁻⁵  (D) 0,56 × 10⁻³\n\n**Q3.** √18 simplifié donne :\n(A) 9√2  (B) 3√2  (C) 6√3  (D) 2√9"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (B) 4 : 2^(5+3-6) = 2² = 4\n\n**Q2.** (B) 5,6 × 10⁻⁴ : 0,00056 = 5,6 × 10⁻⁴\n\n**Q3.** (B) 3√2 : √18 = √(9×2) = 3√2"
+          }
+        ]
+      },
+      "options_qcm": [
+        ["2", "4", "8", "16"],
+        ["5,6 × 10⁻³", "5,6 × 10⁻⁴", "56 × 10⁻⁵", "0,56 × 10⁻³"],
+        ["9√2", "3√2", "6√3", "2√9"]
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Problème BEPC — Astronomie et géographie",
+      "type_exercice": "probleme",
+      "niveau": "examen",
+      "bareme": 10,
+      "duree_recommandee": 25,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "La vitesse du son est v = 3,4 × 10² m/s. La vitesse de la lumière est c = 3 × 10⁸ m/s. La distance de la Terre à la Lune est d = 3,84 × 10⁸ m.\n\n**1.** Combien de fois la vitesse de la lumière est-elle plus grande que celle du son ?\n**2.** En combien de secondes la lumière atteint-elle la Lune ?\n**3.** En combien de secondes le son atteindrait-il la Lune ?\n**4.** La distance Douala–Yaoundé est de 240 km = 2,4 × 10⁵ m. Combien de temps faut-il à la lumière pour parcourir cette distance ?\n**5.** Un avion vole à 9 × 10² km/h. Combien de temps met-il pour aller de Douala à Yaoundé ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** c/v = (3 × 10⁸) / (3,4 × 10²) = (3/3,4) × 10⁶ ≈ **0,882 × 10⁶ ≈ 882 000 fois**\n\n**2.** t = d/c = (3,84 × 10⁸) / (3 × 10⁸) = 3,84/3 ≈ **1,28 secondes**\n\n**3.** t = d/v = (3,84 × 10⁸) / (3,4 × 10²) = (3,84/3,4) × 10⁶ ≈ **1,129 × 10⁶ s ≈ 1 129 000 s ≈ 13 jours**\n\n**4.** t = (2,4 × 10⁵) / (3 × 10⁸) = 0,8 × 10⁻³ = **8 × 10⁻⁴ s** (0,0008 seconde)\n\n**5.** t = 240/900 = 4/15 h ≈ **0,267 h ≈ 16 minutes**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 7,
+      "titre": "Synthèse — Puissances, racines et notation scientifique",
+      "type_exercice": "synthese",
+      "niveau": "approfondissement",
+      "bareme": 10,
+      "duree_recommandee": 30,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.** Simplifier les expressions suivantes (résultat exact) :\na) (2³ × 3²)² / (6 × 2⁴)\nb) (√5 + √5)²\nc) (2 × 10³)³\n\n**Partie B.** La Terre a une masse de 6 × 10²⁴ kg. La Lune a une masse de 7,35 × 10²² kg.\n1. Quelle est la masse totale du système Terre-Lune en notation scientifique ?\n2. Combien de fois la Terre est-elle plus massive que la Lune ?\n3. Si on créait une sphère avec toute la masse terrestre et que sa densité était d = 5 500 kg/m³, calculer son volume en m³ (V = Masse / densité). Écrire en notation scientifique."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.**\na) (2³×3²)² / (6×2⁴) = (2³)²×(3²)² / (2×3×2⁴)\n= 2⁶×3⁴ / (2⁵×3) = 2^(6-5) × 3^(4-1) = 2 × 3³ = 2 × 27 = **54**\n\nb) (√5 + √5)² = (2√5)² = 4 × 5 = **20**\n\nc) (2 × 10³)³ = 2³ × (10³)³ = 8 × 10⁹ = **8 × 10⁹**\n\n**Partie B.**\n1. 6 × 10²⁴ + 7,35 × 10²² = 600 × 10²² + 7,35 × 10²² = 607,35 × 10²² = **6,0735 × 10²⁴ kg**\n\n2. (6 × 10²⁴) / (7,35 × 10²²) = (6/7,35) × 10² ≈ 0,816 × 10² ≈ **81,6 fois**\n\n3. V = M/d = (6 × 10²⁴) / (5500) = (6 × 10²⁴) / (5,5 × 10³) = (6/5,5) × 10²¹ ≈ 1,09 × 10²¹ m³\n≈ **1,09 × 10²¹ m³**"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

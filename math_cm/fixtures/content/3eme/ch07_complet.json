@@ -1,0 +1,311 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "3eme-7-proportionnalite-et-pourcentages",
+  "meta": {
+    "classe": "3ème",
+    "numero": 7,
+    "titre": "Proportionnalité et pourcentages",
+    "categorie": "arithmetique",
+    "difficulte": 2,
+    "description": "Situations de proportionnalité, règle de trois, pourcentages, taux et prix — omniprésents au BEPC et dans la vie quotidienne.",
+    "objectifs": [
+      "Reconnaître une situation de proportionnalité",
+      "Appliquer la règle de trois (quatrième proportionnelle)",
+      "Calculer des pourcentages et des taux",
+      "Résoudre des problèmes de prix, remises et augmentations"
+    ],
+    "prerequis_slugs": ["3eme-6-fonction-lineaire-et-affine"],
+    "duree_estimee": 60,
+    "points_total_exercices": 50
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Proportionnalité — définition et tableau",
+      "type_lecon": "definition",
+      "duree_lecture": 16,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Deux grandeurs sont **proportionnelles** si leurs valeurs ont un rapport constant. Ce rapport est appelé **coefficient de proportionnalité**.\n\nSi y est proportionnel à x : y = k × x (avec k constant)\n\nDans un **tableau de proportionnalité**, chaque valeur de la 2ème ligne est obtenue en multipliant la valeur correspondante de la 1ère ligne par k."
+          },
+          {
+            "type": "exemple",
+            "titre": "Exemple concret",
+            "valeur": "Prix de sachets de riz en vrac à Yaoundé :\n| Quantité (kg) | 1 | 2 | 5 | 10 |\n|---------------|---|---|---|----|\n| Prix (FCFA)   | 600 | 1200 | 3000 | 6000 |\n\nCoefficient k = 600 FCFA/kg → Prix = 600 × Quantité\n\n**Test de proportionnalité :** vérifier que 1200/2 = 3000/5 = 6000/10 = 600 ✓"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Contre-exemple (non proportionnel) :**\n| Âge (ans) | 10 | 20 | 30 |\n|-----------|----|----|----|\n| Taille (cm) | 140 | 170 | 175 |\n\n140/10 ≠ 170/20 ≠ 175/30 → **Non proportionnel**\n\nLa taille n'est pas proportionnelle à l'âge !"
+          },
+          {
+            "type": "contexte",
+            "valeur": "Au Cameroun, la TVA est de 19,25% sur de nombreux produits. Le montant de TVA est proportionnel au prix hors taxe. Pour un produit à 10 000 FCFA HT, la TVA = 1 925 FCFA (coefficient k = 0,1925)."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Règle de trois et quatrième proportionnelle",
+      "type_lecon": "methode",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "methode",
+            "titre": "La règle de trois (produit en croix)",
+            "valeur": "Si a/b = c/d, alors a × d = b × c (produit en croix)\n\n**Pour trouver x dans :** a/b = x/d\nx = (a × d)/b\n\nC'est la **quatrième proportionnelle** quand on connaît 3 valeurs et on cherche la 4ème."
+          },
+          {
+            "type": "exemple",
+            "titre": "Applications",
+            "valeur": "**Problème 1 :** 5 carnets coûtent 1 250 FCFA. Combien coûtent 8 carnets ?\n5/1250 = 8/x\nx = 8 × 1250 / 5 = 2 000 FCFA\n\n**Problème 2 :** Une voiture roule à 90 km/h. Quelle distance parcourt-elle en 2h30 ?\nEn 1h → 90 km\nEn 2,5h → x = 2,5 × 90 = 225 km\n\n**Problème 3 :** Sur une carte à l'échelle 1/50 000, deux villes sont distantes de 4 cm. Quelle est la distance réelle ?\nDistance réelle = 4 × 50 000 = 200 000 cm = 2 km"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Proportionnalité inverse :** Deux grandeurs sont inversement proportionnelles si leur produit est constant.\n\nExemple : 4 ouvriers font un travail en 6 jours. Combien de jours pour 3 ouvriers ?\n4 × 6 = 3 × x → x = 8 jours\n\n⚠️ Ne pas confondre proportionnalité directe et inverse !"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Pourcentages — calculs et applications",
+      "type_lecon": "methode",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**p%** d'une quantité Q = (p/100) × Q\n\nExemples :\n• 20% de 5 000 FCFA = 0,20 × 5 000 = 1 000 FCFA\n• 15% de 80 kg = 0,15 × 80 = 12 kg\n• 7,5% de 40 000 = 0,075 × 40 000 = 3 000"
+          },
+          {
+            "type": "methode",
+            "titre": "Augmentation et remise (réduction)",
+            "valeur": "**Augmentation de p% :**\nNouveau prix = Ancien prix × (1 + p/100)\n\nExemple : Un article à 8 000 FCFA subit une hausse de 15%.\nNouuveau prix = 8 000 × 1,15 = 9 200 FCFA\n\n**Remise (réduction) de p% :**\nNouveau prix = Ancien prix × (1 − p/100)\n\nExemple : Un article à 12 000 FCFA est soldé à −25%.\nPrix soldé = 12 000 × 0,75 = 9 000 FCFA"
+          },
+          {
+            "type": "exemple",
+            "titre": "Taux de variation",
+            "valeur": "**Taux de variation** entre la valeur initiale V₀ et la valeur finale V₁ :\nt = (V₁ − V₀)/V₀ × 100 (%)\n\nExemple : Le prix du carburant passe de 650 à 700 FCFA/litre.\nt = (700 − 650)/650 × 100 ≈ 7,7% → augmentation de ~7,7%\n\nExemple : Un salaire passe de 80 000 à 68 000 FCFA.\nt = (68 000 − 80 000)/80 000 × 100 = −15% → baisse de 15%"
+          },
+          {
+            "type": "contexte",
+            "valeur": "En période de fêtes de fin d'année au Cameroun, les marchés affichent des remises. Un commerçant de Douala-Akwa propose 20% de remise sur tout. Un article affiché 15 000 FCFA est vendu : 15 000 × 0,80 = 12 000 FCFA."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Pourcentages enchaînés et prix TTC",
+      "type_lecon": "methode",
+      "duree_lecture": 15,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "methode",
+            "titre": "Taux équivalent à deux taux successifs",
+            "valeur": "Appliquer successivement +a% puis +b% ≠ +(a+b)%\n\nTaux global = (1 + a/100)(1 + b/100) − 1\n\n**Exemple :** Hausse de 10% puis baisse de 10% :\nTaux global = 1,10 × 0,90 − 1 = 0,99 − 1 = −0,01 = **−1%**\n\nAttention : ce n'est pas 0% mais −1% ! (On a perdu 1%)"
+          },
+          {
+            "type": "exemple",
+            "titre": "Prix TTC avec TVA camerounaise",
+            "valeur": "La TVA au Cameroun est de 19,25%.\n\n**Prix TTC = Prix HT × 1,1925**\n\nExemple : Un ordinateur vaut 250 000 FCFA HT.\nPrix TTC = 250 000 × 1,1925 = 298 125 FCFA\n\n**Prix HT à partir du TTC :**\nPrix HT = Prix TTC / 1,1925\n\nSi le TTC est 59 625 FCFA :\nPrix HT = 59 625 / 1,1925 = 50 000 FCFA"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Récapitulatif :**\n• p% de Q = (p/100) × Q\n• Augmentation p% : × (1 + p/100)\n• Réduction p% : × (1 − p/100)\n• Taux de variation : (V₁−V₀)/V₀ × 100\n• Deux variations successives : multiplier les coefficients"
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Tableau de proportionnalité",
+      "type_exercice": "application",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Compléter le tableau de proportionnalité (coefficient k = 450) :\n| Quantité | 1 | 3 | ? | 8 | ? |\n| Prix     | 450 | ? | 2700 | ? | 4950 |\n\nPuis vérifier que le tableau est bien proportionnel."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "k = 450, donc Prix = 450 × Quantité\n\n| Quantité | 1 | 3 | **6** | 8 | **11** |\n| Prix | 450 | **1350** | 2700 | **3600** | 4950 |\n\nVérification : 450/1 = 1350/3 = 2700/6 = 3600/8 = 4950/11 = 450 ✓"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Règle de trois",
+      "type_exercice": "calcul",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Résoudre par la règle de trois :\na) Si 3 m de tissu coûtent 4 500 FCFA, combien coûtent 7 m ?\nb) Un robinet remplit un réservoir de 120 L en 4 minutes. Combien de litres en 15 minutes ?\nc) Sur une carte à l'échelle 1/25 000, une route mesure 8 cm. Quelle est sa longueur réelle ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** 3 m → 4500 FCFA\n7 m → x = 7 × 4500/3 = **10 500 FCFA**\n\n**b)** 4 min → 120 L\n15 min → x = 15 × 120/4 = **450 L**\n\n**c)** Longueur réelle = 8 cm × 25 000 = 200 000 cm = **2 km**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Calcul de pourcentages",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) Calculer 35% de 24 000 FCFA.\nb) Un article coûtait 18 000 FCFA. Son prix augmente de 12%. Quel est le nouveau prix ?\nc) Un sac à 30 000 FCFA est soldé à −30%. Quel est le prix final ?\nd) Un salaire passe de 95 000 à 114 000 FCFA. Quel est le taux d'augmentation ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** 35% × 24 000 = 0,35 × 24 000 = **8 400 FCFA**\n\n**b)** 18 000 × 1,12 = **20 160 FCFA**\n\n**c)** 30 000 × 0,70 = **21 000 FCFA**\n\n**d)** t = (114 000 − 95 000)/95 000 × 100 = 19 000/95 000 × 100 = **20%**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Problème de commerce",
+      "type_exercice": "probleme",
+      "niveau": "approfondissement",
+      "bareme": 8,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Un commerçant de Bafoussam achète un lot de pagnes à 180 000 FCFA. Il vend les pagnes avec un bénéfice de 25%.\n\n**1.** Quel est le prix de vente total du lot ?\n**2.** S'il accorde une remise de 10% à un bon client, quel est le nouveau prix de vente ?\n**3.** Par rapport au prix d'achat, quel est le bénéfice final (en FCFA et en %) ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** Prix de vente = 180 000 × 1,25 = **225 000 FCFA**\n\n**2.** Prix après remise = 225 000 × 0,90 = **202 500 FCFA**\n\n**3.** Bénéfice = 202 500 − 180 000 = 22 500 FCFA\nTaux = 22 500/180 000 × 100 = **12,5%** de bénéfice"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Proportionnalité et pourcentages",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** 4 ouvriers font un chantier en 15 jours. 6 ouvriers le feraient en :\n(A) 22,5 jours  (B) 10 jours  (C) 12 jours  (D) 20 jours\n\n**Q2.** Après une hausse de 20% puis une baisse de 20%, le prix initial :\n(A) Est inchangé  (B) A baissé de 4%  (C) A augmenté de 4%  (D) A baissé de 2%\n\n**Q3.** Le taux de variation de 500 à 375 est :\n(A) +25%  (B) −25%  (C) +33%  (D) −33%"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (B) 10 jours : proportionnalité inverse → 4×15 = 6×x → x = 10\n\n**Q2.** (B) −4% : 1,20 × 0,80 = 0,96 → −4%\n\n**Q3.** (B) −25% : (375−500)/500 × 100 = −125/500 × 100 = −25%"
+          }
+        ]
+      },
+      "options_qcm": [
+        ["22,5 jours", "10 jours", "12 jours", "20 jours"],
+        ["Est inchangé", "A baissé de 4%", "A augmenté de 4%", "A baissé de 2%"],
+        ["+25%", "−25%", "+33%", "−33%"]
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Problème BEPC — Prix et TVA",
+      "type_exercice": "probleme",
+      "niveau": "examen",
+      "bareme": 10,
+      "duree_recommandee": 25,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Un appareil électronique est vendu 119 250 FCFA TTC au Cameroun. La TVA est de 19,25%.\n\n**1.** Calculer le prix HT de l'appareil.\n**2.** Le vendeur accorde une remise de 5% sur le prix TTC. Quel est le prix final ?\n**3.** Quel pourcentage du prix HT représente le prix final ?\n**4.** Si le vendeur avait acheté l'appareil 80 000 FCFA HT, quel est son bénéfice en FCFA et en % ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1.** Prix HT = 119 250 / 1,1925 = **100 000 FCFA**\n\n**2.** Prix avec remise = 119 250 × 0,95 = **113 287,50 FCFA**\n\n**3.** 113 287,50 / 100 000 × 100 = **113,29%** du prix HT\n\n**4.** Bénéfice = 113 287,50 − 80 000 × 1,1925 = 113 287,50 − 95 400 = 17 887,50 FCFA\nTaux bénéfice / coût achat TTC = 17 887,50/95 400 × 100 ≈ **18,75%**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 7,
+      "titre": "Synthèse complète",
+      "type_exercice": "synthese",
+      "niveau": "approfondissement",
+      "bareme": 12,
+      "duree_recommandee": 30,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.** Dans une classe de 45 élèves, 60% sont des filles.\n1. Combien y a-t-il de filles et de garçons ?\n2. Si 3 nouvelles filles arrivent, quel est maintenant le pourcentage de filles ?\n\n**Partie B.** Un terrain vaut 5 000 000 FCFA. Sa valeur augmente de 8% par an pendant 2 ans.\n1. Quelle est sa valeur après la première année ?\n2. Quelle est sa valeur après la deuxième année ?\n3. Quel est le taux global d'augmentation sur les 2 ans ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Partie A.**\n1. Filles = 60% × 45 = 27 ; Garçons = 45 − 27 = 18\n2. Après : 27+3 = 30 filles sur 45+3 = 48 élèves\nPourcentage = 30/48 × 100 = 62,5%\n\n**Partie B.**\n1. Valeur après 1 an = 5 000 000 × 1,08 = **5 400 000 FCFA**\n2. Valeur après 2 ans = 5 400 000 × 1,08 = **5 832 000 FCFA**\n3. Taux global = 1,08² − 1 = 1,1664 − 1 = 0,1664 = **16,64%**\n(Et non 16% = 2×8%, c'est l'effet des intérêts composés)"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}
