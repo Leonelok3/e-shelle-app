@@ -42,15 +42,27 @@ def catalogue(request):
     tri = request.GET.get("tri", "-created_at")
     formations = formations.order_by(tri)
 
+    classes_math = [
+        ("3eme",   "3ème"),
+        ("2nde",   "2nde"),
+        ("1ere_a", "1ère A"),
+        ("1ere_c", "1ère C"),
+        ("1ere_d", "1ère D"),
+        ("tle_a",  "Tle A"),
+        ("tle_c",  "Tle C"),
+        ("tle_d",  "Tle D"),
+    ]
+
     context = {
-        "formations":  formations,
-        "categories":  categories,
-        "cat_slug":    cat_slug,
-        "niveau":      niveau,
-        "langue":      langue,
-        "recherche":   recherche,
-        "niveaux":     Formation.NIVEAUX,
-        "langues":     Formation.LANGUES,
+        "formations":   formations,
+        "categories":   categories,
+        "cat_slug":     cat_slug,
+        "niveau":       niveau,
+        "langue":       langue,
+        "recherche":    recherche,
+        "niveaux":      Formation.NIVEAUX,
+        "langues":      Formation.LANGUES,
+        "classes_math": classes_math,
     }
     return render(request, "formations/catalogue.html", context)
 
