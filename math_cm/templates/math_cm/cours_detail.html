@@ -49,6 +49,37 @@
       <div id="cours-contenu">
         {% if lecon.contenu %}
           {% with c=lecon.contenu %}
+
+          {# ── Structure BLOCS (1ère C et nouveaux chapitres) ── #}
+          {% if c.blocs %}
+            {% for bloc in c.blocs %}
+              {% if bloc.type == 'texte' %}
+              <div class="bloc-definition" style="margin-bottom:1.25rem;white-space:pre-line">{{ bloc.valeur }}</div>
+
+              {% elif bloc.type == 'exemple' %}
+              <div class="bloc-exemple" style="margin-bottom:1.25rem">
+                {% if bloc.titre %}<div style="font-weight:700;margin-bottom:.5rem">📌 {{ bloc.titre }}</div>{% endif %}
+                <div style="white-space:pre-line;font-size:.93rem">{{ bloc.valeur }}</div>
+              </div>
+
+              {% elif bloc.type == 'methode' %}
+              <div class="bloc-methode" style="margin-bottom:1.25rem">
+                {% if bloc.titre %}<div style="font-weight:700;margin-bottom:.5rem">🔧 {{ bloc.titre }}</div>{% endif %}
+                <div style="white-space:pre-line;font-size:.93rem">{{ bloc.valeur }}</div>
+              </div>
+
+              {% elif bloc.type == 'contexte' or bloc.type == 'remarque' %}
+              <div style="font-size:.88rem;color:#FFC107;background:rgba(255,193,7,0.07);border:1px solid rgba(255,193,7,0.2);border-radius:8px;padding:.75rem 1rem;margin-bottom:1.25rem;white-space:pre-line">
+                💡 {% if bloc.titre %}<strong>{{ bloc.titre }}</strong><br>{% endif %}{{ bloc.valeur }}
+              </div>
+
+              {% else %}
+              <div style="line-height:1.7;margin-bottom:1.25rem;white-space:pre-line">{{ bloc.valeur }}</div>
+              {% endif %}
+            {% endfor %}
+
+          {# ── Structure SECTIONS (3ème — ancienne structure) ── #}
+          {% else %}
           {% if c.introduction %}
           <p style="font-size:1rem;color:var(--math-muted);line-height:1.7;margin-bottom:1.5rem">{{ c.introduction }}</p>
           {% endif %}
@@ -106,6 +137,8 @@
             {% endfor %}
           </div>
           {% endif %}
+          {% endif %}{# fin if blocs/sections #}
+
           {% endwith %}
         {% else %}
         <div style="color:var(--math-muted);text-align:center;padding:3rem">Contenu en cours de génération…</div>
