@@ -1,0 +1,853 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "3eme-1-ensembles-et-applications",
+  "chapitre_titre": "Ensembles et applications",
+  "classe": "Troisième",
+  "programme": "MINESEC Cameroun",
+  "categorie": "logique",
+  "difficulte": 2,
+  "objectifs": [
+    "Comprendre la notion d'ensemble et ses notations",
+    "Maîtriser les opérations sur les ensembles (union, intersection, complémentaire)",
+    "Connaître les sous-ensembles et les diagrammes de Venn",
+    "Comprendre la notion d'application entre deux ensembles",
+    "Distinguer injection, surjection et bijection"
+  ],
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Notion d'ensemble et éléments",
+      "type_lecon": "definition",
+      "duree_lecture": 20,
+      "is_free": true,
+      "contenu": {
+        "introduction": "Dans la vie quotidienne, nous regroupons constamment des objets selon leurs propriétés communes : la liste des élèves d'une classe, les fruits du marché de Mokolo, les nombres pairs... En mathématiques, ce regroupement s'appelle un ENSEMBLE. Maîtriser les ensembles, c'est poser les bases de toute la logique mathématique.",
+        "sections": [
+          {
+            "titre": "I. Définition d'un ensemble",
+            "type": "definition",
+            "contenu": "Un ensemble est une collection bien définie d'objets appelés éléments. 'Bien définie' signifie que pour tout objet, on peut décider sans ambiguïté s'il appartient ou non à la collection. On note généralement les ensembles par des lettres majuscules (E, A, B, F...) et les éléments par des lettres minuscules (a, b, x, y...).",
+            "formules": [
+              "E = {a, b, c, d} — notation en extension (on liste tous les éléments)",
+              "E = {x | propriété de x} — notation en compréhension (on décrit la propriété)",
+              "x ∈ E signifie : x appartient à E",
+              "x ∉ E signifie : x n'appartient pas à E"
+            ],
+            "exemples": [
+              {
+                "enonce": "Soit E l'ensemble des chiffres. Écrire E en extension.",
+                "solution": "E = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}",
+                "etapes": [
+                  "Les chiffres sont les symboles de base de notre système de numération",
+                  "Il y en a exactement 10, de 0 à 9",
+                  "On les liste entre accolades { } séparés par des virgules",
+                  "E = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}"
+                ]
+              },
+              {
+                "enonce": "Soit A = {2, 4, 6, 8, 10}. Dire si 6 ∈ A et si 7 ∈ A.",
+                "solution": "6 ∈ A (vrai) et 7 ∉ A (faux)",
+                "etapes": [
+                  "On cherche 6 dans la liste : {2, 4, 6, 8, 10} → 6 est présent donc 6 ∈ A ✓",
+                  "On cherche 7 dans la liste : {2, 4, 6, 8, 10} → 7 est absent donc 7 ∉ A ✓"
+                ]
+              },
+              {
+                "enonce": "Écrire en compréhension : B = {2, 4, 6, 8, 10}",
+                "solution": "B = {x ∈ ℕ | x est pair et 2 ≤ x ≤ 10}",
+                "etapes": [
+                  "On observe que tous les éléments sont des entiers naturels",
+                  "On observe qu'ils sont tous pairs (divisibles par 2)",
+                  "Le plus petit est 2, le plus grand est 10",
+                  "On écrit la propriété : x ∈ ℕ, x pair, 2 ≤ x ≤ 10"
+                ]
+              }
+            ],
+            "remarques": [
+              "L'ensemble vide {} ou ∅ est un ensemble qui ne contient aucun élément. Ex: ensemble des élèves de 3ème qui ont plus de 30 ans.",
+              "L'ordre des éléments n'a pas d'importance : {1,2,3} = {3,1,2} = {2,3,1}",
+              "On ne répète pas un élément dans un ensemble : {1,1,2} est incorrect, on écrit {1,2}"
+            ]
+          },
+          {
+            "titre": "II. Cardinalité d'un ensemble",
+            "type": "definition",
+            "contenu": "Le cardinal (ou cardinalité) d'un ensemble E, noté Card(E) ou |E| ou n(E), est le nombre d'éléments distincts que contient cet ensemble. Un ensemble est dit fini si son cardinal est un entier naturel. Il est infini si on ne peut pas compter ses éléments.",
+            "formules": [
+              "Card(E) = nombre d'éléments de E",
+              "Card(∅) = 0",
+              "Si E = {a, b, c, d, e} alors Card(E) = 5"
+            ],
+            "exemples": [
+              {
+                "enonce": "Calculer le cardinal de A = {voyelles de l'alphabet français}",
+                "solution": "A = {a, e, i, o, u, y} donc Card(A) = 6",
+                "etapes": [
+                  "On identifie les voyelles : a, e, i, o, u, y",
+                  "On compte : 6 voyelles",
+                  "Card(A) = 6"
+                ]
+              },
+              {
+                "enonce": "Calculer Card(B) si B = {entiers naturels} = {0, 1, 2, 3, ...}",
+                "solution": "B est infini : Card(B) est infini (on note Card(B) = +∞)",
+                "etapes": [
+                  "Les entiers naturels ne s'arrêtent jamais : 0, 1, 2, 3, ...",
+                  "On ne peut pas compter jusqu'au bout",
+                  "B est un ensemble infini"
+                ]
+              }
+            ],
+            "remarques": [
+              "ℕ (entiers naturels), ℤ (entiers relatifs), ℚ (rationnels), ℝ (réels) sont tous des ensembles infinis",
+              "Dans les problèmes du BEPC, on travaille souvent avec des ensembles finis dont on doit calculer le cardinal"
+            ]
+          },
+          {
+            "titre": "III. Sous-ensembles (parties d'un ensemble)",
+            "type": "definition",
+            "contenu": "A est un sous-ensemble de E (ou une partie de E), noté A ⊂ E, si tout élément de A est aussi un élément de E. On dit que A est inclus dans E. L'ensemble de toutes les parties de E est noté 𝒫(E) ou P(E).",
+            "formules": [
+              "A ⊂ E signifie : tout x ∈ A implique x ∈ E",
+              "A ⊄ E signifie : A n'est pas inclus dans E",
+              "∅ ⊂ E pour tout ensemble E (l'ensemble vide est inclus dans tout ensemble)",
+              "E ⊂ E (tout ensemble est inclus dans lui-même)",
+              "Si Card(E) = n alors E possède 2ⁿ parties"
+            ],
+            "exemples": [
+              {
+                "enonce": "Soit E = {1, 2, 3, 4, 5} et A = {2, 4}. Est-ce que A ⊂ E ?",
+                "solution": "Oui, A ⊂ E car 2 ∈ E et 4 ∈ E.",
+                "etapes": [
+                  "On vérifie chaque élément de A dans E",
+                  "2 ∈ E ? → Oui, 2 est dans {1,2,3,4,5} ✓",
+                  "4 ∈ E ? → Oui, 4 est dans {1,2,3,4,5} ✓",
+                  "Tous les éléments de A sont dans E, donc A ⊂ E"
+                ]
+              },
+              {
+                "enonce": "Soit E = {a, b, c}. Lister toutes les parties de E.",
+                "solution": "P(E) = {∅, {a}, {b}, {c}, {a,b}, {a,c}, {b,c}, {a,b,c}} → 2³ = 8 parties",
+                "etapes": [
+                  "Card(E) = 3, donc E a 2³ = 8 parties",
+                  "Partie à 0 élément : ∅",
+                  "Parties à 1 élément : {a}, {b}, {c}",
+                  "Parties à 2 éléments : {a,b}, {a,c}, {b,c}",
+                  "Partie à 3 éléments : {a,b,c}",
+                  "Total : 8 parties ✓"
+                ]
+              }
+            ],
+            "remarques": [
+              "Attention à la différence entre ∈ (appartenance) et ⊂ (inclusion) : 2 ∈ {1,2,3} mais {2} ⊂ {1,2,3}",
+              "L'ensemble vide ∅ est inclus dans TOUT ensemble, même dans ∅ lui-même",
+              "Ne pas confondre 'partie' et 'élément' : {a} est une partie de {a,b,c} mais a est un élément de {a,b,c}"
+            ]
+          }
+        ],
+        "retenir": [
+          "Un ensemble est une collection BIEN DÉFINIE d'objets appelés éléments",
+          "x ∈ E (x appartient à E) et A ⊂ E (A est inclus dans E) sont deux notions différentes",
+          "Card(∅) = 0 et un ensemble de n éléments a exactement 2ⁿ parties",
+          "L'ensemble vide ∅ est inclus dans tout ensemble"
+        ],
+        "mots_cles": ["ensemble", "élément", "appartenance", "inclusion", "cardinal", "partie", "ensemble vide"]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Opérations sur les ensembles",
+      "type_lecon": "methode",
+      "duree_lecture": 25,
+      "is_free": false,
+      "contenu": {
+        "introduction": "Comme on effectue des opérations sur les nombres (addition, soustraction...), on peut effectuer des opérations sur les ensembles. Ces opérations permettent de construire de nouveaux ensembles à partir d'ensembles existants. Les diagrammes de Venn sont l'outil visuel indispensable pour comprendre ces opérations.",
+        "sections": [
+          {
+            "titre": "I. Intersection de deux ensembles",
+            "type": "definition",
+            "contenu": "L'intersection de deux ensembles A et B, notée A ∩ B, est l'ensemble des éléments qui appartiennent à la fois à A ET à B.",
+            "formules": [
+              "A ∩ B = {x | x ∈ A et x ∈ B}",
+              "x ∈ A ∩ B ⟺ (x ∈ A et x ∈ B)",
+              "Si A ∩ B = ∅, on dit que A et B sont disjoints"
+            ],
+            "exemples": [
+              {
+                "enonce": "Soit A = {1, 2, 3, 4, 5} et B = {2, 4, 6, 8}. Calculer A ∩ B.",
+                "solution": "A ∩ B = {2, 4}",
+                "etapes": [
+                  "On cherche les éléments communs à A et B",
+                  "1 ∈ A mais 1 ∉ B → non",
+                  "2 ∈ A et 2 ∈ B → oui ✓",
+                  "3 ∈ A mais 3 ∉ B → non",
+                  "4 ∈ A et 4 ∈ B → oui ✓",
+                  "5 ∈ A mais 5 ∉ B → non",
+                  "A ∩ B = {2, 4}"
+                ]
+              },
+              {
+                "enonce": "Dans une classe de 40 élèves, 25 aiment le football (F) et 18 aiment le basketball (B), 10 aiment les deux sports. Calculer Card(F ∩ B).",
+                "solution": "Card(F ∩ B) = 10",
+                "etapes": [
+                  "F ∩ B = ensemble des élèves qui aiment les DEUX sports",
+                  "On nous dit directement que 10 élèves aiment les deux",
+                  "Card(F ∩ B) = 10"
+                ]
+              }
+            ],
+            "remarques": [
+              "A ∩ B = B ∩ A (la propriété commutative est vraie pour l'intersection)",
+              "A ∩ A = A et A ∩ ∅ = ∅"
+            ]
+          },
+          {
+            "titre": "II. Réunion (union) de deux ensembles",
+            "type": "definition",
+            "contenu": "La réunion (ou union) de deux ensembles A et B, notée A ∪ B, est l'ensemble des éléments qui appartiennent à A OU à B (ou aux deux).",
+            "formules": [
+              "A ∪ B = {x | x ∈ A ou x ∈ B}",
+              "x ∈ A ∪ B ⟺ (x ∈ A ou x ∈ B)",
+              "Card(A ∪ B) = Card(A) + Card(B) − Card(A ∩ B)"
+            ],
+            "exemples": [
+              {
+                "enonce": "Soit A = {1, 2, 3} et B = {3, 4, 5}. Calculer A ∪ B.",
+                "solution": "A ∪ B = {1, 2, 3, 4, 5}",
+                "etapes": [
+                  "On regroupe TOUS les éléments de A et B sans répétition",
+                  "De A : 1, 2, 3",
+                  "De B : 3 (déjà présent), 4, 5",
+                  "A ∪ B = {1, 2, 3, 4, 5}"
+                ]
+              },
+              {
+                "enonce": "Dans une classe de 40 élèves : 25 aiment le foot (F), 18 aiment le basket (B), 10 aiment les deux. Combien d'élèves aiment au moins un sport ?",
+                "solution": "Card(F ∪ B) = 25 + 18 − 10 = 33 élèves",
+                "etapes": [
+                  "On applique la formule : Card(A ∪ B) = Card(A) + Card(B) − Card(A ∩ B)",
+                  "Card(F) = 25, Card(B) = 18, Card(F ∩ B) = 10",
+                  "Card(F ∪ B) = 25 + 18 − 10 = 33",
+                  "33 élèves aiment au moins un sport"
+                ]
+              }
+            ],
+            "remarques": [
+              "On soustrait Card(A ∩ B) pour ne pas compter deux fois les éléments communs",
+              "A ∪ B = B ∪ A (commutativité)",
+              "A ∪ A = A et A ∪ ∅ = A"
+            ]
+          },
+          {
+            "titre": "III. Complémentaire d'un ensemble",
+            "type": "definition",
+            "contenu": "Si A est un sous-ensemble d'un ensemble de référence E (appelé ensemble universel), le complémentaire de A dans E, noté Ā ou Aᶜ ou ∁ₑA, est l'ensemble des éléments de E qui n'appartiennent PAS à A.",
+            "formules": [
+              "Ā = ∁ₑA = {x ∈ E | x ∉ A}",
+              "Card(Ā) = Card(E) − Card(A)",
+              "A ∪ Ā = E",
+              "A ∩ Ā = ∅"
+            ],
+            "exemples": [
+              {
+                "enonce": "E = {1,2,3,4,5,6,7,8,9,10} et A = {2,4,6,8,10}. Calculer Ā.",
+                "solution": "Ā = {1, 3, 5, 7, 9}",
+                "etapes": [
+                  "On garde tous les éléments de E qui ne sont PAS dans A",
+                  "1 ∉ A → dans Ā ✓",
+                  "2 ∈ A → pas dans Ā",
+                  "3 ∉ A → dans Ā ✓",
+                  "... et ainsi de suite",
+                  "Ā = {1, 3, 5, 7, 9}"
+                ]
+              },
+              {
+                "enonce": "Dans une classe de 50 élèves, 32 ont réussi l'examen. Combien ont échoué ?",
+                "solution": "Card(Ā) = 50 − 32 = 18 élèves ont échoué",
+                "etapes": [
+                  "E = ensemble de tous les élèves, Card(E) = 50",
+                  "A = ensemble des réussites, Card(A) = 32",
+                  "Ā = ensemble des échecs",
+                  "Card(Ā) = Card(E) − Card(A) = 50 − 32 = 18"
+                ]
+              }
+            ],
+            "remarques": [
+              "Le complémentaire dépend toujours de l'ensemble de référence E",
+              "Le complémentaire du complémentaire redonne l'ensemble : (Ā)̄ = A",
+              "Lois de De Morgan : (A ∪ B)̄ = Ā ∩ B̄ et (A ∩ B)̄ = Ā ∪ B̄"
+            ]
+          },
+          {
+            "titre": "IV. Diagrammes de Venn",
+            "type": "methode",
+            "contenu": "Un diagramme de Venn est une représentation graphique des ensembles. L'ensemble universel E est représenté par un rectangle. Chaque ensemble est représenté par un cercle ou une ellipse à l'intérieur du rectangle. Les zones du diagramme représentent les différentes combinaisons possibles.",
+            "formules": [
+              "Zone A seul : A ∩ B̄ (dans A mais pas dans B)",
+              "Zone centrale : A ∩ B (dans A et dans B)",
+              "Zone B seul : Ā ∩ B (dans B mais pas dans A)",
+              "Zone extérieure : Ā ∩ B̄ (ni dans A ni dans B)"
+            ],
+            "exemples": [
+              {
+                "enonce": "Dans une classe de 35 élèves : 20 font du sport (S), 15 font de la musique (M), 8 font les deux. Représenter par un diagramme de Venn et calculer le nombre d'élèves qui ne font ni sport ni musique.",
+                "solution": "Ni sport ni musique = 35 − (20 + 15 − 8) = 35 − 27 = 8 élèves",
+                "etapes": [
+                  "Zone S seulement : Card(S) − Card(S ∩ M) = 20 − 8 = 12",
+                  "Zone centrale (S ∩ M) : 8",
+                  "Zone M seulement : Card(M) − Card(S ∩ M) = 15 − 8 = 7",
+                  "Total dans les cercles : 12 + 8 + 7 = 27",
+                  "Ni sport ni musique : 35 − 27 = 8 élèves"
+                ]
+              }
+            ],
+            "remarques": [
+              "Le diagramme de Venn est très utile pour les problèmes de dénombrement au BEPC",
+              "Toujours commencer par la zone centrale (intersection) quand on remplit un diagramme"
+            ]
+          }
+        ],
+        "retenir": [
+          "A ∩ B : éléments communs (ET) — A ∪ B : tous les éléments (OU)",
+          "Formule clé BEPC : Card(A ∪ B) = Card(A) + Card(B) − Card(A ∩ B)",
+          "Complémentaire : Card(Ā) = Card(E) − Card(A)",
+          "Dans un diagramme de Venn, commencer par remplir la zone centrale"
+        ],
+        "mots_cles": ["intersection", "union", "réunion", "complémentaire", "diagramme de Venn", "ensemble disjoint"]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Applications entre ensembles",
+      "type_lecon": "definition",
+      "duree_lecture": 25,
+      "is_free": false,
+      "contenu": {
+        "introduction": "Après avoir étudié les ensembles, nous allons voir comment relier deux ensembles entre eux. En mathématiques, une application (ou fonction) est une règle qui associe à chaque élément d'un ensemble E exactement un élément d'un ensemble F. Cette notion est fondamentale car elle est à la base de toutes les fonctions que vous étudierez jusqu'au Baccalauréat.",
+        "sections": [
+          {
+            "titre": "I. Définition d'une application",
+            "type": "definition",
+            "contenu": "Une application f de E vers F (notée f : E → F) est une règle qui associe à CHAQUE élément x de E un UNIQUE élément y de F. On écrit y = f(x), et on dit que y est l'image de x par f, et que x est un antécédent de y par f. E est appelé l'ensemble de départ (ou domaine) et F l'ensemble d'arrivée (ou codomaine).",
+            "formules": [
+              "f : E → F",
+              "x ↦ f(x) = y",
+              "y = f(x) : y est l'image de x",
+              "x est un antécédent de y si f(x) = y"
+            ],
+            "exemples": [
+              {
+                "enonce": "Soit E = {1, 2, 3} et F = {a, b, c, d}. f est définie par f(1) = a, f(2) = c, f(3) = a. Est-ce une application ?",
+                "solution": "Oui, c'est une application : chaque élément de E a exactement une image dans F.",
+                "etapes": [
+                  "On vérifie que chaque élément de E a une image : f(1) = a ✓, f(2) = c ✓, f(3) = a ✓",
+                  "On vérifie que chaque image est unique (un seul résultat par élément de départ) ✓",
+                  "Remarque : b et d de F n'ont pas d'antécédent, c'est autorisé",
+                  "Remarque : a a deux antécédents (1 et 3), c'est autorisé",
+                  "Conclusion : c'est bien une application"
+                ]
+              },
+              {
+                "enonce": "La règle g : E → F définie par g(1) = a, g(1) = b, g(2) = c, g(3) = d est-elle une application ?",
+                "solution": "Non ! g(1) a deux images différentes (a et b), ce qui viole la définition d'une application.",
+                "etapes": [
+                  "On vérifie l'unicité de l'image pour chaque élément",
+                  "g(1) = a ET g(1) = b → l'élément 1 a deux images différentes ✗",
+                  "Cela viole la condition 'un UNIQUE élément'",
+                  "Conclusion : g n'est PAS une application"
+                ]
+              }
+            ],
+            "remarques": [
+              "Tout élément de E DOIT avoir une image (sinon ce n'est pas une application)",
+              "Un élément de E ne peut avoir qu'UNE SEULE image",
+              "Un élément de F peut avoir 0, 1 ou plusieurs antécédents : c'est autorisé",
+              "On représente une application par un tableau de correspondance ou un graphe sagittal"
+            ]
+          },
+          {
+            "titre": "II. Image et antécédent",
+            "type": "methode",
+            "contenu": "Pour une application f : E → F, l'image d'un élément x de E est l'élément f(x) de F. L'ensemble image de f, noté f(E) ou Im(f), est l'ensemble de toutes les images des éléments de E. Un antécédent de y est tout x ∈ E tel que f(x) = y.",
+            "formules": [
+              "Image de x : f(x)",
+              "Im(f) = f(E) = {f(x) | x ∈ E}",
+              "Antécédent de y : tout x tel que f(x) = y",
+              "Im(f) ⊂ F (l'ensemble image est inclus dans l'ensemble d'arrivée)"
+            ],
+            "exemples": [
+              {
+                "enonce": "f : ℝ → ℝ définie par f(x) = 2x + 1. Calculer : a) f(3)   b) f(−2)   c) l'antécédent de 7",
+                "solution": "a) f(3) = 7  b) f(−2) = −3  c) x = 3",
+                "etapes": [
+                  "a) f(3) = 2×3 + 1 = 6 + 1 = 7",
+                  "b) f(−2) = 2×(−2) + 1 = −4 + 1 = −3",
+                  "c) On cherche x tel que f(x) = 7 : 2x + 1 = 7 → 2x = 6 → x = 3",
+                  "Vérification : f(3) = 2×3 + 1 = 7 ✓"
+                ]
+              }
+            ],
+            "remarques": [
+              "Pour trouver l'image : on remplace x par la valeur donnée et on calcule",
+              "Pour trouver l'antécédent : on pose f(x) = valeur donnée et on résout l'équation",
+              "Un antécédent peut ne pas exister ou il peut en exister plusieurs"
+            ]
+          },
+          {
+            "titre": "III. Types d'applications",
+            "type": "theoreme",
+            "contenu": "Il existe trois types importants d'applications selon les propriétés des images et antécédents.",
+            "formules": [
+              "Injection : tout élément de F a AU PLUS un antécédent (f préserve la distinction)",
+              "Surjection : tout élément de F a AU MOINS un antécédent (Im(f) = F)",
+              "Bijection : tout élément de F a EXACTEMENT un antécédent (injection + surjection)"
+            ],
+            "exemples": [
+              {
+                "enonce": "E = {1,2,3}, F = {a,b,c,d}. f : f(1)=a, f(2)=b, f(3)=c. Quel type d'application ?",
+                "solution": "f est injective mais pas surjective (d n'a pas d'antécédent).",
+                "etapes": [
+                  "Injection ? Chaque élément de F a au plus 1 antécédent : a←1, b←2, c←3, d←rien ✓ → injective",
+                  "Surjection ? Tout élément de F doit avoir un antécédent : d n'en a pas ✗ → pas surjective",
+                  "Bijection ? Non, car pas surjective",
+                  "Conclusion : f est injective seulement"
+                ]
+              },
+              {
+                "enonce": "E = {1,2,3}, F = {a,b}. g : g(1)=a, g(2)=b, g(3)=a. Quel type ?",
+                "solution": "g est surjective mais pas injective (a a deux antécédents : 1 et 3).",
+                "etapes": [
+                  "Injection ? a a deux antécédents (1 et 3) ✗ → pas injective",
+                  "Surjection ? a a l'antécédent 1 ✓, b a l'antécédent 2 ✓ → surjective",
+                  "Bijection ? Non, car pas injective",
+                  "Conclusion : g est surjective seulement"
+                ]
+              }
+            ],
+            "remarques": [
+              "Une bijection existe entre E et F seulement si Card(E) = Card(F)",
+              "Pour une bijection, on peut définir la fonction réciproque f⁻¹",
+              "Au niveau 3ème, l'essentiel est de comprendre injection et surjection"
+            ]
+          }
+        ],
+        "retenir": [
+          "Application f : E → F → chaque élément de E a UNE et UNE SEULE image dans F",
+          "Image de x : f(x) / Antécédent de y : x tel que f(x) = y",
+          "Injection : au plus 1 antécédent par élément de F",
+          "Surjection : au moins 1 antécédent / Bijection : exactement 1 antécédent"
+        ],
+        "mots_cles": ["application", "fonction", "image", "antécédent", "ensemble de départ", "ensemble d'arrivée", "injection", "surjection", "bijection"]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Récapitulatif et méthodes BEPC",
+      "type_lecon": "recapitulatif",
+      "duree_lecture": 20,
+      "is_free": false,
+      "contenu": {
+        "introduction": "Ce chapitre 'Ensembles et applications' est l'un des plus importants du programme de 3ème car ses résultats sont utilisés dans toutes les autres parties des mathématiques. Voici un récapitulatif complet des notions et méthodes que tu dois maîtriser pour le BEPC.",
+        "sections": [
+          {
+            "titre": "I. Tableau récapitulatif des notations",
+            "type": "texte",
+            "contenu": "Toutes les notations essentielles du chapitre classées et expliquées.",
+            "formules": [
+              "∈ : appartient à | ∉ : n'appartient pas à",
+              "⊂ : est inclus dans | ⊄ : n'est pas inclus dans",
+              "∩ : intersection (ET) | ∪ : union (OU)",
+              "Ā ou Aᶜ : complémentaire de A",
+              "∅ : ensemble vide | Card(E) : cardinal de E",
+              "f : E → F : application de E vers F",
+              "f(x) : image de x | f⁻¹(y) : antécédent de y"
+            ],
+            "exemples": [],
+            "remarques": [
+              "Ces notations sont directement utilisées dans les sujets de BEPC",
+              "Apprendre à les lire et les écrire correctement est indispensable"
+            ]
+          },
+          {
+            "titre": "II. Méthode type BEPC — Problème de dénombrement",
+            "type": "methode",
+            "contenu": "Les problèmes de dénombrement avec diagramme de Venn sont très fréquents au BEPC. Voici la méthode en 5 étapes.",
+            "formules": [
+              "Étape 1 : Identifier E (ensemble universel) et son cardinal",
+              "Étape 2 : Identifier A, B et Card(A ∩ B)",
+              "Étape 3 : Remplir le diagramme en commençant par la zone centrale",
+              "Étape 4 : Appliquer Card(A ∪ B) = Card(A) + Card(B) − Card(A ∩ B)",
+              "Étape 5 : Calculer les zones restantes"
+            ],
+            "exemples": [
+              {
+                "enonce": "Dans un village de 200 habitants : 120 cultivent du maïs (M), 80 cultivent du manioc (N), 40 cultivent les deux. Combien ne cultivent ni maïs ni manioc ?",
+                "solution": "200 − (120 + 80 − 40) = 200 − 160 = 40 habitants",
+                "etapes": [
+                  "E = habitants du village, Card(E) = 200",
+                  "Card(M) = 120, Card(N) = 80, Card(M ∩ N) = 40",
+                  "Zone M seulement : 120 − 40 = 80",
+                  "Zone centrale (M ∩ N) : 40",
+                  "Zone N seulement : 80 − 40 = 40",
+                  "Card(M ∪ N) = 80 + 40 + 40 = 160",
+                  "Ni maïs ni manioc : 200 − 160 = 40 habitants"
+                ]
+              }
+            ],
+            "remarques": [
+              "Ce type d'exercice rapporte souvent 4 à 6 points au BEPC",
+              "Toujours dessiner le diagramme de Venn même si ce n'est pas demandé",
+              "Vérifier que la somme de toutes les zones = Card(E)"
+            ]
+          },
+          {
+            "titre": "III. Erreurs fréquentes à éviter",
+            "type": "remarque",
+            "contenu": "Liste des erreurs les plus courantes dans ce chapitre.",
+            "formules": [],
+            "exemples": [],
+            "remarques": [
+              "ERREUR 1 : Confondre ∈ et ⊂ → 2 ∈ {1,2,3} (appartenance) ≠ {2} ⊂ {1,2,3} (inclusion)",
+              "ERREUR 2 : Oublier de soustraire l'intersection dans Card(A ∪ B)",
+              "ERREUR 3 : Répéter un élément dans la liste d'un ensemble",
+              "ERREUR 4 : Croire que A ∩ B = ∅ signifie que A ou B est vide",
+              "ERREUR 5 : Pour une application, associer plusieurs images à un même élément de départ",
+              "ERREUR 6 : Confondre 'image' et 'antécédent' — l'image est dans F, l'antécédent est dans E"
+            ]
+          }
+        ],
+        "retenir": [
+          "Maîtriser toutes les notations : ∈, ⊂, ∩, ∪, Ā, ∅, Card, f, f(x)",
+          "Formule clé : Card(A ∪ B) = Card(A) + Card(B) − Card(A ∩ B)",
+          "Méthode diagramme de Venn : toujours commencer par la zone centrale",
+          "Application : 1 élément de E → 1 et 1 seule image dans F"
+        ],
+        "mots_cles": ["BEPC", "dénombrement", "diagramme de Venn", "révision", "méthode"]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Appartenance et inclusion",
+      "type_exercice": "application",
+      "niveau": "decouverte",
+      "bareme": 4,
+      "duree_recommandee": 10,
+      "enonce": {
+        "texte": "Soit E = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, A = {0, 2, 4, 6, 8} et B = {0, 3, 6, 9}.",
+        "donnees": ["E = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}", "A = {0, 2, 4, 6, 8}", "B = {0, 3, 6, 9}"],
+        "questions": [
+          {"numero": "1", "texte": "Préciser si chaque assertion est vraie ou fausse : a) 4 ∈ A   b) 3 ∈ A   c) 6 ∈ B   d) {0,6} ⊂ B", "points": 2},
+          {"numero": "2", "texte": "Calculer Card(A) et Card(B)", "points": 1},
+          {"numero": "3", "texte": "A est-il un sous-ensemble de E ? Justifier.", "points": 1}
+        ]
+      },
+      "correction": {
+        "methode": "On vérifie l'appartenance en cherchant chaque élément dans la liste. On vérifie l'inclusion en vérifiant chaque élément du sous-ensemble.",
+        "etapes": [
+          {"numero": 1, "texte": "a) 4 ∈ A : VRAI (4 est dans {0,2,4,6,8})", "justification": "4 figure dans la liste de A"},
+          {"numero": 2, "texte": "b) 3 ∈ A : FAUX (3 n'est pas dans {0,2,4,6,8})", "justification": "A contient uniquement les chiffres pairs"},
+          {"numero": 3, "texte": "c) 6 ∈ B : VRAI (6 est dans {0,3,6,9})", "justification": "6 figure dans la liste de B"},
+          {"numero": 4, "texte": "d) {0,6} ⊂ B : VRAI car 0 ∈ B et 6 ∈ B", "justification": "Les deux éléments de {0,6} sont dans B"},
+          {"numero": 5, "texte": "Card(A) = 5 et Card(B) = 4", "justification": "On compte les éléments de chaque ensemble"},
+          {"numero": 6, "texte": "A ⊂ E : OUI car tout élément de A (0,2,4,6,8) est dans E", "justification": "E contient tous les chiffres de 0 à 9"}
+        ],
+        "reponses": {"1a": "VRAI", "1b": "FAUX", "1c": "VRAI", "1d": "VRAI", "2": "Card(A)=5, Card(B)=4", "3": "Oui, A ⊂ E"},
+        "piege": "Ne pas confondre {0,6} ⊂ B (inclusion) avec 0,6 ∈ B (appartenance). {0,6} est un ensemble de 2 éléments.",
+        "points_total": 4
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Opérations sur les ensembles",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 15,
+      "enonce": {
+        "texte": "Soit E = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, A = {1, 3, 5, 7, 9} et B = {2, 3, 5, 7}.",
+        "donnees": ["E = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}", "A = {nombres impairs de E}", "B = {2, 3, 5, 7}"],
+        "questions": [
+          {"numero": "1", "texte": "Calculer A ∩ B", "points": 1},
+          {"numero": "2", "texte": "Calculer A ∪ B", "points": 1},
+          {"numero": "3", "texte": "Calculer Ā (complémentaire de A dans E)", "points": 1},
+          {"numero": "4", "texte": "Vérifier la formule : Card(A ∪ B) = Card(A) + Card(B) − Card(A ∩ B)", "points": 2},
+          {"numero": "5", "texte": "Calculer Card(Ā ∩ B̄)", "points": 1}
+        ]
+      },
+      "correction": {
+        "methode": "On procède opération par opération en listant d'abord les éléments communs (intersection) puis tous les éléments (union).",
+        "etapes": [
+          {"numero": 1, "texte": "A ∩ B = {3, 5, 7}", "justification": "Éléments présents dans A ET dans B"},
+          {"numero": 2, "texte": "A ∪ B = {1, 2, 3, 5, 7, 9}", "justification": "Tous les éléments de A et B sans répétition"},
+          {"numero": 3, "texte": "Ā = {2, 4, 6, 8, 10}", "justification": "Éléments de E qui ne sont pas dans A (nombres pairs)"},
+          {"numero": 4, "texte": "Card(A)=5, Card(B)=4, Card(A∩B)=3, Card(A∪B)=6. Vérif: 5+4−3=6 ✓", "justification": "Application de la formule d'addition"},
+          {"numero": 5, "texte": "Ā ∩ B̄ = {4, 6, 8, 10} ∩ {1, 4, 6, 8, 9, 10} = {4, 6, 8, 10}", "justification": "Par les lois de De Morgan, Ā ∩ B̄ = (A ∪ B)̄ = éléments ni dans A ni dans B"}
+        ],
+        "reponses": {
+          "1": "{3, 5, 7}",
+          "2": "{1, 2, 3, 5, 7, 9}",
+          "3": "{2, 4, 6, 8, 10}",
+          "4": "5 + 4 − 3 = 6 ✓",
+          "5": "{4, 6, 8, 10}"
+        },
+        "piege": "Pour A ∪ B, ne pas répéter les éléments communs. {3,5,7} apparaissent dans A ET B mais on les note une seule fois dans A ∪ B.",
+        "points_total": 6
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "QCM — Notions fondamentales",
+      "type_exercice": "qcm",
+      "niveau": "decouverte",
+      "bareme": 5,
+      "duree_recommandee": 10,
+      "enonce": {
+        "texte": "Pour chaque question, choisir la bonne réponse.",
+        "donnees": [],
+        "questions": [
+          {"numero": "1", "texte": "Si E = {a, b, c, d, e}, combien E a-t-il de parties ?", "points": 1},
+          {"numero": "2", "texte": "Si A = {2,4,6} et B = {1,3,5}, alors A ∩ B vaut :", "points": 1},
+          {"numero": "3", "texte": "Card(A ∪ B) si Card(A)=8, Card(B)=6 et Card(A∩B)=3 vaut :", "points": 1},
+          {"numero": "4", "texte": "Laquelle de ces assertions est VRAIE si E={1,2,3} et A={1,2} ?", "points": 1},
+          {"numero": "5", "texte": "Une application f : E → F associe à chaque élément de E :", "points": 1}
+        ]
+      },
+      "correction": {
+        "methode": "Appliquer les définitions et formules du cours.",
+        "etapes": [
+          {"numero": 1, "texte": "Card(E) = 5 donc 2⁵ = 32 parties", "justification": "Formule : 2^n parties"},
+          {"numero": 2, "texte": "A ∩ B = ∅ car A et B sont disjoints (pairs vs impairs)", "justification": "Aucun élément commun"},
+          {"numero": 3, "texte": "Card(A∪B) = 8 + 6 − 3 = 11", "justification": "Formule d'addition des cardinaux"},
+          {"numero": 4, "texte": "A ⊂ E est VRAIE (1 et 2 sont dans E)", "justification": "Tout élément de A est dans E"},
+          {"numero": 5, "texte": "Exactement UNE image dans F", "justification": "Définition d'une application"}
+        ],
+        "reponses": {"1": "B (32)", "2": "A (∅)", "3": "C (11)", "4": "B (A ⊂ E)", "5": "B (une unique image)"},
+        "piege": "Question 1 : ne pas confondre Card(E)=5 éléments et 2⁵=32 parties.",
+        "points_total": 5
+      },
+      "options_qcm": [
+        [
+          {"label": "A", "texte": "16 parties", "correct": false},
+          {"label": "B", "texte": "32 parties", "correct": true},
+          {"label": "C", "texte": "10 parties", "correct": false},
+          {"label": "D", "texte": "5 parties", "correct": false}
+        ],
+        [
+          {"label": "A", "texte": "∅", "correct": true},
+          {"label": "B", "texte": "{2,4,6,1,3,5}", "correct": false},
+          {"label": "C", "texte": "{1,2,3,4,5,6}", "correct": false},
+          {"label": "D", "texte": "{3,5}", "correct": false}
+        ],
+        [
+          {"label": "A", "texte": "14", "correct": false},
+          {"label": "B", "texte": "17", "correct": false},
+          {"label": "C", "texte": "11", "correct": true},
+          {"label": "D", "texte": "3", "correct": false}
+        ],
+        [
+          {"label": "A", "texte": "3 ∈ A", "correct": false},
+          {"label": "B", "texte": "A ⊂ E", "correct": true},
+          {"label": "C", "texte": "E ⊂ A", "correct": false},
+          {"label": "D", "texte": "Card(A) = 3", "correct": false}
+        ],
+        [
+          {"label": "A", "texte": "Au moins une image dans F", "correct": false},
+          {"label": "B", "texte": "Exactement une image dans F", "correct": true},
+          {"label": "C", "texte": "Au plus une image dans F", "correct": false},
+          {"label": "D", "texte": "Aucune image obligatoire", "correct": false}
+        ]
+      ]
+    },
+    {
+      "numero": 4,
+      "titre": "Problème de dénombrement — Style BEPC",
+      "type_exercice": "probleme",
+      "niveau": "entrainement",
+      "bareme": 8,
+      "duree_recommandee": 25,
+      "enonce": {
+        "texte": "Dans un marché de Yaoundé, on interroge 100 commerçants sur leurs activités. On obtient les résultats suivants : 60 vendent des légumes (L), 45 vendent des fruits (F), 20 vendent les deux.",
+        "donnees": [
+          "Nombre total de commerçants : 100",
+          "Commerçants vendant des légumes : 60",
+          "Commerçants vendant des fruits : 45",
+          "Commerçants vendant les deux : 20"
+        ],
+        "questions": [
+          {"numero": "1", "texte": "Représenter cette situation par un diagramme de Venn.", "points": 2},
+          {"numero": "2", "texte": "Combien de commerçants vendent des légumes uniquement ?", "points": 1},
+          {"numero": "3", "texte": "Combien de commerçants vendent des fruits uniquement ?", "points": 1},
+          {"numero": "4", "texte": "Combien de commerçants vendent au moins un des deux produits ?", "points": 2},
+          {"numero": "5", "texte": "Combien de commerçants ne vendent ni légumes ni fruits ?", "points": 2}
+        ]
+      },
+      "correction": {
+        "methode": "On utilise le diagramme de Venn en remplissant d'abord la zone centrale (L ∩ F), puis les zones exclusives, puis on calcule l'extérieur.",
+        "etapes": [
+          {"numero": 1, "texte": "Diagramme : Zone L seul = 40, Zone centrale = 20, Zone F seul = 25, Extérieur = 15", "justification": "On remplit dans l'ordre : centre → zones exclusives → extérieur"},
+          {"numero": 2, "texte": "Légumes uniquement : Card(L) − Card(L ∩ F) = 60 − 20 = 40 commerçants", "justification": "On retire ceux qui font aussi les fruits"},
+          {"numero": 3, "texte": "Fruits uniquement : Card(F) − Card(L ∩ F) = 45 − 20 = 25 commerçants", "justification": "On retire ceux qui font aussi les légumes"},
+          {"numero": 4, "texte": "Au moins un : Card(L ∪ F) = 60 + 45 − 20 = 85 commerçants", "justification": "Formule Card(A ∪ B) = Card(A) + Card(B) − Card(A ∩ B)"},
+          {"numero": 5, "texte": "Ni l'un ni l'autre : 100 − 85 = 15 commerçants", "justification": "Complémentaire de L ∪ F dans E"},
+          {"numero": 6, "texte": "Vérification : 40 + 20 + 25 + 15 = 100 ✓", "justification": "La somme de toutes les zones doit égaler Card(E)"}
+        ],
+        "reponses": {
+          "1": "Diagramme avec zones : 40 | 20 | 25 et extérieur 15",
+          "2": "40 commerçants",
+          "3": "25 commerçants",
+          "4": "85 commerçants",
+          "5": "15 commerçants"
+        },
+        "piege": "Ne pas oublier de vérifier que 40 + 20 + 25 + 15 = 100 = Card(E). Si ça ne tombe pas juste, il y a une erreur quelque part.",
+        "points_total": 8
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "Applications — Images et antécédents",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 6,
+      "duree_recommandee": 20,
+      "enonce": {
+        "texte": "Soit f l'application définie de ℝ vers ℝ par f(x) = 3x − 2.",
+        "donnees": ["f : ℝ → ℝ", "f(x) = 3x − 2"],
+        "questions": [
+          {"numero": "1", "texte": "Calculer f(0), f(2) et f(−3)", "points": 2},
+          {"numero": "2", "texte": "Trouver l'antécédent de 7 par f", "points": 2},
+          {"numero": "3", "texte": "Trouver l'antécédent de −5 par f", "points": 2}
+        ]
+      },
+      "correction": {
+        "methode": "Pour les images : substituer la valeur dans f(x). Pour les antécédents : poser f(x) = valeur et résoudre l'équation.",
+        "etapes": [
+          {"numero": 1, "texte": "f(0) = 3×0 − 2 = −2", "justification": "Substitution de x par 0"},
+          {"numero": 2, "texte": "f(2) = 3×2 − 2 = 6 − 2 = 4", "justification": "Substitution de x par 2"},
+          {"numero": 3, "texte": "f(−3) = 3×(−3) − 2 = −9 − 2 = −11", "justification": "Substitution de x par −3, attention au signe"},
+          {"numero": 4, "texte": "Antécédent de 7 : 3x − 2 = 7 → 3x = 9 → x = 3. Vérif: f(3) = 7 ✓", "justification": "On résout l'équation f(x) = 7"},
+          {"numero": 5, "texte": "Antécédent de −5 : 3x − 2 = −5 → 3x = −3 → x = −1. Vérif: f(−1) = 3(−1)−2 = −5 ✓", "justification": "On résout l'équation f(x) = −5"}
+        ],
+        "reponses": {
+          "1": "f(0) = −2 ; f(2) = 4 ; f(−3) = −11",
+          "2": "x = 3",
+          "3": "x = −1"
+        },
+        "piege": "Pour les antécédents, ne pas oublier de vérifier en recalculant f(x) avec la valeur trouvée. Attention aux signes avec les nombres négatifs.",
+        "points_total": 6
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 6,
+      "titre": "Injection, surjection, bijection",
+      "type_exercice": "application",
+      "niveau": "approfondissement",
+      "bareme": 6,
+      "duree_recommandee": 20,
+      "enonce": {
+        "texte": "On considère les applications suivantes. Pour chacune, préciser si elle est injective, surjective ou bijective.",
+        "donnees": [
+          "E = {1, 2, 3} et F = {a, b, c}",
+          "f : f(1)=a, f(2)=b, f(3)=c",
+          "g : g(1)=a, g(2)=a, g(3)=b",
+          "h : h(1)=a, h(2)=c, h(3)=b"
+        ],
+        "questions": [
+          {"numero": "1", "texte": "Étudier f : est-elle injective ? surjective ? bijective ?", "points": 2},
+          {"numero": "2", "texte": "Étudier g : est-elle injective ? surjective ? bijective ?", "points": 2},
+          {"numero": "3", "texte": "Étudier h : est-elle injective ? surjective ? bijective ?", "points": 2}
+        ]
+      },
+      "correction": {
+        "methode": "Pour l'injection : chaque élément de F a au plus 1 antécédent. Pour la surjection : chaque élément de F a au moins 1 antécédent. Bijection = injection + surjection.",
+        "etapes": [
+          {"numero": 1, "texte": "f : a←1, b←2, c←3. Chaque élément de F a exactement 1 antécédent → injective ET surjective → BIJECTIVE", "justification": "Correspondance parfaite 1-1 entre E et F"},
+          {"numero": 2, "texte": "g : a←1 et a←2 (deux antécédents) → PAS injective. c n'a aucun antécédent → PAS surjective", "justification": "a a 2 antécédents (viole injection) et c n'en a aucun (viole surjection)"},
+          {"numero": 3, "texte": "h : a←1, b←3, c←2. Chaque élément de F a exactement 1 antécédent → BIJECTIVE", "justification": "Même si l'ordre est différent, c'est une correspondance 1-1"}
+        ],
+        "reponses": {
+          "1": "f est bijective",
+          "2": "g n'est ni injective ni surjective",
+          "3": "h est bijective"
+        },
+        "piege": "Pour h, ne pas se laisser tromper par l'ordre différent. Ce qui compte c'est que chaque élément de F ait exactement un antécédent.",
+        "points_total": 6
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 7,
+      "titre": "Problème synthèse niveau BEPC",
+      "type_exercice": "synthese",
+      "niveau": "examen",
+      "bareme": 10,
+      "duree_recommandee": 35,
+      "enonce": {
+        "texte": "Dans un lycée de Bafoussam, on a interrogé 120 élèves de Terminale sur leurs matières préférées. 70 préfèrent les mathématiques (M), 55 préfèrent la physique (P), et 30 préfèrent les deux matières. On définit aussi l'application f : ℝ → ℝ par f(x) = 2x + 5.",
+        "donnees": [
+          "Nombre total d'élèves : 120",
+          "Préfèrent les mathématiques : 70",
+          "Préfèrent la physique : 55",
+          "Préfèrent les deux : 30",
+          "f : ℝ → ℝ, f(x) = 2x + 5"
+        ],
+        "questions": [
+          {"numero": "1a", "texte": "Représenter la situation par un diagramme de Venn", "points": 2},
+          {"numero": "1b", "texte": "Combien d'élèves préfèrent les maths uniquement ?", "points": 1},
+          {"numero": "1c", "texte": "Combien d'élèves préfèrent au moins une des deux matières ?", "points": 1},
+          {"numero": "1d", "texte": "Combien d'élèves ne préfèrent ni les maths ni la physique ?", "points": 1},
+          {"numero": "2a", "texte": "Calculer f(4), f(0) et f(−3)", "points": 2},
+          {"numero": "2b", "texte": "Trouver l'antécédent de 11 par f", "points": 1},
+          {"numero": "2c", "texte": "f est-elle une bijection de ℝ vers ℝ ? Justifier.", "points": 2}
+        ]
+      },
+      "correction": {
+        "methode": "Partie 1 : Méthode diagramme de Venn. Partie 2 : Calculs d'images et d'antécédents.",
+        "etapes": [
+          {"numero": 1, "texte": "Zone M seul : 70−30 = 40, Zone centrale : 30, Zone P seul : 55−30 = 25, Extérieur : 120−(40+30+25) = 25", "justification": "Remplissage du diagramme de Venn"},
+          {"numero": 2, "texte": "Maths uniquement : 70 − 30 = 40 élèves", "justification": "On retire ceux qui préfèrent aussi la physique"},
+          {"numero": 3, "texte": "Au moins une matière : 70 + 55 − 30 = 95 élèves", "justification": "Formule Card(M ∪ P) = Card(M) + Card(P) − Card(M ∩ P)"},
+          {"numero": 4, "texte": "Ni l'une ni l'autre : 120 − 95 = 25 élèves", "justification": "Complémentaire dans l'ensemble total"},
+          {"numero": 5, "texte": "f(4) = 2(4)+5 = 13 ; f(0) = 5 ; f(−3) = 2(−3)+5 = −6+5 = −1", "justification": "Substitution directe"},
+          {"numero": 6, "texte": "Antécédent de 11 : 2x+5=11 → 2x=6 → x=3. Vérif : f(3)=11 ✓", "justification": "Résolution de l'équation"},
+          {"numero": 7, "texte": "f est bijective : tout y ∈ ℝ a exactement un antécédent x = (y−5)/2 ∈ ℝ", "justification": "f est affine avec a≠0, donc bijection de ℝ vers ℝ"}
+        ],
+        "reponses": {
+          "1a": "Diagramme : 40|30|25 avec extérieur 25",
+          "1b": "40 élèves",
+          "1c": "95 élèves",
+          "1d": "25 élèves",
+          "2a": "f(4)=13 ; f(0)=5 ; f(−3)=−1",
+          "2b": "x = 3",
+          "2c": "Oui, f est bijective"
+        },
+        "piege": "Vérification finale : 40 + 30 + 25 + 25 = 120 ✓. Pour la bijection, justifier en montrant que tout y a un unique antécédent.",
+        "points_total": 10
+      },
+      "options_qcm": []
+    }
+  ],
+  "meta": {
+    "total_lecons": 4,
+    "total_exercices": 7,
+    "points_total_exercices": 45,
+    "niveaux_couverts": ["decouverte", "entrainement", "approfondissement", "examen"],
+    "competences_visees": [
+      "Lire et écrire les notations ensemblistes",
+      "Effectuer les opérations sur les ensembles",
+      "Résoudre des problèmes de dénombrement avec diagramme de Venn",
+      "Calculer images et antécédents d'une application",
+      "Identifier injection, surjection, bijection"
+    ],
+    "liens_bepc": [
+      "Ce chapitre représente environ 15-20% des points d'un sujet de BEPC",
+      "Les problèmes de dénombrement (diagramme de Venn) sont quasi-systématiques",
+      "Les applications sont souvent couplées avec les fonctions du chapitre 5"
+    ]
+  }
+}
