@@ -1,0 +1,273 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "1ere-c-8-fonction-exponentielle",
+  "meta": {
+    "classe": "1ère C",
+    "numero": 8,
+    "titre": "Fonction exponentielle",
+    "categorie": "analyse",
+    "difficulte": 4,
+    "description": "Définition de exp, propriétés, dérivée, étude, applications croissance et décroissance.",
+    "objectifs": [
+      "Connaître la définition et les propriétés algébriques de exp",
+      "Calculer la dérivée de fonctions contenant exp",
+      "Résoudre des équations et inéquations exponentielles",
+      "Modéliser des phénomènes de croissance et de décroissance"
+    ],
+    "prerequis_slugs": ["1ere-c-7-logarithme-neperien"],
+    "duree_estimee": 100,
+    "points_total_exercices": 55
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Définition et propriétés de l'exponentielle",
+      "type_lecon": "definition",
+      "duree_lecture": 22,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "La fonction **exponentielle** notée **exp** ou **eˣ** est la **réciproque de ln** :\n• exp est définie sur ℝ et à valeurs dans **]0 ; +∞[**\n• exp(ln(x)) = x pour x > 0\n• ln(exp(x)) = x pour x ∈ ℝ\n• exp(0) = 1, exp(1) = e ≈ 2,718..."
+          },
+          {
+            "type": "texte",
+            "valeur": "**Propriétés algébriques** (pour a, b ∈ ℝ) :\n• eᵃ × eᵇ = e^{a+b}\n• eᵃ / eᵇ = e^{a−b}\n• (eᵃ)ⁿ = e^{na}\n• e⁻ᵃ = 1/eᵃ\n• eᵃ > 0 pour tout a ∈ ℝ"
+          },
+          {
+            "type": "exemple",
+            "titre": "Calculs exponentiels",
+            "valeur": "Simplifier :\na) e² × e³ = e⁵\nb) e⁷/e⁴ = e³\nc) (e²)⁻³ = e⁻⁶ = 1/e⁶\nd) e^{ln(5)} = 5\ne) ln(e^{√2}) = √2"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Limites importantes :**\n• lim(x→−∞) eˣ = 0\n• lim(x→+∞) eˣ = +∞\n• lim(x→+∞) eˣ/xⁿ = +∞ (exp croît plus vite que tout polynôme)\n• lim(x→−∞) x·eˣ = 0\n• lim(x→0) (eˣ−1)/x = 1"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Dérivée de fonctions exponentielles",
+      "type_lecon": "methode",
+      "duree_lecture": 20,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Formules de dérivation :\n• **(eˣ)' = eˣ** (l'exponentielle est sa propre dérivée !)\n• **(eᵘ)' = u' × eᵘ** (dérivée d'une composée)\n• **(aˣ)' = aˣ × ln(a)** pour a > 0, a ≠ 1"
+          },
+          {
+            "type": "exemple",
+            "titre": "Dérivées exponentielles",
+            "valeur": "Calculer les dérivées :\na) f(x) = e^{3x} : f'(x) = 3e^{3x}\nb) g(x) = e^{x²−1} : g'(x) = 2x·e^{x²−1}\nc) h(x) = x²·eˣ : h'(x) = 2x·eˣ + x²·eˣ = eˣ(2x + x²) = x(x+2)eˣ\nd) k(x) = eˣ/(x+1) : k'(x) = [eˣ(x+1) − eˣ·1]/(x+1)² = eˣ·x/(x+1)²\ne) m(x) = e^{√x} : m'(x) = (1/(2√x))·e^{√x}"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Équations et inéquations exponentielles",
+      "type_lecon": "methode",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "methode",
+            "titre": "Résolution d'équations exponentielles",
+            "valeur": "exp est une **fonction strictement croissante et bijective** de ℝ vers ]0;+∞[.\n\n• eᴬ = eᴮ ⟺ A = B\n• eᴬ = k (k > 0) ⟺ A = ln(k)\n• eᴬ > eᴮ ⟺ A > B (exp croissante)"
+          },
+          {
+            "type": "exemple",
+            "titre": "Résolution d'équations",
+            "valeur": "**a)** e^{2x−1} = e³\n2x − 1 = 3 ⟹ x = 2\n\n**b)** e^{x²} = e^{4x−4}\nx² = 4x − 4 ⟹ x² − 4x + 4 = 0 ⟹ (x−2)² = 0 ⟹ x = 2\n\n**c)** eˣ = 5 ⟹ x = ln(5)\n\n**d)** e^{2x} − 5eˣ + 6 = 0\nPosons t = eˣ (t > 0) : t² − 5t + 6 = 0\n(t−2)(t−3) = 0 ⟹ t = 2 ou t = 3\neˣ = 2 ⟹ x = ln(2) ; eˣ = 3 ⟹ x = ln(3)"
+          },
+          {
+            "type": "exemple",
+            "titre": "Inéquation exponentielle",
+            "valeur": "Résoudre : e^{2x} < e^{x+3}\n2x < x + 3 (exp croissante) ⟹ x < 3\n\n**S = ]−∞ ; 3[**"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Étude de fonctions exponentielles et applications",
+      "type_lecon": "methode",
+      "duree_lecture": 22,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "exemple",
+            "titre": "Étude complète de f(x) = (x+1)eˣ",
+            "valeur": "**Domaine :** ℝ\n**Dérivée :** f'(x) = eˣ + (x+1)eˣ = eˣ(1 + x + 1) = eˣ(x+2)\n\nf'(x) = 0 ⟺ x = −2 (car eˣ > 0 toujours)\nf'(x) < 0 pour x < −2 ; f'(x) > 0 pour x > −2\n→ **Minimum en x = −2** : f(−2) = (−1)e⁻² = −1/e²\n\n**Limites :**\n• lim(x→−∞) (x+1)eˣ = 0 (eˣ→0 l'emporte sur x+1)\n• lim(x→+∞) (x+1)eˣ = +∞\n\n**Tableau de variations :**\nx    | −∞      −2        +∞\nf    |  0  ↘  −1/e²  ↗  +∞"
+          },
+          {
+            "type": "contexte",
+            "valeur": "**Modèle de croissance exponentielle :** Une population bactérienne de Douala passe de 1000 à t=0 à N(t) = 1000·e^{0,3t} bactéries après t heures. Après 5h : N(5) = 1000·e^{1,5} ≈ 4482 bactéries. Le temps de doublement : N(t) = 2000 ⟹ e^{0,3t} = 2 ⟹ t = ln(2)/0,3 ≈ 2,31 heures."
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Calculs exponentiels",
+      "type_exercice": "calcul",
+      "niveau": "base",
+      "bareme": 8,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Simplifier :\na) e^{ln(3)+2}\nb) e^{3ln(2)}\nc) ln(e^5 × e^{−2})\nd) (e^{ln(x)})² pour x > 0\ne) e^{ln(2)+ln(3)−ln(6)}"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) e^{ln(3)+2} = e^{ln(3)} × e² = **3e²**\n\nb) e^{3ln(2)} = e^{ln(2³)} = **8**\n\nc) ln(e⁵ × e⁻²) = ln(e³) = **3**\n\nd) (e^{ln(x)})² = x² (car e^{ln(x)}=x) → **x²**\n\ne) e^{ln(2)+ln(3)−ln(6)} = e^{ln(6/6)} = e^{ln(1)} = e⁰ = **1**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Dérivées exponentielles",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 10,
+      "duree_recommandee": 18,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Calculer les dérivées :\na) f(x) = e^{5x−2}\nb) g(x) = e^{−x²}\nc) h(x) = xeˣ − eˣ\nd) k(x) = √(eˣ+1)"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) f'(x) = **5e^{5x−2}**\n\nb) g'(x) = **−2x·e^{−x²}**\n\nc) h'(x) = eˣ + xeˣ − eˣ = **xeˣ**\n\nd) k(x) = (eˣ+1)^{1/2}\nk'(x) = (1/2)·eˣ·(eˣ+1)^{−1/2} = **eˣ / (2√(eˣ+1))**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Équations et inéquations exponentielles",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 10,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Résoudre dans ℝ :\na) e^{x+2} = e^{3x−4}\nb) e^{2x} − 4eˣ + 3 = 0\nc) 2eˣ > 6\nd) e^{x²−3} ≤ e^{2x}"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) x+2 = 3x−4 ⟹ 2x = 6 ⟹ **x = 3**\n\nb) Posons t = eˣ > 0 : t²−4t+3 = 0 ⟹ (t−1)(t−3) = 0\nt = 1 ⟹ eˣ = 1 ⟹ x = 0\nt = 3 ⟹ eˣ = 3 ⟹ x = ln(3)\n**S = {0 ; ln(3)}**\n\nc) eˣ > 3 ⟹ x > ln(3)\n**S = ]ln(3) ; +∞[**\n\nd) x²−3 ≤ 2x ⟹ x²−2x−3 ≤ 0 ⟹ (x−3)(x+1) ≤ 0\n**S = [−1 ; 3]**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Étude de fonction",
+      "type_exercice": "calcul",
+      "niveau": "approfondissement",
+      "bareme": 12,
+      "duree_recommandee": 22,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Soit f(x) = (1 − x)eˣ.\n1) Calculer f'(x).\n2) Étudier les variations de f.\n3) Montrer que f(x) ≤ 1 pour tout x ∈ ℝ."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1)** f'(x) = −eˣ + (1−x)eˣ = eˣ(−1+1−x) = **−xeˣ**\n\n**2)** f'(x) = −xeˣ ; eˣ > 0 toujours, donc signe de f'(x) = signe de (−x)\n• x < 0 : f'(x) > 0 (croissante)\n• x = 0 : f'(x) = 0\n• x > 0 : f'(x) < 0 (décroissante)\n→ **Maximum en x = 0** : f(0) = 1·e⁰ = 1\n\nLimites : lim(x→−∞) (1−x)eˣ = 0 ; lim(x→+∞) = −∞\n\nTableau :\nx   | −∞    0    +∞\nf   |  0  ↗  1  ↘  −∞\n\n**3)** f atteint son maximum en x=0 avec f(0)=1\nDonc f(x) ≤ 1 pour tout x ∈ ℝ ✓"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Exponentielle",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 8,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** La dérivée de f(x) = e^{2x+3} est :\n(A) e^{2x+3}  (B) 2e^{2x+3}  (C) (2x+3)e^{2x+2}  (D) 2xe^{2x+3}\n\n**Q2.** La solution de e^{x} = 1/e² est :\n(A) x = 2  (B) x = −2  (C) x = 1/2  (D) x = e²\n\n**Q3.** lim(x→+∞) e^{−x} vaut :\n(A) +∞  (B) 1  (C) 0  (D) −∞"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (B) 2e^{2x+3} : dérivée de e^u = u'e^u avec u=2x+3, u'=2\n\n**Q2.** (B) x = −2 : eˣ = e⁻² ⟹ x = −2\n\n**Q3.** (C) 0 : lim(x→+∞) e^{−x} = 0 (eˣ → +∞ donc e^{−x} → 0)"
+          }
+        ]
+      },
+      "options_qcm": [
+        {"question": 1, "reponse_correcte": "B"},
+        {"question": 2, "reponse_correcte": "B"},
+        {"question": 3, "reponse_correcte": "C"}
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Modélisation — Décroissance radioactive",
+      "type_exercice": "probleme",
+      "niveau": "approfondissement",
+      "bareme": 7,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Une substance radioactive a une masse M(t) = 100·e^{−0,02t} grammes après t heures.\n1) Quelle est la masse initiale ?\n2) Calculer la masse après 10 heures.\n3) Après combien d'heures la masse sera-t-elle inférieure à 50 g (demi-vie) ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1)** M(0) = 100·e⁰ = **100 g**\n\n**2)** M(10) = 100·e^{−0,2} ≈ 100 × 0,819 ≈ **81,9 g**\n\n**3)** M(t) < 50 :\n100·e^{−0,02t} < 50\ne^{−0,02t} < 0,5\n−0,02t < ln(0,5) = −ln(2)\nt > ln(2)/0,02 = 0,693/0,02 ≈ **34,7 heures**\n\nLa demi-vie est d'environ **34,7 heures**."
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

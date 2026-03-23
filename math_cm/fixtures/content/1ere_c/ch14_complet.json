@@ -1,0 +1,251 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "1ere-c-14-denombrement-et-probabilites",
+  "meta": {
+    "classe": "1ère C",
+    "numero": 14,
+    "titre": "Dénombrement et probabilités",
+    "categorie": "statistiques",
+    "difficulte": 3,
+    "description": "Arrangements, permutations, combinaisons, probabilités conditionnelles, indépendance.",
+    "objectifs": [
+      "Calculer des arrangements, permutations et combinaisons",
+      "Appliquer les règles de comptage aux probabilités",
+      "Calculer des probabilités conditionnelles",
+      "Utiliser l'indépendance d'événements"
+    ],
+    "prerequis_slugs": ["1ere-c-1-generalites-sur-les-fonctions-numeriques"],
+    "duree_estimee": 90,
+    "points_total_exercices": 50
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Dénombrement — arrangements et permutations",
+      "type_lecon": "definition",
+      "duree_lecture": 22,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Factorielle :** n! = 1 × 2 × 3 × ... × n, avec 0! = 1\n\n**Arrangements :** Nombre de façons de choisir et d'ordonner r éléments parmi n :\n**A(n,r) = n!/(n−r)!** = n(n−1)(n−2)...(n−r+1)\n\n**Permutations :** Arrangement de tous les éléments (r = n) :\n**P(n) = n!**"
+          },
+          {
+            "type": "exemple",
+            "titre": "Arrangements",
+            "valeur": "Combien de mots de 3 lettres différentes peut-on former avec les lettres A, B, C, D, E ?\nA(5,3) = 5!/(5−3)! = 5!/2! = 5×4×3 = **60 mots**\n\nCombien de façons de classer 7 coureurs à l'arrivée ?\nP(7) = 7! = 5040 **façons**\n\nCombien de numéros de téléphone à 8 chiffres distincts ?\nA(10,8) = 10!/2! = 1 814 400"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Combinaisons",
+      "type_lecon": "definition",
+      "duree_lecture": 20,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Combinaisons :** Nombre de façons de choisir r éléments parmi n (sans ordre) :\n**C(n,r) = Cₙʳ = n! / (r! × (n−r)!)**\n\nNotation usuelle : C(n,r) = Cₙʳ = (n choose r)\n\n**Propriétés :**\n• Cₙ⁰ = Cₙⁿ = 1\n• Cₙʳ = Cₙⁿ⁻ʳ (symétrie)\n• Cₙʳ + Cₙʳ⁺¹ = Cₙ₊₁ʳ⁺¹ (triangle de Pascal)\n• C(n,1) = n ; C(n,2) = n(n−1)/2"
+          },
+          {
+            "type": "exemple",
+            "titre": "Combinaisons",
+            "valeur": "Combien de façons de choisir 3 étudiants parmi 10 pour un jury ?\nC(10,3) = 10!/(3!×7!) = 10×9×8/(3×2×1) = **120 façons**\n\nUn commerçant de Bafoussam a 8 produits différents. Il veut en exposer 5.\nC(8,5) = C(8,3) = 8×7×6/(3×2×1) = **56 façons**\n\nTriangle de Pascal (C(n,r)) :\nn=0: 1\nn=1: 1  1\nn=2: 1  2  1\nn=3: 1  3  3  1\nn=4: 1  4  6  4  1"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Probabilités — rappels et probabilités conditionnelles",
+      "type_lecon": "definition",
+      "duree_lecture": 22,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Rappels :**\n• Ω : univers (ensemble des issues possibles)\n• P(A) ∈ [0;1], P(Ω) = 1, P(∅) = 0\n• P(Ā) = 1 − P(A) (événement contraire)\n• P(A ∪ B) = P(A) + P(B) − P(A ∩ B)\n• Si A et B incompatibles : P(A ∪ B) = P(A) + P(B)"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Probabilité conditionnelle** de A sachant B (avec P(B) > 0) :\n**P(A|B) = P(A ∩ B) / P(B)**\n\n**Formule des probabilités totales :** Si B₁, B₂, ..., Bₙ forment une partition de Ω :\nP(A) = P(A|B₁)·P(B₁) + P(A|B₂)·P(B₂) + ... + P(A|Bₙ)·P(Bₙ)"
+          },
+          {
+            "type": "exemple",
+            "titre": "Probabilités conditionnelles",
+            "valeur": "Une urne contient 5 boules rouges (R) et 3 boules bleues (B).\nOn tire 2 boules sans remise.\n\nP(2 rouges) = (5/8) × (4/7) = 20/56 = **5/14**\n\nP(1 rouge, 1 bleue) = P(RB) + P(BR)\n= (5/8)(3/7) + (3/8)(5/7) = 15/56 + 15/56 = **30/56 = 15/28**"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Indépendance de A et B :**\nA et B sont **indépendants** si : **P(A ∩ B) = P(A) × P(B)**\nCela équivaut à P(A|B) = P(A) (B ne change pas la probabilité de A)."
+          },
+          {
+            "type": "contexte",
+            "valeur": "Un test de dépistage médical à Yaoundé : 2% de la population est malade. Si malade, test positif avec probabilité 0,95. Si sain, test positif avec probabilité 0,03 (faux positif).\nP(test+) = 0,95×0,02 + 0,03×0,98 = 0,019 + 0,0294 = 0,0484\nP(malade | test+) = 0,019/0,0484 ≈ 0,393 = 39,3% !"
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Dénombrement",
+      "type_exercice": "calcul",
+      "niveau": "base",
+      "bareme": 8,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) Calculer : 5!, C(7,3), A(8,2), C(10,4).\nb) De combien de façons peut-on former une équipe de 4 personnes parmi 9 candidats ?\nc) Combien de mots de 4 lettres différentes peut-on former avec les 26 lettres de l'alphabet ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) 5! = 120\nC(7,3) = 7!/(3!4!) = 35\nA(8,2) = 8×7 = 56\nC(10,4) = 10×9×8×7/(4×3×2×1) = 210\n\nb) C(9,4) = 9!/(4!5!) = 9×8×7×6/(24) = **126 façons**\n\nc) A(26,4) = 26×25×24×23 = **358 800 mots**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Probabilités classiques",
+      "type_exercice": "calcul",
+      "niveau": "base",
+      "bareme": 8,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "On tire au hasard une carte dans un jeu de 52 cartes.\na) P(as) = ?\nb) P(cœur) = ?\nc) P(as ou cœur) = ?\nd) P(as de cœur) = ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) P(as) = 4/52 = **1/13**\n\nb) P(cœur) = 13/52 = **1/4**\n\nc) P(as ∪ cœur) = P(as) + P(cœur) − P(as ∩ cœur)\n= 4/52 + 13/52 − 1/52 = **16/52 = 4/13**\n\nd) P(as de cœur) = **1/52**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Probabilités conditionnelles",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 12,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Une classe de 30 élèves comprend 18 garçons et 12 filles. Parmi les garçons, 12 font du sport. Parmi les filles, 6 font du sport. On choisit un élève au hasard.\na) P(l'élève fait du sport) ?\nb) P(l'élève est un garçon sachant qu'il fait du sport) ?\nc) Faire du sport et être une fille sont-ils indépendants ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) Formule des probabilités totales :\nP(sport) = P(sport|garçon)×P(garçon) + P(sport|fille)×P(fille)\n= (12/18)×(18/30) + (6/12)×(12/30)\n= (2/3)×(3/5) + (1/2)×(2/5)\n= 2/5 + 1/5 = **3/5**\n\nb) P(garçon|sport) = P(garçon ∩ sport)/P(sport)\nP(garçon ∩ sport) = 12/30 = 2/5\nP(garçon|sport) = (2/5)/(3/5) = **2/3**\n\nc) P(fille ∩ sport) = 6/30 = 1/5\nP(fille)×P(sport) = (12/30)×(3/5) = (2/5)×(3/5) = 6/25\n1/5 = 5/25 ≠ 6/25\n→ **Non indépendants**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Problème de loterie",
+      "type_exercice": "probleme",
+      "niveau": "approfondissement",
+      "bareme": 10,
+      "duree_recommandee": 18,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Une loterie tire 5 numéros parmi 49 (sans remise, sans ordre). Un joueur coche 5 numéros sur sa grille.\n1) Combien y a-t-il de grilles possibles ?\n2) Calculer la probabilité de trouver les 5 bons numéros (jackpot).\n3) Calculer la probabilité d'obtenir exactement 3 bons numéros."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1)** C(49,5) = 49!/(5!×44!) = 49×48×47×46×45/120 = **1 906 884**\n\n**2)** P(jackpot) = 1/C(49,5) ≈ **5,25 × 10⁻⁷** (environ 1 chance sur 2 millions)\n\n**3)** Pour 3 bons numéros :\n• Choisir 3 bons parmi 5 : C(5,3) = 10\n• Choisir 2 mauvais parmi les 44 restants : C(44,2) = 44×43/2 = 946\n\nNombre de grilles favorables = 10 × 946 = 9460\n\nP(3 bons numéros) = 9460/1 906 884 ≈ **0,00496 ≈ 0,5%**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Dénombrement et probabilités",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 9,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** C(6,2) vaut :\n(A) 12  (B) 15  (C) 30  (D) 36\n\n**Q2.** Si P(A) = 0,3 et P(B) = 0,5 avec A et B indépendants, alors P(A ∩ B) = :\n(A) 0,8  (B) 0,2  (C) 0,15  (D) 0,35\n\n**Q3.** P(A|B) = 0,4 et P(B) = 0,5. P(A ∩ B) = :\n(A) 0,9  (B) 0,1  (C) 0,2  (D) 0,8"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (B) 15 : C(6,2) = 6!/(2!4!) = 30/2 = 15\n\n**Q2.** (C) 0,15 : P(A∩B) = P(A)×P(B) = 0,3×0,5 = 0,15 (indépendance)\n\n**Q3.** (C) 0,2 : P(A∩B) = P(A|B)×P(B) = 0,4×0,5 = 0,2"
+          }
+        ]
+      },
+      "options_qcm": [
+        {"question": 1, "reponse_correcte": "B"},
+        {"question": 2, "reponse_correcte": "C"},
+        {"question": 3, "reponse_correcte": "C"}
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Arbre de probabilités",
+      "type_exercice": "calcul",
+      "niveau": "approfondissement",
+      "bareme": 3,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "On jette deux dés équilibrés. On note S = somme des deux dés.\na) P(S = 7) ?\nb) P(S ≥ 10) ?\nc) P(S pair | S ≥ 8) ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Univers : 36 issues équiprobables.\n\na) S = 7 : (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) → 6 issues\nP(S=7) = 6/36 = **1/6**\n\nb) S ≥ 10 : S=10: (4,6),(5,5),(6,4)→3 ; S=11: (5,6),(6,5)→2 ; S=12: (6,6)→1\nTotal = 6 issues\nP(S≥10) = 6/36 = **1/6**\n\nc) S ≥ 8 : S=8(5 issues)+S=9(4)+S=10(3)+S=11(2)+S=12(1) = 15 issues\nS pair ET S≥8 : S=8(5)+S=10(3)+S=12(1) = 9 issues\nP(S pair|S≥8) = 9/15 = **3/5**"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

@@ -1,0 +1,254 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "1ere-c-11-geometrie-analytique-droites-et-distances",
+  "meta": {
+    "classe": "1ère C",
+    "numero": 11,
+    "titre": "Géométrie analytique — droites et distances",
+    "categorie": "geometrie",
+    "difficulte": 3,
+    "description": "Équation de droite, pente, parallélisme, perpendicularité, distance d'un point à une droite.",
+    "objectifs": [
+      "Écrire l'équation d'une droite sous différentes formes",
+      "Calculer la pente d'une droite",
+      "Déterminer si deux droites sont parallèles ou perpendiculaires",
+      "Calculer la distance d'un point à une droite"
+    ],
+    "prerequis_slugs": ["1ere-c-10-vecteurs-dans-le-plan"],
+    "duree_estimee": 90,
+    "points_total_exercices": 50
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Équation cartésienne d'une droite",
+      "type_lecon": "definition",
+      "duree_lecture": 22,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Équation cartésienne** d'une droite : **ax + by + c = 0** (a et b non simultanément nuls)\n\nFormes particulières :\n• **Forme réduite :** y = mx + p (m = pente, p = ordonnée à l'origine) — droite non verticale\n• **Droite verticale :** x = k\n• **Droite horizontale :** y = k\n\n**Pente (coefficient directeur) :** m = (y_B − y_A)/(x_B − x_A) pour une droite passant par A et B"
+          },
+          {
+            "type": "methode",
+            "titre": "Trouver l'équation d'une droite",
+            "valeur": "**Méthode 1 :** Connaissant la pente m et un point (x₀ ; y₀) :\ny − y₀ = m(x − x₀)\n\n**Méthode 2 :** Connaissant deux points A(x_A ; y_A) et B(x_B ; y_B) :\nm = (y_B−y_A)/(x_B−x_A) puis y − y_A = m(x − x_A)\n\n**Méthode 3 :** Avec l'équation ax + by + c = 0, la pente est m = −a/b"
+          },
+          {
+            "type": "exemple",
+            "titre": "Équations de droites",
+            "valeur": "**a)** Droite passant par A(1;3) et B(4;9) :\nm = (9−3)/(4−1) = 6/3 = 2\ny − 3 = 2(x − 1) → **y = 2x + 1**\n\n**b)** Droite de pente −3 passant par C(2;−1) :\ny − (−1) = −3(x − 2) → y + 1 = −3x + 6 → **y = −3x + 5**\n\n**c)** De 3x + 4y − 7 = 0 : y = (−3x+7)/4 → m = −3/4, p = 7/4"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Parallélisme et perpendicularité",
+      "type_lecon": "definition",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Soit d₁ : y = m₁x + p₁ et d₂ : y = m₂x + p₂\n\n• **d₁ ∥ d₂** ⟺ **m₁ = m₂** (et p₁ ≠ p₂)\n• **d₁ ⊥ d₂** ⟺ **m₁ × m₂ = −1**\n• d₁ = d₂ ⟺ m₁ = m₂ et p₁ = p₂ (confondues)\n\nSi d₁ est verticale (x = k₁) et d₂ verticale (x = k₂) : d₁ ∥ d₂\nSi d₁ verticale et d₂ horizontale : d₁ ⊥ d₂"
+          },
+          {
+            "type": "exemple",
+            "titre": "Droites parallèles et perpendiculaires",
+            "valeur": "d₁ : y = 2x − 3 et d₂ : y = 2x + 5 → **d₁ ∥ d₂** (mêmes pentes)\n\nd₁ : y = 3x + 1 et d₂ : y = −(1/3)x + 7 → 3 × (−1/3) = −1 → **d₁ ⊥ d₂**\n\nDroite parallèle à d : y = 4x − 1 passant par M(0 ; 3) :\nm = 4 (même pente) et passe par (0;3) : **y = 4x + 3**\n\nDroite perpendiculaire à d : y = 4x − 1 passant par M(0 ; 3) :\nm = −1/4 : **y = −(1/4)x + 3**"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Distance et intersection",
+      "type_lecon": "methode",
+      "duree_lecture": 22,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Distance d'un point P(x₀ ; y₀) à la droite ax + by + c = 0 :**\n\n**d = |ax₀ + by₀ + c| / √(a² + b²)**\n\nCette formule est fondamentale pour calculer des hauteurs de triangles, des rayons de cercles inscrits, etc."
+          },
+          {
+            "type": "exemple",
+            "titre": "Distance point-droite",
+            "valeur": "Distance de P(3 ; 1) à la droite d : 4x − 3y + 2 = 0\nd = |4×3 − 3×1 + 2| / √(16+9) = |12 − 3 + 2| / √25 = |11| / 5 = **11/5 = 2,2**"
+          },
+          {
+            "type": "methode",
+            "titre": "Intersection de deux droites",
+            "valeur": "Pour trouver le point d'intersection de d₁ et d₂ :\n**Résoudre le système** formé par les deux équations.\n\nSi le système n'a pas de solution : droites parallèles\nSi le système a une infinité de solutions : droites confondues"
+          },
+          {
+            "type": "exemple",
+            "titre": "Point d'intersection",
+            "valeur": "d₁ : 2x + y − 5 = 0 et d₂ : x − 3y + 1 = 0\n\nDe d₂ : x = 3y − 1\nSubstituer dans d₁ : 2(3y−1) + y − 5 = 0 ⟹ 7y = 7 ⟹ y = 1\nx = 3×1 − 1 = 2\n\n**Point d'intersection : I(2 ; 1)**\nVérif d₁ : 4+1−5=0 ✓ ; d₂ : 2−3+1=0 ✓"
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Équations de droites",
+      "type_exercice": "calcul",
+      "niveau": "base",
+      "bareme": 10,
+      "duree_recommandee": 18,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) Trouver l'équation de la droite passant par A(2;5) et B(−1;−4).\nb) Trouver l'équation de la droite de pente 1/2 passant par C(4;1).\nc) La droite 3x − 2y + 6 = 0 : donner sa pente et son ordonnée à l'origine."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) m = (−4−5)/(−1−2) = −9/(−3) = 3\ny − 5 = 3(x − 2) ⟹ y = 3x − 1\n**Équation : y = 3x − 1** (ou 3x − y − 1 = 0)\n\nb) y − 1 = (1/2)(x − 4) ⟹ y = x/2 − 1\n**Équation : y = (1/2)x − 1**\n\nc) 3x − 2y + 6 = 0 ⟹ y = (3/2)x + 3\n**Pente m = 3/2, ordonnée à l'origine p = 3**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Parallèles et perpendiculaires",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 10,
+      "duree_recommandee": 18,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Soit d : y = −2x + 3.\na) Écrire l'équation de la droite d' parallèle à d passant par P(1;5).\nb) Écrire l'équation de la droite d'' perpendiculaire à d passant par P(1;5).\nc) Trouver le point d'intersection de d et d''."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) m' = −2 (même pente que d)\ny − 5 = −2(x − 1) ⟹ y = −2x + 7\n**d' : y = −2x + 7**\n\nb) m'' = 1/2 (car −2 × 1/2 = −1)\ny − 5 = (1/2)(x − 1) ⟹ y = (1/2)x + 9/2\n**d'' : y = (1/2)x + 9/2**\n\nc) Intersection de d et d'' :\n−2x + 3 = (1/2)x + 9/2\n−2x − x/2 = 9/2 − 3 = 3/2\n−5x/2 = 3/2 ⟹ x = −3/5\ny = 2×3/5 + 3 = 6/5 + 15/5 = 21/5\n**Intersection : (−3/5 ; 21/5)**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Distance point-droite",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 8,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) Calculer la distance du point A(4;−2) à la droite d : 3x + 4y − 10 = 0.\nb) Calculer l'aire du triangle ABC avec A(0;0), B(4;0) et C(1;3) en utilisant la formule de la distance."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) d(A;d) = |3×4 + 4×(−2) − 10| / √(9+16) = |12 − 8 − 10| / 5 = |−6| / 5 = **6/5 = 1,2**\n\nb) La base AB est sur l'axe des x, |AB| = 4.\nLa droite AB : y = 0\nHauteur h = distance de C(1;3) à y = 0 = |3| = 3\nAire = (1/2) × 4 × 3 = **6 unités²**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Problème — Plan d'un quartier",
+      "type_exercice": "probleme",
+      "niveau": "approfondissement",
+      "bareme": 12,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Un plan d'un quartier de Douala place trois bâtiments en A(0;0), B(6;0) et C(3;4) (en centaines de mètres).\n1) Écrire l'équation de la médiatrice de [AB].\n2) Calculer la hauteur issue de C dans le triangle ABC.\n3) Trouver l'orthocentre H du triangle (intersection des hauteurs)."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1)** Médiatrice de [AB] :\nMilieu de AB : M(3;0). AB→ = (6;0), direction horizontale.\nMédiatrice : droite verticale passant par M : **x = 3**\n\n**2)** Hauteur issue de C perpendiculaire à AB.\nAB est sur l'axe des x, droite : y = 0\nHauteur issue de C : droite verticale x = 3 ? Non : C=(3;4), pied de la hauteur est H₁(3;0)\nLongueur de la hauteur = distance de C à AB (y=0) = **4 (centaines de m) = 400 m**\n\n**3)** Les hauteurs :\n• h_C (issue de C ⊥ AB) : AB horizontal → h_C est x = 3\n• h_A (issue de A ⊥ BC) : BC→ = (−3;4), pente = −4/3\nHauteur ⊥ BC : pente = 3/4, passant par A(0;0) : y = (3/4)x\n\nIntersection : x = 3, y = 9/4\n**Orthocentre H(3 ; 9/4)**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Géométrie analytique",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 8,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** La pente de la droite 4x − 2y + 5 = 0 est :\n(A) 4  (B) −2  (C) 2  (D) 1/2\n\n**Q2.** Deux droites de pentes 3 et −1/3 sont :\n(A) parallèles  (B) confondues  (C) sécantes  (D) perpendiculaires\n\n**Q3.** La distance de l'origine O(0;0) à la droite 3x + 4y − 15 = 0 est :\n(A) 5  (B) 3  (C) 4  (D) 15"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (C) 2 : 4x − 2y + 5 = 0 ⟹ y = 2x + 5/2, pente = 2\n\n**Q2.** (D) perpendiculaires : 3 × (−1/3) = −1\n\n**Q3.** (B) 3 : d = |3×0 + 4×0 − 15| / √(9+16) = 15/5 = 3"
+          }
+        ]
+      },
+      "options_qcm": [
+        {"question": 1, "reponse_correcte": "C"},
+        {"question": 2, "reponse_correcte": "D"},
+        {"question": 3, "reponse_correcte": "B"}
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Cercle et droite",
+      "type_exercice": "calcul",
+      "niveau": "approfondissement",
+      "bareme": 2,
+      "duree_recommandee": 8,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Le cercle de centre C(2;3) et de rayon 5 coupe-t-il la droite d : 3x − 4y + 7 = 0 ? Justifier en calculant la distance de C à d."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "d(C; d) = |3×2 − 4×3 + 7| / √(9+16) = |6 − 12 + 7| / 5 = |1| / 5 = **1/5 = 0,2**\n\nComme 0,2 < 5 (rayon), la droite **coupe le cercle en deux points**.\n(Si la distance était = 5 : tangente ; > 5 : pas d'intersection.)"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

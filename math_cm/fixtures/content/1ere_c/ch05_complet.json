@@ -1,0 +1,268 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "1ere-c-5-polynomes-et-equations-du-second-degre",
+  "meta": {
+    "classe": "1ère C",
+    "numero": 5,
+    "titre": "Polynômes et équations du second degré",
+    "categorie": "algebre",
+    "difficulte": 3,
+    "description": "Discriminant, racines, factorisation, forme canonique, signe du trinôme, inéquations.",
+    "objectifs": [
+      "Résoudre une équation du second degré avec le discriminant",
+      "Factoriser un trinôme du second degré",
+      "Étudier le signe d'un trinôme",
+      "Résoudre des inéquations du second degré"
+    ],
+    "prerequis_slugs": ["1ere-c-1-generalites-sur-les-fonctions-numeriques"],
+    "duree_estimee": 100,
+    "points_total_exercices": 55
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Équation du second degré — discriminant et racines",
+      "type_lecon": "definition",
+      "duree_lecture": 22,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Une **équation du second degré** est de la forme **ax² + bx + c = 0** (a ≠ 0).\n\nOn calcule le **discriminant** : **Δ = b² − 4ac**\n\n• Δ > 0 : deux racines réelles distinctes : x₁ = (−b − √Δ)/(2a) et x₂ = (−b + √Δ)/(2a)\n• Δ = 0 : une racine double : x₀ = −b/(2a)\n• Δ < 0 : pas de racine réelle"
+          },
+          {
+            "type": "exemple",
+            "titre": "Résolution d'équations",
+            "valeur": "**a) 2x² − 5x + 3 = 0**\nΔ = 25 − 24 = 1 > 0\nx₁ = (5 − 1)/4 = 1 ; x₂ = (5 + 1)/4 = 3/2\n\n**b) x² − 4x + 4 = 0**\nΔ = 16 − 16 = 0\nx₀ = 4/2 = 2 (racine double)\n\n**c) x² + x + 1 = 0**\nΔ = 1 − 4 = −3 < 0 → **pas de solution réelle**"
+          },
+          {
+            "type": "methode",
+            "titre": "Relations de Viète",
+            "valeur": "Si x₁ et x₂ sont les racines de ax² + bx + c = 0, alors :\n• **x₁ + x₂ = −b/a** (somme des racines)\n• **x₁ × x₂ = c/a** (produit des racines)\n\nCes relations permettent de vérifier les racines ou de reconstruire un trinôme connaissant ses racines."
+          },
+          {
+            "type": "exemple",
+            "titre": "Application des relations de Viète",
+            "valeur": "x² − 7x + 10 = 0 : a=1, b=−7, c=10\nx₁ + x₂ = 7 et x₁×x₂ = 10\nOn cherche deux nombres dont la somme est 7 et le produit 10 : **2 et 5**\nVérification : 2² − 7×2 + 10 = 4 − 14 + 10 = 0 ✓"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Forme canonique et factorisation",
+      "type_lecon": "methode",
+      "duree_lecture": 20,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Forme canonique :** ax² + bx + c = a(x − α)² + β\noù **α = −b/(2a)** (abscisse du sommet) et **β = f(α) = c − b²/(4a) = −Δ/(4a)**\n\nCette forme montre directement le sommet (α ; β) de la parabole."
+          },
+          {
+            "type": "exemple",
+            "titre": "Mise sous forme canonique",
+            "valeur": "f(x) = 2x² − 8x + 5\nα = 8/(2×2) = 2\nβ = f(2) = 8 − 16 + 5 = −3\n\n**Forme canonique : f(x) = 2(x − 2)² − 3**\n\nVérification : 2(x−2)² − 3 = 2(x²−4x+4)−3 = 2x²−8x+8−3 = 2x²−8x+5 ✓"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Factorisation :** si Δ ≥ 0, alors :\nax² + bx + c = **a(x − x₁)(x − x₂)**\n\nSi Δ = 0 (racine double x₀) : ax² + bx + c = a(x − x₀)²"
+          },
+          {
+            "type": "exemple",
+            "titre": "Factorisation",
+            "valeur": "6x² − x − 2 = 0 : Δ = 1 + 48 = 49\nx₁ = (1−7)/12 = −1/2 ; x₂ = (1+7)/12 = 2/3\n\n**6x² − x − 2 = 6(x + 1/2)(x − 2/3) = (2x + 1)(3x − 2)**"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Signe du trinôme et inéquations",
+      "type_lecon": "methode",
+      "duree_lecture": 22,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Règle du signe** du trinôme ax² + bx + c :\n\n• **Δ < 0** : le trinôme a le signe de a pour tout x ∈ ℝ\n• **Δ = 0** : le trinôme a le signe de a sauf en x₀ où il s'annule\n• **Δ > 0** : entre les racines (x₁ < x < x₂), signe opposé à a ; extérieur, même signe que a"
+          },
+          {
+            "type": "methode",
+            "titre": "Tableau de signes",
+            "valeur": "Pour étudier le signe de 2x² − 3x − 2 :\n\nΔ = 9 + 16 = 25 ; x₁ = (3−5)/4 = −1/2 ; x₂ = (3+5)/4 = 2\n\nTableau de signes :\nx     | −∞    −1/2    2    +∞\n2x²−3x−2 |  +  0  −  0  +\n\n(a = 2 > 0 : + à l'extérieur des racines, − entre les racines)"
+          },
+          {
+            "type": "exemple",
+            "titre": "Résolution d'inéquations",
+            "valeur": "Résoudre : x² − x − 6 ≤ 0\n\nΔ = 1 + 24 = 25 ; x₁ = (1−5)/2 = −2 ; x₂ = (1+5)/2 = 3\nSigna (a=1>0) : − entre les racines\n\n**Solution : x² − x − 6 ≤ 0 ⟺ −2 ≤ x ≤ 3, soit [−2 ; 3]**"
+          },
+          {
+            "type": "exemple",
+            "titre": "Système avec trinôme",
+            "valeur": "Résoudre : (x² − 4)(2x − 1) > 0\n\nx² − 4 = (x−2)(x+2) : racines −2 et 2\n2x − 1 = 0 ⟹ x = 1/2\n\nTableau de signes :\nx    | −∞  −2   1/2   2   +∞\nx+2  |  −   0   +     +    +\nx−2  |  −   −   −     0    +\n2x−1 |  −   −   0     +    +\nProduit| −  0   +   0  −  0  +\n\nS = ]−2 ; 1/2[ ∪ ]2 ; +∞["
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Résolution d'équations du second degré",
+      "type_exercice": "calcul",
+      "niveau": "base",
+      "bareme": 8,
+      "duree_recommandee": 18,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Résoudre dans ℝ :\na) 3x² − 7x + 2 = 0\nb) x² − 6x + 9 = 0\nc) 2x² + x + 4 = 0\nd) x² − 5 = 0"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** Δ = 49 − 24 = 25\nx₁ = (7−5)/6 = 1/3 ; x₂ = (7+5)/6 = 2\n**S = {1/3 ; 2}**\n\n**b)** Δ = 36 − 36 = 0\nx₀ = 6/2 = 3 (racine double)\n**S = {3}**\n\n**c)** Δ = 1 − 32 = −31 < 0\n**Pas de solution réelle**\n\n**d)** x² = 5 → x = ±√5\n**S = {−√5 ; √5}**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Forme canonique",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 8,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Mettre sous forme canonique a(x−α)² + β :\na) f(x) = x² − 4x + 7\nb) g(x) = −2x² + 8x − 3\nEn déduire le sommet de chaque parabole."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** f(x) = x² − 4x + 7\nα = 4/2 = 2 ; β = f(2) = 4 − 8 + 7 = 3\n**f(x) = (x − 2)² + 3** → Sommet S(2 ; 3)\n\n**b)** g(x) = −2x² + 8x − 3\nα = −8/(2×(−2)) = 2 ; β = g(2) = −8 + 16 − 3 = 5\n**g(x) = −2(x − 2)² + 5** → Sommet S(2 ; 5)"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Inéquations du second degré",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 10,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Résoudre les inéquations :\na) x² − 2x − 8 > 0\nb) −x² + 4x − 3 ≤ 0\nc) 2x² − 7x + 3 ≥ 0"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** x² − 2x − 8 > 0 : Δ = 4+32 = 36, x₁ = −2, x₂ = 4\nSigne a=1>0 : + hors des racines\n**S = ]−∞ ; −2[ ∪ ]4 ; +∞[**\n\n**b)** −x² + 4x − 3 ≤ 0 ⟺ x² − 4x + 3 ≥ 0\nΔ = 16−12 = 4, x₁ = 1, x₂ = 3\na=1>0 : + hors des racines\n**S = ]−∞ ; 1] ∪ [3 ; +∞[**\n\n**c)** 2x² − 7x + 3 ≥ 0 : Δ = 49−24 = 25, x₁ = 1/2, x₂ = 3\na=2>0 : + hors des racines\n**S = ]−∞ ; 1/2] ∪ [3 ; +∞[**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Problème — Dimensions d'un terrain",
+      "type_exercice": "probleme",
+      "niveau": "approfondissement",
+      "bareme": 12,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Un terrain rectangulaire à Yaoundé a un périmètre de 40 m et une aire de 91 m². Trouver les dimensions du terrain."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Soit x la longueur (x > 0). La largeur est (20 − x) (demi-périmètre = 20).\nAire : x(20 − x) = 91\n20x − x² = 91\nx² − 20x + 91 = 0\n\nΔ = 400 − 364 = 36\nx₁ = (20 − 6)/2 = 7 ; x₂ = (20 + 6)/2 = 13\n\nLes deux solutions donnent le même rectangle :\n**Longueur = 13 m, Largeur = 7 m**\n\nVérification : 2(13 + 7) = 40 ✓ et 13 × 7 = 91 ✓"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Second degré",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 8,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** Le discriminant de 3x² − 5x + 2 = 0 est :\n(A) 1  (B) 11  (C) 49  (D) 25\n\n**Q2.** x² − 6x + 9 = 0 a :\n(A) deux racines distinctes  (B) une racine double  (C) pas de racine  (D) deux racines négatives\n\n**Q3.** La somme des racines de 2x² − 7x + 3 = 0 est :\n(A) 7/2  (B) 3/2  (C) 7  (D) −7/2"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (A) 1 : Δ = 25 − 4×3×2 = 25 − 24 = 1\n\n**Q2.** (B) une racine double : Δ = 36 − 36 = 0 → x₀ = 3\n\n**Q3.** (A) 7/2 : somme = −b/a = 7/2"
+          }
+        ]
+      },
+      "options_qcm": [
+        {"question": 1, "reponse_correcte": "A"},
+        {"question": 2, "reponse_correcte": "B"},
+        {"question": 3, "reponse_correcte": "A"}
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Étude de signe d'un produit de trinômes",
+      "type_exercice": "calcul",
+      "niveau": "approfondissement",
+      "bareme": 9,
+      "duree_recommandee": 18,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Résoudre dans ℝ : (x² − 3x + 2)(x² + x − 6) ≤ 0"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Factorisons chaque trinôme :\nx² − 3x + 2 = 0 : Δ = 9−8=1, x₁=1, x₂=2 → (x−1)(x−2)\nx² + x − 6 = 0 : Δ = 1+24=25, x₁=−3, x₂=2 → (x+3)(x−2)\n\nDonc le produit = (x−1)(x−2)(x+3)(x−2) = (x+3)(x−1)(x−2)²\n\n(x−2)² ≥ 0 toujours, donc le signe dépend de (x+3)(x−1) :\n• (x+3)(x−1) ≤ 0 ⟺ −3 ≤ x ≤ 1\n• (x−2)² = 0 ⟺ x = 2\n\n**S = [−3 ; 1] ∪ {2}**"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

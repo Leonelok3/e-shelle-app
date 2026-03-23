@@ -1,0 +1,266 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "1ere-c-9-trigonometrie-cercle-et-formules",
+  "meta": {
+    "classe": "1ère C",
+    "numero": 9,
+    "titre": "Trigonométrie — cercle et formules",
+    "categorie": "trigonometrie",
+    "difficulte": 4,
+    "description": "Cercle trigonométrique, radian, formules d'addition, de duplication, équations trigonométriques.",
+    "objectifs": [
+      "Convertir entre degrés et radians",
+      "Utiliser le cercle trigonométrique",
+      "Appliquer les formules d'addition et de duplication",
+      "Résoudre des équations trigonométriques de base"
+    ],
+    "prerequis_slugs": ["1ere-c-1-generalites-sur-les-fonctions-numeriques"],
+    "duree_estimee": 110,
+    "points_total_exercices": 55
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Cercle trigonométrique et mesure en radians",
+      "type_lecon": "definition",
+      "duree_lecture": 22,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Le **cercle trigonométrique** est le cercle de centre O et de rayon 1. Un angle orienté de sommet O est mesuré en **radians** (rad).\n\n**Conversion :** angle_rad = angle_degrés × π/180\nangle_degrés = angle_rad × 180/π\n\nAngles fondamentaux :\n• 0° = 0 rad ; 30° = π/6 ; 45° = π/4 ; 60° = π/3 ; 90° = π/2 ; 180° = π ; 360° = 2π"
+          },
+          {
+            "type": "texte",
+            "valeur": "Pour un angle θ, le point M sur le cercle a pour coordonnées **(cos θ ; sin θ)**.\n\nValeurs fondamentales :\n| θ | 0 | π/6 | π/4 | π/3 | π/2 | π |\n|---|---|-----|-----|-----|-----|---|\n| cos θ | 1 | √3/2 | √2/2 | 1/2 | 0 | −1 |\n| sin θ | 0 | 1/2 | √2/2 | √3/2 | 1 | 0 |\n| tan θ | 0 | 1/√3 | 1 | √3 | ndef | 0 |"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Relations fondamentales :**\n• cos²θ + sin²θ = 1 (identité pythagoricienne)\n• tan θ = sin θ / cos θ\n• 1 + tan²θ = 1/cos²θ\n\n**Parité et périodicité :**\n• cos(−θ) = cos θ (cosinus pair)\n• sin(−θ) = −sin θ (sinus impair)\n• cos(θ + 2π) = cos θ ; sin(θ + 2π) = sin θ (période 2π)"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Formules d'addition et de duplication",
+      "type_lecon": "definition",
+      "duree_lecture": 25,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Formules d'addition** (à mémoriser absolument) :\n• cos(a + b) = cos a·cos b − sin a·sin b\n• cos(a − b) = cos a·cos b + sin a·sin b\n• sin(a + b) = sin a·cos b + cos a·sin b\n• sin(a − b) = sin a·cos b − cos a·sin b\n• tan(a + b) = (tan a + tan b)/(1 − tan a·tan b)"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Formules de duplication** (cas particulier a = b) :\n• cos(2a) = cos²a − sin²a = 2cos²a − 1 = 1 − 2sin²a\n• sin(2a) = 2sin a·cos a\n• tan(2a) = 2tan a/(1 − tan²a)\n\n**Formules de demi-angle :**\n• cos²a = (1 + cos 2a)/2\n• sin²a = (1 − cos 2a)/2"
+          },
+          {
+            "type": "exemple",
+            "titre": "Applications des formules",
+            "valeur": "a) Calculer cos(75°) = cos(45° + 30°)\n= cos45·cos30 − sin45·sin30\n= (√2/2)(√3/2) − (√2/2)(1/2)\n= √6/4 − √2/4 = **(√6 − √2)/4**\n\nb) Sachant que sin θ = 3/5 et θ ∈ [0 ; π/2], calculer sin(2θ) et cos(2θ).\ncos θ = 4/5 (positif dans le premier quadrant)\nsin(2θ) = 2×(3/5)×(4/5) = **24/25**\ncos(2θ) = (4/5)² − (3/5)² = 16/25 − 9/25 = **7/25**"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Équations trigonométriques",
+      "type_lecon": "methode",
+      "duree_lecture": 25,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Équations de base :**\n• sin x = k (|k| ≤ 1) : x = arcsin(k) + 2kπ **ou** x = π − arcsin(k) + 2kπ\n• cos x = k (|k| ≤ 1) : x = ±arccos(k) + 2kπ\n• tan x = k : x = arctan(k) + kπ\n\nPour les valeurs remarquables, on utilise directement les angles du cercle."
+          },
+          {
+            "type": "exemple",
+            "titre": "Résolution d'équations",
+            "valeur": "**a)** cos x = 1/2 (x ∈ [0 ; 2π])\ncos x = 1/2 ⟹ x = π/3 ou x = 2π − π/3 = 5π/3\n**S = {π/3 ; 5π/3}**\n\n**b)** sin x = −√3/2 (x ∈ [0 ; 2π])\narcsin(√3/2) = π/3\nsin x = −√3/2 ⟹ x = π + π/3 = 4π/3 ou x = 2π − π/3 = 5π/3\n**S = {4π/3 ; 5π/3}**\n\n**c)** 2cos²x − 1 = 0 (x ∈ [0 ; 2π])\ncos(2x) = 0 ⟹ 2x = π/2 + kπ ⟹ x = π/4 + kπ/2\nSolutions dans [0;2π] : x = π/4, 3π/4, 5π/4, 7π/4\n**S = {π/4 ; 3π/4 ; 5π/4 ; 7π/4}**"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Fonctions sinus et cosinus — propriétés",
+      "type_lecon": "definition",
+      "duree_lecture": 20,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Fonction sin x :** définie sur ℝ, à valeurs dans [−1 ; 1], période 2π, impaire.\n• Croissante sur [−π/2 ; π/2], décroissante sur [π/2 ; 3π/2]\n• (sin x)' = cos x\n\n**Fonction cos x :** définie sur ℝ, à valeurs dans [−1 ; 1], période 2π, paire.\n• Décroissante sur [0 ; π], croissante sur [π ; 2π]\n• (cos x)' = −sin x\n\n**Fonction tan x :** définie sur ℝ \\ {π/2 + kπ}, période π, impaire.\n• (tan x)' = 1 + tan²x = 1/cos²x"
+          },
+          {
+            "type": "exemple",
+            "titre": "Dérivées trigonométriques",
+            "valeur": "a) f(x) = sin(2x) : f'(x) = 2cos(2x)\nb) g(x) = cos²(x) : g'(x) = 2cos(x)·(−sin(x)) = −sin(2x)\nc) h(x) = tan(3x) : h'(x) = 3/cos²(3x) = 3(1+tan²(3x))\nd) k(x) = x·sin(x) : k'(x) = sin(x) + x·cos(x)"
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Conversions et valeurs exactes",
+      "type_exercice": "calcul",
+      "niveau": "base",
+      "bareme": 8,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) Convertir en radians : 120°, 135°, 270°\nb) Convertir en degrés : 5π/6, 7π/4, 3π\nc) Calculer sans calculatrice : cos(5π/6), sin(5π/4), tan(2π/3)"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) 120° = 2π/3 ; 135° = 3π/4 ; 270° = 3π/2\n\nb) 5π/6 = 150° ; 7π/4 = 315° ; 3π = 540°\n\nc) cos(5π/6) = cos(π − π/6) = −cos(π/6) = **−√3/2**\nsin(5π/4) = sin(π + π/4) = −sin(π/4) = **−√2/2**\ntan(2π/3) = tan(π − π/3) = −tan(π/3) = **−√3**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Formules d'addition",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 10,
+      "duree_recommandee": 18,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) Calculer sin(π/12) = sin(π/4 − π/6) en utilisant la formule d'addition.\nb) Sachant que cos α = 1/3 et α ∈ ]0 ; π/2[, calculer sin α, cos(2α) et sin(2α).\nc) Simplifier : cos(x + π) + sin(x + π/2)."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) sin(π/4 − π/6) = sin(π/4)cos(π/6) − cos(π/4)sin(π/6)\n= (√2/2)(√3/2) − (√2/2)(1/2) = √6/4 − √2/4 = **(√6−√2)/4**\n\nb) cos α = 1/3, α ∈ ]0;π/2[\nsin²α = 1 − 1/9 = 8/9, sin α = 2√2/3 (positif)\ncos(2α) = 2cos²α − 1 = 2/9 − 1 = **−7/9**\nsin(2α) = 2sinα·cosα = 2·(2√2/3)·(1/3) = **4√2/9**\n\nc) cos(x+π) = −cos x ; sin(x+π/2) = cos x\nDonc −cos x + cos x = **0**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Équations trigonométriques",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 12,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Résoudre sur [0 ; 2π] :\na) sin x = √3/2\nb) cos x = −1/2\nc) sin x = cos x\nd) 2sin²x − sinx − 1 = 0"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) sin x = √3/2 ⟹ x = π/3 ou x = π − π/3 = 2π/3\n**S = {π/3 ; 2π/3}**\n\nb) cos x = −1/2 ⟹ x = 2π/3 ou x = 4π/3\n**S = {2π/3 ; 4π/3}**\n\nc) sin x = cos x ⟹ tan x = 1 ⟹ x = π/4 ou x = π/4 + π = 5π/4\n**S = {π/4 ; 5π/4}**\n\nd) Posons t = sin x : 2t² − t − 1 = 0\n(2t+1)(t−1) = 0 ⟹ t = −1/2 ou t = 1\nsin x = 1 ⟹ x = π/2\nsin x = −1/2 ⟹ x = 7π/6 ou x = 11π/6\n**S = {π/2 ; 7π/6 ; 11π/6}**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "QCM — Trigonométrie",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 8,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** cos(2×π/3) vaut :\n(A) 1/2  (B) −1/2  (C) √3/2  (D) −√3/2\n\n**Q2.** (sin x)' est égal à :\n(A) −sin x  (B) cos x  (C) −cos x  (D) sin x\n\n**Q3.** L'identité cos²x + sin²x est égale à :\n(A) 2  (B) cos(2x)  (C) 1  (D) 0"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (B) −1/2 : cos(2π/3) = cos(π − π/3) = −cos(π/3) = −1/2\n\n**Q2.** (B) cos x : la dérivée de sin x est cos x\n\n**Q3.** (C) 1 : identité pythagoricienne fondamentale"
+          }
+        ]
+      },
+      "options_qcm": [
+        {"question": 1, "reponse_correcte": "B"},
+        {"question": 2, "reponse_correcte": "B"},
+        {"question": 3, "reponse_correcte": "C"}
+      ]
+    },
+    {
+      "numero": 5,
+      "titre": "Identités trigonométriques",
+      "type_exercice": "calcul",
+      "niveau": "approfondissement",
+      "bareme": 12,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "1) Montrer que cos(3x) = 4cos³x − 3cos x.\n2) En déduire la valeur exacte de cos(π/9) si cos(π/3) = 1/2.\n(Indication : utiliser la formule d'addition cos(2x+x))"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1)** cos(3x) = cos(2x + x)\n= cos(2x)cos(x) − sin(2x)sin(x)\n= (2cos²x−1)cos x − 2sin x·cos x·sin x\n= 2cos³x − cos x − 2cos x·sin²x\n= 2cos³x − cos x − 2cos x(1 − cos²x)\n= 2cos³x − cos x − 2cos x + 2cos³x\n**= 4cos³x − 3cos x ✓**\n\n**2)** On cherche cos(π/9) tel que cos(3×π/9) = cos(π/3) = 1/2.\nSoit c = cos(π/9). On résout 4c³ − 3c = 1/2.\n8c³ − 6c − 1 = 0\nOn peut vérifier que c = cos(π/9) ≈ 0,940 est une solution de cette équation cubique."
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 6,
+      "titre": "Dérivées et variations trigonométriques",
+      "type_exercice": "calcul",
+      "niveau": "approfondissement",
+      "bareme": 5,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Étudier les variations de f(x) = sin x + cos x sur [0 ; 2π]."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "f'(x) = cos x − sin x\nf'(x) = 0 ⟺ cos x = sin x ⟺ tan x = 1 ⟺ x = π/4 ou x = 5π/4\n\nSigne de f'(x) = cos x − sin x :\n• 0 < x < π/4 : cos > sin → f'(x) > 0 (↗)\n• π/4 < x < 5π/4 : cos < sin → f'(x) < 0 (↘)\n• 5π/4 < x < 2π : cos > sin → f'(x) > 0 (↗)\n\nValeurs :\nf(π/4) = √2/2 + √2/2 = √2 (maximum)\nf(5π/4) = −√2/2 − √2/2 = −√2 (minimum)\n\nTableau :\nx  | 0    π/4      5π/4     2π\nf  | 1  ↗  √2   ↘  −√2  ↗  1"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

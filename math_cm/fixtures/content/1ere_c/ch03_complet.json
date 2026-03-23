@@ -1,0 +1,283 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "1ere-c-3-etude-de-fonctions-variations-et-extrema",
+  "meta": {
+    "classe": "1ère C",
+    "numero": 3,
+    "titre": "Étude de fonctions — variations et extrema",
+    "categorie": "analyse",
+    "difficulte": 3,
+    "description": "Utiliser la dérivée pour dresser le tableau de variations, trouver les extrema locaux et globaux.",
+    "objectifs": [
+      "Calculer la dérivée d'une fonction et déterminer son signe",
+      "Dresser le tableau de variations d'une fonction",
+      "Identifier les extrema locaux et globaux",
+      "Résoudre des problèmes d'optimisation concrets"
+    ],
+    "prerequis_slugs": ["1ere-c-2-derivation-definition-et-regles-de-calcul"],
+    "duree_estimee": 100,
+    "points_total_exercices": 55
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Signe de la dérivée et monotonie",
+      "type_lecon": "definition",
+      "duree_lecture": 20,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Le lien fondamental entre la dérivée et les variations d'une fonction est le théorème suivant : **si f est dérivable sur un intervalle I**, alors :\n• f est **croissante** sur I ⟺ f'(x) ≥ 0 pour tout x ∈ I\n• f est **décroissante** sur I ⟺ f'(x) ≤ 0 pour tout x ∈ I\n• f est **constante** sur I ⟺ f'(x) = 0 pour tout x ∈ I"
+          },
+          {
+            "type": "methode",
+            "titre": "Méthode pour étudier les variations",
+            "valeur": "**Étape 1 :** Calculer f'(x)\n**Étape 2 :** Résoudre f'(x) = 0 pour trouver les racines\n**Étape 3 :** Étudier le signe de f'(x) entre les racines\n**Étape 4 :** Dresser le tableau de variations de f"
+          },
+          {
+            "type": "exemple",
+            "titre": "Exemple complet",
+            "valeur": "Étudier les variations de f(x) = x³ − 3x + 2 sur ℝ\n\n**f'(x) = 3x² − 3 = 3(x² − 1) = 3(x−1)(x+1)**\n\nf'(x) = 0 ⟹ x = −1 ou x = 1\n\nSigne de f'(x) :\n• x < −1 : f'(x) > 0 (croissante)\n• −1 < x < 1 : f'(x) < 0 (décroissante)\n• x > 1 : f'(x) > 0 (croissante)\n\nValeurs : f(−1) = −1 + 3 + 2 = 4 ; f(1) = 1 − 3 + 2 = 0\n\n**Tableau de variations :**\nx  | −∞   −1   1   +∞\nf' |  +  0  −  0  +\nf  |  ↗  4  ↘  0  ↗"
+          },
+          {
+            "type": "contexte",
+            "valeur": "Un agriculteur de Bafoussam veut clôturer un terrain rectangulaire avec 120 m de grillage. Si x est la longueur, la largeur est (60 − x) et l'aire A(x) = x(60 − x) = 60x − x². A'(x) = 60 − 2x = 0 donne x = 30 m. L'aire maximale est 900 m²."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Extrema locaux et globaux",
+      "type_lecon": "definition",
+      "duree_lecture": 22,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Un **maximum local** en a : f(a) ≥ f(x) pour x voisin de a (f' change de signe + → −)\nUn **minimum local** en a : f(a) ≤ f(x) pour x voisin de a (f' change de signe − → +)\nUn **extremum global** est le plus grand (ou petit) de tous les extrema locaux sur l'intervalle étudié."
+          },
+          {
+            "type": "methode",
+            "titre": "Lecture du tableau de variations",
+            "valeur": "Dans un tableau de variations :\n• Une **flèche montante** (↗) indique une portion croissante\n• Une **flèche descendante** (↘) indique une portion décroissante\n• Un **sommet** du tableau correspond à un maximum local\n• Un **creux** du tableau correspond à un minimum local\n\nSur un intervalle fermé [a ; b], l'extremum global est le plus grand (ou petit) parmi les valeurs aux extrema locaux et aux bornes."
+          },
+          {
+            "type": "exemple",
+            "titre": "Extrema sur un intervalle fermé",
+            "valeur": "Soit f(x) = −x³ + 3x sur [−2 ; 2]\nf'(x) = −3x² + 3 = −3(x² − 1)\nf'(x) = 0 ⟹ x = −1 ou x = 1\n\nValeurs remarquables :\nf(−2) = 8 − 6 = 2\nf(−1) = 1 − 3 = −2 (minimum local)\nf(1) = −1 + 3 = 2 (maximum local)\nf(2) = −8 + 6 = −2\n\n**Maximum global = 2** (atteint en x = −2 et x = 1)\n**Minimum global = −2** (atteint en x = −1 et x = 2)"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Équation de la tangente et problèmes d'optimisation",
+      "type_lecon": "methode",
+      "duree_lecture": 25,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "L'équation de la **tangente** à la courbe de f au point d'abscisse a est :\n**y = f'(a)(x − a) + f(a)**\nCette droite a pour pente f'(a) et passe par le point (a ; f(a))."
+          },
+          {
+            "type": "exemple",
+            "titre": "Équation de tangente",
+            "valeur": "Trouver la tangente à f(x) = x³ − 2x en x = 1\n\nf(1) = 1 − 2 = −1\nf'(x) = 3x² − 2, donc f'(1) = 3 − 2 = 1\n\nTangente : y = 1·(x − 1) + (−1) = x − 2\n\n**Équation : y = x − 2**"
+          },
+          {
+            "type": "methode",
+            "titre": "Optimisation — démarche",
+            "valeur": "**1.** Modéliser : exprimer la quantité à optimiser en fonction d'une seule variable x\n**2.** Déterminer le domaine admissible (contraintes du problème)\n**3.** Dériver et annuler : résoudre f'(x) = 0\n**4.** Vérifier qu'on a bien un maximum ou minimum (tableau de variations)\n**5.** Conclure dans le contexte du problème"
+          },
+          {
+            "type": "exemple",
+            "titre": "Problème d'optimisation",
+            "valeur": "Une boîte sans couvercle est fabriquée à partir d'un carré de côté 12 cm en découpant des carrés de côté x aux 4 coins. Maximiser le volume.\n\nV(x) = x(12 − 2x)² pour x ∈ ]0 ; 6[\nV(x) = x(144 − 48x + 4x²) = 144x − 48x² + 4x³\nV'(x) = 144 − 96x + 12x² = 12(12 − 8x + x²) = 12(x − 2)(x − 6)\n\nV'(x) = 0 ⟹ x = 2 ou x = 6 (hors domaine)\n\nx = 2 est un maximum : V(2) = 2 × 8² = 128 cm³"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Convexité et point d'inflexion",
+      "type_lecon": "definition",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Une fonction f est **convexe** sur I si f'' ≥ 0 sur I (la courbe est « en creux »).\nElle est **concave** sur I si f'' ≤ 0 sur I (la courbe est « en bosse »).\n\nUn **point d'inflexion** est un point où la courbe change de convexité, c'est-à-dire où f'' change de signe."
+          },
+          {
+            "type": "exemple",
+            "titre": "Point d'inflexion",
+            "valeur": "Soit f(x) = x³ − 3x² + 1\nf'(x) = 3x² − 6x\nf''(x) = 6x − 6 = 6(x − 1)\n\nf''(x) = 0 ⟹ x = 1\n• x < 1 : f''(x) < 0 (concave)\n• x > 1 : f''(x) > 0 (convexe)\n\n**Point d'inflexion en x = 1** : f(1) = 1 − 3 + 1 = −1\nCoordonnées : (1 ; −1)"
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Tableau de variations — fonctions polynômes",
+      "type_exercice": "calcul",
+      "niveau": "base",
+      "bareme": 8,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Dresser le tableau de variations de chaque fonction sur ℝ :\na) f(x) = 2x³ − 6x + 1\nb) g(x) = −x⁴ + 4x²\nc) h(x) = x³ − 3x²"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a) f(x) = 2x³ − 6x + 1**\nf'(x) = 6x² − 6 = 6(x² − 1) = 6(x−1)(x+1)\nf'(x) = 0 ⟹ x = −1 ou x = 1\nf(−1) = −2 + 6 + 1 = 5 ; f(1) = 2 − 6 + 1 = −3\nVariations : ↗ jusqu'à (−1 ; 5), ↘ jusqu'à (1 ; −3), ↗\n\n**b) g(x) = −x⁴ + 4x²**\ng'(x) = −4x³ + 8x = −4x(x² − 2) = −4x(x−√2)(x+√2)\ng'(x) = 0 ⟹ x = −√2, x = 0 ou x = √2\ng(−√2) = −4 + 8 = 4 ; g(0) = 0 ; g(√2) = 4\nVariations : ↗ jusqu'à (−√2 ; 4), ↘ jusqu'à (0 ; 0), ↗ jusqu'à (√2 ; 4), ↘\n\n**c) h(x) = x³ − 3x²**\nh'(x) = 3x² − 6x = 3x(x − 2)\nh'(x) = 0 ⟹ x = 0 ou x = 2\nh(0) = 0 ; h(2) = 8 − 12 = −4\nVariations : ↗ jusqu'à (0 ; 0), ↘ jusqu'à (2 ; −4), ↗"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Extrema sur un intervalle fermé",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 8,
+      "duree_recommandee": 18,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Trouver les extrema globaux de f(x) = x³ − 6x² + 9x + 1 sur [0 ; 4]."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "f'(x) = 3x² − 12x + 9 = 3(x² − 4x + 3) = 3(x−1)(x−3)\nf'(x) = 0 ⟹ x = 1 ou x = 3\n\nValeurs :\nf(0) = 1\nf(1) = 1 − 6 + 9 + 1 = 5\nf(3) = 27 − 54 + 27 + 1 = 1\nf(4) = 64 − 96 + 36 + 1 = 5\n\n**Maximum global = 5**, atteint en x = 1 et x = 4\n**Minimum global = 1**, atteint en x = 0 et x = 3"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Équation de tangente",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 8,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Déterminer l'équation de la tangente à la courbe de f en le point indiqué :\na) f(x) = x³ − 2x² + 1 au point d'abscisse x = 2\nb) f(x) = 2x² − 3x + 1 au point d'abscisse x = 1"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** f(2) = 8 − 8 + 1 = 1\nf'(x) = 3x² − 4x, f'(2) = 12 − 8 = 4\nTangente : y = 4(x − 2) + 1 = 4x − 7\n\n**b)** f(1) = 2 − 3 + 1 = 0\nf'(x) = 4x − 3, f'(1) = 1\nTangente : y = 1·(x − 1) + 0 = x − 1"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Problème d'optimisation",
+      "type_exercice": "probleme",
+      "niveau": "approfondissement",
+      "bareme": 12,
+      "duree_recommandee": 25,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Un entrepreneur de Douala veut construire une route reliant deux villages A et B. La route doit traverser une forêt et coûte 3 millions FCFA par km en forêt et 1 million FCFA par km en terrain plat. Les villages sont distants de 10 km (en ligne droite). La forêt occupe une bande de 3 km de large perpendiculaire à la droite AB. Si la route entre dans la forêt à une distance x km du point le plus court (d'où x ∈ [0 ; 10]), exprimer le coût total C(x) et trouver le tracé optimal."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Distance en forêt : √(x² + 9) km\nDistance en terrain plat : (10 − x) km\n\nC(x) = 3√(x² + 9) + (10 − x) (en millions FCFA)\n\nC'(x) = 3 · x/√(x² + 9) − 1\n\nC'(x) = 0 ⟹ 3x/√(x² + 9) = 1\n⟹ 9x² = x² + 9\n⟹ 8x² = 9\n⟹ x = 3/(2√2) = 3√2/4 ≈ 1,06 km\n\nC(3√2/4) = 3·√(9/8 + 9) + 10 − 3√2/4\n= 3·√(81/8) + ... ≈ 3·3,18 + 9,73 ≈ 19,27 millions FCFA\n\nLa route doit entrer dans la forêt à environ **1,06 km** du point le plus proche pour minimiser le coût."
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Variations et extrema",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 9,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** f(x) = x³ − 3x admet un maximum local en :\n(A) x = 0  (B) x = 1  (C) x = −1  (D) x = 3\n\n**Q2.** Si f'(x) > 0 sur ]a ; b[, alors f est :\n(A) décroissante  (B) constante  (C) croissante  (D) nulle\n\n**Q3.** f(x) = −2x² + 8x a son maximum en :\n(A) x = 2  (B) x = −2  (C) x = 4  (D) x = 0"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (C) x = −1 : f'(x) = 3x² − 3 = 0 ⟹ x = ±1. En x = −1 : f' passe de + à − → maximum local.\n\n**Q2.** (C) croissante : f' > 0 ⟺ f croissante.\n\n**Q3.** (A) x = 2 : f'(x) = −4x + 8 = 0 ⟹ x = 2. f''(x) = −4 < 0 → maximum."
+          }
+        ]
+      },
+      "options_qcm": [
+        {"question": 1, "reponse_correcte": "C"},
+        {"question": 2, "reponse_correcte": "C"},
+        {"question": 3, "reponse_correcte": "A"}
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Point d'inflexion",
+      "type_exercice": "calcul",
+      "niveau": "approfondissement",
+      "bareme": 10,
+      "duree_recommandee": 18,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Soit f(x) = x⁴ − 6x² + 2x + 3.\n1) Calculer f'(x) et f''(x).\n2) Trouver les points d'inflexion de f.\n3) Dresser le tableau de convexité."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1)** f'(x) = 4x³ − 12x + 2\nf''(x) = 12x² − 12 = 12(x² − 1) = 12(x−1)(x+1)\n\n**2)** f''(x) = 0 ⟹ x = −1 ou x = 1\n• En x = −1 : f''change de signe (+ → −) → **point d'inflexion**\n• En x = 1 : f'' change de signe (− → +) → **point d'inflexion**\n\nf(−1) = 1 − 6 − 2 + 3 = −4 → Point (−1 ; −4)\nf(1) = 1 − 6 + 2 + 3 = 0 → Point (1 ; 0)\n\n**3)** Tableau de convexité :\nx   | −∞   −1   1   +∞\nf'' |  +  0  −  0  +\nf   | convexe | concave | convexe"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

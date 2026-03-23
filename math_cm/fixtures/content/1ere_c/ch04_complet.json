@@ -1,0 +1,246 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "1ere-c-4-suites-numeriques",
+  "meta": {
+    "classe": "1ère C",
+    "numero": 4,
+    "titre": "Suites numériques",
+    "categorie": "analyse",
+    "difficulte": 3,
+    "description": "Suites arithmétiques et géométriques : définition, terme général, somme des termes, applications.",
+    "objectifs": [
+      "Définir une suite par récurrence ou par son terme général",
+      "Reconnaître et utiliser les suites arithmétiques et géométriques",
+      "Calculer le terme général et la somme des termes",
+      "Résoudre des problèmes financiers et concrets avec les suites"
+    ],
+    "prerequis_slugs": ["1ere-c-1-generalites-sur-les-fonctions-numeriques"],
+    "duree_estimee": 90,
+    "points_total_exercices": 50
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Définition et modes de représentation d'une suite",
+      "type_lecon": "definition",
+      "duree_lecture": 18,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Une **suite numérique** est une fonction définie sur ℕ (ou une partie de ℕ) à valeurs dans ℝ. On note le n-ième terme **u_n** et la suite **(u_n)_{n≥0}** ou **(u_n)**.\n\nDeux modes de définition :\n• **Terme général** : formule explicite donnant u_n en fonction de n. Ex : u_n = 2n + 1\n• **Relation de récurrence** : formule donnant u_{n+1} en fonction de u_n. Ex : u_{n+1} = 2u_n − 3"
+          },
+          {
+            "type": "exemple",
+            "titre": "Calcul des premiers termes",
+            "valeur": "Suite définie par u_n = n² − 2n + 1 :\nu_0 = 0 − 0 + 1 = 1\nu_1 = 1 − 2 + 1 = 0\nu_2 = 4 − 4 + 1 = 1\nu_3 = 9 − 6 + 1 = 4\nu_4 = 16 − 8 + 1 = 9\n\nSuite par récurrence : u_0 = 3, u_{n+1} = 2u_n − 1 :\nu_0 = 3 ; u_1 = 5 ; u_2 = 9 ; u_3 = 17 ; u_4 = 33"
+          },
+          {
+            "type": "texte",
+            "valeur": "Une suite est **croissante** si u_{n+1} ≥ u_n pour tout n.\nElle est **décroissante** si u_{n+1} ≤ u_n pour tout n.\nElle est **bornée** s'il existe M > 0 tel que |u_n| ≤ M pour tout n."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Suites arithmétiques",
+      "type_lecon": "definition",
+      "duree_lecture": 22,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Une suite **(u_n)** est **arithmétique** de raison r si :\n**u_{n+1} = u_n + r** pour tout n ∈ ℕ\n\nPropriétés :\n• Terme général : **u_n = u_0 + nr** (ou u_n = u_p + (n−p)r)\n• Somme des n premiers termes : **S_n = u_0 + u_1 + ... + u_{n−1} = n · (u_0 + u_{n−1})/2**\n• r > 0 ⟹ suite croissante ; r < 0 ⟹ décroissante ; r = 0 ⟹ constante"
+          },
+          {
+            "type": "exemple",
+            "titre": "Suite arithmétique",
+            "valeur": "Suite arithmétique : u_0 = 5, r = 3\nu_n = 5 + 3n\nu_10 = 5 + 30 = 35\n\nSomme S = u_0 + u_1 + ... + u_9 (10 termes)\nS = 10 × (u_0 + u_9)/2 = 10 × (5 + 32)/2 = 10 × 18,5 = 185"
+          },
+          {
+            "type": "contexte",
+            "valeur": "Un apprenti mécanicien à Douala gagne 45 000 FCFA le premier mois. Son salaire augmente de 3 000 FCFA par mois. Au bout de 12 mois, son salaire est u_11 = 45 000 + 11×3 000 = 78 000 FCFA. Le total perçu en 1 an : S = 12×(45 000 + 78 000)/2 = 738 000 FCFA."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Suites géométriques",
+      "type_lecon": "definition",
+      "duree_lecture": 22,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Une suite **(u_n)** est **géométrique** de raison q (q ≠ 0) si :\n**u_{n+1} = q · u_n** pour tout n ∈ ℕ\n\nPropriétés :\n• Terme général : **u_n = u_0 · qⁿ**\n• Somme (q ≠ 1) : **S_n = u_0 · (1 − qⁿ)/(1 − q)**\n• Somme (q = 1) : S_n = n · u_0\n• q > 1 et u_0 > 0 ⟹ croissante ; 0 < q < 1 et u_0 > 0 ⟹ décroissante"
+          },
+          {
+            "type": "exemple",
+            "titre": "Suite géométrique",
+            "valeur": "Suite géométrique : u_0 = 2, q = 3\nu_n = 2 × 3ⁿ\nu_5 = 2 × 3⁵ = 2 × 243 = 486\n\nS = u_0 + u_1 + ... + u_4 (5 termes, q = 3)\nS = 2 × (1 − 3⁵)/(1 − 3) = 2 × (1 − 243)/(−2) = 2 × 121 = 242"
+          },
+          {
+            "type": "contexte",
+            "valeur": "Une somme de 500 000 FCFA est placée sur un compte à intérêts composés au taux annuel de 5%. Le capital après n années est : C_n = 500 000 × 1,05ⁿ (suite géométrique de raison 1,05). Après 10 ans : C_10 = 500 000 × 1,05^10 ≈ 814 447 FCFA."
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Limite d'une suite — notions de base",
+      "type_lecon": "definition",
+      "duree_lecture": 20,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Limite d'une suite :** On dit que u_n tend vers L quand n → +∞ si u_n peut être aussi proche de L qu'on veut pour n suffisamment grand. On note : lim(n→+∞) u_n = L.\n\nLimites usuelles :\n• lim n^k = +∞ (k > 0)\n• lim (1/n^k) = 0 (k > 0)\n• lim qⁿ = 0 si |q| < 1 ; lim qⁿ = +∞ si q > 1"
+          },
+          {
+            "type": "exemple",
+            "titre": "Limites de suites courantes",
+            "valeur": "• u_n = (2n + 1)/(n + 3) = (2 + 1/n)/(1 + 3/n) → 2/1 = 2\n• u_n = (0,9)ⁿ → 0 (car |0,9| < 1)\n• u_n = 3 + 2n → +∞\n• u_n = 1/n² → 0"
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Identifier le type de suite",
+      "type_exercice": "calcul",
+      "niveau": "base",
+      "bareme": 8,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Pour chaque suite, préciser si elle est arithmétique, géométrique ou ni l'une ni l'autre. Donner le terme général et calculer u_6.\na) 2, 5, 8, 11, ...\nb) 3, 6, 12, 24, ...\nc) 1, 4, 9, 16, ...\nd) u_0 = 10, u_{n+1} = u_n − 4"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** Différences : 5−2=3, 8−5=3, 11−8=3 → **Arithmétique**, r = 3\nu_n = 2 + 3n → u_6 = 2 + 18 = **20**\n\n**b)** Rapports : 6/3=2, 12/6=2, 24/12=2 → **Géométrique**, q = 2\nu_n = 3 × 2ⁿ → u_6 = 3 × 64 = **192**\n\n**c)** u_n = (n+1)² → **Ni arithmétique ni géométrique**\nu_6 = 7² = **49**\n\n**d)** u_{n+1} − u_n = −4 constant → **Arithmétique**, r = −4\nu_n = 10 − 4n → u_6 = 10 − 24 = **−14**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Terme général et somme",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 10,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) Suite arithmétique avec u_3 = 11 et u_7 = 19. Trouver u_0, la raison r et calculer S = u_0 + u_1 + ... + u_9.\nb) Suite géométrique avec u_2 = 12 et u_5 = 96. Trouver u_0, la raison q et calculer S = u_0 + u_1 + ... + u_4."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a)** u_7 − u_3 = 4r = 19 − 11 = 8 ⟹ r = 2\nu_0 = u_3 − 3r = 11 − 6 = 5\nu_9 = 5 + 9×2 = 23\nS_10 = 10 × (u_0 + u_9)/2 = 10 × (5 + 23)/2 = **140**\n\n**b)** u_5/u_2 = q³ = 96/12 = 8 ⟹ q = 2\nu_0 = u_2/q² = 12/4 = 3\nS = 3 × (1 − 2⁵)/(1 − 2) = 3 × (1 − 32)/(−1) = 3 × 31 = **93**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Problème financier",
+      "type_exercice": "probleme",
+      "niveau": "approfondissement",
+      "bareme": 12,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Mme Awono place 200 000 FCFA dans une tontine qui lui rapporte 8% d'intérêts composés par an.\n1) Quel est le capital C_n après n années ?\n2) Après combien d'années le capital dépasse-t-il 300 000 FCFA ?\n3) Calculer le capital après 5 ans."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1)** C_n = 200 000 × (1,08)ⁿ (suite géométrique, q = 1,08)\n\n**2)** On cherche n tel que C_n > 300 000 :\n200 000 × (1,08)ⁿ > 300 000\n(1,08)ⁿ > 1,5\nn × ln(1,08) > ln(1,5)\nn > ln(1,5)/ln(1,08) ≈ 0,405/0,0770 ≈ 5,27\n\nDonc à partir de **n = 6 ans**, le capital dépasse 300 000 FCFA.\n\n**3)** C_5 = 200 000 × (1,08)⁵ = 200 000 × 1,4693 ≈ **293 866 FCFA**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "QCM — Suites",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 9,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** La suite 5, 10, 20, 40, ... est géométrique de raison :\n(A) 5  (B) 2  (C) 4  (D) 10\n\n**Q2.** Pour la suite arithmétique u_n = 3n − 1, la somme u_0 + u_1 + u_2 + u_3 vaut :\n(A) 14  (B) 16  (C) 20  (D) 18\n\n**Q3.** La limite de la suite u_n = 2ⁿ/(3ⁿ + 1) est :\n(A) 2/3  (B) +∞  (C) 0  (D) 1"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (B) 2 : 10/5 = 2, 20/10 = 2 ✓\n\n**Q2.** (C) 20 : u_0=−1, u_1=2, u_2=5, u_3=8 → somme = 14. Hmm... recalcul : u_0=−1+u_1=2+u_2=5+u_3=8 = 14 → (A) 14\n\n**Q3.** (C) 0 : u_n = (2/3)ⁿ/(1+1/3ⁿ) → 0 car |2/3| < 1"
+          }
+        ]
+      },
+      "options_qcm": [
+        {"question": 1, "reponse_correcte": "B"},
+        {"question": 2, "reponse_correcte": "A"},
+        {"question": 3, "reponse_correcte": "C"}
+      ]
+    },
+    {
+      "numero": 5,
+      "titre": "Suite définie par récurrence",
+      "type_exercice": "calcul",
+      "niveau": "approfondissement",
+      "bareme": 11,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Soit la suite définie par u_0 = 1 et u_{n+1} = 2u_n + 3.\n1) Calculer u_1, u_2, u_3, u_4.\n2) Posons v_n = u_n + 3. Montrer que (v_n) est géométrique.\n3) En déduire le terme général de u_n."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1)** u_1 = 2×1+3 = 5 ; u_2 = 2×5+3 = 13 ; u_3 = 2×13+3 = 29 ; u_4 = 2×29+3 = 61\n\n**2)** v_n = u_n + 3\nv_{n+1} = u_{n+1} + 3 = (2u_n + 3) + 3 = 2u_n + 6 = 2(u_n + 3) = 2v_n\n\nDonc v_{n+1}/v_n = 2 = constante → **(v_n) est géométrique de raison 2**\nv_0 = u_0 + 3 = 1 + 3 = 4\n\n**3)** v_n = 4 × 2ⁿ = 2^{n+2}\nOr u_n = v_n − 3, donc **u_n = 2^{n+2} − 3 = 4×2ⁿ − 3**\n\nVérification : u_3 = 4×8 − 3 = 32 − 3 = 29 ✓"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

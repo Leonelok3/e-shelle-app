@@ -1,0 +1,588 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "1ere-c-1-generalites-sur-les-fonctions-numeriques",
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Domaine de définition et opérations sur les fonctions",
+      "type_lecon": "definition",
+      "duree_lecture": 20,
+      "is_free": true,
+      "contenu": {
+        "introduction": "Une fonction numérique f associe à chaque réel x de son domaine un réel f(x). Maîtriser les fonctions, c'est savoir déterminer leur domaine, les combiner et interpréter leurs graphes. C'est la base de tout le programme de Première C.",
+        "sections": [
+          {
+            "titre": "Domaine de définition",
+            "type": "definition",
+            "contenu": "Le domaine de définition Df d'une fonction f est l'ensemble des réels x pour lesquels f(x) est défini. Pour le trouver, on exclut les valeurs qui rendent l'expression impossible.",
+            "formules": ["D_f = \\{x \\in \\mathbb{R} \\mid f(x) \\text{ existe}\\}"],
+            "exemples": [
+              {
+                "enonce": "Trouver le domaine de définition de f(x) = 1/(x-3)",
+                "etapes": [
+                  "Le dénominateur ne peut pas être nul : x - 3 ≠ 0",
+                  "Donc x ≠ 3",
+                  "Df = ℝ \\ {3} = ]-∞ ; 3[ ∪ ]3 ; +∞["
+                ],
+                "solution": "Df = ℝ \\ {3}"
+              },
+              {
+                "enonce": "Trouver le domaine de f(x) = √(2x - 6)",
+                "etapes": [
+                  "L'expression sous la racine doit être positive ou nulle : 2x - 6 ≥ 0",
+                  "2x ≥ 6 donc x ≥ 3",
+                  "Df = [3 ; +∞["
+                ],
+                "solution": "Df = [3 ; +∞["
+              }
+            ],
+            "remarques": ["Pour une racine carrée : expression ≥ 0. Pour un logarithme : expression > 0. Pour un quotient : dénominateur ≠ 0."]
+          },
+          {
+            "titre": "Opérations sur les fonctions",
+            "type": "propriete",
+            "contenu": "Soient f et g deux fonctions. On peut construire de nouvelles fonctions par somme, différence, produit, quotient ou composition. Le domaine de la fonction résultante est l'intersection des domaines, avec les restrictions supplémentaires (dénominateur ≠ 0 pour le quotient).",
+            "formules": [
+              "(f + g)(x) = f(x) + g(x),\\quad D_{f+g} = D_f \\cap D_g",
+              "\\left(\\frac{f}{g}\\right)(x) = \\frac{f(x)}{g(x)},\\quad D_{f/g} = D_f \\cap D_g \\setminus \\{g(x)=0\\}",
+              "(f \\circ g)(x) = f(g(x)),\\quad D_{f\\circ g} = \\{x \\in D_g \\mid g(x) \\in D_f\\}"
+            ],
+            "exemples": [
+              {
+                "enonce": "f(x) = √x et g(x) = x - 1. Calculer (f∘g)(x) et son domaine.",
+                "etapes": [
+                  "(f∘g)(x) = f(g(x)) = f(x-1) = √(x-1)",
+                  "Il faut g(x) ∈ Df, soit x - 1 ≥ 0",
+                  "Donc x ≥ 1"
+                ],
+                "solution": "(f∘g)(x) = √(x-1), D = [1 ; +∞["
+              }
+            ],
+            "remarques": ["La composition f∘g se lit 'f après g' : on applique g d'abord, puis f."]
+          },
+          {
+            "titre": "Parité et périodicité",
+            "type": "definition",
+            "contenu": "Une fonction f est paire si f(-x) = f(x) pour tout x de Df (symétrie par rapport à l'axe des ordonnées). Elle est impaire si f(-x) = -f(x) (symétrie par rapport à l'origine). Elle est périodique de période T si f(x+T) = f(x) pour tout x.",
+            "formules": [
+              "f \\text{ paire} \\Leftrightarrow f(-x) = f(x)",
+              "f \\text{ impaire} \\Leftrightarrow f(-x) = -f(x)"
+            ],
+            "exemples": [
+              {
+                "enonce": "Étudier la parité de f(x) = x⁴ - 3x² + 1",
+                "etapes": [
+                  "Calculer f(-x) = (-x)⁴ - 3(-x)² + 1 = x⁴ - 3x² + 1",
+                  "f(-x) = f(x) pour tout x",
+                  "f est paire"
+                ],
+                "solution": "f est paire (symétrique par rapport à l'axe Oy)"
+              }
+            ],
+            "remarques": ["En Terminale et en Probatoire, la parité permet de ne tracer que la moitié du graphe et de déduire l'autre par symétrie."]
+          },
+          {
+            "titre": "Monotonie et sens de variation",
+            "type": "definition",
+            "contenu": "Une fonction f est croissante sur un intervalle I si pour x₁ < x₂ dans I, f(x₁) < f(x₂). Elle est décroissante si f(x₁) > f(x₂). Le sens de variation s'étudiera rigoureusement avec la dérivée en chapitre 2.",
+            "formules": [
+              "f \\text{ croissante sur } I \\Leftrightarrow \\forall x_1, x_2 \\in I,\\; x_1 < x_2 \\Rightarrow f(x_1) < f(x_2)"
+            ],
+            "exemples": [
+              {
+                "enonce": "La fonction f(x) = 2x + 5 est-elle monotone ?",
+                "etapes": [
+                  "Soient x₁ < x₂. Alors 2x₁ < 2x₂ donc 2x₁ + 5 < 2x₂ + 5",
+                  "f(x₁) < f(x₂) pour tout x₁ < x₂",
+                  "f est strictement croissante sur ℝ"
+                ],
+                "solution": "f est strictement croissante sur ℝ"
+              }
+            ],
+            "remarques": ["Une fonction affine f(x) = ax + b est croissante si a > 0 et décroissante si a < 0."]
+          }
+        ],
+        "retenir": [
+          "Pour Df : racine √ → ≥ 0 ; logarithme ln → > 0 ; quotient → dén ≠ 0",
+          "(f∘g)(x) = f(g(x)) — on applique g en premier",
+          "f paire ↔ f(-x) = f(x) — axe Oy. f impaire ↔ f(-x) = -f(x) — origine O",
+          "La dérivée est l'outil clé pour étudier la monotonie (chapitre 2)"
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Limites de fonctions — définitions et calcul",
+      "type_lecon": "methode",
+      "duree_lecture": 22,
+      "is_free": true,
+      "contenu": {
+        "introduction": "La notion de limite permet de décrire le comportement d'une fonction quand x tend vers une valeur ou vers l'infini. C'est fondamental pour l'étude de fonctions et le calcul intégral.",
+        "sections": [
+          {
+            "titre": "Limite en l'infini",
+            "type": "definition",
+            "contenu": "On dit que f(x) tend vers L quand x tend vers +∞ si f(x) se rapproche indéfiniment de L pour x très grand. On écrit lim(x→+∞) f(x) = L.",
+            "formules": [
+              "\\lim_{x \\to +\\infty} x^n = +\\infty \\quad (n > 0)",
+              "\\lim_{x \\to +\\infty} \\frac{1}{x^n} = 0 \\quad (n > 0)",
+              "\\lim_{x \\to +\\infty} (a_n x^n + \\ldots + a_0) = \\lim_{x \\to +\\infty} a_n x^n"
+            ],
+            "exemples": [
+              {
+                "enonce": "Calculer lim(x→+∞) (3x² - 5x + 1)",
+                "etapes": [
+                  "On regarde le terme de plus haut degré : 3x²",
+                  "lim(x→+∞) 3x² = +∞",
+                  "Donc lim(x→+∞) (3x² - 5x + 1) = +∞"
+                ],
+                "solution": "lim = +∞"
+              }
+            ],
+            "remarques": ["Pour un polynôme, la limite en ±∞ est celle du terme de plus haut degré."]
+          },
+          {
+            "titre": "Limite en un point — formes indéterminées",
+            "type": "methode",
+            "contenu": "Quand on obtient 0/0 ou ∞/∞ en substituant x, on a une forme indéterminée. On doit factoriser, simplifier ou conjuguer pour lever l'indétermination.",
+            "formules": [
+              "\\frac{0}{0},\\; \\frac{\\infty}{\\infty},\\; 0 \\times \\infty,\\; \\infty - \\infty \\quad \\text{(formes indéterminées)}"
+            ],
+            "exemples": [
+              {
+                "enonce": "Calculer lim(x→2) (x² - 4)/(x - 2)",
+                "etapes": [
+                  "En x=2 : 0/0 — forme indéterminée",
+                  "Factoriser : x² - 4 = (x-2)(x+2)",
+                  "(x²-4)/(x-2) = (x+2) pour x ≠ 2",
+                  "lim(x→2) (x+2) = 4"
+                ],
+                "solution": "lim = 4"
+              },
+              {
+                "enonce": "Calculer lim(x→+∞) (2x² + 3x)/(x² - 1)",
+                "etapes": [
+                  "Forme ∞/∞ — diviser par x² (plus haut degré)",
+                  "(2x²+3x)/(x²-1) = (2 + 3/x)/(1 - 1/x²)",
+                  "Quand x→+∞ : 3/x→0 et 1/x²→0",
+                  "Limite = 2/1 = 2"
+                ],
+                "solution": "lim = 2"
+              }
+            ],
+            "remarques": ["Astuce ∞/∞ : diviser numérateur et dénominateur par la plus grande puissance du dénominateur."]
+          },
+          {
+            "titre": "Continuité et théorème des valeurs intermédiaires",
+            "type": "theoreme",
+            "contenu": "Une fonction f est continue en a si lim(x→a) f(x) = f(a). Si f est continue sur [a,b] et si k est un réel compris entre f(a) et f(b), alors il existe au moins un réel c dans ]a,b[ tel que f(c) = k. Ce théorème est utilisé pour prouver l'existence de solutions d'équations.",
+            "formules": [
+              "f \\text{ continue sur } [a,b] \\text{ et } f(a) \\cdot f(b) < 0 \\Rightarrow \\exists\\, c \\in ]a,b[,\\; f(c) = 0"
+            ],
+            "exemples": [
+              {
+                "enonce": "Montrer que f(x) = x³ - 3x + 1 a une racine dans [1 ; 2].",
+                "etapes": [
+                  "f est continue sur ℝ (polynôme)",
+                  "f(1) = 1 - 3 + 1 = -1 < 0",
+                  "f(2) = 8 - 6 + 1 = 3 > 0",
+                  "f(1) × f(2) < 0 donc par TVI, ∃ c ∈ ]1;2[ avec f(c) = 0"
+                ],
+                "solution": "Il existe bien une racine dans ]1 ; 2["
+              }
+            ],
+            "remarques": ["Le TVI garantit l'existence mais pas l'unicité. Pour l'unicité, utiliser la stricte monotonie (dérivée > 0)."]
+          },
+          {
+            "titre": "Asymptotes",
+            "type": "definition",
+            "contenu": "Une droite est asymptote au graphe de f si la distance entre le graphe et la droite tend vers 0. — Asymptote horizontale y = L si lim(x→±∞) f(x) = L. — Asymptote verticale x = a si lim(x→a) f(x) = ±∞. — Asymptote oblique y = ax + b si lim(x→±∞) [f(x) - (ax+b)] = 0.",
+            "formules": [
+              "\\text{AH}: \\lim_{x \\to \\pm\\infty} f(x) = L",
+              "\\text{AV}: \\lim_{x \\to a} f(x) = \\pm\\infty",
+              "\\text{AO}: \\lim_{x \\to \\pm\\infty} [f(x) - (ax+b)] = 0"
+            ],
+            "exemples": [
+              {
+                "enonce": "Trouver les asymptotes de f(x) = (2x+1)/(x-3)",
+                "etapes": [
+                  "AV : x = 3 (dénominateur nul) → lim(x→3) f(x) = ±∞ ✓",
+                  "AH : lim(x→±∞) (2x+1)/(x-3) = 2 → y = 2",
+                  "Vérifier qu'il n'y a pas d'AO (AH déjà trouvée)"
+                ],
+                "solution": "AV : x = 3 ; AH : y = 2"
+              }
+            ],
+            "remarques": ["Si deg(num) = deg(den) + 1, il y a une asymptote oblique. Trouver a = lim f(x)/x, puis b = lim[f(x) - ax]."]
+          }
+        ],
+        "retenir": [
+          "Limite d'un polynôme en ±∞ = limite du terme de plus haut degré",
+          "Formes indéterminées 0/0 et ∞/∞ → factoriser ou diviser par x^n",
+          "TVI : f continue, f(a)·f(b) < 0 → racine dans ]a,b[",
+          "AH : limite finie en ∞. AV : limite infinie en un point. AO : f(x) - (ax+b) → 0"
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Représentation graphique et lecture de courbe",
+      "type_lecon": "methode",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "introduction": "Lire et interpréter une courbe représentative est une compétence centrale au Probatoire. Il faut savoir lire des images, antécédents, sens de variation, extrema, et reconnaître les asymptotes graphiquement.",
+        "sections": [
+          {
+            "titre": "Lire images et antécédents sur un graphe",
+            "type": "methode",
+            "contenu": "L'image de a par f est f(a) : on lit la valeur y correspondant à x = a sur la courbe. Un antécédent de b par f est un x tel que f(x) = b : on trace la droite horizontale y = b et on lit les abscisses des intersections avec la courbe.",
+            "formules": [
+              "f(a) = b \\Leftrightarrow \\text{le point } (a, b) \\text{ est sur la courbe}"
+            ],
+            "exemples": [
+              {
+                "enonce": "Sur une courbe, le point (3, 5) est visible. Que peut-on dire ?",
+                "etapes": [
+                  "f(3) = 5 : l'image de 3 par f est 5",
+                  "3 est un antécédent de 5 par f"
+                ],
+                "solution": "f(3) = 5 ; 3 est antécédent de 5"
+              }
+            ],
+            "remarques": ["Au Probatoire, on demande souvent de 'lire graphiquement' une valeur approchée d'une solution d'équation f(x) = k."]
+          },
+          {
+            "titre": "Extrema locaux et globaux",
+            "type": "definition",
+            "contenu": "Un maximum local en a est un point où f(a) ≥ f(x) pour x proche de a. Un minimum local en a est un point où f(a) ≤ f(x) pour x proche de a. Le maximum global est la plus grande valeur atteinte sur tout le domaine (ou un intervalle donné).",
+            "formules": [],
+            "exemples": [
+              {
+                "enonce": "Sur le graphe de f, la courbe monte de -∞ à x=1 (où f(1)=4), puis descend. Que peut-on déduire ?",
+                "etapes": [
+                  "f est croissante sur ]-∞ ; 1] et décroissante sur [1 ; +∞[",
+                  "x = 1 est un maximum local (et global sur ℝ)",
+                  "La valeur maximale est f(1) = 4"
+                ],
+                "solution": "Maximum en x = 1, valeur maximale = 4"
+              }
+            ],
+            "remarques": ["Au Probatoire, on relie souvent l'extremum à la dérivée nulle : si f'(a) = 0 et la dérivée change de signe, c'est un extremum."]
+          },
+          {
+            "titre": "Résoudre graphiquement f(x) = g(x)",
+            "type": "methode",
+            "contenu": "Les solutions de f(x) = g(x) sont les abscisses des points d'intersection des courbes Cf et Cg. Les solutions de f(x) > g(x) sont les intervalles où Cf est au-dessus de Cg.",
+            "formules": [],
+            "exemples": [
+              {
+                "enonce": "Résoudre graphiquement f(x) = x + 1 sachant que la courbe Cf croise la droite y = x + 1 en x = -2 et x = 3.",
+                "etapes": [
+                  "Les solutions sont les abscisses des intersections",
+                  "S = {-2 ; 3}"
+                ],
+                "solution": "S = {-2 ; 3}"
+              }
+            ],
+            "remarques": ["Toujours préciser 'graphiquement' ou 'de façon approchée' si la lecture se fait sur un graphe."]
+          },
+          {
+            "titre": "Tableau de variations et signe",
+            "type": "methode",
+            "contenu": "Le tableau de variations résume le sens de variation de f sur chaque intervalle et les valeurs remarquables (extrema). Le tableau de signes de f(x) - k permet de résoudre f(x) > k graphiquement.",
+            "formules": [],
+            "exemples": [
+              {
+                "enonce": "f est croissante sur [-2 ; 1] avec f(-2) = -3 et f(1) = 5, puis décroissante sur [1 ; 4] avec f(4) = -1. Dresser le tableau de variations.",
+                "etapes": [
+                  "Intervalles : [-2 ; 1] croissant, [1 ; 4] décroissant",
+                  "Valeurs : f(-2) = -3, f(1) = 5 (maximum), f(4) = -1",
+                  "Tableau avec flèches ↗ de -3 à 5, puis ↘ de 5 à -1"
+                ],
+                "solution": "Tableau dressé avec maximum en x = 1, valeur 5"
+              }
+            ],
+            "remarques": ["Le tableau de variations est exigé dans presque tous les exercices du Probatoire sur les fonctions."]
+          }
+        ],
+        "retenir": [
+          "Image de a = f(a) = ordonnée du point de la courbe d'abscisse a",
+          "Antécédent de b = x tel que f(x) = b = intersection avec y = b",
+          "f(x) = g(x) ↔ intersection des courbes Cf et Cg",
+          "Tableau de variations : résume sens de variation et valeurs aux extrema"
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Fonctions de référence et transformations",
+      "type_lecon": "recapitulatif",
+      "duree_lecture": 16,
+      "is_free": false,
+      "contenu": {
+        "introduction": "Maîtriser les fonctions de référence (carrée, racine, inverse, valeur absolue) et les transformations géométriques (translations, réflexions, homothéties) permet de tracer rapidement n'importe quelle courbe.",
+        "sections": [
+          {
+            "titre": "Fonctions de référence",
+            "type": "definition",
+            "contenu": "Les fonctions de référence à connaître parfaitement : f(x) = x² (parabole), f(x) = √x (racine), f(x) = 1/x (hyperbole), f(x) = |x| (valeur absolue), f(x) = x³ (cubique).",
+            "formules": [
+              "f(x) = x^2 : D = \\mathbb{R},\\; \\text{minimum en } 0",
+              "f(x) = \\sqrt{x} : D = [0;+\\infty[,\\; \\text{croissante}",
+              "f(x) = \\frac{1}{x} : D = \\mathbb{R}^*,\\; \\text{AV } x=0,\\; \\text{AH } y=0"
+            ],
+            "exemples": [
+              {
+                "enonce": "Donner les propriétés de f(x) = 1/x.",
+                "etapes": [
+                  "Domaine : ℝ* = ]-∞;0[ ∪ ]0;+∞[",
+                  "Fonction impaire : 1/(-x) = -1/x = -f(x)",
+                  "Décroissante sur ]-∞;0[ et sur ]0;+∞[",
+                  "AV : x = 0 ; AH : y = 0"
+                ],
+                "solution": "Hyperbole, fonction impaire, décroissante sur chaque intervalle"
+              }
+            ],
+            "remarques": ["Ces courbes de référence sont à tracer de mémoire lors du Probatoire."]
+          },
+          {
+            "titre": "Transformations géométriques de courbes",
+            "type": "methode",
+            "contenu": "À partir de la courbe de f, on obtient d'autres courbes par transformations : translation (décalage), réflexion (symétrie), mise à l'échelle (étirement).",
+            "formules": [
+              "y = f(x-a) + b : translation de vecteur \\binom{a}{b}",
+              "y = -f(x) : réflexion par rapport à l'axe Ox",
+              "y = f(-x) : réflexion par rapport à l'axe Oy",
+              "y = k \\cdot f(x) : dilatation verticale de rapport k"
+            ],
+            "exemples": [
+              {
+                "enonce": "Déduire la courbe de g(x) = (x-2)² + 3 à partir de f(x) = x².",
+                "etapes": [
+                  "g(x) = f(x-2) + 3",
+                  "Translation de f de vecteur (2; 3)",
+                  "Le sommet passe de (0;0) à (2;3)"
+                ],
+                "solution": "Parabole de sommet (2 ; 3), ouverte vers le haut"
+              }
+            ],
+            "remarques": ["En Probatoire, on peut demander de déduire la courbe de g à partir de celle de f sans recalculer."]
+          },
+          {
+            "titre": "Fonctions usuelles — tableau récapitulatif",
+            "type": "recapitulatif",
+            "contenu": "Récapitulatif des dérivées des fonctions usuelles (à connaître pour le chapitre 2) : d/dx(x^n) = nx^(n-1) ; d/dx(√x) = 1/(2√x) ; d/dx(1/x) = -1/x². Ces formules seront démontrées au prochain chapitre.",
+            "formules": [
+              "\\frac{d}{dx}(x^n) = n x^{n-1}",
+              "\\frac{d}{dx}(\\sqrt{x}) = \\frac{1}{2\\sqrt{x}}",
+              "\\frac{d}{dx}\\left(\\frac{1}{x}\\right) = -\\frac{1}{x^2}"
+            ],
+            "exemples": [],
+            "remarques": ["Mémoriser ces dérivées de base — elles sont utilisées dans tous les exercices de Première C et au Probatoire."]
+          }
+        ],
+        "retenir": [
+          "Connaître par cœur : x², √x, 1/x, |x|, x³ avec leurs domaines et propriétés",
+          "y = f(x-a)+b → translation de vecteur (a; b)",
+          "y = -f(x) → réflexion par rapport à Ox",
+          "y = f(-x) → réflexion par rapport à Oy"
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Domaines de définition",
+      "type_exercice": "calcul",
+      "niveau": "decouverte",
+      "duree_recommandee": 15,
+      "bareme": 6,
+      "enonce": {
+        "texte": "Déterminer le domaine de définition de chacune des fonctions suivantes.",
+        "questions": [
+          {"numero": "1", "texte": "f(x) = (x + 2) / (x² - 9)", "points": 2},
+          {"numero": "2", "texte": "g(x) = √(3x - 6)", "points": 2},
+          {"numero": "3", "texte": "h(x) = √(x - 1) / (x - 4)", "points": 2}
+        ]
+      },
+      "correction": {
+        "methode": "Identifier les restrictions : dénominateur ≠ 0, radicande ≥ 0.",
+        "etapes": [
+          {"numero": 1, "texte": "f : dén = x²-9 = (x-3)(x+3) ≠ 0 → x ≠ 3 et x ≠ -3. Df = ℝ \\ {-3 ; 3}", "justification": ""},
+          {"numero": 2, "texte": "g : 3x-6 ≥ 0 → x ≥ 2. Dg = [2 ; +∞[", "justification": ""},
+          {"numero": 3, "texte": "h : x-1 ≥ 0 ET x ≠ 4 → x ≥ 1 et x ≠ 4. Dh = [1;4[ ∪ ]4;+∞[", "justification": "Combinaison des deux conditions"}
+        ],
+        "reponse_finale": "Df = ℝ\\{-3;3} ; Dg = [2;+∞[ ; Dh = [1;4[∪]4;+∞["
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "QCM — Parité et monotonie",
+      "type_exercice": "qcm",
+      "niveau": "decouverte",
+      "duree_recommandee": 10,
+      "bareme": 4,
+      "enonce": {
+        "texte": "Laquelle de ces fonctions est paire ?",
+        "questions": []
+      },
+      "correction": {
+        "methode": "f paire ↔ f(-x) = f(x)",
+        "etapes": [
+          {"numero": 1, "texte": "A : f(x) = x³ — f(-x) = -x³ = -f(x) → impaire", "justification": ""},
+          {"numero": 2, "texte": "B : f(x) = x² + 1 — f(-x) = x² + 1 = f(x) → paire ✓", "justification": ""},
+          {"numero": 3, "texte": "C : f(x) = x + 1 — f(-x) = -x+1 ≠ f(x) → ni paire ni impaire", "justification": ""}
+        ],
+        "reponse_finale": "B",
+        "piege": "Ne pas confondre paire et positive. Une fonction paire peut prendre des valeurs négatives."
+      },
+      "options_qcm": [
+        {"label": "A", "texte": "f(x) = x³", "correct": false},
+        {"label": "B", "texte": "f(x) = x² + 1", "correct": true},
+        {"label": "C", "texte": "f(x) = x + 1", "correct": false},
+        {"label": "D", "texte": "f(x) = 2x - 3", "correct": false}
+      ]
+    },
+    {
+      "numero": 3,
+      "titre": "Calcul de limites",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "duree_recommandee": 20,
+      "bareme": 8,
+      "enonce": {
+        "texte": "Calculer les limites suivantes. Justifier les formes indéterminées.",
+        "questions": [
+          {"numero": "1", "texte": "lim(x→+∞) (4x³ - 2x + 7)", "points": 2},
+          {"numero": "2", "texte": "lim(x→3) (x² - 9)/(x - 3)", "points": 2},
+          {"numero": "3", "texte": "lim(x→+∞) (3x² + x)/(2x² - 5)", "points": 2},
+          {"numero": "4", "texte": "lim(x→-∞) (x² - 2x + 1)", "points": 2}
+        ]
+      },
+      "correction": {
+        "methode": "Terme dominant pour ∞/∞, factorisation pour 0/0.",
+        "etapes": [
+          {"numero": 1, "texte": "lim(4x³-2x+7) = lim(4x³) = +∞", "justification": "Terme dominant x³"},
+          {"numero": 2, "texte": "Forme 0/0. (x²-9)/(x-3) = (x+3)(x-3)/(x-3) = x+3 → lim = 6", "justification": "Factorisation"},
+          {"numero": 3, "texte": "Forme ∞/∞. Diviser par x² : (3 + 1/x)/(2 - 5/x²) → 3/2", "justification": "Division par x²"},
+          {"numero": 4, "texte": "lim(x²-2x+1) = lim(x²) = +∞ (car (-∞)² = +∞)", "justification": "x² → +∞ quand x → ±∞"}
+        ],
+        "reponse_finale": "+∞ ; 6 ; 3/2 ; +∞"
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Asymptotes d'une fonction rationnelle",
+      "type_exercice": "probleme",
+      "niveau": "entrainement",
+      "duree_recommandee": 20,
+      "bareme": 8,
+      "enonce": {
+        "texte": "Soit f(x) = (2x² - x) / (x - 1).",
+        "questions": [
+          {"numero": "1", "texte": "Déterminer le domaine de définition de f.", "points": 1},
+          {"numero": "2", "texte": "Calculer lim(x→1) f(x). En déduire une asymptote verticale.", "points": 2},
+          {"numero": "3", "texte": "Étudier la limite de f en +∞ et -∞. Y a-t-il une asymptote horizontale ?", "points": 2},
+          {"numero": "4", "texte": "Effectuer la division euclidienne de 2x²-x par x-1 pour trouver une asymptote oblique.", "points": 3}
+        ]
+      },
+      "correction": {
+        "methode": "Analyse des limites aux frontières du domaine.",
+        "etapes": [
+          {"numero": 1, "texte": "x - 1 ≠ 0 → x ≠ 1. Df = ℝ \\ {1}", "justification": ""},
+          {"numero": 2, "texte": "lim(x→1) f(x) = (2-1)/0 = ±∞ → AV : x = 1", "justification": "Signe du dénominateur change"},
+          {"numero": 3, "texte": "deg(num) = 2 > deg(den) = 1 → pas d'AH. lim = ±∞", "justification": ""},
+          {"numero": 4, "texte": "2x²-x = (x-1)(2x+1) + 0. Donc f(x) = 2x+1 pour x≠1. Pas d'AO car f(x) = 2x+1 exactement.", "justification": "La droite y = 2x+1 est une asymptote oblique"}
+        ],
+        "reponse_finale": "AV : x=1 ; AO : y = 2x+1 ; pas d'AH"
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Limites et asymptotes",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "duree_recommandee": 10,
+      "bareme": 4,
+      "enonce": {
+        "texte": "Quelle est la limite de f(x) = (x² - 1)/(x - 1) quand x tend vers 1 ?",
+        "questions": []
+      },
+      "correction": {
+        "methode": "Factoriser pour lever la forme 0/0.",
+        "etapes": [
+          {"numero": 1, "texte": "x²-1 = (x-1)(x+1)", "justification": ""},
+          {"numero": 2, "texte": "(x-1)(x+1)/(x-1) = x+1 pour x ≠ 1", "justification": ""},
+          {"numero": 3, "texte": "lim(x→1) (x+1) = 2", "justification": ""}
+        ],
+        "reponse_finale": "B",
+        "piege": "En substituant directement x=1 on obtient 0/0, mais ce n'est pas la limite — il faut factoriser."
+      },
+      "options_qcm": [
+        {"label": "A", "texte": "La limite n'existe pas", "correct": false},
+        {"label": "B", "texte": "2", "correct": true},
+        {"label": "C", "texte": "0", "correct": false},
+        {"label": "D", "texte": "+∞", "correct": false}
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Théorème des valeurs intermédiaires",
+      "type_exercice": "demonstration",
+      "niveau": "approfondissement",
+      "duree_recommandee": 20,
+      "bareme": 8,
+      "enonce": {
+        "texte": "Soit f(x) = x³ + x - 3.",
+        "questions": [
+          {"numero": "1", "texte": "Montrer que f est continue et strictement croissante sur ℝ.", "points": 3},
+          {"numero": "2", "texte": "Calculer f(1) et f(2). En déduire qu'il existe un unique réel α ∈ ]1;2[ tel que f(α) = 0.", "points": 3},
+          {"numero": "3", "texte": "Donner un encadrement de α à 0,1 près en étudiant les valeurs de f.", "points": 2}
+        ]
+      },
+      "correction": {
+        "methode": "TVI + stricte monotonie pour l'unicité + dichotomie pour l'encadrement.",
+        "etapes": [
+          {"numero": 1, "texte": "f polynôme → continue sur ℝ. f'(x) = 3x² + 1 ≥ 1 > 0 → strictement croissante.", "justification": ""},
+          {"numero": 2, "texte": "f(1) = 1+1-3 = -1 < 0. f(2) = 8+2-3 = 7 > 0. f(1)·f(2) < 0 + continuité + TVI → ∃ α. Unicité car f strictement croissante.", "justification": ""},
+          {"numero": 3, "texte": "f(1,2) = 1,728+1,2-3 = -0,072 < 0. f(1,3) = 2,197+1,3-3 = 0,497 > 0. α ∈ ]1,2 ; 1,3[", "justification": "Dichotomie"}
+        ],
+        "reponse_finale": "α ∈ ]1,2 ; 1,3[ (à 0,1 près)"
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 7,
+      "titre": "Problème de Probatoire — étude complète d'une fonction",
+      "type_exercice": "synthese",
+      "niveau": "examen",
+      "duree_recommandee": 35,
+      "bareme": 12,
+      "enonce": {
+        "texte": "Soit f(x) = (x² + x - 2)/(x - 1).",
+        "questions": [
+          {"numero": "1", "texte": "Déterminer Df. Factoriser le numérateur et simplifier f(x) en précisant les restrictions.", "points": 3},
+          {"numero": "2", "texte": "Étudier les limites de f aux bornes de son domaine. Interpréter graphiquement.", "points": 4},
+          {"numero": "3", "texte": "Montrer que la droite y = x + 2 est une asymptote oblique à la courbe de f.", "points": 3},
+          {"numero": "4", "texte": "Étudier la position de la courbe Cf par rapport à cette asymptote.", "points": 2}
+        ]
+      },
+      "correction": {
+        "methode": "Factorisation, limites, asymptotes, position relative.",
+        "etapes": [
+          {"numero": 1, "texte": "Df = ℝ\\{1}. x²+x-2 = (x+2)(x-1). Pour x≠1 : f(x) = x+2.", "justification": "Simplification valide uniquement pour x≠1"},
+          {"numero": 2, "texte": "lim(x→1) f(x) = lim(x→1)(x+2) = 3 mais f(1) est indéfini. Pas d'AV — il y a un trou (point exclu) en (1;3). lim(x→±∞) f(x) = ±∞", "justification": ""},
+          {"numero": 3, "texte": "f(x) - (x+2) = (x+2) - (x+2) = 0 pour x≠1. Donc la courbe coïncide avec la droite y=x+2 sauf en x=1.", "justification": "C'est en réalité la même droite avec un trou"},
+          {"numero": 4, "texte": "La courbe EST la droite y = x+2 privée du point (1;3). Pas de position 'au-dessus' ou 'en-dessous'.", "justification": ""}
+        ],
+        "reponse_finale": "Cf : droite y = x+2 avec point exclu en (1 ; 3)"
+      },
+      "options_qcm": []
+    }
+  ]
+}

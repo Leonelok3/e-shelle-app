@@ -1,0 +1,256 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "1ere-c-10-vecteurs-dans-le-plan",
+  "meta": {
+    "classe": "1ère C",
+    "numero": 10,
+    "titre": "Vecteurs dans le plan",
+    "categorie": "geometrie",
+    "difficulte": 3,
+    "description": "Opérations sur les vecteurs, colinéarité, repère cartésien, coordonnées de vecteurs.",
+    "objectifs": [
+      "Définir et représenter des vecteurs",
+      "Effectuer les opérations (addition, soustraction, produit scalaire vectoriel)",
+      "Utiliser les coordonnées de vecteurs dans un repère",
+      "Démontrer la colinéarité et appliquer aux problèmes géométriques"
+    ],
+    "prerequis_slugs": ["1ere-c-1-generalites-sur-les-fonctions-numeriques"],
+    "duree_estimee": 80,
+    "points_total_exercices": 50
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Définition et opérations sur les vecteurs",
+      "type_lecon": "definition",
+      "duree_lecture": 20,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Un **vecteur** est caractérisé par :\n• Sa **direction** (la droite qui le porte)\n• Son **sens** (flèche)\n• Sa **norme** (longueur), notée **||v→||**\n\nDeux vecteurs sont **égaux** s'ils ont même direction, même sens et même norme.\nLe **vecteur nul** 0→ a une norme nulle."
+          },
+          {
+            "type": "texte",
+            "valeur": "**Opérations :**\n• Addition : u→ + v→ (règle du parallélogramme ou méthode tête-à-queue)\n• Opposé : −u→ (même norme, même direction, sens opposé)\n• Soustraction : u→ − v→ = u→ + (−v→)\n• Multiplication par un scalaire : k·u→ (vecteur de même direction, norme |k|·||u→||, sens selon signe de k)"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Relation de Chasles :**\nAB→ + BC→ = AC→ (toujours vraie)\n\nConséquences :\n• AB→ = −BA→\n• AA→ = 0→\n• AB→ + BC→ + CA→ = 0→"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Coordonnées de vecteurs dans un repère",
+      "type_lecon": "definition",
+      "duree_lecture": 22,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Dans un repère orthonormé (O ; i→, j→), tout vecteur s'écrit :\n**u→ = (a ; b)** où a est l'abscisse et b l'ordonnée du vecteur.\n\nSi A(x_A ; y_A) et B(x_B ; y_B), alors :\n**AB→ = (x_B − x_A ; y_B − y_A)**\n\n**Norme** : ||u→|| = √(a² + b²)"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Opérations en coordonnées :**\nSi u→ = (a ; b) et v→ = (c ; d) :\n• u→ + v→ = (a+c ; b+d)\n• u→ − v→ = (a−c ; b−d)\n• k·u→ = (ka ; kb)\n\n**Milieu I de [AB] :** I = ((x_A+x_B)/2 ; (y_A+y_B)/2)"
+          },
+          {
+            "type": "exemple",
+            "titre": "Calculs de coordonnées",
+            "valeur": "A(2 ; −1), B(5 ; 3), C(−1 ; 4)\n\nAB→ = (5−2 ; 3−(−1)) = (3 ; 4)\n||AB→|| = √(9+16) = √25 = 5\n\nBC→ = (−1−5 ; 4−3) = (−6 ; 1)\n||BC→|| = √(36+1) = √37\n\nAC→ = AB→ + BC→ = (3+(−6) ; 4+1) = (−3 ; 5)\nVérif : AC→ = (−1−2 ; 4−(−1)) = (−3 ; 5) ✓\n\nMilieu M de [AB] : M = ((2+5)/2 ; (−1+3)/2) = (7/2 ; 1)"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Colinéarité et applications",
+      "type_lecon": "methode",
+      "duree_lecture": 22,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Deux vecteurs **u→ = (a ; b)** et **v→ = (c ; d)** sont **colinéaires** si et seulement si :\n**ad − bc = 0**\n\nApplications :\n• A, B, C sont **alignés** ⟺ AB→ et AC→ sont colinéaires\n• AB→ ∥ CD→ ⟺ AB→ et CD→ sont colinéaires"
+          },
+          {
+            "type": "exemple",
+            "titre": "Test de colinéarité",
+            "valeur": "A(1 ; 2), B(3 ; 5), C(7 ; 11)\nAB→ = (2 ; 3) et AC→ = (6 ; 9)\n\nDéterminant : 2×9 − 3×6 = 18 − 18 = 0\n→ AB→ et AC→ sont colinéaires ⟹ **A, B, C sont alignés**\n\nContre-exemple : D(2 ; 3)\nAD→ = (1 ; 1)\nAB→ = (2 ; 3) et AD→ = (1 ; 1)\n2×1 − 3×1 = 2 − 3 = −1 ≠ 0 → **B, A, D ne sont pas alignés**"
+          },
+          {
+            "type": "methode",
+            "titre": "Vecteurs et géométrie",
+            "valeur": "Pour montrer qu'un quadrilatère ABCD est un parallélogramme, il suffit de montrer :\n**AB→ = DC→** (ou AD→ = BC→)\n\nCela équivaut à montrer que les diagonales ont le même milieu."
+          },
+          {
+            "type": "exemple",
+            "titre": "Parallélogramme",
+            "valeur": "A(0;0), B(3;1), C(5;4), D(2;3)\nAB→ = (3;1), DC→ = (3;1) ✓\nAD→ = (2;3), BC→ = (2;3) ✓\n→ ABCD est un **parallélogramme**"
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Coordonnées et norme",
+      "type_exercice": "calcul",
+      "niveau": "base",
+      "bareme": 8,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "On donne A(1;3), B(−2;1), C(4;−1), D(7;5).\na) Calculer les coordonnées de AB→, AC→ et BD→.\nb) Calculer ||AB→|| et ||CD→||.\nc) Trouver le milieu de [AC] et de [BD]."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) AB→ = (−2−1 ; 1−3) = **(−3 ; −2)**\nAC→ = (4−1 ; −1−3) = **(3 ; −4)**\nBD→ = (7−(−2) ; 5−1) = **(9 ; 4)**\n\nb) ||AB→|| = √(9+4) = **√13**\nCD→ = (7−4 ; 5−(−1)) = (3 ; 6)\n||CD→|| = √(9+36) = **√45 = 3√5**\n\nc) Milieu de [AC] = ((1+4)/2 ; (3+(−1))/2) = **(5/2 ; 1)**\nMilieu de [BD] = ((−2+7)/2 ; (1+5)/2) = **(5/2 ; 3)**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Opérations sur les vecteurs",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 8,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Soit u→ = (3 ; −1) et v→ = (−2 ; 4).\na) Calculer u→ + v→, u→ − v→ et 2u→ − 3v→.\nb) Trouver le vecteur w→ tel que u→ + 2w→ = v→.\nc) Calculer ||2u→ + v→||."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) u→ + v→ = (1 ; 3)\nu→ − v→ = (5 ; −5)\n2u→ − 3v→ = (6;−2) − (−6;12) = **(12 ; −14)**\n\nb) u→ + 2w→ = v→ ⟹ 2w→ = v→ − u→ = (−5 ; 5)\nw→ = **(−5/2 ; 5/2)**\n\nc) 2u→ + v→ = (6;−2) + (−2;4) = (4 ; 2)\n||2u→ + v→|| = √(16+4) = **√20 = 2√5**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Colinéarité et alignement",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 10,
+      "duree_recommandee": 18,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) Les points A(2 ; 1), B(5 ; 4) et C(8 ; 7) sont-ils alignés ?\nb) Trouver la valeur de k pour que A(1 ; 2), B(3 ; k) et C(5 ; 8) soient alignés.\nc) ABCD est-il un parallélogramme si A(0;1), B(4;3), C(6;7), D(2;5) ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "a) AB→ = (3;3), AC→ = (6;6)\nDét = 3×6 − 3×6 = 0 → **A, B, C sont alignés**\n\nb) AB→ = (2;k−2), AC→ = (4;6)\nAlignés ⟺ 2×6 − (k−2)×4 = 0\n12 − 4k + 8 = 0 ⟹ 4k = 20 ⟹ **k = 5**\n\nc) AB→ = (4;2), DC→ = (6−2;7−5) = (4;2) ✓\nAD→ = (2;4), BC→ = (6−4;7−3) = (2;4) ✓\n→ **ABCD est un parallélogramme**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "Problème géométrique",
+      "type_exercice": "probleme",
+      "niveau": "approfondissement",
+      "bareme": 12,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Un GPS calcule la position de trois antennes à Yaoundé : A(10 ; 20), B(50 ; 40) et C(30 ; 80) (coordonnées en km).\n1) Calculer le périmètre du triangle ABC.\n2) G est le centre de gravité du triangle (G = (A+B+C)/3). Trouver ses coordonnées.\n3) Vérifier que AG→ = (1/3)(AB→ + AC→)."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1)** AB→ = (40;20), ||AB|| = √(1600+400) = √2000 = 20√5 ≈ 44,7 km\nBC→ = (−20;40), ||BC|| = √(400+1600) = √2000 = 20√5 ≈ 44,7 km\nAC→ = (20;60), ||AC|| = √(400+3600) = √4000 = 20√10 ≈ 63,2 km\nPérimètre ≈ **152,6 km**\n\n**2)** G = ((10+50+30)/3 ; (20+40+80)/3) = (90/3 ; 140/3) = **(30 ; 140/3)**\n\n**3)** AB→ + AC→ = (40+20 ; 20+60) = (60 ; 80)\n(1/3)(60 ; 80) = (20 ; 80/3)\nAG→ = (30−10 ; 140/3−20) = (20 ; 80/3) ✓"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "QCM — Vecteurs",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 9,
+      "duree_recommandee": 10,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** Si A(1;2) et B(4;6), alors ||AB→|| vaut :\n(A) 3  (B) 4  (C) 5  (D) 7\n\n**Q2.** Les vecteurs (2;3) et (4;6) sont :\n(A) orthogonaux  (B) colinéaires  (C) unitaires  (D) nuls\n\n**Q3.** La relation de Chasles dit que AB→ + BC→ est égal à :\n(A) BA→  (B) CA→  (C) AC→  (D) 0→"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (C) 5 : AB→ = (3;4), ||AB→|| = √(9+16) = √25 = 5\n\n**Q2.** (B) colinéaires : det = 2×6 − 3×4 = 12 − 12 = 0\n\n**Q3.** (C) AC→ : relation de Chasles AB→ + BC→ = AC→"
+          }
+        ]
+      },
+      "options_qcm": [
+        {"question": 1, "reponse_correcte": "C"},
+        {"question": 2, "reponse_correcte": "B"},
+        {"question": 3, "reponse_correcte": "C"}
+      ]
+    },
+    {
+      "numero": 6,
+      "titre": "Vecteurs et barycentres",
+      "type_exercice": "calcul",
+      "niveau": "approfondissement",
+      "bareme": 3,
+      "duree_recommandee": 8,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Montrer que les médianes d'un triangle se croisent au tiers de chacune (centroïde)."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Soit le triangle ABC. Soit M le milieu de [BC] : AM→ = (AB→ + AC→)/2.\nLe point G sur [AM] au tiers : G tel que AG→ = (2/3)AM→ = (1/3)(AB→ + AC→).\n\nSoit M' le milieu de [AC]. BM'→ = BA→ + AM'→ = −AB→ + AC→/2... on peut montrer que le point G qui divise BM' dans le rapport 2:1 vérifie aussi BG→ = (1/3)(BA→ + BC→).\n\nDonc G est bien sur les 3 médianes et **G a pour coordonnées la moyenne des 3 sommets**."
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

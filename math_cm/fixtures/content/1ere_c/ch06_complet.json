@@ -1,0 +1,224 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "1ere-c-6-fonctions-du-second-degre",
+  "meta": {
+    "classe": "1ère C",
+    "numero": 6,
+    "titre": "Fonctions du second degré",
+    "categorie": "analyse",
+    "difficulte": 3,
+    "description": "Parabole : sommet, axe de symétrie, variations, représentation graphique, problèmes d'optimisation.",
+    "objectifs": [
+      "Représenter graphiquement une fonction du second degré",
+      "Déterminer le sommet, l'axe de symétrie et les variations",
+      "Utiliser la parabole pour résoudre des problèmes d'optimisation",
+      "Lire les solutions d'une équation sur le graphe"
+    ],
+    "prerequis_slugs": ["1ere-c-5-polynomes-et-equations-du-second-degre"],
+    "duree_estimee": 80,
+    "points_total_exercices": 50
+  },
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "La parabole — forme et propriétés",
+      "type_lecon": "definition",
+      "duree_lecture": 20,
+      "is_free": true,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "La fonction **f(x) = ax² + bx + c** (a ≠ 0) a pour représentation graphique une **parabole**.\n\n• Si **a > 0** : parabole ouverte vers le **haut** (minimum au sommet)\n• Si **a < 0** : parabole ouverte vers le **bas** (maximum au sommet)\n\nLe **sommet** S a pour coordonnées : **S(α ; β)** avec α = −b/(2a) et β = f(α)"
+          },
+          {
+            "type": "texte",
+            "valeur": "**Axe de symétrie** : droite verticale d'équation **x = α = −b/(2a)**\n\nLa parabole est symétrique par rapport à cet axe. Si on connaît un point (x₀ ; y₀) de la parabole, son symétrique a pour abscisse **2α − x₀**."
+          },
+          {
+            "type": "exemple",
+            "titre": "Étude complète d'une parabole",
+            "valeur": "f(x) = −x² + 4x − 3\n\n**Sommet :** α = 4/2 = 2 ; β = f(2) = −4 + 8 − 3 = 1 → S(2 ; 1)\n**Axe de symétrie :** x = 2\n**Sens :** a = −1 < 0, parabole tournée vers le bas → maximum en S\n\n**Variations :**\n• Croissante sur ]−∞ ; 2]\n• Décroissante sur [2 ; +∞[\n\n**Intersections avec l'axe des x :** f(x) = 0\n−x² + 4x − 3 = 0 ⟹ Δ = 16 − 12 = 4\nx₁ = 1 ; x₂ = 3\n\n**Intersection avec l'axe des y :** f(0) = −3"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Variations et tableau de variation",
+      "type_lecon": "methode",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "methode",
+            "titre": "Dresser le tableau de variation d'une fonction du second degré",
+            "valeur": "**Étape 1 :** Déterminer le signe de a\n**Étape 2 :** Calculer α = −b/(2a) et β = f(α)\n**Étape 3 :** Remplir le tableau :\n\nSi a > 0 :\nx     | −∞        α       +∞\nf'(x) |    −   0    +\nf(x)  |  ↘       β       ↗\n\nSi a < 0 :\nx     | −∞        α       +∞\nf'(x) |    +   0    −\nf(x)  |  ↗       β       ↘"
+          },
+          {
+            "type": "exemple",
+            "titre": "Tableau de variation",
+            "valeur": "g(x) = 3x² − 6x + 1, a = 3 > 0\nα = 6/6 = 1 ; β = g(1) = 3 − 6 + 1 = −2\n\nTableau :\nx    | −∞       1       +∞\ng(x) |  ↘      −2      ↗\n\nMinimum = −2 en x = 1, pas de maximum sur ℝ"
+          }
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Optimisation avec les fonctions du second degré",
+      "type_lecon": "methode",
+      "duree_lecture": 22,
+      "is_free": false,
+      "contenu": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Les fonctions du second degré modélisent de nombreuses situations où l'on cherche à **maximiser** (recettes, aire, portée) ou **minimiser** (coût, distance, temps).\n\nLa valeur optimale est toujours atteinte au **sommet de la parabole**."
+          },
+          {
+            "type": "exemple",
+            "titre": "Maximisation de recettes",
+            "valeur": "Un vendeur de pagnes à Bafoussam vend x pagnes par jour au prix de (1500 − 10x) FCFA chacun (si le prix baisse, il en vend plus).\n\nRecette : R(x) = x(1500 − 10x) = 1500x − 10x²\n\nα = −1500/(2×(−10)) = 75 pagnes\nβ = R(75) = 75 × 750 = **56 250 FCFA**\n\nLe vendeur maximise ses recettes en vendant **75 pagnes** par jour."
+          },
+          {
+            "type": "exemple",
+            "titre": "Trajectoire d'un objet",
+            "valeur": "Un ballon lancé en l'air suit la trajectoire h(t) = −5t² + 20t + 2 (h en mètres, t en secondes).\n\nHauteur maximale : α = 20/10 = 2 s ; β = h(2) = −20 + 40 + 2 = **22 m**\n\nLe ballon atteint son maximum à **t = 2 s** à une hauteur de **22 m**."
+          }
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Étude d'une parabole",
+      "type_exercice": "calcul",
+      "niveau": "base",
+      "bareme": 10,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Pour chaque fonction, trouver le sommet, l'axe de symétrie, les intersections avec les axes et dresser le tableau de variation :\na) f(x) = x² − 6x + 8\nb) g(x) = −2x² + 4x + 6"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**a) f(x) = x² − 6x + 8** (a=1>0)\nα = 3 ; β = 9−18+8 = −1 → **Sommet S(3 ; −1)** (minimum)\nAxe : x = 3\nf(x) = 0 : Δ = 36−32=4 ; x₁=2, x₂=4\nf(0) = 8\nVariations : ↘ sur ]−∞;3], ↗ sur [3;+∞[\n\n**b) g(x) = −2x² + 4x + 6** (a=−2<0)\nα = 4/4 = 1 ; β = −2+4+6 = 8 → **Sommet S(1 ; 8)** (maximum)\nAxe : x = 1\ng(x) = 0 : Δ = 16+48=64 ; x₁=−1, x₂=3\ng(0) = 6\nVariations : ↗ sur ]−∞;1], ↘ sur [1;+∞["
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Intersection de deux paraboles",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "bareme": 8,
+      "duree_recommandee": 15,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Trouver les points d'intersection de f(x) = x² − 2x − 3 et g(x) = −x² + 4."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "f(x) = g(x) :\nx² − 2x − 3 = −x² + 4\n2x² − 2x − 7 = 0\nΔ = 4 + 56 = 60\nx₁ = (2−√60)/4 = (1−√15)/2 ≈ −1,44\nx₂ = (2+√60)/4 = (1+√15)/2 ≈ 2,44\n\nPoints d'intersection :\nA((1−√15)/2 ; g(x₁)) et B((1+√15)/2 ; g(x₂))"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "Problème d'optimisation",
+      "type_exercice": "probleme",
+      "niveau": "approfondissement",
+      "bareme": 12,
+      "duree_recommandee": 20,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "Une association de Yaoundé organise un concert. Si le billet coûte x milliers de FCFA, le nombre d'entrées est estimé à (800 − 100x). \n1) Exprimer la recette R(x) en fonction de x.\n2) Quel prix maximise la recette ? Calculer la recette maximale.\n3) Pour quel intervalle de prix la recette dépasse-t-elle 1 200 000 FCFA ?"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1)** R(x) = x × (800 − 100x) × 1000 = 1000(800x − 100x²) (en FCFA)\nSoit R(x) = 100 000(8x − x²) pour x ∈ ]0 ; 8[\n\n**2)** R(x) = −100 000x² + 800 000x\nα = 800 000/(2×100 000) = 4 milliers de FCFA\nR_max = 100 000(32 − 16) = **1 600 000 FCFA**\nPrix optimal : **4 000 FCFA** par billet\n\n**3)** 100 000(8x − x²) > 1 200 000\n8x − x² > 12\nx² − 8x + 12 < 0\nΔ = 64 − 48 = 16 ; x₁ = 2 ; x₂ = 6\n\nSolution : **2 < x < 6**, soit un prix entre **2 000 et 6 000 FCFA**"
+          }
+        ]
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 4,
+      "titre": "QCM — Parabole",
+      "type_exercice": "qcm",
+      "niveau": "entrainement",
+      "bareme": 9,
+      "duree_recommandee": 12,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** Le sommet de f(x) = 2x² − 8x + 5 est :\n(A) (2 ; −3)  (B) (4 ; 5)  (C) (2 ; 5)  (D) (−2 ; 25)\n\n**Q2.** La parabole f(x) = −3x² + 12x − 1 est :\n(A) tournée vers le haut  (B) tournée vers le bas  (C) une droite  (D) une ellipse\n\n**Q3.** L'axe de symétrie de f(x) = x² − 10x + 21 est :\n(A) x = 5  (B) x = 10  (C) x = −5  (D) x = 21"
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**Q1.** (A) (2 ; −3) : α = 8/4 = 2 ; β = 8 − 16 + 5 = −3\n\n**Q2.** (B) tournée vers le bas : a = −3 < 0\n\n**Q3.** (A) x = 5 : α = 10/2 = 5"
+          }
+        ]
+      },
+      "options_qcm": [
+        {"question": 1, "reponse_correcte": "A"},
+        {"question": 2, "reponse_correcte": "B"},
+        {"question": 3, "reponse_correcte": "A"}
+      ]
+    },
+    {
+      "numero": 5,
+      "titre": "Construire un trinôme à partir de conditions",
+      "type_exercice": "calcul",
+      "niveau": "approfondissement",
+      "bareme": 11,
+      "duree_recommandee": 18,
+      "enonce": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "1) Trouver le trinôme f(x) = ax² + bx + c tel que : f(0) = 3, f(1) = 0 et f(3) = 0.\n2) Montrer que la parabole passe par (2 ; −1) et trouver son sommet."
+          }
+        ]
+      },
+      "correction": {
+        "blocs": [
+          {
+            "type": "texte",
+            "valeur": "**1)** f(1) = 0 et f(3) = 0, donc 1 et 3 sont les racines.\nf(x) = a(x−1)(x−3) = a(x² − 4x + 3)\nf(0) = a(0−0+3) = 3a = 3 ⟹ a = 1\n**f(x) = x² − 4x + 3**\n\n**2)** f(2) = 4 − 8 + 3 = −1 ✓ → la parabole passe bien par (2 ; −1)\n\nSommet : α = 4/2 = 2 ; β = f(2) = −1\n**Sommet S(2 ; −1)**"
+          }
+        ]
+      },
+      "options_qcm": []
+    }
+  ]
+}

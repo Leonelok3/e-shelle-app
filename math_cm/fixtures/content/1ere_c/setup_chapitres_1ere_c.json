@@ -1,0 +1,132 @@
+{
+  "type": "setup_chapitres",
+  "classe": {
+    "nom": "1ere_c",
+    "label": "Première C",
+    "examen_fin_annee": "probatoire",
+    "description": "Classe de Première C — Sciences exactes. Préparation au Probatoire C (MINESEC Cameroun).",
+    "ordre": 3
+  },
+  "chapitres": [
+    {
+      "numero": 1,
+      "titre": "Généralités sur les fonctions numériques",
+      "slug": "1ere-c-1-generalites-sur-les-fonctions-numeriques",
+      "categorie": "analyse",
+      "description": "Rappels et approfondissement : domaine de définition, parité, monotonie, opérations sur les fonctions.",
+      "duree_estimee": 90
+    },
+    {
+      "numero": 2,
+      "titre": "Dérivation — définition et règles de calcul",
+      "slug": "1ere-c-2-derivation-definition-et-regles-de-calcul",
+      "categorie": "analyse",
+      "description": "Nombre dérivé, fonction dérivée, règles (somme, produit, quotient, composée), dérivées usuelles.",
+      "duree_estimee": 120
+    },
+    {
+      "numero": 3,
+      "titre": "Étude de fonctions — variations et extrema",
+      "slug": "1ere-c-3-etude-de-fonctions-variations-et-extrema",
+      "categorie": "analyse",
+      "description": "Utiliser la dérivée pour dresser le tableau de variations, trouver les extrema locaux et globaux.",
+      "duree_estimee": 100
+    },
+    {
+      "numero": 4,
+      "titre": "Suites numériques",
+      "slug": "1ere-c-4-suites-numeriques",
+      "categorie": "analyse",
+      "description": "Suites arithmétiques et géométriques : définition, terme général, somme des termes.",
+      "duree_estimee": 90
+    },
+    {
+      "numero": 5,
+      "titre": "Polynômes et équations du second degré",
+      "slug": "1ere-c-5-polynomes-et-equations-du-second-degre",
+      "categorie": "algebre",
+      "description": "Discriminant, racines, factorisation, forme canonique, signe du trinôme, inéquations.",
+      "duree_estimee": 100
+    },
+    {
+      "numero": 6,
+      "titre": "Fonctions du second degré",
+      "slug": "1ere-c-6-fonctions-du-second-degre",
+      "categorie": "analyse",
+      "description": "Parabole : sommet, axe de symétrie, variations, représentation graphique, problèmes d'optimisation.",
+      "duree_estimee": 80
+    },
+    {
+      "numero": 7,
+      "titre": "Logarithme népérien",
+      "slug": "1ere-c-7-logarithme-neperien",
+      "categorie": "analyse",
+      "description": "Définition de ln, propriétés algébriques, dérivée, étude de fonctions logarithmiques.",
+      "duree_estimee": 100
+    },
+    {
+      "numero": 8,
+      "titre": "Fonction exponentielle",
+      "slug": "1ere-c-8-fonction-exponentielle",
+      "categorie": "analyse",
+      "description": "Définition de exp, propriétés, dérivée, étude, applications croissance et décroissance.",
+      "duree_estimee": 100
+    },
+    {
+      "numero": 9,
+      "titre": "Trigonométrie — cercle et formules",
+      "slug": "1ere-c-9-trigonometrie-cercle-et-formules",
+      "categorie": "trigonometrie",
+      "description": "Cercle trigonométrique, radian, formules d'addition, de duplication, équations trigonométriques.",
+      "duree_estimee": 110
+    },
+    {
+      "numero": 10,
+      "titre": "Vecteurs dans le plan",
+      "slug": "1ere-c-10-vecteurs-dans-le-plan",
+      "categorie": "geometrie",
+      "description": "Opérations sur les vecteurs, colinéarité, repère cartésien, coordonnées de vecteurs.",
+      "duree_estimee": 80
+    },
+    {
+      "numero": 11,
+      "titre": "Géométrie analytique — droites et distances",
+      "slug": "1ere-c-11-geometrie-analytique-droites-et-distances",
+      "categorie": "geometrie",
+      "description": "Équation de droite, pente, parallélisme, perpendicularité, distance d'un point à une droite.",
+      "duree_estimee": 90
+    },
+    {
+      "numero": 12,
+      "titre": "Produit scalaire et applications",
+      "slug": "1ere-c-12-produit-scalaire-et-applications",
+      "categorie": "geometrie",
+      "description": "Définition, propriétés, angle entre deux vecteurs, orthogonalité, applications géométriques.",
+      "duree_estimee": 90
+    },
+    {
+      "numero": 13,
+      "titre": "Transformations du plan",
+      "slug": "1ere-c-13-transformations-du-plan",
+      "categorie": "geometrie",
+      "description": "Translation, rotation, homothétie, symétries : propriétés et applications.",
+      "duree_estimee": 80
+    },
+    {
+      "numero": 14,
+      "titre": "Dénombrement et probabilités",
+      "slug": "1ere-c-14-denombrement-et-probabilites",
+      "categorie": "statistiques",
+      "description": "Arrangements, permutations, combinaisons, probabilités conditionnelles, indépendance.",
+      "duree_estimee": 90
+    },
+    {
+      "numero": 15,
+      "titre": "Statistiques descriptives avancées",
+      "slug": "1ere-c-15-statistiques-descriptives-avancees",
+      "categorie": "statistiques",
+      "description": "Variance, écart-type, covariance, coefficient de corrélation, droite de régression.",
+      "duree_estimee": 80
+    }
+  ]
+}

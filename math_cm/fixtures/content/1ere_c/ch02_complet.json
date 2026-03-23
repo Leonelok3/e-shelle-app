@@ -1,0 +1,558 @@
+{
+  "type": "cours_complet",
+  "chapitre_slug": "1ere-c-2-derivation-definition-et-regles-de-calcul",
+  "lecons": [
+    {
+      "ordre": 1,
+      "titre": "Nombre dérivé et fonction dérivée",
+      "type_lecon": "definition",
+      "duree_lecture": 22,
+      "is_free": true,
+      "contenu": {
+        "introduction": "La dérivée est l'outil mathématique le plus puissant pour étudier les variations d'une fonction. Elle mesure le taux de variation instantané et permet de trouver les extrema, de tracer des tangentes et de résoudre des problèmes d'optimisation.",
+        "sections": [
+          {
+            "titre": "Taux de variation et nombre dérivé",
+            "type": "definition",
+            "contenu": "Le taux de variation de f entre a et a+h est [f(a+h) - f(a)] / h. Quand h → 0, si cette expression admet une limite finie L, on dit que f est dérivable en a et L est le nombre dérivé de f en a, noté f'(a).",
+            "formules": [
+              "\\tau(a, h) = \\frac{f(a+h) - f(a)}{h}",
+              "f'(a) = \\lim_{h \\to 0} \\frac{f(a+h) - f(a)}{h}"
+            ],
+            "exemples": [
+              {
+                "enonce": "Calculer f'(2) pour f(x) = x² à partir de la définition.",
+                "etapes": [
+                  "τ(2, h) = [(2+h)² - 4] / h = [4 + 4h + h² - 4] / h",
+                  "= [4h + h²] / h = 4 + h",
+                  "lim(h→0) (4 + h) = 4",
+                  "Donc f'(2) = 4"
+                ],
+                "solution": "f'(2) = 4"
+              }
+            ],
+            "remarques": ["Le nombre dérivé f'(a) est la pente de la tangente à la courbe au point d'abscisse a."]
+          },
+          {
+            "titre": "Équation de la tangente",
+            "type": "propriete",
+            "contenu": "La tangente à la courbe Cf au point A(a ; f(a)) a pour équation : y = f'(a)(x - a) + f(a). Cette droite a la même pente que la courbe en ce point.",
+            "formules": [
+              "y = f'(a)(x - a) + f(a)"
+            ],
+            "exemples": [
+              {
+                "enonce": "f(x) = x². Écrire l'équation de la tangente en x = 3.",
+                "etapes": [
+                  "f(3) = 9 et f'(x) = 2x donc f'(3) = 6",
+                  "y = 6(x - 3) + 9 = 6x - 18 + 9",
+                  "y = 6x - 9"
+                ],
+                "solution": "y = 6x - 9"
+              }
+            ],
+            "remarques": ["Au Probatoire, on demande très souvent l'équation de la tangente à un point donné."]
+          },
+          {
+            "titre": "Dérivabilité et continuité",
+            "type": "theoreme",
+            "contenu": "Si f est dérivable en a, alors f est continue en a. La réciproque est fausse : f(x) = |x| est continue en 0 mais pas dérivable (la pente à gauche est -1, à droite est +1 : pas de limite unique).",
+            "formules": [
+              "f \\text{ dérivable en } a \\Rightarrow f \\text{ continue en } a"
+            ],
+            "exemples": [
+              {
+                "enonce": "f(x) = |x| est-elle dérivable en 0 ?",
+                "etapes": [
+                  "τ(0, h) = |h|/h = 1 si h > 0 et -1 si h < 0",
+                  "Limite à droite = 1, limite à gauche = -1",
+                  "Les limites sont différentes → pas de limite unique",
+                  "f n'est pas dérivable en 0"
+                ],
+                "solution": "f non dérivable en 0 (point anguleux)"
+              }
+            ],
+            "remarques": ["Un graphe avec un 'angle' ou une 'pointe' en un point indique une non-dérivabilité en ce point."]
+          },
+          {
+            "titre": "Fonction dérivée — notation",
+            "type": "definition",
+            "contenu": "La fonction dérivée f' associe à chaque x (où f est dérivable) le nombre dérivé f'(x). On note aussi dy/dx ou Df. La dérivée seconde f'' est la dérivée de f'.",
+            "formules": [
+              "f'(x) = \\lim_{h \\to 0} \\frac{f(x+h)-f(x)}{h}",
+              "f'' = (f')'"
+            ],
+            "exemples": [
+              {
+                "enonce": "Calculer la fonction dérivée de f(x) = x² par la définition.",
+                "etapes": [
+                  "f'(x) = lim [(x+h)² - x²] / h",
+                  "= lim [2xh + h²] / h = lim (2x + h)",
+                  "= 2x"
+                ],
+                "solution": "f'(x) = 2x"
+              }
+            ],
+            "remarques": ["On retrouve bien f'(2) = 4 comme calculé précédemment."]
+          }
+        ],
+        "retenir": [
+          "f'(a) = lim(h→0) [f(a+h)-f(a)]/h = pente de la tangente en A(a; f(a))",
+          "Tangente en x=a : y = f'(a)(x-a) + f(a)",
+          "Dérivable → continu (mais pas l'inverse)",
+          "Point anguleux = non dérivable"
+        ]
+      }
+    },
+    {
+      "ordre": 2,
+      "titre": "Dérivées des fonctions usuelles et règles de calcul",
+      "type_lecon": "methode",
+      "duree_lecture": 25,
+      "is_free": true,
+      "contenu": {
+        "introduction": "Plutôt que de revenir à la définition pour chaque fonction, on utilise un tableau de dérivées usuelles et des règles algébriques (somme, produit, quotient, composée). Ces règles sont indispensables pour traiter tous les exercices du Probatoire.",
+        "sections": [
+          {
+            "titre": "Tableau des dérivées usuelles",
+            "type": "propriete",
+            "contenu": "À connaître impérativement : les dérivées des fonctions de base.",
+            "formules": [
+              "(x^n)' = n x^{n-1} \\quad (n \\in \\mathbb{Z})",
+              "(\\sqrt{x})' = \\frac{1}{2\\sqrt{x}} \\quad (x > 0)",
+              "\\left(\\frac{1}{x}\\right)' = -\\frac{1}{x^2} \\quad (x \\neq 0)",
+              "(\\sin x)' = \\cos x,\\quad (\\cos x)' = -\\sin x",
+              "(\\ln x)' = \\frac{1}{x} \\quad (x > 0),\\quad (e^x)' = e^x"
+            ],
+            "exemples": [
+              {
+                "enonce": "Donner les dérivées de : x⁵ ; √x ; 1/x² ; e^x.",
+                "etapes": [
+                  "(x⁵)' = 5x⁴",
+                  "(√x)' = 1/(2√x)",
+                  "(1/x²)' = (x⁻²)' = -2x⁻³ = -2/x³",
+                  "(e^x)' = e^x"
+                ],
+                "solution": "5x⁴ ; 1/(2√x) ; -2/x³ ; e^x"
+              }
+            ],
+            "remarques": ["(e^x)' = e^x est la seule fonction égale à sa propre dérivée (à une constante multiplicative près)."]
+          },
+          {
+            "titre": "Règles de linéarité : somme et produit par constante",
+            "type": "propriete",
+            "contenu": "La dérivée est linéaire : (f + g)' = f' + g' et (kf)' = k f'. Cela permet de dériver les polynômes terme à terme.",
+            "formules": [
+              "(f + g)' = f' + g'",
+              "(kf)' = k f' \\quad (k \\in \\mathbb{R})",
+              "(f - g)' = f' - g'"
+            ],
+            "exemples": [
+              {
+                "enonce": "Dériver f(x) = 3x⁴ - 5x² + 2x - 7.",
+                "etapes": [
+                  "f'(x) = 3(x⁴)' - 5(x²)' + 2(x)' - (7)'",
+                  "= 3·4x³ - 5·2x + 2·1 - 0",
+                  "= 12x³ - 10x + 2"
+                ],
+                "solution": "f'(x) = 12x³ - 10x + 2"
+              }
+            ],
+            "remarques": ["La dérivée d'une constante est toujours 0."]
+          },
+          {
+            "titre": "Règle du produit et du quotient",
+            "type": "propriete",
+            "contenu": "Pour le produit : (uv)' = u'v + uv'. Pour le quotient : (u/v)' = (u'v - uv') / v². Ces formules sont fondamentales et apparaissent souvent au Probatoire.",
+            "formules": [
+              "(uv)' = u'v + uv'",
+              "\\left(\\frac{u}{v}\\right)' = \\frac{u'v - uv'}{v^2} \\quad (v \\neq 0)"
+            ],
+            "exemples": [
+              {
+                "enonce": "Dériver f(x) = x² · (2x + 1).",
+                "etapes": [
+                  "u = x², u' = 2x ; v = 2x+1, v' = 2",
+                  "f'(x) = 2x(2x+1) + x²·2",
+                  "= 4x² + 2x + 2x² = 6x² + 2x"
+                ],
+                "solution": "f'(x) = 6x² + 2x = 2x(3x + 1)"
+              },
+              {
+                "enonce": "Dériver g(x) = (x + 1)/(x - 2).",
+                "etapes": [
+                  "u = x+1, u' = 1 ; v = x-2, v' = 1",
+                  "g'(x) = [1·(x-2) - (x+1)·1] / (x-2)²",
+                  "= [(x-2) - (x+1)] / (x-2)²",
+                  "= -3/(x-2)²"
+                ],
+                "solution": "g'(x) = -3/(x-2)²"
+              }
+            ],
+            "remarques": ["Mnémo produit : 'dérivée-fois-second + premier-fois-dérivée'. Mnémo quotient : 'num'den - num·den' sur den²'."]
+          },
+          {
+            "titre": "Dérivée d'une fonction composée",
+            "type": "propriete",
+            "contenu": "Si h(x) = f(g(x)) alors h'(x) = g'(x) · f'(g(x)). En pratique : 'dérivée de l'intérieur × dérivée de l'extérieur évalué à l'intérieur'.",
+            "formules": [
+              "(f \\circ g)'(x) = g'(x) \\cdot f'(g(x))",
+              "(u^n)' = n u^{n-1} \\cdot u'",
+              "(\\sqrt{u})' = \\frac{u'}{2\\sqrt{u}}",
+              "\\left(\\frac{1}{u}\\right)' = -\\frac{u'}{u^2}",
+              "(e^u)' = u' e^u,\\quad (\\ln u)' = \\frac{u'}{u}"
+            ],
+            "exemples": [
+              {
+                "enonce": "Dériver h(x) = (3x + 1)⁵.",
+                "etapes": [
+                  "u = 3x+1, u' = 3",
+                  "h'(x) = 5(3x+1)⁴ · 3 = 15(3x+1)⁴"
+                ],
+                "solution": "h'(x) = 15(3x+1)⁴"
+              },
+              {
+                "enonce": "Dériver k(x) = √(x² + 1).",
+                "etapes": [
+                  "u = x²+1, u' = 2x",
+                  "k'(x) = 2x / (2√(x²+1)) = x/√(x²+1)"
+                ],
+                "solution": "k'(x) = x/√(x²+1)"
+              }
+            ],
+            "remarques": ["La règle de la chaîne est la règle de dérivation la plus utilisée au Probatoire. Identifier clairement u (l'intérieur) avant de dériver."]
+          }
+        ],
+        "retenir": [
+          "Tableau de base : (xⁿ)' = nxⁿ⁻¹ ; (√x)' = 1/(2√x) ; (1/x)' = -1/x²",
+          "(uv)' = u'v + uv' — produit",
+          "(u/v)' = (u'v - uv')/v² — quotient",
+          "(uⁿ)' = nu^(n-1)·u' ; (√u)' = u'/(2√u) ; (eᵘ)' = u'eᵘ — composée"
+        ]
+      }
+    },
+    {
+      "ordre": 3,
+      "titre": "Applications de la dérivée — tangente et taux de variation",
+      "type_lecon": "exemple",
+      "duree_lecture": 18,
+      "is_free": false,
+      "contenu": {
+        "introduction": "La dérivée a de nombreuses applications concrètes : calculer des taux de variation en physique, économie ou biologie, trouver des tangentes à des courbes, et déterminer les extrema dans des problèmes d'optimisation.",
+        "sections": [
+          {
+            "titre": "Taux de variation moyen et instantané",
+            "type": "methode",
+            "contenu": "En sciences, le taux de variation moyen de f entre t₁ et t₂ est Δf/Δt = [f(t₂)-f(t₁)]/(t₂-t₁). Le taux instantané en t est f'(t). En physique : vitesse = dérivée de la position ; courant = dérivée de la charge.",
+            "formules": [
+              "\\tau_{\\text{moy}} = \\frac{f(t_2)-f(t_1)}{t_2-t_1}",
+              "\\tau_{\\text{inst}}(t) = f'(t)"
+            ],
+            "exemples": [
+              {
+                "enonce": "La position d'un mobile est x(t) = 2t² - 3t + 1 (en mètres, t en secondes). Calculer la vitesse en t = 2.",
+                "etapes": [
+                  "v(t) = x'(t) = 4t - 3",
+                  "v(2) = 4·2 - 3 = 5 m/s"
+                ],
+                "solution": "v(2) = 5 m/s"
+              }
+            ],
+            "remarques": ["En économie, le coût marginal = dérivée du coût total. En biologie, le taux de croissance = dérivée de la population."]
+          },
+          {
+            "titre": "Tangente horizontale — extrema",
+            "type": "propriete",
+            "contenu": "Si f est dérivable en a et admet un extremum local en a, alors f'(a) = 0 (condition nécessaire). Mais f'(a) = 0 ne suffit pas — il faut vérifier le changement de signe de f'. Si f'(a) = 0 et f' change de signe en a, c'est un extremum.",
+            "formules": [
+              "f'(a) = 0 \\text{ et } f' \\text{ change de signe en } a \\Rightarrow \\text{extremum en } a"
+            ],
+            "exemples": [
+              {
+                "enonce": "f(x) = x³ - 3x. Trouver les extrema.",
+                "etapes": [
+                  "f'(x) = 3x² - 3 = 3(x-1)(x+1)",
+                  "f'(x) = 0 → x = -1 ou x = 1",
+                  "f' > 0 sur ]-∞;-1[, f' < 0 sur ]-1;1[, f' > 0 sur ]1;+∞[",
+                  "Maximum local en x = -1 : f(-1) = 2",
+                  "Minimum local en x = 1 : f(1) = -2"
+                ],
+                "solution": "Maximum local en (-1; 2), minimum local en (1; -2)"
+              }
+            ],
+            "remarques": ["f'(a) = 0 mais f' ne change pas de signe → point d'inflexion (ex: f(x) = x³ en 0)."]
+          },
+          {
+            "titre": "Problèmes d'optimisation",
+            "type": "methode",
+            "contenu": "Pour optimiser (maximiser ou minimiser) une quantité : 1) Exprimer la quantité comme une fonction f(x). 2) Déterminer le domaine. 3) Calculer f'(x) et résoudre f'(x) = 0. 4) Vérifier le signe de f' et conclure.",
+            "formules": [],
+            "exemples": [
+              {
+                "enonce": "Une boîte sans couvercle à base carrée de côté x et de hauteur h a un volume fixe V = 500 cm³. Exprimer la surface S(x) et trouver x minimisant S.",
+                "etapes": [
+                  "h = 500/x² (d'après V = x²·h = 500)",
+                  "S = x² + 4xh = x² + 4x·(500/x²) = x² + 2000/x",
+                  "S'(x) = 2x - 2000/x²",
+                  "S'(x) = 0 → 2x = 2000/x² → x³ = 1000 → x = 10 cm"
+                ],
+                "solution": "x = 10 cm minimise la surface"
+              }
+            ],
+            "remarques": ["Ces problèmes d'optimisation sont très appréciés au Probatoire C — ils combinent géométrie, algèbre et dérivation."]
+          }
+        ],
+        "retenir": [
+          "Vitesse = dérivée de la position ; taux marginal = dérivée du coût",
+          "Extremum local → f'(a) = 0 ET changement de signe de f'",
+          "f'(a) = 0 sans changement de signe → point d'inflexion",
+          "Optimisation : exprimer f(x), calculer f'(x)=0, vérifier le signe"
+        ]
+      }
+    },
+    {
+      "ordre": 4,
+      "titre": "Récapitulatif — méthode complète d'étude par la dérivée",
+      "type_lecon": "recapitulatif",
+      "duree_lecture": 15,
+      "is_free": false,
+      "contenu": {
+        "introduction": "Au Probatoire, l'exercice 'étude de fonction' suit toujours la même structure. Ce récapitulatif donne la méthode pas à pas pour ne rien oublier.",
+        "sections": [
+          {
+            "titre": "Plan type d'une étude de fonction",
+            "type": "methode",
+            "contenu": "Étape 1 : Domaine de définition. Étape 2 : Limites aux bornes / asymptotes. Étape 3 : Calcul de f'(x). Étape 4 : Signe de f'(x) → tableau de variations. Étape 5 : Tableau de valeurs et tracé de la courbe.",
+            "formules": [],
+            "exemples": [
+              {
+                "enonce": "Appliquer le plan à f(x) = x³ - 3x² + 4 sur [-1 ; 4].",
+                "etapes": [
+                  "1. Df = ℝ (polynôme). Restriction à [-1;4].",
+                  "2. Valeurs aux bornes : f(-1) = -1-3+4 = 0 ; f(4) = 64-48+4 = 20",
+                  "3. f'(x) = 3x² - 6x = 3x(x-2)",
+                  "4. f'(x) = 0 → x=0 ou x=2. f'>0 sur ]-1;0[, f'<0 sur ]0;2[, f'>0 sur ]2;4[",
+                  "5. f(0) = 4 (max local), f(2) = 8-12+4 = 0 (min local)"
+                ],
+                "solution": "Maximum local en (0;4), minimum local en (2;0)"
+              }
+            ],
+            "remarques": ["Ce plan doit être appliqué mécaniquement à chaque exercice de type 'étude de fonction'."]
+          },
+          {
+            "titre": "Erreurs classiques à éviter",
+            "type": "remarque",
+            "contenu": "Erreur 1 : Oublier de vérifier le changement de signe de f' (f'(a)=0 ne suffit pas). Erreur 2 : Dériver incorrectement un quotient (confondre avec le produit). Erreur 3 : Ne pas préciser le domaine avant d'étudier les limites. Erreur 4 : Confondre f'(a) = 0 (extremum) et f'(a) ≠ 0 (tangente non horizontale).",
+            "formules": [],
+            "exemples": [],
+            "remarques": ["Toujours dresser le tableau de signes de f' — c'est la seule façon sûre de conclure sur les variations."]
+          },
+          {
+            "titre": "Exercice type Probatoire — récapitulatif",
+            "type": "recapitulatif",
+            "contenu": "Exemple complet de présentation attendue au Probatoire pour l'étude de la fonction f(x) = (x² - 4)/(x - 2) sur ℝ\\{2}. Étape 1 : Df = ℝ\\{2}. Étape 2 : Simplifier f(x) = x+2 pour x≠2 ; trou en (2;4) — pas d'AV. Étape 3 : f'(x) = 1 (constante). Étape 4 : f toujours croissante. Étape 5 : droite y = x+2 avec point exclu.",
+            "formules": [],
+            "exemples": [],
+            "remarques": ["La clarté de la présentation est notée autant que le résultat au Probatoire."]
+          }
+        ],
+        "retenir": [
+          "Plan : Df → Limites/Asymptotes → f'(x) → Signe de f' → Tableau de variations → Graphe",
+          "Toujours vérifier le changement de signe de f' pour conclure sur les extrema",
+          "Présentation soignée = points supplémentaires au Probatoire",
+          "Tangente en a : y = f'(a)(x-a) + f(a)"
+        ]
+      }
+    }
+  ],
+  "exercices": [
+    {
+      "numero": 1,
+      "titre": "Calcul de dérivées — règles de base",
+      "type_exercice": "calcul",
+      "niveau": "decouverte",
+      "duree_recommandee": 15,
+      "bareme": 6,
+      "enonce": {
+        "texte": "Calculer la dérivée de chacune des fonctions suivantes.",
+        "questions": [
+          {"numero": "1", "texte": "f(x) = 4x³ - 3x² + 7x - 2", "points": 2},
+          {"numero": "2", "texte": "g(x) = (2x + 1)(x - 3)", "points": 2},
+          {"numero": "3", "texte": "h(x) = x/(x + 2)", "points": 2}
+        ]
+      },
+      "correction": {
+        "methode": "Appliquer les règles de linéarité, produit et quotient.",
+        "etapes": [
+          {"numero": 1, "texte": "f'(x) = 12x² - 6x + 7", "justification": "Dérivée terme à terme"},
+          {"numero": 2, "texte": "Développer : (2x+1)(x-3) = 2x²-5x-3. g'(x) = 4x-5. Ou règle produit : 2(x-3)+(2x+1)·1 = 4x-5", "justification": ""},
+          {"numero": 3, "texte": "h'(x) = [1·(x+2) - x·1]/(x+2)² = 2/(x+2)²", "justification": "Règle du quotient, u=x, v=x+2"}
+        ],
+        "reponse_finale": "f'=12x²-6x+7 ; g'=4x-5 ; h'=2/(x+2)²"
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 2,
+      "titre": "Dérivées de fonctions composées",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "duree_recommandee": 20,
+      "bareme": 8,
+      "enonce": {
+        "texte": "Calculer la dérivée de chacune des fonctions composées.",
+        "questions": [
+          {"numero": "1", "texte": "f(x) = (2x - 5)⁴", "points": 2},
+          {"numero": "2", "texte": "g(x) = √(3x² + 1)", "points": 2},
+          {"numero": "3", "texte": "h(x) = 1/(x² - 4)", "points": 2},
+          {"numero": "4", "texte": "k(x) = e^(x²)", "points": 2}
+        ]
+      },
+      "correction": {
+        "methode": "(uⁿ)' = nu^(n-1)·u' ; (√u)' = u'/(2√u) ; (1/u)' = -u'/u² ; (eᵘ)' = u'eᵘ",
+        "etapes": [
+          {"numero": 1, "texte": "u=2x-5, u'=2. f'(x) = 4(2x-5)³·2 = 8(2x-5)³", "justification": ""},
+          {"numero": 2, "texte": "u=3x²+1, u'=6x. g'(x) = 6x/(2√(3x²+1)) = 3x/√(3x²+1)", "justification": ""},
+          {"numero": 3, "texte": "u=x²-4, u'=2x. h'(x) = -2x/(x²-4)²", "justification": ""},
+          {"numero": 4, "texte": "u=x², u'=2x. k'(x) = 2x·e^(x²)", "justification": ""}
+        ],
+        "reponse_finale": "8(2x-5)³ ; 3x/√(3x²+1) ; -2x/(x²-4)² ; 2x·e^(x²)"
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 3,
+      "titre": "QCM — Nombre dérivé et tangente",
+      "type_exercice": "qcm",
+      "niveau": "decouverte",
+      "duree_recommandee": 10,
+      "bareme": 4,
+      "enonce": {
+        "texte": "f(x) = x² - 2x + 3. Quelle est l'équation de la tangente à Cf au point d'abscisse 1 ?",
+        "questions": []
+      },
+      "correction": {
+        "methode": "Calculer f(1) et f'(1), puis appliquer y = f'(1)(x-1) + f(1).",
+        "etapes": [
+          {"numero": 1, "texte": "f(1) = 1-2+3 = 2", "justification": ""},
+          {"numero": 2, "texte": "f'(x) = 2x-2 → f'(1) = 0", "justification": ""},
+          {"numero": 3, "texte": "y = 0·(x-1) + 2 = 2 (tangente horizontale)", "justification": ""}
+        ],
+        "reponse_finale": "C",
+        "piege": "f'(1) = 0 donne une tangente horizontale, pas une tangente nulle. La tangente existe bien, elle est juste horizontale."
+      },
+      "options_qcm": [
+        {"label": "A", "texte": "y = 2x - 1", "correct": false},
+        {"label": "B", "texte": "y = x + 1", "correct": false},
+        {"label": "C", "texte": "y = 2", "correct": true},
+        {"label": "D", "texte": "y = -2x + 4", "correct": false}
+      ]
+    },
+    {
+      "numero": 4,
+      "titre": "Extrema d'une fonction polynôme",
+      "type_exercice": "probleme",
+      "niveau": "entrainement",
+      "duree_recommandee": 25,
+      "bareme": 8,
+      "enonce": {
+        "texte": "Soit f(x) = x³ - 6x² + 9x + 2.",
+        "questions": [
+          {"numero": "1", "texte": "Calculer f'(x) et résoudre f'(x) = 0.", "points": 3},
+          {"numero": "2", "texte": "Dresser le tableau de variations de f sur ℝ.", "points": 3},
+          {"numero": "3", "texte": "Déterminer les coordonnées des extrema locaux de f.", "points": 2}
+        ]
+      },
+      "correction": {
+        "methode": "Dériver, résoudre f'=0, dresser tableau de signes de f'.",
+        "etapes": [
+          {"numero": 1, "texte": "f'(x) = 3x²-12x+9 = 3(x²-4x+3) = 3(x-1)(x-3). f'(x)=0 → x=1 ou x=3", "justification": ""},
+          {"numero": 2, "texte": "f'>0 sur ]-∞;1[, f'<0 sur ]1;3[, f'>0 sur ]3;+∞[. f croissante, décroissante, croissante.", "justification": ""},
+          {"numero": 3, "texte": "Maximum local en x=1 : f(1)=1-6+9+2=6. Minimum local en x=3 : f(3)=27-54+27+2=2", "justification": ""}
+        ],
+        "reponse_finale": "Max local (1;6), Min local (3;2)"
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 5,
+      "titre": "Équation de tangente et point de contact",
+      "type_exercice": "calcul",
+      "niveau": "entrainement",
+      "duree_recommandee": 20,
+      "bareme": 6,
+      "enonce": {
+        "texte": "Soit f(x) = x³ - 2x + 1.",
+        "questions": [
+          {"numero": "1", "texte": "Écrire l'équation de la tangente à Cf au point d'abscisse 2.", "points": 3},
+          {"numero": "2", "texte": "Trouver l'abscisse du point où la tangente à Cf est parallèle à y = 10x.", "points": 3}
+        ]
+      },
+      "correction": {
+        "methode": "f'(x) = pente de la tangente.",
+        "etapes": [
+          {"numero": 1, "texte": "f(2) = 8-4+1 = 5. f'(x) = 3x²-2. f'(2) = 12-2 = 10. Tangente : y = 10(x-2)+5 = 10x-15", "justification": ""},
+          {"numero": 2, "texte": "Tangente parallèle à y=10x → même pente → f'(x) = 10. 3x²-2 = 10 → x² = 4 → x = ±2", "justification": ""}
+        ],
+        "reponse_finale": "1) y = 10x-15 ; 2) x = 2 ou x = -2"
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 6,
+      "titre": "Optimisation — problème concret",
+      "type_exercice": "probleme",
+      "niveau": "approfondissement",
+      "duree_recommandee": 30,
+      "bareme": 10,
+      "enonce": {
+        "texte": "Un agriculteur camerounais veut clôturer un terrain rectangulaire de 600 m² en utilisant un mur existant comme l'un des côtés longs. Il n'a que 60 m de grillage pour les trois autres côtés.",
+        "questions": [
+          {"numero": "1", "texte": "Si x est la longueur du côté perpendiculaire au mur, exprimer la largeur y et la surface S en fonction de x.", "points": 3},
+          {"numero": "2", "texte": "Pour quelle valeur de x la surface est-elle maximale ? Calculer ce maximum.", "points": 4},
+          {"numero": "3", "texte": "Vérifier que cette valeur donne bien un maximum (et non un minimum).", "points": 3}
+        ]
+      },
+      "correction": {
+        "methode": "Exprimer S(x), dériver, résoudre S'=0, vérifier.",
+        "etapes": [
+          {"numero": 1, "texte": "2x + y = 60 → y = 60-2x. S(x) = x·y = x(60-2x) = 60x-2x². Domaine : 0 < x < 30", "justification": ""},
+          {"numero": 2, "texte": "S'(x) = 60-4x. S'(x)=0 → x=15. S(15) = 60·15-2·225 = 900-450 = 450 m²", "justification": ""},
+          {"numero": 3, "texte": "S''(x) = -4 < 0 → concave → x=15 est bien un maximum. Ou : S'>0 sur ]0;15[, S'<0 sur ]15;30[", "justification": ""}
+        ],
+        "reponse_finale": "x = 15 m, surface maximale = 450 m²"
+      },
+      "options_qcm": []
+    },
+    {
+      "numero": 7,
+      "titre": "Synthèse Probatoire — étude complète d'une fonction",
+      "type_exercice": "synthese",
+      "niveau": "examen",
+      "duree_recommandee": 40,
+      "bareme": 14,
+      "enonce": {
+        "texte": "Soit f définie sur ℝ par f(x) = (2x³)/3 - 3x² + 4x + 1.",
+        "questions": [
+          {"numero": "1", "texte": "Calculer f'(x). Résoudre f'(x) = 0.", "points": 3},
+          {"numero": "2", "texte": "Dresser le tableau de variations complet de f.", "points": 4},
+          {"numero": "3", "texte": "Donner les coordonnées des extrema locaux.", "points": 2},
+          {"numero": "4", "texte": "Écrire l'équation de la tangente à Cf au point d'abscisse 0.", "points": 2},
+          {"numero": "5", "texte": "Pour quelles valeurs de x a-t-on f(x) > 1 ? (Utiliser le tableau de variations)", "points": 3}
+        ]
+      },
+      "correction": {
+        "methode": "Plan complet : f', tableau, extrema, tangente, inéquation graphique.",
+        "etapes": [
+          {"numero": 1, "texte": "f'(x) = 2x²-6x+4 = 2(x²-3x+2) = 2(x-1)(x-2). f'=0 → x=1 ou x=2", "justification": ""},
+          {"numero": 2, "texte": "f'>0 sur ]-∞;1[, f'<0 sur ]1;2[, f'>0 sur ]2;+∞[. f(1)=2/3-3+4+1=8/3. f(2)=16/3-12+8+1=7/3", "justification": ""},
+          {"numero": 3, "texte": "Max local en (1 ; 8/3) ≈ (1; 2,67). Min local en (2 ; 7/3) ≈ (2; 2,33)", "justification": ""},
+          {"numero": 4, "texte": "f(0)=1. f'(0)=4. Tangente : y=4x+1", "justification": ""},
+          {"numero": 5, "texte": "f(x)>1 ↔ f(x)-1>0. f(0)=1, f croissante en 0+. Sur ]-∞;0[, f<1 ? f→-∞. f(0)=1 exact. f>1 sur ]0;...[ mais min>1 aussi. Analyser : f(x)>1 sur ]0; +∞[ approximativement — vérifier avec valeurs.", "justification": ""}
+        ],
+        "reponse_finale": "Max (1 ; 8/3), Min (2 ; 7/3), tangente y=4x+1"
+      },
+      "options_qcm": []
+    }
+  ]
+}

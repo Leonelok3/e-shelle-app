@@ -7,10 +7,11 @@ Usage:
   python manage.py import_content --file math_cm/fixtures/content/3eme/ch01_complet.json
 
 Types acceptés dans le JSON :
-  "lecons"       → importe uniquement les leçons
-  "exercices"    → importe uniquement les exercices
-  "cours_complet"→ importe leçons + exercices en une seule fois
-  "epreuve"      → importe une épreuve type examen
+  "setup_chapitres" → crée la classe et ses chapitres (sans contenu)
+  "lecons"          → importe uniquement les leçons
+  "exercices"       → importe uniquement les exercices
+  "cours_complet"   → importe leçons + exercices en une seule fois
+  "epreuve"         → importe une épreuve type examen
 """
 import json
 import os
@@ -37,6 +38,43 @@ class Command(BaseCommand):
 
         content_type = data.get('type')
         chapitre_slug = data.get('chapitre_slug')
+
+        # ── SETUP CLASSE + CHAPITRES ──────────────────────────────────
+        if content_type == 'setup_chapitres':
+            cl = data['classe']
+            classe, created = Classe.objects.update_or_create(
+                nom=cl['nom'],
+                defaults={
+                    'label': cl['label'],
+                    'examen_fin_annee': cl.get('examen_fin_annee', ''),
+                    'description': cl.get('description', ''),
+                    'ordre': cl.get('ordre', 0),
+                    'is_active': True,
+                }
+            )
+            action = 'créée' if created else 'mise à jour'
+            self.stdout.write(f"\n🏫 Classe {action} : {classe.label}")
+
+            for ch in data.get('chapitres', []):
+                slug = ch.get('slug') or slugify(f"{cl['nom']}-{ch['numero']}-{ch['titre']}")[:220]
+                obj, ch_created = Chapitre.objects.update_or_create(
+                    classe=classe, numero=ch['numero'],
+                    defaults={
+                        'titre': ch['titre'],
+                        'slug': slug,
+                        'categorie': ch.get('categorie', 'algebre'),
+                        'description': ch.get('description', ''),
+                        'duree_estimee': ch.get('duree_estimee', 60),
+                        'is_published': False,
+                    }
+                )
+                icon = '✅' if ch_created else '🔄'
+                self.stdout.write(f"  {icon} Ch.{ch['numero']} : {ch['titre']}  (slug: {obj.slug})")
+
+            self.stdout.write(self.style.SUCCESS(
+                f"\n✅ Setup terminé : {len(data.get('chapitres', []))} chapitres pour {classe.label}"
+            ))
+            return
 
         # ── COURS COMPLET (leçons + exercices ensemble) ───────────────
         if content_type == 'cours_complet':
