@@ -65,7 +65,7 @@ class BienAdmin(admin.ModelAdmin):
     ]
     list_editable   = ["est_mis_en_avant", "est_coup_de_coeur"]
     readonly_fields = [
-        "slug", "vues", "created_at", "updated_at", "date_publication",
+        "vues", "created_at", "updated_at", "date_publication",
         "apercu_photo_principale",
     ]
     prepopulated_fields = {"slug": ("titre",)}
