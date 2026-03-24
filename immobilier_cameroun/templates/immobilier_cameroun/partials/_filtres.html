@@ -1,0 +1,61 @@
+{% comment %}Panneau de filtres latéral — doit recevoir : form (RechercheForm){% endcomment %}
+<aside class="immo-filtres">
+  <h2 class="immo-filtres__titre">
+    <i class="fa-solid fa-sliders"></i> Filtrer
+  </h2>
+  <form method="get" action="{% url 'immobilier:liste_biens' %}" id="form-filtres">
+
+    <!-- Recherche texte -->
+    <div class="immo-filtres__groupe">
+      <label class="immo-filtres__label">Recherche</label>
+      {{ form.q }}
+    </div>
+
+    <!-- Type de transaction -->
+    <div class="immo-filtres__groupe">
+      <label class="immo-filtres__label">Transaction</label>
+      {{ form.type_transaction }}
+    </div>
+
+    <!-- Type de bien -->
+    <div class="immo-filtres__groupe">
+      <label class="immo-filtres__label">Type de bien</label>
+      {{ form.type_bien }}
+    </div>
+
+    <!-- Ville -->
+    <div class="immo-filtres__groupe">
+      <label class="immo-filtres__label">Ville</label>
+      {{ form.ville }}
+    </div>
+
+    <!-- Prix -->
+    <div class="immo-filtres__groupe">
+      <label class="immo-filtres__label">Budget (XAF)</label>
+      <div class="immo-filtres__range">
+        {{ form.prix_min }}
+        <span>—</span>
+        {{ form.prix_max }}
+      </div>
+    </div>
+
+    <!-- Chambres -->
+    <div class="immo-filtres__groupe">
+      <label class="immo-filtres__label">Chambres (min)</label>
+      {{ form.chambres_min }}
+    </div>
+
+    <!-- Tri -->
+    <div class="immo-filtres__groupe">
+      <label class="immo-filtres__label">Trier par</label>
+      {{ form.tri }}
+    </div>
+
+    <button type="submit" class="immo-btn immo-btn--primary immo-btn--full mt-3">
+      <i class="fa-solid fa-magnifying-glass"></i> Rechercher
+    </button>
+    <a href="{% url 'immobilier:liste_biens' %}" class="immo-btn immo-btn--outline immo-btn--full mt-2">
+      <i class="fa-solid fa-rotate-left"></i> Réinitialiser
+    </a>
+  </form>
+</aside>

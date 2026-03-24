@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Votre bien a été publié</title></head>
+<body style="font-family:Inter,Arial,sans-serif;background:#FAF0E6;margin:0;padding:0;">
+  <div style="max-width:600px;margin:30px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
+    <div style="background:#2D6A4F;padding:30px;text-align:center;">
+      <h1 style="color:#fff;margin:0;font-size:24px;">✅ Votre bien est en ligne !</h1>
+    </div>
+    <div style="padding:30px;">
+      <p>Bonjour <strong>{{ user.get_full_name|default:user.username }}</strong>,</p>
+      <p>Votre annonce <strong>« {{ bien.titre }} »</strong> a été validée et est maintenant publiée sur <a href="https://e-shelle.com/immobilier/" style="color:#2D6A4F;">E-Shelle Immo</a>.</p>
+      <div style="background:#F4F4F4;border-radius:8px;padding:15px;margin:20px 0;">
+        <p><strong>📍 Localisation :</strong> {{ bien.quartier }}, {{ bien.ville }}</p>
+        <p><strong>💰 Prix :</strong> {{ bien.prix_formate }}</p>
+        <p><strong>🏠 Type :</strong> {{ bien.get_type_bien_display }}</p>
+      </div>
+      <div style="text-align:center;margin:30px 0;">
+        <a href="https://e-shelle.com{{ bien.get_absolute_url }}"
+           style="background:#2D6A4F;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:700;">
+          Voir mon annonce
+        </a>
+      </div>
+      <p style="color:#666;font-size:13px;">
+        Pour toute question, contactez-nous sur WhatsApp : <a href="https://wa.me/237680625082" style="color:#2D6A4F;">+237 680 625 082</a>
+      </p>
+    </div>
+    <div style="background:#F4A261;padding:15px;text-align:center;">
+      <p style="margin:0;color:#fff;font-size:13px;">© E-Shelle — Plateforme SaaS camerounaise</p>
+    </div>
+  </div>
+</body>
+</html>

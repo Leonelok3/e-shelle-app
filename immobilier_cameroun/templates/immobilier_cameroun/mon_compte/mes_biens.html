@@ -1,0 +1,100 @@
+{% extends "immobilier_cameroun/base_immobilier.html" %}
+{% load static %}
+
+{% block title %}Mes biens — E-Shelle Immo{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item"><a href="{% url 'immobilier:mon_compte' %}">Mon compte</a></li>
+  <li class="breadcrumb-item active">Mes biens</li>
+{% endblock %}
+
+{% block immo_content %}
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-lg-3">
+      {% include "immobilier_cameroun/mon_compte/_nav_compte.html" %}
+    </div>
+    <div class="col-lg-9">
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="immo-page-titre">Mes biens</h1>
+        <a href="{% url 'immobilier:publier_bien' %}" class="immo-btn immo-btn--primary">
+          <i class="fa-solid fa-plus"></i> Nouveau bien
+        </a>
+      </div>
+
+      {% if biens %}
+        <div class="row g-3">
+          {% for bien in biens %}
+            <div class="col-12">
+              <div class="immo-bien-row">
+                <!-- Miniature -->
+                {% with photo=bien.photo_principale %}
+                  {% if photo %}
+                    <img src="{{ photo.image.url }}" alt="{{ bien.titre }}" class="immo-bien-row__img">
+                  {% else %}
+                    <div class="immo-bien-row__img immo-bien-row__img--placeholder">
+                      <i class="fa-solid fa-building"></i>
+                    </div>
+                  {% endif %}
+                {% endwith %}
+
+                <!-- Info -->
+                <div class="immo-bien-row__info">
+                  <h3 class="immo-bien-row__titre">{{ bien.titre }}</h3>
+                  <p class="immo-bien-row__meta">
+                    <i class="fa-solid fa-location-dot"></i> {{ bien.quartier }}, {{ bien.ville }}
+                    &nbsp;·&nbsp; {{ bien.get_type_bien_display }}
+                    &nbsp;·&nbsp; {{ bien.prix_formate }}
+                  </p>
+                  <div class="immo-bien-row__badges">
+                    <span class="immo-badge immo-badge--{{ bien.statut|lower }}">
+                      {{ bien.get_statut_display }}
+                    </span>
+                    {% if bien.est_mis_en_avant %}
+                      <span class="immo-badge immo-badge--premium">⭐ En avant</span>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="immo-bien-row__stats">
+                  <span><i class="fa-solid fa-eye"></i> {{ bien.vues }}</span>
+                  <span><i class="fa-solid fa-heart"></i> {{ bien.nb_favoris }}</span>
+                </div>
+
+                <!-- Actions -->
+                <div class="immo-bien-row__actions">
+                  <a href="{{ bien.get_absolute_url }}" class="immo-btn immo-btn--xs immo-btn--outline" title="Voir">
+                    <i class="fa-solid fa-eye"></i>
+                  </a>
+                  <a href="{% url 'immobilier:modifier_bien' slug=bien.slug %}" class="immo-btn immo-btn--xs immo-btn--primary ms-1" title="Modifier">
+                    <i class="fa-solid fa-pen"></i>
+                  </a>
+                  <form method="post" action="{% url 'immobilier:supprimer_bien' slug=bien.slug %}"
+                        class="d-inline ms-1"
+                        onsubmit="return confirm('Supprimer ce bien ? Cette action est irréversible.');">
+                    {% csrf_token %}
+                    <button type="submit" class="immo-btn immo-btn--xs immo-btn--danger" title="Supprimer">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="immo-empty">
+          <i class="fa-solid fa-house fa-3x"></i>
+          <h3>Vous n'avez pas encore de bien</h3>
+          <a href="{% url 'immobilier:publier_bien' %}" class="immo-btn immo-btn--primary mt-3">
+            Publier mon premier bien
+          </a>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}

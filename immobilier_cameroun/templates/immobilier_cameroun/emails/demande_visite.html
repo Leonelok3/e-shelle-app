@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Nouvelle demande de visite</title></head>
+<body style="font-family:Inter,Arial,sans-serif;background:#FAF0E6;margin:0;padding:0;">
+  <div style="max-width:600px;margin:30px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
+    <div style="background:#457B9D;padding:30px;text-align:center;">
+      <h1 style="color:#fff;margin:0;font-size:24px;">📅 Nouvelle demande de visite</h1>
+    </div>
+    <div style="padding:30px;">
+      <p>Quelqu'un souhaite visiter votre bien <strong>« {{ bien.titre }} »</strong>.</p>
+      <div style="background:#F4F4F4;border-radius:8px;padding:15px;margin:20px 0;">
+        <p><strong>👤 Nom :</strong> {{ demande.nom_complet }}</p>
+        <p><strong>📞 Téléphone :</strong> {{ demande.telephone }}</p>
+        {% if demande.email %}<p><strong>📧 Email :</strong> {{ demande.email }}</p>{% endif %}
+        {% if demande.date_souhaitee %}<p><strong>📅 Date souhaitée :</strong> {{ demande.date_souhaitee|date:"d/m/Y" }}</p>{% endif %}
+        {% if demande.message %}<p><strong>💬 Message :</strong><br>{{ demande.message }}</p>{% endif %}
+      </div>
+      <div style="text-align:center;margin:30px 0;">
+        <a href="https://wa.me/{{ demande.telephone|cut:'+' }}"
+           style="background:#25D366;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:700;">
+          <i>Répondre sur WhatsApp</i>
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

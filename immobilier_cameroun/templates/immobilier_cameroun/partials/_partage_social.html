@@ -1,0 +1,72 @@
+{% comment %}
+Boutons partage réseaux sociaux — variable attendue : bien
+{% endcomment %}
+<div class="immo-partage">
+  <span class="immo-partage__label">
+    <i class="fa-solid fa-share-nodes"></i> Partager :
+  </span>
+
+  <!-- WhatsApp -->
+  <a href="{{ bien.get_whatsapp_url }}"
+     target="_blank" rel="noopener"
+     class="immo-partage__btn immo-partage__btn--whatsapp"
+     title="Partager sur WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+    <span>WhatsApp</span>
+  </a>
+
+  <!-- Facebook -->
+  <a href="{{ bien.get_partage_facebook_url }}"
+     target="_blank" rel="noopener"
+     class="immo-partage__btn immo-partage__btn--facebook"
+     title="Partager sur Facebook">
+    <i class="fa-brands fa-facebook-f"></i>
+    <span>Facebook</span>
+  </a>
+
+  <!-- X / Twitter -->
+  <a href="{{ bien.get_partage_twitter_url }}"
+     target="_blank" rel="noopener"
+     class="immo-partage__btn immo-partage__btn--twitter"
+     title="Partager sur X (Twitter)">
+    <i class="fa-brands fa-x-twitter"></i>
+    <span>X</span>
+  </a>
+
+  <!-- LinkedIn -->
+  <a href="{{ bien.get_partage_linkedin_url }}"
+     target="_blank" rel="noopener"
+     class="immo-partage__btn immo-partage__btn--linkedin"
+     title="Partager sur LinkedIn">
+    <i class="fa-brands fa-linkedin-in"></i>
+    <span>LinkedIn</span>
+  </a>
+
+  <!-- Telegram -->
+  <a href="{{ bien.get_partage_telegram_url }}"
+     target="_blank" rel="noopener"
+     class="immo-partage__btn immo-partage__btn--telegram"
+     title="Partager sur Telegram">
+    <i class="fa-brands fa-telegram"></i>
+    <span>Telegram</span>
+  </a>
+
+  <!-- TikTok — copier le lien -->
+  <button
+    class="immo-partage__btn immo-partage__btn--tiktok"
+    data-copy-url="{{ bien.get_partage_tiktok_url }}"
+    title="Copier le lien pour TikTok">
+    <i class="fa-brands fa-tiktok"></i>
+    <span>TikTok</span>
+  </button>
+
+  <!-- Copier le lien -->
+  <button
+    class="immo-partage__btn immo-partage__btn--copy"
+    data-copy-url="{{ bien.get_absolute_url }}"
+    id="btn-copier-lien"
+    title="Copier le lien">
+    <i class="fa-solid fa-link"></i>
+    <span>Copier</span>
+  </button>
+</div>

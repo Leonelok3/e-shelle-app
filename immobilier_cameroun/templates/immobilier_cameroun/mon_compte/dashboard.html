@@ -1,0 +1,150 @@
+{% extends "immobilier_cameroun/base_immobilier.html" %}
+{% load static %}
+
+{% block title %}Mon compte immobilier — E-Shelle Immo{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item active">Mon compte</li>
+{% endblock %}
+
+{% block immo_content %}
+<div class="container py-4">
+  <div class="row g-4">
+
+    <!-- Sidebar navigation compte -->
+    <div class="col-lg-3">
+      {% include "immobilier_cameroun/mon_compte/_nav_compte.html" %}
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="col-lg-9">
+
+      <!-- En-tête -->
+      <div class="immo-dashboard__header">
+        <div>
+          <h1 class="immo-dashboard__titre">
+            Bonjour, {{ user.get_full_name|default:user.username }} 👋
+          </h1>
+          <p class="immo-dashboard__sous-titre">
+            Compte
+            <span class="immo-badge immo-badge--{{ profil.compte_type|lower }}">
+              {{ profil.get_compte_type_display }}
+            </span>
+            {% if profil.est_premium_actif %}
+              — expire le {{ profil.date_expiration_premium|date:"d/m/Y" }}
+            {% endif %}
+          </p>
+        </div>
+        <a href="{% url 'immobilier:publier_bien' %}" class="immo-btn immo-btn--primary">
+          <i class="fa-solid fa-plus"></i> Publier un bien
+        </a>
+      </div>
+
+      <!-- Statistiques -->
+      <div class="immo-stats-grid mt-4">
+        <div class="immo-stat-card">
+          <i class="fa-solid fa-house-circle-check fa-2x"></i>
+          <div class="immo-stat-card__valeur">{{ stats.biens_publies }}</div>
+          <div class="immo-stat-card__label">Bien{{ stats.biens_publies|pluralize }} publié{{ stats.biens_publies|pluralize }}</div>
+        </div>
+        <div class="immo-stat-card">
+          <i class="fa-solid fa-eye fa-2x"></i>
+          <div class="immo-stat-card__valeur">{{ stats.vues_totales }}</div>
+          <div class="immo-stat-card__label">Vue{{ stats.vues_totales|pluralize }} totale{{ stats.vues_totales|pluralize }}</div>
+        </div>
+        <div class="immo-stat-card">
+          <i class="fa-solid fa-heart fa-2x"></i>
+          <div class="immo-stat-card__valeur">{{ stats.favoris_total }}</div>
+          <div class="immo-stat-card__label">Favori{{ stats.favoris_total|pluralize }}</div>
+        </div>
+        <div class="immo-stat-card {% if stats.nouvelles_demandes > 0 %}immo-stat-card--alert{% endif %}">
+          <i class="fa-solid fa-calendar-check fa-2x"></i>
+          <div class="immo-stat-card__valeur">{{ stats.nouvelles_demandes }}</div>
+          <div class="immo-stat-card__label">Demande{{ stats.nouvelles_demandes|pluralize }} de visite</div>
+        </div>
+      </div>
+
+      <!-- Premium CTA -->
+      {% if not profil.est_premium_actif %}
+        <div class="immo-premium-cta mt-4">
+          <div class="immo-premium-cta__content">
+            <h3>🚀 Passez en Premium</h3>
+            <p>Publiez des biens illimités, bénéficiez de la mise en avant automatique et d'un badge Premium.</p>
+          </div>
+          <a href="{% url 'immobilier:upgrade_premium' %}" class="immo-btn immo-btn--accent">
+            Passer Premium →
+          </a>
+        </div>
+      {% endif %}
+
+      <!-- Mes biens récents -->
+      <div class="mt-4">
+        <div class="immo-section-header">
+          <h2>Mes derniers biens</h2>
+          <a href="{% url 'immobilier:mes_biens' %}" class="immo-lien-voir-tout">
+            Voir tout <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+
+        {% if mes_biens %}
+          <div class="immo-table-responsive mt-3">
+            <table class="immo-table">
+              <thead>
+                <tr>
+                  <th>Bien</th>
+                  <th>Statut</th>
+                  <th>Vues</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for bien in mes_biens %}
+                  <tr>
+                    <td>
+                      <div class="immo-table__bien">
+                        {% with photo=bien.photo_principale %}
+                          {% if photo %}
+                            <img src="{{ photo.image.url }}" alt="{{ bien.titre }}" class="immo-table__bien-img">
+                          {% endif %}
+                        {% endwith %}
+                        <div>
+                          <strong>{{ bien.titre|truncatechars:40 }}</strong>
+                          <small class="d-block text-muted">{{ bien.ville }}</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="immo-badge immo-badge--{{ bien.statut|lower }}">
+                        {{ bien.get_statut_display }}
+                      </span>
+                    </td>
+                    <td>{{ bien.vues }}</td>
+                    <td>{{ bien.created_at|date:"d/m/Y" }}</td>
+                    <td>
+                      <a href="{% url 'immobilier:modifier_bien' slug=bien.slug %}" class="immo-btn immo-btn--xs immo-btn--outline">
+                        <i class="fa-solid fa-pen"></i>
+                      </a>
+                      <a href="{{ bien.get_absolute_url }}" class="immo-btn immo-btn--xs immo-btn--primary ms-1">
+                        <i class="fa-solid fa-eye"></i>
+                      </a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="immo-empty mt-3">
+            <p>Vous n'avez pas encore publié de bien.</p>
+            <a href="{% url 'immobilier:publier_bien' %}" class="immo-btn immo-btn--primary">
+              Publier mon premier bien
+            </a>
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

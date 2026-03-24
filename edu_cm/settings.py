@@ -56,7 +56,13 @@ INSTALLED_APPS = [
     "GermanPrepApp.apps.GermanprepappConfig",
     "italian_courses.apps.ItalianCoursesConfig",
     "preparation_tests.apps.PreparationTestsConfig",
+    "immobilier_cameroun.apps.ImmobilierCamerounConfig",
+
+    # Sites framework (utilisé pour les URLs absolues de partage)
+    "django.contrib.sites",
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -174,6 +180,12 @@ if not DEBUG:
 # Taille max upload (fichiers produits digitaux)
 DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800   # 50 Mo
 FILE_UPLOAD_MAX_MEMORY_SIZE = 52428800   # 50 Mo
+
+# ── Immobilier Cameroun ─────────────────────────────────────────
+IMMOBILIER_MAX_PHOTOS_PAR_BIEN  = 10
+IMMOBILIER_MAX_BIENS_GRATUIT    = 3
+IMMOBILIER_TAILLE_MAX_IMAGE_MB  = 5
+IMMO_WHATSAPP_CONTACT           = "+237680625082"
 
 # DRF
 REST_FRAMEWORK = {

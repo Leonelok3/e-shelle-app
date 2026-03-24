@@ -1,0 +1,35 @@
+{% comment %}Navigation sidebar du compte immobilier{% endcomment %}
+<nav class="immo-nav-compte">
+  <ul class="immo-nav-compte__list">
+    <li class="immo-nav-compte__item {% if request.resolver_match.url_name == 'mon_compte' %}immo-nav-compte__item--actif{% endif %}">
+      <a href="{% url 'immobilier:mon_compte' %}">
+        <i class="fa-solid fa-gauge-high"></i> Tableau de bord
+      </a>
+    </li>
+    <li class="immo-nav-compte__item {% if request.resolver_match.url_name == 'mes_biens' %}immo-nav-compte__item--actif{% endif %}">
+      <a href="{% url 'immobilier:mes_biens' %}">
+        <i class="fa-solid fa-house-user"></i> Mes biens
+      </a>
+    </li>
+    <li class="immo-nav-compte__item {% if request.resolver_match.url_name == 'publier_bien' %}immo-nav-compte__item--actif{% endif %}">
+      <a href="{% url 'immobilier:publier_bien' %}">
+        <i class="fa-solid fa-plus-circle"></i> Publier un bien
+      </a>
+    </li>
+    <li class="immo-nav-compte__item {% if request.resolver_match.url_name == 'mes_favoris' %}immo-nav-compte__item--actif{% endif %}">
+      <a href="{% url 'immobilier:mes_favoris' %}">
+        <i class="fa-solid fa-heart"></i> Mes favoris
+      </a>
+    </li>
+    <li class="immo-nav-compte__item {% if request.resolver_match.url_name == 'upgrade_premium' %}immo-nav-compte__item--actif{% endif %}">
+      <a href="{% url 'immobilier:upgrade_premium' %}">
+        <i class="fa-solid fa-star"></i> Premium
+      </a>
+    </li>
+  </ul>
+  <div class="immo-nav-compte__footer">
+    <a href="{% url 'immobilier:liste_biens' %}" class="immo-lien-retour">
+      <i class="fa-solid fa-arrow-left"></i> Retour au catalogue
+    </a>
+  </div>
+</nav>

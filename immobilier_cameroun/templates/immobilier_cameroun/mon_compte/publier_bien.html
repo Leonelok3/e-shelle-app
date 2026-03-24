@@ -1,0 +1,297 @@
+{% extends "immobilier_cameroun/base_immobilier.html" %}
+{% load static %}
+
+{% block title %}Publier un bien — E-Shelle Immo{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item"><a href="{% url 'immobilier:mon_compte' %}">Mon compte</a></li>
+  <li class="breadcrumb-item active">Publier un bien</li>
+{% endblock %}
+
+{% block immo_content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+
+      <h1 class="immo-form-page__titre">
+        {% if is_create %}
+          <i class="fa-solid fa-plus-circle"></i> Publier un bien
+        {% else %}
+          <i class="fa-solid fa-pen"></i> Modifier le bien
+        {% endif %}
+      </h1>
+
+      {% if profil and not profil.est_premium_actif %}
+        <div class="alert alert-info immo-alert-quota">
+          <i class="fa-solid fa-circle-info"></i>
+          Compte Gratuit — vous pouvez publier jusqu'à <strong>3 biens actifs</strong>.
+          <a href="{% url 'immobilier:upgrade_premium' %}" class="alert-link">Passer Premium →</a>
+        </div>
+      {% endif %}
+
+      <form method="post" enctype="multipart/form-data" id="form-publier-bien" novalidate>
+        {% csrf_token %}
+
+        <!-- ── ONGLETS / ÉTAPES ─────────────────────────────────── -->
+        <div class="immo-steps" id="immo-steps">
+          <div class="immo-step active" data-step="1">
+            <span class="immo-step__num">1</span>
+            <span class="immo-step__label">Type</span>
+          </div>
+          <div class="immo-step" data-step="2">
+            <span class="immo-step__num">2</span>
+            <span class="immo-step__label">Description</span>
+          </div>
+          <div class="immo-step" data-step="3">
+            <span class="immo-step__num">3</span>
+            <span class="immo-step__label">Localisation</span>
+          </div>
+          <div class="immo-step" data-step="4">
+            <span class="immo-step__num">4</span>
+            <span class="immo-step__label">Détails</span>
+          </div>
+          <div class="immo-step" data-step="5">
+            <span class="immo-step__num">5</span>
+            <span class="immo-step__label">Photos</span>
+          </div>
+        </div>
+
+        <!-- Erreurs globales -->
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger mt-3">
+            {% for error in form.non_field_errors %}
+              <p class="mb-0">{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <!-- ── ÉTAPE 1 : Type ──────────────────────────────────── -->
+        <div class="immo-step-panel active" data-panel="1">
+          <h2 class="immo-form-section__titre">Type de bien & transaction</h2>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label immo-form-label">Type de bien *</label>
+              {{ form.type_bien }}
+              {% if form.type_bien.errors %}<div class="immo-form-error">{{ form.type_bien.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label immo-form-label">Type de transaction *</label>
+              {{ form.type_transaction }}
+              {% if form.type_transaction.errors %}<div class="immo-form-error">{{ form.type_transaction.errors.0 }}</div>{% endif %}
+            </div>
+          </div>
+          <div class="immo-step-nav mt-4">
+            <button type="button" class="immo-btn immo-btn--primary btn-next">Suivant →</button>
+          </div>
+        </div>
+
+        <!-- ── ÉTAPE 2 : Description & Prix ───────────────────── -->
+        <div class="immo-step-panel" data-panel="2">
+          <h2 class="immo-form-section__titre">Informations générales</h2>
+          <div class="mb-3">
+            <label class="form-label immo-form-label">Titre de l'annonce *</label>
+            {{ form.titre }}
+            {% if form.titre.errors %}<div class="immo-form-error">{{ form.titre.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="mb-3">
+            <label class="form-label immo-form-label">Description *</label>
+            {{ form.description }}
+            {% if form.description.errors %}<div class="immo-form-error">{{ form.description.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label immo-form-label">Prix *</label>
+              {{ form.prix }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label immo-form-label">Devise</label>
+              {{ form.devise }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label immo-form-label">Période</label>
+              {{ form.periode_prix }}
+            </div>
+          </div>
+          <div class="immo-step-nav mt-4">
+            <button type="button" class="immo-btn immo-btn--outline btn-prev">← Précédent</button>
+            <button type="button" class="immo-btn immo-btn--primary btn-next ms-2">Suivant →</button>
+          </div>
+        </div>
+
+        <!-- ── ÉTAPE 3 : Localisation ──────────────────────────── -->
+        <div class="immo-step-panel" data-panel="3">
+          <h2 class="immo-form-section__titre">Localisation</h2>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label immo-form-label">Ville *</label>
+              {{ form.ville }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label immo-form-label">Quartier *</label>
+              {{ form.quartier }}
+            </div>
+            <div class="col-12">
+              <label class="form-label immo-form-label">Adresse complète</label>
+              {{ form.adresse_complete }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label immo-form-label">Latitude</label>
+              {{ form.latitude }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label immo-form-label">Longitude</label>
+              {{ form.longitude }}
+            </div>
+          </div>
+          <div class="immo-step-nav mt-4">
+            <button type="button" class="immo-btn immo-btn--outline btn-prev">← Précédent</button>
+            <button type="button" class="immo-btn immo-btn--primary btn-next ms-2">Suivant →</button>
+          </div>
+        </div>
+
+        <!-- ── ÉTAPE 4 : Détails ───────────────────────────────── -->
+        <div class="immo-step-panel" data-panel="4">
+          <h2 class="immo-form-section__titre">Détails du bien</h2>
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label class="form-label immo-form-label">Surface (m²)</label>
+              {{ form.surface }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label immo-form-label">Pièces</label>
+              {{ form.nombre_pieces }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label immo-form-label">Chambres</label>
+              {{ form.nombre_chambres }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label immo-form-label">Salles de bain</label>
+              {{ form.nombre_salles_bain }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label immo-form-label">Étage</label>
+              {{ form.etage }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label immo-form-label">Date de disponibilité</label>
+              {{ form.date_disponibilite }}
+            </div>
+          </div>
+
+          <!-- Équipements -->
+          <div class="mt-4">
+            <label class="form-label immo-form-label">Équipements & commodités</label>
+            <div class="immo-equipements-grid">
+              {{ form.equipements }}
+            </div>
+          </div>
+
+          <div class="immo-step-nav mt-4">
+            <button type="button" class="immo-btn immo-btn--outline btn-prev">← Précédent</button>
+            <button type="button" class="immo-btn immo-btn--primary btn-next ms-2">Suivant →</button>
+          </div>
+        </div>
+
+        <!-- ── ÉTAPE 5 : Photos ────────────────────────────────── -->
+        <div class="immo-step-panel" data-panel="5">
+          <h2 class="immo-form-section__titre">Photos (max 10)</h2>
+          <p class="text-muted">Ajoutez au moins 1 photo. La 1ère sera la photo principale.</p>
+
+          {{ formset.management_form }}
+          <div id="photos-container">
+            {% for photo_form in formset %}
+              <div class="immo-photo-form mb-3 {% if photo_form.instance.pk %}has-photo{% endif %}">
+                {% if photo_form.instance.pk and photo_form.instance.image %}
+                  <div class="immo-photo-preview">
+                    <img src="{{ photo_form.instance.image.url }}" alt="Photo" class="immo-photo-preview__img">
+                  </div>
+                {% endif %}
+                <div class="row g-2 align-items-center">
+                  <div class="col-md-5">{{ photo_form.image }}</div>
+                  <div class="col-md-4">{{ photo_form.legende }}</div>
+                  <div class="col-md-2 text-center">
+                    <label class="form-check-label">
+                      {{ photo_form.est_photo_principale }} Principale
+                    </label>
+                  </div>
+                  <div class="col-md-1">
+                    {% if photo_form.instance.pk %}
+                      {{ photo_form.DELETE }}
+                    {% endif %}
+                  </div>
+                </div>
+                {{ photo_form.id }}
+              </div>
+            {% endfor %}
+          </div>
+
+          <!-- SEO (collapse) -->
+          <div class="mt-4">
+            <button class="immo-btn immo-btn--outline immo-btn--sm" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#seo-section">
+              <i class="fa-solid fa-search"></i> Options SEO (avancé)
+            </button>
+            <div class="collapse mt-3" id="seo-section">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label immo-form-label">Meta description</label>
+                  {{ form.meta_description }}
+                </div>
+                <div class="col-12">
+                  <label class="form-label immo-form-label">Meta keywords</label>
+                  {{ form.meta_keywords }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="immo-step-nav mt-4">
+            <button type="button" class="immo-btn immo-btn--outline btn-prev">← Précédent</button>
+            <button type="submit" class="immo-btn immo-btn--primary ms-2">
+              <i class="fa-solid fa-paper-plane"></i>
+              {% if is_create %}Soumettre l'annonce{% else %}Enregistrer les modifications{% endif %}
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block immo_extra_js %}
+<script>
+// Gestion navigation multi-étapes
+document.addEventListener("DOMContentLoaded", () => {
+  const steps   = document.querySelectorAll(".immo-step");
+  const panels  = document.querySelectorAll(".immo-step-panel");
+  let current   = 1;
+
+  function goTo(n) {
+    panels.forEach(p => p.classList.remove("active"));
+    steps.forEach(s => s.classList.remove("active", "done"));
+    const target = document.querySelector(`[data-panel="${n}"]`);
+    if (target) target.classList.add("active");
+    steps.forEach(s => {
+      const sn = parseInt(s.dataset.step);
+      if (sn === n)  s.classList.add("active");
+      if (sn < n)    s.classList.add("done");
+    });
+    current = n;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  document.querySelectorAll(".btn-next").forEach(btn => {
+    btn.addEventListener("click", () => { if (current < 5) goTo(current + 1); });
+  });
+  document.querySelectorAll(".btn-prev").forEach(btn => {
+    btn.addEventListener("click", () => { if (current > 1) goTo(current - 1); });
+  });
+  steps.forEach(s => {
+    s.addEventListener("click", () => goTo(parseInt(s.dataset.step)));
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,380 @@
+{% extends "immobilier_cameroun/base_immobilier.html" %}
+{% load static %}
+
+{% block title %}{{ bien.titre }} — {{ bien.ville }} | E-Shelle Immo{% endblock %}
+{% block meta_description %}{{ bien.meta_description|default:bien.description|truncatechars:160 }}{% endblock %}
+{% block og_title %}{{ bien.titre }}{% endblock %}
+{% block og_description %}{{ bien.prix_formate }} — {{ bien.quartier }}, {{ bien.ville }}{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item"><a href="{% url 'immobilier:liste_biens' %}">Catalogue</a></li>
+  <li class="breadcrumb-item active">{{ bien.titre|truncatechars:40 }}</li>
+{% endblock %}
+
+{% block immo_content %}
+<div class="container py-4">
+  <div class="row g-4">
+
+    <!-- Colonne principale -->
+    <div class="col-lg-8">
+
+      <!-- Badges statut -->
+      <div class="immo-detail__badges mb-3">
+        <span class="immo-badge immo-badge--{{ bien.statut|lower }} immo-badge--lg">
+          {% if bien.statut == 'PUBLIE' %}✅ Disponible
+          {% elif bien.statut == 'RESERVE' %}🔒 Réservé
+          {% elif bien.statut == 'LOUE_VENDU' %}✔️ Loué / Vendu
+          {% endif %}
+        </span>
+        <span class="immo-badge immo-badge--transaction immo-badge--{{ bien.type_transaction|lower }} immo-badge--lg">
+          {{ bien.get_type_transaction_display }}
+        </span>
+        {% if bien.est_coup_de_coeur %}
+          <span class="immo-badge immo-badge--coeur immo-badge--lg">❤️ Coup de cœur</span>
+        {% endif %}
+        {% if bien.est_mis_en_avant %}
+          <span class="immo-badge immo-badge--premium immo-badge--lg">⭐ Premium</span>
+        {% endif %}
+      </div>
+
+      <h1 class="immo-detail__titre">{{ bien.titre }}</h1>
+      <p class="immo-detail__localisation">
+        <i class="fa-solid fa-location-dot text-accent"></i>
+        {{ bien.quartier }}, {{ bien.ville }}
+        {% if bien.adresse_complete %} — {{ bien.adresse_complete }}{% endif %}
+      </p>
+
+      <!-- ── GALERIE PHOTOS ── -->
+      <div class="immo-galerie mb-4">
+        {% if photos %}
+          <!-- Photo principale (Swiper) -->
+          <div class="swiper immo-swiper-main">
+            <div class="swiper-wrapper">
+              {% for photo in photos %}
+                <div class="swiper-slide">
+                  <a href="{{ photo.image.url }}" class="glightbox immo-galerie__lien"
+                     data-gallery="bien-{{ bien.pk }}"
+                     data-description="{{ photo.legende|default:bien.titre }}">
+                    <img
+                      src="{{ photo.image.url }}"
+                      alt="{{ photo.legende|default:bien.titre }}"
+                      class="immo-galerie__main-img"
+                      loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                    >
+                  </a>
+                </div>
+              {% endfor %}
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
+
+          <!-- Miniatures -->
+          <div class="swiper immo-swiper-thumbs mt-2">
+            <div class="swiper-wrapper">
+              {% for photo in photos %}
+                <div class="swiper-slide">
+                  <img src="{{ photo.image.url }}" alt="{{ photo.legende|default:'' }}"
+                       class="immo-galerie__thumb" loading="lazy">
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% else %}
+          <div class="immo-galerie__placeholder">
+            <i class="fa-solid fa-building fa-4x"></i>
+            <p>Aucune photo disponible</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- ── PRIX ── -->
+      <div class="immo-detail__prix-bloc">
+        <span class="immo-detail__prix">{{ bien.prix_formate }}</span>
+        {% if bien.type_transaction == 'LOCATION' %}
+          <span class="immo-detail__periode">
+            / {% if bien.periode_prix == 'PAR_MOIS' %}mois{% elif bien.periode_prix == 'PAR_JOUR' %}jour{% endif %}
+          </span>
+        {% endif %}
+        {% if bien.date_disponibilite %}
+          <span class="immo-detail__dispo ms-3">
+            <i class="fa-solid fa-calendar-check"></i>
+            Disponible le {{ bien.date_disponibilite|date:"d/m/Y" }}
+          </span>
+        {% endif %}
+      </div>
+
+      <!-- ── CARACTÉRISTIQUES ── -->
+      <div class="immo-detail__specs">
+        <div class="immo-spec">
+          <i class="fa-solid fa-tag"></i>
+          <span>{{ bien.get_type_bien_display }}</span>
+        </div>
+        {% if bien.surface %}
+          <div class="immo-spec">
+            <i class="fa-solid fa-ruler-combined"></i>
+            <span>{{ bien.surface }} m²</span>
+          </div>
+        {% endif %}
+        <div class="immo-spec">
+          <i class="fa-solid fa-layer-group"></i>
+          <span>{{ bien.nombre_pieces }} pièce{{ bien.nombre_pieces|pluralize }}</span>
+        </div>
+        <div class="immo-spec">
+          <i class="fa-solid fa-bed"></i>
+          <span>{{ bien.nombre_chambres }} chambre{{ bien.nombre_chambres|pluralize }}</span>
+        </div>
+        <div class="immo-spec">
+          <i class="fa-solid fa-shower"></i>
+          <span>{{ bien.nombre_salles_bain }} salle{{ bien.nombre_salles_bain|pluralize }} de bain</span>
+        </div>
+        {% if bien.etage is not None %}
+          <div class="immo-spec">
+            <i class="fa-solid fa-stairs"></i>
+            <span>Étage {{ bien.etage }}</span>
+          </div>
+        {% endif %}
+        <div class="immo-spec">
+          <i class="fa-solid fa-eye"></i>
+          <span>{{ bien.vues }} vue{{ bien.vues|pluralize }}</span>
+        </div>
+      </div>
+
+      <!-- ── DESCRIPTION ── -->
+      <div class="immo-detail__section">
+        <h2 class="immo-detail__section-titre">
+          <i class="fa-solid fa-align-left"></i> Description
+        </h2>
+        <div class="immo-detail__description">
+          {{ bien.description|linebreaks }}
+        </div>
+      </div>
+
+      <!-- ── ÉQUIPEMENTS ── -->
+      {% if equipements %}
+        <div class="immo-detail__section">
+          <h2 class="immo-detail__section-titre">
+            <i class="fa-solid fa-list-check"></i> Équipements & commodités
+          </h2>
+          <ul class="immo-equipements">
+            {% for eq in equipements %}
+              <li class="immo-equipement">
+                <i class="fa-solid {{ eq.icone }}"></i>
+                {{ eq.get_nom_display }}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <!-- ── CARTE (si coordonnées) ── -->
+      {% if bien.latitude and bien.longitude %}
+        <div class="immo-detail__section">
+          <h2 class="immo-detail__section-titre">
+            <i class="fa-solid fa-map-location-dot"></i> Localisation
+          </h2>
+          <div id="immo-map" class="immo-map"
+               data-lat="{{ bien.latitude }}"
+               data-lng="{{ bien.longitude }}"
+               data-titre="{{ bien.titre }}">
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- ── PARTAGE RÉSEAUX SOCIAUX ── -->
+      <div class="immo-detail__section">
+        <h2 class="immo-detail__section-titre">
+          <i class="fa-solid fa-share-nodes"></i> Partager ce bien
+        </h2>
+        {% include "immobilier_cameroun/partials/_partage_social.html" with bien=bien %}
+      </div>
+
+      <!-- ── BIENS SIMILAIRES ── -->
+      {% if similaires %}
+        <div class="immo-detail__section">
+          <h2 class="immo-detail__section-titre">
+            <i class="fa-solid fa-house-circle-check"></i> Biens similaires
+          </h2>
+          <div class="immo-grid immo-grid--3">
+            {% for s in similaires %}
+              {% include "immobilier_cameroun/partials/_card_bien.html" with bien=s %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+
+    <!-- ── SIDEBAR DROITE ── -->
+    <div class="col-lg-4">
+
+      <!-- Sticky sidebar -->
+      <div class="immo-detail__sidebar">
+
+        <!-- Boutons actions rapides -->
+        <div class="immo-detail__actions">
+
+          <!-- WhatsApp -->
+          <a href="{{ bien.get_whatsapp_url }}" target="_blank" rel="noopener"
+             class="immo-btn immo-btn--whatsapp immo-btn--full">
+            <i class="fa-brands fa-whatsapp"></i> Contacter sur WhatsApp
+          </a>
+
+          <!-- Favori -->
+          {% if user.is_authenticated %}
+            <button
+              class="immo-btn immo-btn--full mt-2 btn-toggle-favori {% if est_favori %}immo-btn--favori-actif{% else %}immo-btn--outline{% endif %}"
+              data-bien-id="{{ bien.pk }}"
+            >
+              <i class="fa-{% if est_favori %}solid{% else %}regular{% endif %} fa-heart"></i>
+              {% if est_favori %}Retirer des favoris{% else %}Ajouter aux favoris{% endif %}
+            </button>
+          {% else %}
+            <a href="{% url 'accounts:login' %}?next={{ request.path }}"
+               class="immo-btn immo-btn--outline immo-btn--full mt-2">
+              <i class="fa-regular fa-heart"></i> Ajouter aux favoris
+            </a>
+          {% endif %}
+
+          <!-- Marquer réservé (si propriétaire) -->
+          {% if user == bien.proprietaire or user.is_superuser %}
+            {% if bien.statut == 'PUBLIE' %}
+              <button class="immo-btn immo-btn--warning immo-btn--full mt-2"
+                      id="btn-marquer-reserve"
+                      data-slug="{{ bien.slug }}">
+                <i class="fa-solid fa-lock"></i> Marquer comme Réservé
+              </button>
+            {% endif %}
+          {% endif %}
+        </div>
+
+        <!-- Formulaire demande de visite -->
+        {% if bien.statut == 'PUBLIE' %}
+          <div class="immo-detail__visite-form mt-4">
+            <h3 class="immo-detail__visite-form__titre">
+              <i class="fa-solid fa-calendar-days"></i> Demander une visite
+            </h3>
+            <form method="post" action="{% url 'immobilier:detail_bien' slug=bien.slug %}">
+              {% csrf_token %}
+              {% for field in visite_form %}
+                <div class="mb-3">
+                  <label class="form-label immo-form-label" for="{{ field.id_for_label }}">
+                    {{ field.label }}{% if field.field.required %} *{% endif %}
+                  </label>
+                  {{ field }}
+                  {% if field.errors %}
+                    <div class="immo-form-error">{{ field.errors.0 }}</div>
+                  {% endif %}
+                </div>
+              {% endfor %}
+              <button type="submit" class="immo-btn immo-btn--primary immo-btn--full">
+                <i class="fa-solid fa-paper-plane"></i> Envoyer ma demande
+              </button>
+            </form>
+          </div>
+        {% endif %}
+
+        <!-- Infos propriétaire -->
+        <div class="immo-detail__proprietaire mt-4">
+          <h3 class="immo-detail__proprietaire__titre">
+            <i class="fa-solid fa-user-tie"></i> Annonceur
+          </h3>
+          <div class="immo-detail__proprietaire__card">
+            {% try %}{% with profil=bien.proprietaire.profil_immo %}
+              {% if profil.photo_profil %}
+                <img src="{{ profil.photo_profil.url }}" alt="{{ bien.proprietaire.get_full_name }}" class="immo-detail__proprietaire__avatar">
+              {% else %}
+                <div class="immo-detail__proprietaire__avatar immo-detail__proprietaire__avatar--placeholder">
+                  <i class="fa-solid fa-user fa-2x"></i>
+                </div>
+              {% endif %}
+              <div class="immo-detail__proprietaire__info">
+                <strong>{{ bien.proprietaire.get_full_name|default:bien.proprietaire.username }}</strong>
+                <span>{{ profil.get_role_display }}</span>
+                {% if profil.est_verifie %}
+                  <span class="immo-badge immo-badge--verifie">✅ Vérifié</span>
+                {% endif %}
+              </div>
+            {% endwith %}{% endtry %}
+          </div>
+        </div>
+
+        <!-- Signaler -->
+        <div class="mt-3 text-center">
+          <a href="{% url 'immobilier:signaler_bien' bien_id=bien.pk %}"
+             class="immo-lien-signaler">
+            <i class="fa-solid fa-flag"></i> Signaler ce bien
+          </a>
+        </div>
+
+        <!-- Stats (visible uniquement au propriétaire) -->
+        {% if user == bien.proprietaire or user.is_superuser %}
+          <div class="immo-detail__stats mt-4">
+            <h3 class="immo-detail__section-titre">
+              <i class="fa-solid fa-chart-simple"></i> Statistiques
+            </h3>
+            <ul class="immo-stats-list">
+              <li><i class="fa-solid fa-eye"></i> {{ stats.vues }} vue{{ stats.vues|pluralize }}</li>
+              <li><i class="fa-solid fa-heart"></i> {{ stats.favoris_count }} favori{{ stats.favoris_count|pluralize }}</li>
+              <li><i class="fa-solid fa-calendar-check"></i> {{ stats.demandes_count }} demande{{ stats.demandes_count|pluralize }} de visite</li>
+            </ul>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block immo_extra_js %}
+<script>
+// ── Swiper galerie ──────────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", () => {
+  const swiperThumbs = new Swiper(".immo-swiper-thumbs", {
+    slidesPerView: 4, spaceBetween: 8,
+    freeMode: true, watchSlidesProgress: true,
+  });
+  new Swiper(".immo-swiper-main", {
+    slidesPerView: 1, spaceBetween: 0,
+    navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+    pagination: { el: ".swiper-pagination", clickable: true },
+    thumbs: { swiper: swiperThumbs },
+  });
+
+  // ── GLightbox ─────────────────────────────────────────────────
+  GLightbox({ selector: ".glightbox", touchNavigation: true, loop: true });
+
+  // ── Marquer réservé ───────────────────────────────────────────
+  const btnReserve = document.getElementById("btn-marquer-reserve");
+  if (btnReserve) {
+    btnReserve.addEventListener("click", async () => {
+      const slug = btnReserve.dataset.slug;
+      const resp = await fetch(`/immobilier/ajax/marquer-reserve/${slug}/`, {
+        method: "POST",
+        headers: { "X-CSRFToken": getCookie("csrftoken") },
+      });
+      if (resp.ok) {
+        btnReserve.textContent = "🔒 Réservé";
+        btnReserve.disabled = true;
+      }
+    });
+  }
+
+  // ── Leaflet map ───────────────────────────────────────────────
+  const mapEl = document.getElementById("immo-map");
+  if (mapEl && typeof L !== "undefined") {
+    const lat   = parseFloat(mapEl.dataset.lat);
+    const lng   = parseFloat(mapEl.dataset.lng);
+    const titre = mapEl.dataset.titre;
+    const map   = L.map("immo-map").setView([lat, lng], 15);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap contributors"
+    }).addTo(map);
+    L.marker([lat, lng]).addTo(map).bindPopup(titre).openPopup();
+  }
+});
+</script>
+{% endblock %}

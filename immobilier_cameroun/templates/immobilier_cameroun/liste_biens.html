@@ -1,0 +1,136 @@
+{% extends "immobilier_cameroun/base_immobilier.html" %}
+{% load static %}
+
+{% block title %}Immobilier Cameroun — Appartements, Villas, Terrains | E-Shelle{% endblock %}
+{% block meta_description %}Trouvez votre bien immobilier au Cameroun : appartements meublés, villas, studios à louer ou acheter à Yaoundé, Douala et partout au Cameroun.{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item active">Catalogue</li>
+{% endblock %}
+
+{% block immo_content %}
+<div class="container py-4">
+
+  <!-- Hero bandeau -->
+  <div class="immo-hero-catalogue">
+    <h1 class="immo-hero-catalogue__titre">
+      🏠 Immobilier au Cameroun
+    </h1>
+    <p class="immo-hero-catalogue__sous-titre">
+      {{ nb_resultats }} bien{{ nb_resultats|pluralize }} disponible{{ nb_resultats|pluralize }}
+    </p>
+
+    <!-- Barre de recherche rapide -->
+    <form method="get" action="{% url 'immobilier:liste_biens' %}" class="immo-hero-catalogue__search">
+      <input
+        type="text" name="q"
+        value="{{ request.GET.q|default:'' }}"
+        placeholder="Ville, quartier, type de bien…"
+        class="immo-hero-catalogue__input"
+      >
+      <select name="type_transaction" class="immo-hero-catalogue__select">
+        <option value="">Location & Vente</option>
+        <option value="LOCATION" {% if request.GET.type_transaction == 'LOCATION' %}selected{% endif %}>Location</option>
+        <option value="VENTE"    {% if request.GET.type_transaction == 'VENTE' %}selected{% endif %}>Vente</option>
+        <option value="COLOCATION" {% if request.GET.type_transaction == 'COLOCATION' %}selected{% endif %}>Colocation</option>
+      </select>
+      <button type="submit" class="immo-btn immo-btn--primary">
+        <i class="fa-solid fa-magnifying-glass"></i> Rechercher
+      </button>
+    </form>
+  </div>
+
+  <div class="row g-4">
+
+    <!-- Sidebar filtres -->
+    <div class="col-lg-3">
+      {% include "immobilier_cameroun/partials/_filtres.html" with form=form %}
+
+      <!-- Coups de cœur -->
+      {% if coups_de_coeur %}
+        <div class="immo-sidebar-coups-coeur mt-4">
+          <h3 class="immo-sidebar-coups-coeur__titre">❤️ Coups de cœur</h3>
+          {% for cc in coups_de_coeur %}
+            <a href="{{ cc.get_absolute_url }}" class="immo-mini-card">
+              {% with photo=cc.photo_principale %}
+                {% if photo %}
+                  <img src="{{ photo.image.url }}" alt="{{ cc.titre }}" class="immo-mini-card__img" loading="lazy">
+                {% endif %}
+              {% endwith %}
+              <div class="immo-mini-card__info">
+                <span class="immo-mini-card__titre">{{ cc.titre|truncatechars:40 }}</span>
+                <span class="immo-mini-card__prix">{{ cc.prix_formate }}</span>
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- Publier un bien CTA -->
+      <div class="immo-cta-publier mt-4">
+        <h4>Vous avez un bien à louer ou vendre ?</h4>
+        <p>Publiez votre annonce gratuitement sur E-Shelle Immo.</p>
+        <a href="{% url 'immobilier:publier_bien' %}" class="immo-btn immo-btn--accent immo-btn--full">
+          <i class="fa-solid fa-plus"></i> Publier un bien
+        </a>
+        <a href="{% url 'immobilier:soumettre_bien' %}" class="immo-btn immo-btn--outline immo-btn--full mt-2">
+          <i class="fa-solid fa-paper-plane"></i> Soumettre à notre équipe
+        </a>
+      </div>
+    </div>
+
+    <!-- Grille des biens -->
+    <div class="col-lg-9">
+
+      {% if page_obj.object_list %}
+        <div class="immo-grid">
+          {% for bien in page_obj %}
+            {% include "immobilier_cameroun/partials/_card_bien.html" with bien=bien favoris_ids=favoris_ids %}
+          {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+          <nav class="immo-pagination mt-5" aria-label="Pagination">
+            <ul class="pagination justify-content-center">
+              {% if page_obj.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?{% include 'immobilier_cameroun/partials/_query_params.html' %}&page={{ page_obj.previous_page_number }}">
+                    <i class="fa-solid fa-chevron-left"></i>
+                  </a>
+                </li>
+              {% endif %}
+              {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                  <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                  <li class="page-item">
+                    <a class="page-link" href="?{% include 'immobilier_cameroun/partials/_query_params.html' %}&page={{ num }}">{{ num }}</a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+              {% if page_obj.has_next %}
+                <li class="page-item">
+                  <a class="page-link" href="?{% include 'immobilier_cameroun/partials/_query_params.html' %}&page={{ page_obj.next_page_number }}">
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </nav>
+        {% endif %}
+
+      {% else %}
+        <div class="immo-empty">
+          <i class="fa-solid fa-house-circle-xmark fa-3x"></i>
+          <h3>Aucun bien trouvé</h3>
+          <p>Modifiez vos critères de recherche ou revenez plus tard.</p>
+          <a href="{% url 'immobilier:liste_biens' %}" class="immo-btn immo-btn--primary">
+            Voir tous les biens
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

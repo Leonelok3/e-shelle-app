@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Annonce non validée</title></head>
+<body style="font-family:Inter,Arial,sans-serif;background:#FAF0E6;margin:0;padding:0;">
+  <div style="max-width:600px;margin:30px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
+    <div style="background:#e63946;padding:30px;text-align:center;">
+      <h1 style="color:#fff;margin:0;font-size:24px;">❌ Annonce non validée</h1>
+    </div>
+    <div style="padding:30px;">
+      <p>Bonjour <strong>{{ user.get_full_name|default:user.username }}</strong>,</p>
+      <p>Malheureusement, votre annonce <strong>« {{ bien.titre }} »</strong> n'a pas pu être publiée.</p>
+      {% if note_admin %}
+        <div style="background:#fff3cd;border-left:4px solid #ffc107;padding:15px;border-radius:4px;margin:20px 0;">
+          <strong>Motif :</strong><br>{{ note_admin }}
+        </div>
+      {% endif %}
+      <p>Vous pouvez corriger votre annonce et la resoumettre.</p>
+      <div style="text-align:center;margin:30px 0;">
+        <a href="https://e-shelle.com/immobilier/mon-compte/biens/"
+           style="background:#2D6A4F;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:700;">
+          Modifier mon annonce
+        </a>
+      </div>
+      <p style="color:#666;font-size:13px;">
+        Une question ? Contactez-nous : <a href="https://wa.me/237680625082" style="color:#2D6A4F;">+237 680 625 082</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

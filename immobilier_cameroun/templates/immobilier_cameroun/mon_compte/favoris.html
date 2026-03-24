@@ -1,0 +1,36 @@
+{% extends "immobilier_cameroun/base_immobilier.html" %}
+{% block title %}Mes favoris — E-Shelle Immo{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item"><a href="{% url 'immobilier:mon_compte' %}">Mon compte</a></li>
+  <li class="breadcrumb-item active">Mes favoris</li>
+{% endblock %}
+
+{% block immo_content %}
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-lg-3">{% include "immobilier_cameroun/mon_compte/_nav_compte.html" %}</div>
+    <div class="col-lg-9">
+      <h1 class="immo-page-titre mb-4">
+        <i class="fa-solid fa-heart text-accent"></i> Mes favoris
+      </h1>
+      {% if favoris %}
+        <div class="immo-grid">
+          {% for favori in favoris %}
+            {% include "immobilier_cameroun/partials/_card_bien.html" with bien=favori.bien %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="immo-empty">
+          <i class="fa-regular fa-heart fa-3x"></i>
+          <h3>Aucun favori</h3>
+          <p>Explorez le catalogue et ajoutez des biens à vos favoris.</p>
+          <a href="{% url 'immobilier:liste_biens' %}" class="immo-btn immo-btn--primary mt-3">
+            Voir le catalogue
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

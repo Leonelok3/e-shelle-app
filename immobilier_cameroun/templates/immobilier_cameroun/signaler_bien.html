@@ -1,0 +1,32 @@
+{% extends "immobilier_cameroun/base_immobilier.html" %}
+{% block title %}Signaler un bien — E-Shelle Immo{% endblock %}
+
+{% block immo_content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="immo-form-card">
+        <div class="immo-form-card__header">
+          <h1><i class="fa-solid fa-flag"></i> Signaler le bien</h1>
+          <p>« {{ bien.titre }} »</p>
+        </div>
+        <div class="immo-form-card__body">
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {% for field in form %}
+              <div class="mb-3">
+                <label class="form-label immo-form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}<div class="immo-form-error">{{ field.errors.0 }}</div>{% endif %}
+              </div>
+            {% endfor %}
+            <button type="submit" class="immo-btn immo-btn--danger immo-btn--full">
+              <i class="fa-solid fa-flag"></i> Envoyer le signalement
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% load static %}
+{% comment %}
+Composant réutilisable : carte bien immobilier
+Variables attendues : bien, favoris_ids (set optionnel)
+{% endcomment %}
+<article class="immo-card {% if bien.est_mis_en_avant %}immo-card--premium{% endif %}">
+
+  {% if bien.est_coup_de_coeur %}
+    <div class="immo-card__ribbon">❤️ Coup de cœur</div>
+  {% endif %}
+
+  <!-- Photo -->
+  <a href="{{ bien.get_absolute_url }}" class="immo-card__img-link">
+    {% with photo=bien.photo_principale %}
+      {% if photo %}
+        <img
+          src="{{ photo.image.url }}"
+          alt="{{ bien.titre }}"
+          class="immo-card__img"
+          loading="lazy"
+        >
+      {% else %}
+        <div class="immo-card__img immo-card__img--placeholder">
+          <i class="fa-solid fa-building fa-2x"></i>
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Badge statut -->
+    <span class="immo-badge immo-badge--{{ bien.statut|lower }}">
+      {% if bien.statut == 'PUBLIE' %}Disponible
+      {% elif bien.statut == 'RESERVE' %}Réservé
+      {% elif bien.statut == 'LOUE_VENDU' %}Loué / Vendu
+      {% else %}{{ bien.get_statut_display }}
+      {% endif %}
+    </span>
+
+    <!-- Badge transaction -->
+    <span class="immo-badge immo-badge--transaction immo-badge--{{ bien.type_transaction|lower }}">
+      {{ bien.get_type_transaction_display }}
+    </span>
+
+    <!-- Bouton favori -->
+    {% if user.is_authenticated %}
+      <button
+        class="immo-btn-favori {% if bien.pk in favoris_ids %}immo-btn-favori--actif{% endif %}"
+        data-bien-id="{{ bien.pk }}"
+        title="{% if bien.pk in favoris_ids %}Retirer des favoris{% else %}Ajouter aux favoris{% endif %}"
+      >
+        <i class="fa-{% if bien.pk in favoris_ids %}solid{% else %}regular{% endif %} fa-heart"></i>
+      </button>
+    {% endif %}
+  </a>
+
+  <!-- Infos -->
+  <div class="immo-card__body">
+    <div class="immo-card__type">{{ bien.get_type_bien_display }}</div>
+    <h3 class="immo-card__titre">
+      <a href="{{ bien.get_absolute_url }}">{{ bien.titre }}</a>
+    </h3>
+    <p class="immo-card__localisation">
+      <i class="fa-solid fa-location-dot"></i>
+      {{ bien.quartier }}, {{ bien.ville }}
+    </p>
+
+    <!-- Caractéristiques -->
+    <ul class="immo-card__specs">
+      {% if bien.nombre_chambres %}
+        <li><i class="fa-solid fa-bed"></i> {{ bien.nombre_chambres }} chambre{{ bien.nombre_chambres|pluralize }}</li>
+      {% endif %}
+      {% if bien.nombre_salles_bain %}
+        <li><i class="fa-solid fa-shower"></i> {{ bien.nombre_salles_bain }} sdb</li>
+      {% endif %}
+      {% if bien.surface %}
+        <li><i class="fa-solid fa-ruler-combined"></i> {{ bien.surface }} m²</li>
+      {% endif %}
+    </ul>
+
+    <!-- Prix & Actions -->
+    <div class="immo-card__footer">
+      <div class="immo-card__prix">
+        {{ bien.prix_formate }}
+        {% if bien.type_transaction == 'LOCATION' %}
+          <span class="immo-card__periode">/ {% if bien.periode_prix == 'PAR_MOIS' %}mois{% elif bien.periode_prix == 'PAR_JOUR' %}jour{% endif %}</span>
+        {% endif %}
+      </div>
+      <a href="{{ bien.get_absolute_url }}" class="immo-btn immo-btn--sm immo-btn--primary">
+        Voir le bien <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+
+  {% if bien.est_mis_en_avant and not bien.est_coup_de_coeur %}
+    <div class="immo-card__premium-label">⭐ Premium</div>
+  {% endif %}
+</article>

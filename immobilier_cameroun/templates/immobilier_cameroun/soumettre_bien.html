@@ -1,0 +1,40 @@
+{% extends "immobilier_cameroun/base_immobilier.html" %}
+{% block title %}Soumettre un bien — E-Shelle Immo{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item active">Soumettre un bien</li>
+{% endblock %}
+
+{% block immo_content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="immo-form-card">
+        <div class="immo-form-card__header">
+          <h1><i class="fa-solid fa-paper-plane"></i> Soumettre un bien</h1>
+          <p>Notre équipe examine votre soumission et publie votre bien sous 48h.</p>
+        </div>
+        <div class="immo-form-card__body">
+          <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            {% for field in form %}
+              <div class="mb-3">
+                <label class="form-label immo-form-label" for="{{ field.id_for_label }}">
+                  {{ field.label }}{% if field.field.required %} *{% endif %}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                  <div class="immo-form-error">{{ field.errors.0 }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+            <button type="submit" class="immo-btn immo-btn--primary immo-btn--full mt-2">
+              <i class="fa-solid fa-paper-plane"></i> Envoyer ma soumission
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
