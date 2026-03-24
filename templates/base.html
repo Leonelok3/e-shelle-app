@@ -13,8 +13,11 @@
   <meta property="og:title"       content="{% block og_title %}E-Shelle{% endblock %}">
   <meta property="og:description" content="{% block og_description %}Plateforme SaaS africaine tout-en-un{% endblock %}">
   <meta property="og:type"        content="website">
+  <meta property="og:url"         content="{{ request.build_absolute_uri }}">
   <meta property="og:locale"      content="fr_FR">
+  {% block og_image %}{% endblock %}
   <meta name="twitter:card"       content="summary_large_image">
+  {% block twitter_image %}{% endblock %}
 
   {# Google Fonts : Syne + Inter + JetBrains Mono #}
   <link rel="preconnect" href="https://fonts.googleapis.com">
