@@ -29,11 +29,6 @@
               </div>
               <div class="ann-conv-item__meta">
                 <span>{{ conv.derniere_activite|timesince }}</span>
-                {% with non_lus=conv.messages_non_lus_pour(request.user) %}
-                  {% if non_lus > 0 %}
-                    <span class="ann-badge ann-badge--new">{{ non_lus }}</span>
-                  {% endif %}
-                {% endwith %}
               </div>
             </a>
           {% endfor %}

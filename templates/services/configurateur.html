@@ -32,12 +32,22 @@
         <div class="wizard-progress-fill" id="wizard-fill" style="width:25%"></div>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:2rem">
-        {% for label in "Type;Fonctions;Budget;Contact"|split:";" %}
         <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem">
-          <div id="step-dot-{{ forloop.counter }}" style="width:28px;height:28px;border-radius:50%;background:{% if forloop.first %}var(--gradient-cta){% else %}var(--bg-elevated){% endif %};border:2px solid {% if forloop.first %}var(--primary-light){% else %}var(--border){% endif %};display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;transition:all .3s">{{ forloop.counter }}</div>
-          <span style="font-size:.72rem;color:var(--text-muted)">{{ label }}</span>
+          <div id="step-dot-1" style="width:28px;height:28px;border-radius:50%;background:var(--gradient-cta);border:2px solid var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;transition:all .3s">1</div>
+          <span style="font-size:.72rem;color:var(--text-muted)">Type</span>
         </div>
-        {% endfor %}
+        <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem">
+          <div id="step-dot-2" style="width:28px;height:28px;border-radius:50%;background:var(--bg-elevated);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;transition:all .3s">2</div>
+          <span style="font-size:.72rem;color:var(--text-muted)">Fonctions</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem">
+          <div id="step-dot-3" style="width:28px;height:28px;border-radius:50%;background:var(--bg-elevated);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;transition:all .3s">3</div>
+          <span style="font-size:.72rem;color:var(--text-muted)">Budget</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:.35rem">
+          <div id="step-dot-4" style="width:28px;height:28px;border-radius:50%;background:var(--bg-elevated);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;transition:all .3s">4</div>
+          <span style="font-size:.72rem;color:var(--text-muted)">Contact</span>
+        </div>
       </div>
 
       <div class="glass-card">
@@ -45,16 +55,30 @@
         <div class="wizard-step active" id="step-1">
           <h2 style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;margin-bottom:1.5rem;text-align:center">Quel type de projet souhaitez-vous ?</h2>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem" id="type-options">
-            {% with types="Site Vitrine|🌐;E-Commerce|🛒;Application Web|⚙️;Blog / Média|✍️;Plateforme SaaS|🚀;Site Institutionnel|🏛️" %}
-            {% for item in types|split:";" %}
-            {% with parts=item|split:"|" %}
-            <div class="option-card" onclick="selectOption(this,'type','{{ parts.0 }}')" data-value="{{ parts.0 }}">
-              <div style="font-size:2rem;margin-bottom:.5rem">{{ parts.1 }}</div>
-              <div style="font-weight:600;font-size:.9rem">{{ parts.0 }}</div>
+            <div class="option-card" onclick="selectOption(this,'type','Site Vitrine')" data-value="Site Vitrine">
+              <div style="font-size:2rem;margin-bottom:.5rem">🌐</div>
+              <div style="font-weight:600;font-size:.9rem">Site Vitrine</div>
             </div>
-            {% endwith %}
-            {% endfor %}
-            {% endwith %}
+            <div class="option-card" onclick="selectOption(this,'type','E-Commerce')" data-value="E-Commerce">
+              <div style="font-size:2rem;margin-bottom:.5rem">🛒</div>
+              <div style="font-weight:600;font-size:.9rem">E-Commerce</div>
+            </div>
+            <div class="option-card" onclick="selectOption(this,'type','Application Web')" data-value="Application Web">
+              <div style="font-size:2rem;margin-bottom:.5rem">⚙️</div>
+              <div style="font-weight:600;font-size:.9rem">Application Web</div>
+            </div>
+            <div class="option-card" onclick="selectOption(this,'type','Blog / Média')" data-value="Blog / Média">
+              <div style="font-size:2rem;margin-bottom:.5rem">✍️</div>
+              <div style="font-weight:600;font-size:.9rem">Blog / Média</div>
+            </div>
+            <div class="option-card" onclick="selectOption(this,'type','Plateforme SaaS')" data-value="Plateforme SaaS">
+              <div style="font-size:2rem;margin-bottom:.5rem">🚀</div>
+              <div style="font-weight:600;font-size:.9rem">Plateforme SaaS</div>
+            </div>
+            <div class="option-card" onclick="selectOption(this,'type','Site Institutionnel')" data-value="Site Institutionnel">
+              <div style="font-size:2rem;margin-bottom:.5rem">🏛️</div>
+              <div style="font-weight:600;font-size:.9rem">Site Institutionnel</div>
+            </div>
           </div>
           <button class="btn btn-primary btn-block" onclick="nextStep(2)" id="btn-next-1" disabled>Continuer →</button>
         </div>
@@ -64,14 +88,73 @@
           <h2 style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;margin-bottom:1.5rem;text-align:center">Quelles fonctionnalités voulez-vous ?</h2>
           <p style="font-size:.85rem;color:var(--text-muted);text-align:center;margin-bottom:1.5rem">Sélectionnez tout ce qui vous intéresse (choix multiples)</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:2rem">
-            {% for feat in "Formulaire de contact|📬;Galerie photos|🖼️;Blog intégré|✍️;Espace membres|👥;Paiement en ligne|💳;Chat en direct|💬;Newsletter|📧;SEO avancé|🔍;Multi-langues|🌍;Tableau de bord|📊;Intégration IA|🤖;API Mobile|📱"|split:";" %}
-            {% with parts=feat|split:"|" %}
+            {% for feat in feat_list %}
             <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.65rem;border:1px solid var(--border);border-radius:var(--radius-sm);transition:all .2s" onmouseenter="this.style.borderColor='var(--primary-light)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'" id="feat-{{ forloop.counter }}">
-              <input type="checkbox" name="features" value="{{ parts.0 }}" style="width:16px;height:16px;cursor:pointer" onchange="updateFeatStyle(this)">
-              <span style="font-size:1.1rem">{{ parts.1 }}</span>
-              <span style="font-size:.85rem;font-weight:500">{{ parts.0 }}</span>
+              <input type="checkbox" name="features" value="{{ feat.0 }}" style="width:16px;height:16px;cursor:pointer" onchange="updateFeatStyle(this)">
+              <span style="font-size:1.1rem">{{ feat.1 }}</span>
+              <span style="font-size:.85rem;font-weight:500">{{ feat.0 }}</span>
             </label>
-            {% endwith %}
+            {% empty %}
+            <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.65rem;border:1px solid var(--border);border-radius:var(--radius-sm);transition:all .2s" onmouseenter="this.style.borderColor='var(--primary-light)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'" id="feat-1">
+              <input type="checkbox" name="features" value="Formulaire de contact" style="width:16px;height:16px;cursor:pointer" onchange="updateFeatStyle(this)">
+              <span style="font-size:1.1rem">📬</span>
+              <span style="font-size:.85rem;font-weight:500">Formulaire de contact</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.65rem;border:1px solid var(--border);border-radius:var(--radius-sm);transition:all .2s" onmouseenter="this.style.borderColor='var(--primary-light)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'" id="feat-2">
+              <input type="checkbox" name="features" value="Galerie photos" style="width:16px;height:16px;cursor:pointer" onchange="updateFeatStyle(this)">
+              <span style="font-size:1.1rem">🖼️</span>
+              <span style="font-size:.85rem;font-weight:500">Galerie photos</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.65rem;border:1px solid var(--border);border-radius:var(--radius-sm);transition:all .2s" onmouseenter="this.style.borderColor='var(--primary-light)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'" id="feat-3">
+              <input type="checkbox" name="features" value="Blog intégré" style="width:16px;height:16px;cursor:pointer" onchange="updateFeatStyle(this)">
+              <span style="font-size:1.1rem">✍️</span>
+              <span style="font-size:.85rem;font-weight:500">Blog intégré</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.65rem;border:1px solid var(--border);border-radius:var(--radius-sm);transition:all .2s" onmouseenter="this.style.borderColor='var(--primary-light)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'" id="feat-4">
+              <input type="checkbox" name="features" value="Espace membres" style="width:16px;height:16px;cursor:pointer" onchange="updateFeatStyle(this)">
+              <span style="font-size:1.1rem">👥</span>
+              <span style="font-size:.85rem;font-weight:500">Espace membres</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.65rem;border:1px solid var(--border);border-radius:var(--radius-sm);transition:all .2s" onmouseenter="this.style.borderColor='var(--primary-light)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'" id="feat-5">
+              <input type="checkbox" name="features" value="Paiement en ligne" style="width:16px;height:16px;cursor:pointer" onchange="updateFeatStyle(this)">
+              <span style="font-size:1.1rem">💳</span>
+              <span style="font-size:.85rem;font-weight:500">Paiement en ligne</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.65rem;border:1px solid var(--border);border-radius:var(--radius-sm);transition:all .2s" onmouseenter="this.style.borderColor='var(--primary-light)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'" id="feat-6">
+              <input type="checkbox" name="features" value="Chat en direct" style="width:16px;height:16px;cursor:pointer" onchange="updateFeatStyle(this)">
+              <span style="font-size:1.1rem">💬</span>
+              <span style="font-size:.85rem;font-weight:500">Chat en direct</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.65rem;border:1px solid var(--border);border-radius:var(--radius-sm);transition:all .2s" onmouseenter="this.style.borderColor='var(--primary-light)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'" id="feat-7">
+              <input type="checkbox" name="features" value="Newsletter" style="width:16px;height:16px;cursor:pointer" onchange="updateFeatStyle(this)">
+              <span style="font-size:1.1rem">📧</span>
+              <span style="font-size:.85rem;font-weight:500">Newsletter</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.65rem;border:1px solid var(--border);border-radius:var(--radius-sm);transition:all .2s" onmouseenter="this.style.borderColor='var(--primary-light)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'" id="feat-8">
+              <input type="checkbox" name="features" value="SEO avancé" style="width:16px;height:16px;cursor:pointer" onchange="updateFeatStyle(this)">
+              <span style="font-size:1.1rem">🔍</span>
+              <span style="font-size:.85rem;font-weight:500">SEO avancé</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.65rem;border:1px solid var(--border);border-radius:var(--radius-sm);transition:all .2s" onmouseenter="this.style.borderColor='var(--primary-light)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'" id="feat-9">
+              <input type="checkbox" name="features" value="Multi-langues" style="width:16px;height:16px;cursor:pointer" onchange="updateFeatStyle(this)">
+              <span style="font-size:1.1rem">🌍</span>
+              <span style="font-size:.85rem;font-weight:500">Multi-langues</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.65rem;border:1px solid var(--border);border-radius:var(--radius-sm);transition:all .2s" onmouseenter="this.style.borderColor='var(--primary-light)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'" id="feat-10">
+              <input type="checkbox" name="features" value="Tableau de bord" style="width:16px;height:16px;cursor:pointer" onchange="updateFeatStyle(this)">
+              <span style="font-size:1.1rem">📊</span>
+              <span style="font-size:.85rem;font-weight:500">Tableau de bord</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.65rem;border:1px solid var(--border);border-radius:var(--radius-sm);transition:all .2s" onmouseenter="this.style.borderColor='var(--primary-light)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'" id="feat-11">
+              <input type="checkbox" name="features" value="Intégration IA" style="width:16px;height:16px;cursor:pointer" onchange="updateFeatStyle(this)">
+              <span style="font-size:1.1rem">🤖</span>
+              <span style="font-size:.85rem;font-weight:500">Intégration IA</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;padding:.65rem;border:1px solid var(--border);border-radius:var(--radius-sm);transition:all .2s" onmouseenter="this.style.borderColor='var(--primary-light)'" onmouseleave="if(!this.querySelector('input').checked)this.style.borderColor='var(--border)'" id="feat-12">
+              <input type="checkbox" name="features" value="API Mobile" style="width:16px;height:16px;cursor:pointer" onchange="updateFeatStyle(this)">
+              <span style="font-size:1.1rem">📱</span>
+              <span style="font-size:.85rem;font-weight:500">API Mobile</span>
+            </label>
             {% endfor %}
           </div>
           <div style="display:flex;gap:.75rem">
@@ -86,13 +169,18 @@
           <div style="margin-bottom:1.5rem">
             <label class="form-label">Budget estimé (FCFA)</label>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem" id="budget-options">
-              {% for b in "< 100 000 FCFA|budget_s;100 000 – 300 000 FCFA|budget_m;300 000 – 700 000 FCFA|budget_l;> 700 000 FCFA|budget_xl"|split:";" %}
-              {% with parts=b|split:"|" %}
-              <div class="option-card" onclick="selectOption(this,'budget','{{ parts.1 }}')" style="text-align:center;padding:1rem">
-                <div style="font-size:.9rem;font-weight:600">{{ parts.0 }}</div>
+              <div class="option-card" onclick="selectOption(this,'budget','budget_s')" style="text-align:center;padding:1rem">
+                <div style="font-size:.9rem;font-weight:600">&lt; 100 000 FCFA</div>
               </div>
-              {% endwith %}
-              {% endfor %}
+              <div class="option-card" onclick="selectOption(this,'budget','budget_m')" style="text-align:center;padding:1rem">
+                <div style="font-size:.9rem;font-weight:600">100 000 – 300 000 FCFA</div>
+              </div>
+              <div class="option-card" onclick="selectOption(this,'budget','budget_l')" style="text-align:center;padding:1rem">
+                <div style="font-size:.9rem;font-weight:600">300 000 – 700 000 FCFA</div>
+              </div>
+              <div class="option-card" onclick="selectOption(this,'budget','budget_xl')" style="text-align:center;padding:1rem">
+                <div style="font-size:.9rem;font-weight:600">&gt; 700 000 FCFA</div>
+              </div>
             </div>
           </div>
           <div class="form-group">

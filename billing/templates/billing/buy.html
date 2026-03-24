@@ -29,7 +29,7 @@
     "@type": "AggregateOffer",
     "priceCurrency": "USD",
     "lowPrice": "{% if plans and plans|length > 0 %}{{ plans.0.price_usd }}{% else %}0{% endif %}",
-    "highPrice": "{% if plans and plans|length > 0 %}{{ plans|last.price_usd }}{% else %}0{% endif %}",
+    "highPrice": "{% if plans and plans|length > 0 %}{% with last_plan=plans|last %}{{ last_plan.price_usd }}{% endwith %}{% else %}0{% endif %}",
     "offerCount": "{{ plans|length }}"
   }
 }
