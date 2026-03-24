@@ -14,19 +14,20 @@
 {% endblock %}
 
 {% block content %}
-<!-- ── BREADCRUMB ── -->
-<nav aria-label="breadcrumb" class="auto-breadcrumb">
-  <div class="container">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{% url 'home' %}">Accueil</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'auto:liste_vehicules' %}">Auto Cameroun</a></li>
-      {% block breadcrumb_items %}{% endblock %}
-    </ol>
-  </div>
-</nav>
+<div class="auto-page">
+  <!-- ── BREADCRUMB ── -->
+  <nav aria-label="breadcrumb" class="auto-breadcrumb">
+    <div class="container">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Accueil</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'auto:liste_vehicules' %}">Auto Cameroun</a></li>
+        {% block breadcrumb_items %}{% endblock %}
+      </ol>
+    </div>
+  </nav>
 
-{% block auto_content %}{% endblock %}
-
+  {% block auto_content %}{% endblock %}
+</div>
 {% endblock %}
 
 {% block extra_js %}
