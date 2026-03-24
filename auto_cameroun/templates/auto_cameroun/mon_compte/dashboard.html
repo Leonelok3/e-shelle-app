@@ -1,0 +1,53 @@
+{% extends "auto_cameroun/base_auto.html" %}
+
+{% block title %}Mon compte — Auto Cameroun{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item active">Mon compte</li>
+{% endblock %}
+
+{% block auto_content %}
+<div class="container py-4">
+  {% include "auto_cameroun/mon_compte/_nav_compte.html" %}
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="auto-card-panel">
+        <h2 class="auto-panel__titre"><i class="fa-solid fa-user-circle"></i> Mon profil</h2>
+        {% if messages %}
+          {% for msg in messages %}
+            <div class="auto-alert auto-alert--{{ msg.tags }}">{{ msg }}</div>
+          {% endfor %}
+        {% endif %}
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="mb-3">
+              <label class="auto-form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}<div class="auto-form-error">{{ field.errors.0 }}</div>{% endif %}
+            </div>
+          {% endfor %}
+          <button type="submit" class="auto-btn auto-btn--primary">Enregistrer</button>
+        </form>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="auto-card-panel">
+        <h3 class="auto-panel__titre"><i class="fa-solid fa-crown"></i> Mon abonnement</h3>
+        {% if profil.est_premium %}
+          <div class="auto-premium-badge">⭐ Compte Premium actif</div>
+          {% if profil.date_expiration_premium %}
+            <p class="mt-2">Expire le : <strong>{{ profil.date_expiration_premium|date:"d/m/Y" }}</strong></p>
+          {% endif %}
+        {% else %}
+          <p>Vous avez un compte <strong>Gratuit</strong> (3 annonces max).</p>
+          <a href="{% url 'auto:upgrade_premium' %}" class="auto-btn auto-btn--or auto-btn--full mt-2">
+            <i class="fa-solid fa-crown"></i> Passer en Premium
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

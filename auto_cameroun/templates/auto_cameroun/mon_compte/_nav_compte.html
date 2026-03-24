@@ -1,0 +1,14 @@
+<div class="auto-nav-compte mb-4">
+  <a href="{% url 'auto:mon_compte' %}" class="auto-nav-compte__lien {% if request.resolver_match.url_name == 'mon_compte' %}active{% endif %}">
+    <i class="fa-solid fa-user"></i> Mon profil
+  </a>
+  <a href="{% url 'auto:mes_vehicules' %}" class="auto-nav-compte__lien {% if request.resolver_match.url_name == 'mes_vehicules' %}active{% endif %}">
+    <i class="fa-solid fa-car"></i> Mes annonces
+  </a>
+  <a href="{% url 'auto:mes_favoris' %}" class="auto-nav-compte__lien {% if request.resolver_match.url_name == 'mes_favoris' %}active{% endif %}">
+    <i class="fa-solid fa-heart"></i> Mes favoris
+  </a>
+  <a href="{% url 'auto:publier_vehicule' %}" class="auto-nav-compte__lien auto-nav-compte__lien--cta">
+    <i class="fa-solid fa-plus"></i> Publier
+  </a>
+</div>

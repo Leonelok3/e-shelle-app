@@ -1,0 +1,94 @@
+{% extends "auto_cameroun/base_auto.html" %}
+
+{% block title %}Mes annonces — Auto Cameroun{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item active">Mes annonces</li>
+{% endblock %}
+
+{% block auto_content %}
+<div class="container py-4">
+  {% include "auto_cameroun/mon_compte/_nav_compte.html" %}
+
+  <div class="auto-card-panel">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="auto-panel__titre mb-0"><i class="fa-solid fa-car"></i> Mes annonces</h2>
+      <a href="{% url 'auto:publier_vehicule' %}" class="auto-btn auto-btn--primary">
+        <i class="fa-solid fa-plus"></i> Nouvelle annonce
+      </a>
+    </div>
+
+    {% if messages %}
+      {% for msg in messages %}
+        <div class="auto-alert auto-alert--{{ msg.tags }}">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+
+    {% if vehicules %}
+      <div class="auto-table-responsive">
+        <table class="auto-table">
+          <thead>
+            <tr>
+              <th>Véhicule</th>
+              <th>Type</th>
+              <th>Prix</th>
+              <th>Statut</th>
+              <th>Vues</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for v in vehicules %}
+              <tr>
+                <td>
+                  <div class="auto-table__titre">
+                    {% with photo=v.photo_principale %}
+                      {% if photo %}
+                        <img src="{{ photo.image.url }}" alt="" class="auto-table__thumb">
+                      {% endif %}
+                    {% endwith %}
+                    <div>
+                      <strong>{{ v.marque }} {{ v.modele }} {{ v.annee }}</strong>
+                      <br><small class="text-muted">{{ v.ville }}</small>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ v.get_type_transaction_display }}</td>
+                <td>{{ v.prix_formate }}</td>
+                <td>
+                  <span class="auto-badge auto-badge--{{ v.statut|lower }}">{{ v.get_statut_display }}</span>
+                </td>
+                <td>{{ v.vues }}</td>
+                <td>
+                  <div class="auto-table__actions">
+                    <a href="{{ v.get_absolute_url }}" class="auto-btn auto-btn--xs auto-btn--outline" title="Voir">
+                      <i class="fa-solid fa-eye"></i>
+                    </a>
+                    <a href="{% url 'auto:modifier_vehicule' slug=v.slug %}" class="auto-btn auto-btn--xs auto-btn--primary" title="Modifier">
+                      <i class="fa-solid fa-pen"></i>
+                    </a>
+                    <form method="post" action="{% url 'auto:supprimer_vehicule' slug=v.slug %}"
+                          onsubmit="return confirm('Supprimer cette annonce ?');">
+                      {% csrf_token %}
+                      <button type="submit" class="auto-btn auto-btn--xs auto-btn--danger" title="Supprimer">
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="auto-empty">
+        <i class="fa-solid fa-car-burst fa-4x"></i>
+        <h3>Aucune annonce</h3>
+        <p>Publiez votre premier véhicule dès maintenant.</p>
+        <a href="{% url 'auto:publier_vehicule' %}" class="auto-btn auto-btn--primary">Publier une annonce</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -42,6 +42,9 @@ urlpatterns = [
     # Immobilier Cameroun
     path("immobilier/", include("immobilier_cameroun.urls", namespace="immobilier")),
 
+    # Auto Cameroun
+    path("auto/", include("auto_cameroun.urls", namespace="auto")),
+
     # Page d'accueil
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
 ]

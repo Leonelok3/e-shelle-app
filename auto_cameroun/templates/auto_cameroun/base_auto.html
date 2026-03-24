@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+<!-- GLightbox -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+<!-- Swiper -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<!-- Auto Cameroun CSS -->
+<link rel="stylesheet" href="{% static 'auto_cameroun/css/auto.css' %}">
+{% block auto_extra_css %}{% endblock %}
+{% endblock %}
+
+{% block content %}
+<!-- ── BREADCRUMB ── -->
+<nav aria-label="breadcrumb" class="auto-breadcrumb">
+  <div class="container">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Accueil</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'auto:liste_vehicules' %}">Auto Cameroun</a></li>
+      {% block breadcrumb_items %}{% endblock %}
+    </ol>
+  </div>
+</nav>
+
+{% block auto_content %}{% endblock %}
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- GLightbox -->
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+<!-- Swiper -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<!-- Auto JS -->
+<script src="{% static 'auto_cameroun/js/auto.js' %}"></script>
+{% block auto_extra_js %}{% endblock %}
+{% endblock %}

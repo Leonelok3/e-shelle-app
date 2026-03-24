@@ -1,0 +1,26 @@
+<div class="auto-partage">
+  <a href="{{ vehicule.get_partage_facebook_url }}" target="_blank" rel="noopener" class="auto-partage__btn auto-partage__btn--facebook">
+    <i class="fa-brands fa-facebook-f"></i> Facebook
+  </a>
+  <a href="{{ vehicule.get_partage_twitter_url }}" target="_blank" rel="noopener" class="auto-partage__btn auto-partage__btn--twitter">
+    <i class="fa-brands fa-x-twitter"></i> X / Twitter
+  </a>
+  <a href="{{ vehicule.get_partage_linkedin_url }}" target="_blank" rel="noopener" class="auto-partage__btn auto-partage__btn--linkedin">
+    <i class="fa-brands fa-linkedin-in"></i> LinkedIn
+  </a>
+  <a href="{{ vehicule.get_partage_telegram_url }}" target="_blank" rel="noopener" class="auto-partage__btn auto-partage__btn--telegram">
+    <i class="fa-brands fa-telegram"></i> Telegram
+  </a>
+  <button class="auto-partage__btn auto-partage__btn--copy" onclick="copierLien()">
+    <i class="fa-solid fa-link"></i> Copier le lien
+  </button>
+</div>
+<script>
+function copierLien() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    const btn = document.querySelector('.auto-partage__btn--copy');
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> Copié !';
+    setTimeout(() => btn.innerHTML = '<i class="fa-solid fa-link"></i> Copier le lien', 2000);
+  });
+}
+</script>

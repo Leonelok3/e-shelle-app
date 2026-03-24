@@ -1,0 +1,31 @@
+{% extends "auto_cameroun/base_auto.html" %}
+
+{% block title %}Signaler une annonce — Auto Cameroun{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item active">Signaler</li>
+{% endblock %}
+
+{% block auto_content %}
+<div class="container py-4">
+  <div class="auto-card-panel" style="max-width:560px;margin:auto;">
+    <h2 class="auto-panel__titre"><i class="fa-solid fa-flag text-danger"></i> Signaler cette annonce</h2>
+    <p class="text-muted mb-4">
+      <strong>{{ vehicule.marque }} {{ vehicule.modele }} {{ vehicule.annee }}</strong> — {{ vehicule.ville }}
+    </p>
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="mb-3">
+          <label class="auto-form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}<div class="auto-form-error">{{ field.errors.0 }}</div>{% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="auto-btn auto-btn--danger auto-btn--full">
+        <i class="fa-solid fa-flag"></i> Envoyer le signalement
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

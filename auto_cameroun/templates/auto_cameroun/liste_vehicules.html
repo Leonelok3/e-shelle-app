@@ -1,0 +1,128 @@
+{% extends "auto_cameroun/base_auto.html" %}
+{% load static %}
+
+{% block title %}Auto Cameroun — Vente & Location de Véhicules{% endblock %}
+{% block meta_description %}Achetez ou louez un véhicule au Cameroun. Toyota, Mercedes, BMW, Peugeot… Voitures, SUV, pick-ups disponibles à Yaoundé, Douala et partout au Cameroun.{% endblock %}
+
+{% block auto_content %}
+<!-- ── HERO ── -->
+<section class="auto-hero">
+  <div class="auto-hero__overlay"></div>
+  <div class="auto-hero__content container">
+    <h1 class="auto-hero__titre">Votre voiture idéale au <span class="auto-hero__accent">Cameroun</span></h1>
+    <p class="auto-hero__sous-titre">Achetez, louez ou vendez un véhicule en toute confiance</p>
+
+    <!-- Barre de recherche rapide -->
+    <form method="get" action="{% url 'auto:liste_vehicules' %}" class="auto-search-bar">
+      <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Marque, modèle…" class="auto-search-bar__input">
+      <select name="type_transaction" class="auto-search-bar__select">
+        <option value="">Vente & Location</option>
+        <option value="VENTE" {% if request.GET.type_transaction == 'VENTE' %}selected{% endif %}>Vente</option>
+        <option value="LOCATION" {% if request.GET.type_transaction == 'LOCATION' %}selected{% endif %}>Location</option>
+      </select>
+      <select name="ville" class="auto-search-bar__select">
+        <option value="">Toutes les villes</option>
+        {% for val, label in form.fields.ville.choices %}
+          {% if val %}<option value="{{ val }}" {% if request.GET.ville == val %}selected{% endif %}>{{ label }}</option>{% endif %}
+        {% endfor %}
+      </select>
+      <button type="submit" class="auto-btn auto-btn--primary auto-search-bar__btn">
+        <i class="fa-solid fa-search"></i> Rechercher
+      </button>
+    </form>
+
+    <div class="auto-hero__ctas mt-3">
+      <a href="{% url 'auto:publier_vehicule' %}" class="auto-btn auto-btn--or">
+        <i class="fa-solid fa-plus"></i> Publier une annonce
+      </a>
+      <a href="{% url 'auto:soumettre_vehicule' %}" class="auto-btn auto-btn--outline-white">
+        <i class="fa-solid fa-paper-plane"></i> Soumettre sans compte
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="container py-5">
+
+  <!-- ── COUPS DE CŒUR ── -->
+  {% if coups_de_coeur and not request.GET %}
+    <section class="mb-5">
+      <h2 class="auto-section-titre">
+        <i class="fa-solid fa-heart text-danger"></i> Coups de cœur
+      </h2>
+      <div class="auto-grid auto-grid--4">
+        {% for v in coups_de_coeur %}
+          {% include "auto_cameroun/partials/_card_vehicule.html" with vehicule=v %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  <div class="row g-4">
+
+    <!-- ── FILTRES SIDEBAR ── -->
+    <div class="col-lg-3">
+      <div class="auto-filtres">
+        <h3 class="auto-filtres__titre"><i class="fa-solid fa-sliders"></i> Filtrer</h3>
+        <form method="get" action="{% url 'auto:liste_vehicules' %}">
+          {% for field in form %}
+            <div class="mb-3">
+              <label class="auto-form-label">{{ field.label }}</label>
+              {{ field }}
+            </div>
+          {% endfor %}
+          <button type="submit" class="auto-btn auto-btn--primary auto-btn--full">Appliquer</button>
+          <a href="{% url 'auto:liste_vehicules' %}" class="auto-btn auto-btn--outline auto-btn--full mt-2">Réinitialiser</a>
+        </form>
+      </div>
+    </div>
+
+    <!-- ── LISTE VÉHICULES ── -->
+    <div class="col-lg-9">
+      <!-- Tri + compteur -->
+      <div class="auto-liste__header mb-3">
+        <span class="auto-liste__count">{{ total }} véhicule{{ total|pluralize }} trouvé{{ total|pluralize }}</span>
+        <div class="auto-liste__tri">
+          <select onchange="window.location=this.value" class="auto-input auto-input--sm">
+            <option value="?{% include 'auto_cameroun/partials/_query_params.html' with exclude='tri' %}&tri=-est_mis_en_avant">Premium en premier</option>
+            <option value="?{% include 'auto_cameroun/partials/_query_params.html' with exclude='tri' %}&tri=-created_at">Plus récents</option>
+            <option value="?{% include 'auto_cameroun/partials/_query_params.html' with exclude='tri' %}&tri=prix">Prix croissant</option>
+            <option value="?{% include 'auto_cameroun/partials/_query_params.html' with exclude='tri' %}&tri=-prix">Prix décroissant</option>
+            <option value="?{% include 'auto_cameroun/partials/_query_params.html' with exclude='tri' %}&tri=-annee">Plus récents (année)</option>
+            <option value="?{% include 'auto_cameroun/partials/_query_params.html' with exclude='tri' %}&tri=-vues">Plus vus</option>
+          </select>
+        </div>
+      </div>
+
+      {% if vehicules %}
+        <div class="auto-grid auto-grid--3">
+          {% for v in vehicules %}
+            {% include "auto_cameroun/partials/_card_vehicule.html" with vehicule=v %}
+          {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if vehicules.has_other_pages %}
+          <nav class="auto-pagination mt-4">
+            {% if vehicules.has_previous %}
+              <a href="?page={{ vehicules.previous_page_number }}" class="auto-page-btn">‹ Précédent</a>
+            {% endif %}
+            <span class="auto-page-info">Page {{ vehicules.number }} / {{ vehicules.paginator.num_pages }}</span>
+            {% if vehicules.has_next %}
+              <a href="?page={{ vehicules.next_page_number }}" class="auto-page-btn">Suivant ›</a>
+            {% endif %}
+          </nav>
+        {% endif %}
+
+      {% else %}
+        <div class="auto-empty">
+          <i class="fa-solid fa-car-burst fa-4x"></i>
+          <h3>Aucun véhicule trouvé</h3>
+          <p>Essayez d'autres critères de recherche.</p>
+          <a href="{% url 'auto:liste_vehicules' %}" class="auto-btn auto-btn--primary">Voir tous les véhicules</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

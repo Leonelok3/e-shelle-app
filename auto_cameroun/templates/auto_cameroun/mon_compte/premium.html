@@ -1,0 +1,66 @@
+{% extends "auto_cameroun/base_auto.html" %}
+
+{% block title %}Passer en Premium — Auto Cameroun{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item active">Premium</li>
+{% endblock %}
+
+{% block auto_content %}
+<div class="container py-5">
+  {% include "auto_cameroun/mon_compte/_nav_compte.html" %}
+
+  <div class="auto-premium-page">
+    <div class="auto-premium-hero">
+      <h1>⭐ Passez en <span class="auto-hero__accent">Premium</span></h1>
+      <p>Vendez vos véhicules plus vite avec une visibilité maximale</p>
+    </div>
+
+    <div class="row g-4 justify-content-center mt-3">
+      <!-- FREE -->
+      <div class="col-md-5">
+        <div class="auto-pricing-card">
+          <div class="auto-pricing-card__header">
+            <h3>Gratuit</h3>
+            <div class="auto-pricing-card__prix">0 <span>XAF</span></div>
+          </div>
+          <ul class="auto-pricing-card__features">
+            <li>✅ 3 annonces actives</li>
+            <li>✅ Photos jusqu'à 10</li>
+            <li>✅ Partage réseaux sociaux</li>
+            <li>❌ Pas de mise en avant</li>
+            <li>❌ Pas de badge Premium</li>
+          </ul>
+          {% if not profil.est_premium %}
+            <div class="auto-pricing-card__current">Votre plan actuel</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- PREMIUM -->
+      <div class="col-md-5">
+        <div class="auto-pricing-card auto-pricing-card--premium">
+          <div class="auto-pricing-card__ribbon">Recommandé</div>
+          <div class="auto-pricing-card__header">
+            <h3>Premium</h3>
+            <div class="auto-pricing-card__prix">5 000 <span>XAF/mois</span></div>
+          </div>
+          <ul class="auto-pricing-card__features">
+            <li>✅ Annonces illimitées</li>
+            <li>✅ Photos jusqu'à 10</li>
+            <li>✅ Mise en avant automatique</li>
+            <li>✅ Badge ⭐ Premium visible</li>
+            <li>✅ Priorité dans les résultats</li>
+            <li>✅ Support prioritaire</li>
+          </ul>
+          <a href="https://wa.me/237680625082?text=Je%20veux%20passer%20en%20Premium%20Auto%20Cameroun"
+             target="_blank" rel="noopener"
+             class="auto-btn auto-btn--or auto-btn--full mt-3">
+            <i class="fa-brands fa-whatsapp"></i> Souscrire via WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

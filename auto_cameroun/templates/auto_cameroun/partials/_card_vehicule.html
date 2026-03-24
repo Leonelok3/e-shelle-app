@@ -1,0 +1,55 @@
+{% load static %}
+<div class="auto-card {% if vehicule.est_mis_en_avant %}auto-card--premium{% endif %} {% if vehicule.est_coup_de_coeur %}auto-card--coeur{% endif %}">
+  {% if vehicule.est_mis_en_avant %}
+    <div class="auto-card__ribbon">⭐ Premium</div>
+  {% endif %}
+
+  <a href="{{ vehicule.get_absolute_url }}" class="auto-card__img-lien">
+    {% with photo=vehicule.photo_principale %}
+      {% if photo %}
+        <img src="{{ photo.image.url }}" alt="{{ vehicule.marque }} {{ vehicule.modele }}" class="auto-card__img" loading="lazy">
+      {% else %}
+        <div class="auto-card__img-placeholder">
+          <i class="fa-solid fa-car fa-3x"></i>
+        </div>
+      {% endif %}
+    {% endwith %}
+    <div class="auto-card__badges-overlay">
+      <span class="auto-badge auto-badge--{{ vehicule.statut|lower }}">
+        {% if vehicule.statut == 'PUBLIE' %}Disponible
+        {% elif vehicule.statut == 'RESERVE' %}🔒 Réservé
+        {% elif vehicule.statut == 'VENDU_LOUE' %}✔️ Vendu/Loué
+        {% endif %}
+      </span>
+      <span class="auto-badge auto-badge--{{ vehicule.type_transaction|lower }}">
+        {{ vehicule.get_type_transaction_display }}
+      </span>
+    </div>
+  </a>
+
+  <div class="auto-card__body">
+    <h3 class="auto-card__titre">
+      <a href="{{ vehicule.get_absolute_url }}">{{ vehicule.marque }} {{ vehicule.modele }} {{ vehicule.annee }}</a>
+    </h3>
+    <p class="auto-card__ville">
+      <i class="fa-solid fa-location-dot"></i> {{ vehicule.ville }}{% if vehicule.quartier %}, {{ vehicule.quartier }}{% endif %}
+    </p>
+
+    <div class="auto-card__specs">
+      {% if vehicule.kilometrage %}
+        <span><i class="fa-solid fa-gauge-high"></i> {{ vehicule.kilometrage|floatformat:0 }} km</span>
+      {% endif %}
+      <span><i class="fa-solid fa-gas-pump"></i> {{ vehicule.get_carburant_display }}</span>
+      <span><i class="fa-solid fa-gears"></i> {{ vehicule.get_boite_display }}</span>
+      <span><i class="fa-solid fa-car-side"></i> {{ vehicule.get_type_carrosserie_display }}</span>
+    </div>
+
+    <div class="auto-card__footer">
+      <span class="auto-card__prix">{{ vehicule.prix_formate }}</span>
+      {% if vehicule.prix_negociable %}
+        <span class="auto-card__nego">Négociable</span>
+      {% endif %}
+      <a href="{{ vehicule.get_absolute_url }}" class="auto-btn auto-btn--sm auto-btn--primary">Voir</a>
+    </div>
+  </div>
+</div>

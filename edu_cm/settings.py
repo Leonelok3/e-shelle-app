@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "italian_courses.apps.ItalianCoursesConfig",
     "preparation_tests.apps.PreparationTestsConfig",
     "immobilier_cameroun.apps.ImmobilierCamerounConfig",
+    "auto_cameroun.apps.AutoCamerounConfig",
 
     # Sites framework (utilisé pour les URLs absolues de partage)
     "django.contrib.sites",
@@ -186,6 +187,11 @@ IMMOBILIER_MAX_PHOTOS_PAR_BIEN  = 10
 IMMOBILIER_MAX_BIENS_GRATUIT    = 3
 IMMOBILIER_TAILLE_MAX_IMAGE_MB  = 5
 IMMO_WHATSAPP_CONTACT           = "+237680625082"
+
+# ── Auto Cameroun ────────────────────────────────────────────────
+AUTO_MAX_VEHICULES_GRATUIT  = 3
+AUTO_TAILLE_MAX_IMAGE_MB    = 5
+AUTO_WHATSAPP_CONTACT       = "+237680625082"
 
 # DRF
 REST_FRAMEWORK = {

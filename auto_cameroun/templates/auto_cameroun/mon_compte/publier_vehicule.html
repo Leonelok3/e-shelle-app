@@ -1,0 +1,250 @@
+{% extends "auto_cameroun/base_auto.html" %}
+
+{% block title %}{% if vehicule %}Modifier l'annonce{% else %}Publier un véhicule{% endif %} — Auto Cameroun{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item"><a href="{% url 'auto:mes_vehicules' %}">Mes annonces</a></li>
+  <li class="breadcrumb-item active">{% if vehicule %}Modifier{% else %}Publier{% endif %}</li>
+{% endblock %}
+
+{% block auto_content %}
+<div class="container py-4">
+  <div class="auto-card-panel">
+    <h2 class="auto-panel__titre">
+      <i class="fa-solid fa-{% if vehicule %}pen{% else %}plus-circle{% endif %}"></i>
+      {% if vehicule %}Modifier l'annonce{% else %}Publier un véhicule{% endif %}
+    </h2>
+    <p class="text-muted mb-4">Votre annonce sera soumise à validation avant publication (sous 24h).</p>
+
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+
+      <!-- Section 1 : Identité -->
+      <div class="auto-form-section">
+        <h3 class="auto-form-section__titre"><i class="fa-solid fa-car"></i> Identité du véhicule</h3>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="auto-form-label">Marque *</label>
+            {{ form.marque }}
+            {% if form.marque.errors %}<div class="auto-form-error">{{ form.marque.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="col-md-4" id="marque-autre-wrap" style="display:none;">
+            <label class="auto-form-label">Autre marque *</label>
+            {{ form.marque_autre }}
+          </div>
+          <div class="col-md-4">
+            <label class="auto-form-label">Modèle *</label>
+            {{ form.modele }}
+            {% if form.modele.errors %}<div class="auto-form-error">{{ form.modele.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="col-md-2">
+            <label class="auto-form-label">Année *</label>
+            {{ form.annee }}
+            {% if form.annee.errors %}<div class="auto-form-error">{{ form.annee.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="col-md-4">
+            <label class="auto-form-label">Version / Finition</label>
+            {{ form.version }}
+          </div>
+          <div class="col-md-3">
+            <label class="auto-form-label">Couleur</label>
+            {{ form.couleur }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2 : Classification -->
+      <div class="auto-form-section">
+        <h3 class="auto-form-section__titre"><i class="fa-solid fa-tag"></i> Classification</h3>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="auto-form-label">Transaction *</label>
+            {{ form.type_transaction }}
+          </div>
+          <div class="col-md-4">
+            <label class="auto-form-label">Type de carrosserie *</label>
+            {{ form.type_carrosserie }}
+          </div>
+          <div class="col-md-4">
+            <label class="auto-form-label">État *</label>
+            {{ form.etat }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3 : Motorisation -->
+      <div class="auto-form-section">
+        <h3 class="auto-form-section__titre"><i class="fa-solid fa-gas-pump"></i> Motorisation</h3>
+        <div class="row g-3">
+          <div class="col-md-3">
+            <label class="auto-form-label">Carburant</label>
+            {{ form.carburant }}
+          </div>
+          <div class="col-md-3">
+            <label class="auto-form-label">Boîte de vitesse</label>
+            {{ form.boite }}
+          </div>
+          <div class="col-md-3">
+            <label class="auto-form-label">Conduite</label>
+            {{ form.conduite }}
+          </div>
+          <div class="col-md-3">
+            <label class="auto-form-label">Puissance (CV)</label>
+            {{ form.puissance_cv }}
+          </div>
+          <div class="col-md-3">
+            <label class="auto-form-label">Cylindrée</label>
+            {{ form.cylindree }}
+          </div>
+          <div class="col-md-3">
+            <label class="auto-form-label">Kilométrage</label>
+            {{ form.kilometrage }}
+          </div>
+          <div class="col-md-3">
+            <label class="auto-form-label">Nombre de places</label>
+            {{ form.nombre_places }}
+          </div>
+          <div class="col-md-3">
+            <label class="auto-form-label">Nombre de portes</label>
+            {{ form.nombre_portes }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4 : Localisation -->
+      <div class="auto-form-section">
+        <h3 class="auto-form-section__titre"><i class="fa-solid fa-location-dot"></i> Localisation</h3>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="auto-form-label">Ville *</label>
+            {{ form.ville }}
+            {% if form.ville.errors %}<div class="auto-form-error">{{ form.ville.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="col-md-4">
+            <label class="auto-form-label">Quartier</label>
+            {{ form.quartier }}
+          </div>
+          <div class="col-md-4">
+            <label class="auto-form-label">Adresse complète</label>
+            {{ form.adresse_complete }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 5 : Prix -->
+      <div class="auto-form-section">
+        <h3 class="auto-form-section__titre"><i class="fa-solid fa-money-bill"></i> Prix</h3>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="auto-form-label">Prix *</label>
+            {{ form.prix }}
+            {% if form.prix.errors %}<div class="auto-form-error">{{ form.prix.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="col-md-3">
+            <label class="auto-form-label">Devise</label>
+            {{ form.devise }}
+          </div>
+          <div class="col-md-3">
+            <label class="auto-form-label">Période (location)</label>
+            {{ form.periode_prix }}
+          </div>
+          <div class="col-md-2 d-flex align-items-end pb-2">
+            <div class="form-check">
+              {{ form.prix_negociable }}
+              <label class="form-check-label" for="{{ form.prix_negociable.id_for_label }}">Négociable</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 6 : Description -->
+      <div class="auto-form-section">
+        <h3 class="auto-form-section__titre"><i class="fa-solid fa-align-left"></i> Description</h3>
+        <div class="mb-3">
+          <label class="auto-form-label">Description *</label>
+          {{ form.description }}
+          {% if form.description.errors %}<div class="auto-form-error">{{ form.description.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="mb-3">
+          <label class="auto-form-label">Options & équipements</label>
+          {{ form.options_equipements }}
+        </div>
+      </div>
+
+      <!-- Section 7 : Garanties -->
+      <div class="auto-form-section">
+        <h3 class="auto-form-section__titre"><i class="fa-solid fa-shield-check"></i> Garanties</h3>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="auto-form-label">Garantie</label>
+            {{ form.garantie }}
+          </div>
+          <div class="col-md-4 d-flex align-items-end pb-2">
+            <div class="form-check me-3">
+              {{ form.est_dedouane }}
+              <label class="form-check-label" for="{{ form.est_dedouane.id_for_label }}">Dédouané</label>
+            </div>
+            <div class="form-check">
+              {{ form.premiere_main }}
+              <label class="form-check-label" for="{{ form.premiere_main.id_for_label }}">1ère main</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="auto-form-label">Date de disponibilité</label>
+            {{ form.date_disponibilite }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 8 : Photos -->
+      <div class="auto-form-section">
+        <h3 class="auto-form-section__titre"><i class="fa-solid fa-camera"></i> Photos (max 10)</h3>
+        {{ formset.management_form }}
+        <div class="auto-photos-grid" id="photos-grid">
+          {% for photo_form in formset %}
+            <div class="auto-photo-item">
+              {{ photo_form.id }}
+              {% if photo_form.instance.pk and photo_form.instance.image %}
+                <img src="{{ photo_form.instance.image.url }}" alt="" class="auto-photo-preview">
+              {% else %}
+                <div class="auto-photo-dropzone" id="dropzone-{{ forloop.counter0 }}">
+                  <i class="fa-solid fa-image fa-2x"></i>
+                  <span>Cliquer pour ajouter</span>
+                </div>
+              {% endif %}
+              <div class="auto-photo-controls">
+                {{ photo_form.image }}
+                <label><small>Légende</small>{{ photo_form.legende }}</label>
+                <label class="form-check-label">
+                  {{ photo_form.est_photo_principale }} <small>Photo principale</small>
+                </label>
+                {% if photo_form.instance.pk %}
+                  <label class="form-check-label text-danger">
+                    {{ photo_form.DELETE }} <small>Supprimer</small>
+                  </label>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="mt-4 d-flex gap-3">
+        <button type="submit" class="auto-btn auto-btn--primary auto-btn--lg">
+          <i class="fa-solid fa-paper-plane"></i>
+          {% if vehicule %}Mettre à jour{% else %}Soumettre l'annonce{% endif %}
+        </button>
+        <a href="{% url 'auto:mes_vehicules' %}" class="auto-btn auto-btn--outline auto-btn--lg">Annuler</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// Afficher/masquer le champ "Autre marque"
+document.querySelector('[name="marque"]')?.addEventListener('change', function() {
+  const wrap = document.getElementById('marque-autre-wrap');
+  if (wrap) wrap.style.display = this.value === 'Autre' ? 'block' : 'none';
+});
+</script>
+{% endblock %}

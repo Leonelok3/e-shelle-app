@@ -1,0 +1,28 @@
+{% extends "auto_cameroun/base_auto.html" %}
+
+{% block title %}Mes favoris — Auto Cameroun{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item active">Mes favoris</li>
+{% endblock %}
+
+{% block auto_content %}
+<div class="container py-4">
+  {% include "auto_cameroun/mon_compte/_nav_compte.html" %}
+  <h2 class="auto-section-titre"><i class="fa-solid fa-heart text-danger"></i> Mes favoris</h2>
+  {% if favoris %}
+    <div class="auto-grid auto-grid--3">
+      {% for fav in favoris %}
+        {% include "auto_cameroun/partials/_card_vehicule.html" with vehicule=fav.vehicule %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="auto-empty">
+      <i class="fa-regular fa-heart fa-4x"></i>
+      <h3>Aucun favori</h3>
+      <p>Ajoutez des véhicules à vos favoris pour les retrouver ici.</p>
+      <a href="{% url 'auto:liste_vehicules' %}" class="auto-btn auto-btn--primary">Explorer les annonces</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
