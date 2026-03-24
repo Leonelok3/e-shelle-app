@@ -86,7 +86,9 @@ def _get_panier(request):
     if request.user.is_authenticated:
         panier, _ = Panier.objects.get_or_create(utilisateur=request.user)
     else:
-        session_key = request.session.session_key or request.session.create()
+        if not request.session.session_key:
+            request.session.create()
+        session_key = request.session.session_key
         panier, _  = Panier.objects.get_or_create(session_key=session_key)
     return panier
 
