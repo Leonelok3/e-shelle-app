@@ -1,0 +1,85 @@
+{% extends "annonces_cam/base_annonces.html" %}
+
+{% block title %}Mon compte — Annonces Cam{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item active">Mon compte</li>
+{% endblock %}
+
+{% block ann_content %}
+<div class="container py-4">
+  <div class="row g-4">
+
+    <!-- Sidebar nav -->
+    <div class="col-lg-3">
+      {% include "annonces_cam/mon_compte/_nav.html" %}
+    </div>
+
+    <!-- Contenu -->
+    <div class="col-lg-9">
+
+      <!-- Stats -->
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+          <div class="ann-stat-card">
+            <div class="ann-stat-card__num">{{ stats.total }}</div>
+            <div class="ann-stat-card__label">Annonces</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="ann-stat-card ann-stat-card--green">
+            <div class="ann-stat-card__num">{{ stats.publiees }}</div>
+            <div class="ann-stat-card__label">Publiées</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="ann-stat-card ann-stat-card--orange">
+            <div class="ann-stat-card__num">{{ stats.en_attente }}</div>
+            <div class="ann-stat-card__label">En attente</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="ann-stat-card ann-stat-card--gray">
+            <div class="ann-stat-card__num">{{ stats.vendues }}</div>
+            <div class="ann-stat-card__label">Vendues</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profil -->
+      <div class="ann-form-card">
+        <h2 class="ann-form-card__titre">
+          <i class="fa-solid fa-user-circle"></i> Mon profil vendeur
+        </h2>
+        {% if profil.est_premium %}
+          <div class="ann-alert ann-alert--success mb-3">
+            ⭐ Compte Premium actif — annonces illimitées et mises en avant automatiques.
+          </div>
+        {% else %}
+          <div class="ann-alert ann-alert--info mb-3">
+            Compte Gratuit — {{ profil.peut_publier|yesno:"Vous pouvez encore publier,Limite atteinte" }}.
+            <a href="{% url 'annonces:upgrade_premium' %}">Passer en Premium →</a>
+          </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="mb-3">
+              <label class="ann-form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}
+                <div class="ann-form-error">{{ field.errors.0 }}</div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          <button type="submit" class="ann-btn ann-btn--primary">
+            <i class="fa-solid fa-save"></i> Enregistrer
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

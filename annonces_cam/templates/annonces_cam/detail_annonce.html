@@ -1,0 +1,373 @@
+{% extends "annonces_cam/base_annonces.html" %}
+{% load static %}
+
+{% block title %}{{ annonce.titre }} — {{ annonce.ville }} | Annonces Cam{% endblock %}
+{% block meta_description %}{{ annonce.meta_description|default:annonce.description|truncatechars:160 }}{% endblock %}
+
+{% block breadcrumb_items %}
+  {% if annonce.categorie.parent %}
+    <li class="breadcrumb-item">
+      <a href="{% url 'annonces:annonces_par_categorie' slug_categorie=annonce.categorie.parent.slug %}">{{ annonce.categorie.parent.nom }}</a>
+    </li>
+  {% endif %}
+  <li class="breadcrumb-item">
+    <a href="{% url 'annonces:annonces_par_categorie' slug_categorie=annonce.categorie.slug %}">{{ annonce.categorie.nom }}</a>
+  </li>
+  <li class="breadcrumb-item active">{{ annonce.titre|truncatechars:40 }}</li>
+{% endblock %}
+
+{% block ann_content %}
+<div class="container py-4">
+  <div class="row g-4">
+
+    <!-- ── COLONNE PRINCIPALE ── -->
+    <div class="col-lg-8">
+
+      <!-- Badges statut -->
+      <div class="ann-detail__badges mb-3">
+        <span class="ann-badge ann-badge--statut ann-badge--{{ annonce.statut|lower }}">
+          {% if annonce.statut == 'PUBLIEE' %}✅ Disponible
+          {% elif annonce.statut == 'VENDUE' %}✔️ Vendue
+          {% elif annonce.statut == 'EXPIREE' %}⏰ Expirée
+          {% else %}{{ annonce.get_statut_display }}
+          {% endif %}
+        </span>
+        {% if annonce.est_urgente %}
+          <span class="ann-badge ann-badge--urgent">🔥 Urgent</span>
+        {% endif %}
+        {% if annonce.est_mise_en_avant %}
+          <span class="ann-badge ann-badge--premium">⭐ Annonce Premium</span>
+        {% endif %}
+        {% if annonce.est_coup_de_coeur %}
+          <span class="ann-badge ann-badge--coeur">❤️ Coup de cœur</span>
+        {% endif %}
+      </div>
+
+      <h1 class="ann-detail__titre">{{ annonce.titre }}</h1>
+      <p class="ann-detail__localisation">
+        <i class="fa-solid fa-location-dot text-accent"></i>
+        {{ annonce.quartier }}{% if annonce.quartier %}, {% endif %}{{ annonce.ville }}
+      </p>
+
+      <!-- ── GALERIE PHOTOS ── -->
+      <div class="ann-galerie mb-4">
+        {% if photos %}
+          <div class="swiper ann-swiper-main">
+            <div class="swiper-wrapper">
+              {% for photo in photos %}
+                <div class="swiper-slide">
+                  <a href="{{ photo.image.url }}" class="glightbox ann-galerie__lien"
+                     data-gallery="annonce-{{ annonce.pk }}"
+                     data-description="{{ photo.legende|default:annonce.titre }}">
+                    <img
+                      src="{{ photo.image.url }}"
+                      alt="{{ photo.legende|default:annonce.titre }}"
+                      class="ann-galerie__main-img"
+                      loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                    >
+                  </a>
+                </div>
+              {% endfor %}
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
+
+          {% if photos|length > 1 %}
+            <div class="swiper ann-swiper-thumbs mt-2">
+              <div class="swiper-wrapper">
+                {% for photo in photos %}
+                  <div class="swiper-slide">
+                    <img src="{{ photo.image.url }}" alt="{{ photo.legende|default:'' }}"
+                         class="ann-galerie__thumb" loading="lazy">
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        {% else %}
+          <div class="ann-galerie__placeholder">
+            <i class="fa-solid fa-tag fa-4x"></i>
+            <p>Aucune photo disponible</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- ── PRIX ── -->
+      <div class="ann-detail__prix-bloc">
+        <span class="ann-detail__prix">{{ annonce.prix_formate }}</span>
+        {% if annonce.jours_restants is not None and annonce.jours_restants <= 5 %}
+          <span class="ann-detail__expire ms-3 text-warning">
+            <i class="fa-solid fa-clock"></i> Expire dans {{ annonce.jours_restants }} jour{{ annonce.jours_restants|pluralize }}
+          </span>
+        {% endif %}
+      </div>
+
+      <!-- ── CARACTÉRISTIQUES ── -->
+      <div class="ann-detail__specs">
+        <div class="ann-spec">
+          <i class="fa-solid fa-tag"></i>
+          <span>{{ annonce.categorie }}</span>
+        </div>
+        <div class="ann-spec">
+          <i class="fa-solid fa-box"></i>
+          <span>{{ annonce.get_etat_produit_display }}</span>
+        </div>
+        <div class="ann-spec">
+          <i class="fa-solid fa-eye"></i>
+          <span>{{ annonce.vues }} vue{{ annonce.vues|pluralize }}</span>
+        </div>
+        <div class="ann-spec">
+          <i class="fa-regular fa-calendar"></i>
+          <span>{{ annonce.created_at|date:"d/m/Y" }}</span>
+        </div>
+      </div>
+
+      <!-- ── DESCRIPTION ── -->
+      <div class="ann-detail__section">
+        <h2 class="ann-detail__section-titre">
+          <i class="fa-solid fa-align-left"></i> Description
+        </h2>
+        <div class="ann-detail__description">
+          {{ annonce.description|linebreaks }}
+        </div>
+      </div>
+
+      <!-- ── LOCALISATION CARTE ── -->
+      {% if annonce.latitude and annonce.longitude %}
+        <div class="ann-detail__section">
+          <h2 class="ann-detail__section-titre">
+            <i class="fa-solid fa-map-location-dot"></i> Localisation
+          </h2>
+          <div id="ann-map" class="ann-map"
+               data-lat="{{ annonce.latitude }}"
+               data-lng="{{ annonce.longitude }}"
+               data-titre="{{ annonce.titre }}">
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- ── PARTAGE ── -->
+      <div class="ann-detail__section">
+        <h2 class="ann-detail__section-titre">
+          <i class="fa-solid fa-share-nodes"></i> Partager
+        </h2>
+        <div class="ann-partage">
+          <a href="{{ annonce.get_whatsapp_url }}" target="_blank" rel="noopener"
+             class="ann-btn ann-btn--whatsapp ann-btn--sm">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+          </a>
+          <a href="{{ annonce.get_partage_facebook_url }}" target="_blank" rel="noopener"
+             class="ann-btn ann-btn--facebook ann-btn--sm">
+            <i class="fa-brands fa-facebook"></i> Facebook
+          </a>
+        </div>
+      </div>
+
+      <!-- ── ANNONCES SIMILAIRES ── -->
+      {% if similaires %}
+        <div class="ann-detail__section">
+          <h2 class="ann-detail__section-titre">
+            <i class="fa-solid fa-circle-check"></i> Annonces similaires
+          </h2>
+          <div class="ann-grid ann-grid--4">
+            {% for s in similaires %}
+              {% include "annonces_cam/partials/_card_annonce.html" with annonce=s %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+
+    <!-- ── SIDEBAR DROITE ── -->
+    <div class="col-lg-4">
+      <div class="ann-detail__sidebar">
+
+        <!-- Actions rapides -->
+        <div class="ann-detail__actions">
+
+          <!-- WhatsApp -->
+          {% if annonce.mode_contact != 'MESSAGE_INTERNE' %}
+            <a href="{{ annonce.get_whatsapp_url }}" target="_blank" rel="noopener"
+               class="ann-btn ann-btn--whatsapp ann-btn--full">
+              <i class="fa-brands fa-whatsapp"></i> Contacter sur WhatsApp
+            </a>
+          {% endif %}
+
+          <!-- Téléphone -->
+          {% if annonce.mode_contact == 'TELEPHONE' or annonce.mode_contact == 'TOUS' %}
+            <a href="tel:{{ annonce.telephone_contact }}"
+               class="ann-btn ann-btn--tel ann-btn--full mt-2">
+              <i class="fa-solid fa-phone"></i> {{ annonce.telephone_contact }}
+            </a>
+          {% endif %}
+
+          <!-- Favori -->
+          {% if user.is_authenticated %}
+            <button
+              class="ann-btn ann-btn--full mt-2 btn-toggle-favori {% if est_favori %}ann-btn--favori-actif{% else %}ann-btn--outline{% endif %}"
+              data-annonce-id="{{ annonce.pk }}"
+            >
+              <i class="fa-{% if est_favori %}solid{% else %}regular{% endif %} fa-heart"></i>
+              {% if est_favori %}Retirer des favoris{% else %}Ajouter aux favoris{% endif %}
+            </button>
+          {% else %}
+            <a href="{% url 'accounts:login' %}?next={{ request.path }}"
+               class="ann-btn ann-btn--outline ann-btn--full mt-2">
+              <i class="fa-regular fa-heart"></i> Ajouter aux favoris
+            </a>
+          {% endif %}
+
+          <!-- Marquer vendu (propriétaire) -->
+          {% if user == annonce.vendeur or user.is_superuser %}
+            {% if annonce.statut == 'PUBLIEE' %}
+              <button class="ann-btn ann-btn--warning ann-btn--full mt-2"
+                      id="btn-marquer-vendue"
+                      data-slug="{{ annonce.slug }}">
+                <i class="fa-solid fa-check-circle"></i> Marquer comme Vendu
+              </button>
+            {% endif %}
+          {% endif %}
+        </div>
+
+        <!-- Messagerie interne -->
+        {% if annonce.statut == 'PUBLIEE' and annonce.mode_contact != 'TELEPHONE' %}
+          {% if user.is_authenticated and user != annonce.vendeur %}
+            <div class="ann-detail__msg-form mt-4">
+              <h3 class="ann-detail__msg-form__titre">
+                <i class="fa-solid fa-comment-dots"></i> Envoyer un message
+              </h3>
+              <form method="post" action="{{ request.path }}">
+                {% csrf_token %}
+                <div class="mb-3">
+                  {{ msg_form.contenu }}
+                </div>
+                <button type="submit" class="ann-btn ann-btn--primary ann-btn--full">
+                  <i class="fa-solid fa-paper-plane"></i> Envoyer
+                </button>
+              </form>
+            </div>
+          {% elif not user.is_authenticated %}
+            <div class="ann-detail__msg-form mt-4">
+              <a href="{% url 'accounts:login' %}?next={{ request.path }}"
+                 class="ann-btn ann-btn--outline ann-btn--full">
+                <i class="fa-solid fa-lock"></i> Connectez-vous pour envoyer un message
+              </a>
+            </div>
+          {% endif %}
+        {% endif %}
+
+        <!-- Infos vendeur -->
+        <div class="ann-detail__vendeur mt-4">
+          <h3 class="ann-detail__vendeur__titre">
+            <i class="fa-solid fa-user-tie"></i> Vendeur
+          </h3>
+          <div class="ann-detail__vendeur__card">
+            {% with profil=annonce.vendeur.profil_vendeur %}
+              {% if profil and profil.photo_profil %}
+                <img src="{{ profil.photo_profil.url }}" alt="{{ annonce.vendeur.get_full_name }}" class="ann-detail__vendeur__avatar">
+              {% else %}
+                <div class="ann-detail__vendeur__avatar ann-detail__vendeur__avatar--placeholder">
+                  <i class="fa-solid fa-user fa-2x"></i>
+                </div>
+              {% endif %}
+              <div class="ann-detail__vendeur__info">
+                <strong>
+                  <a href="{% url 'annonces:profil_vendeur_public' user_id=annonce.vendeur.pk %}">
+                    {% if profil and profil.nom_boutique %}
+                      {{ profil.nom_boutique }}
+                    {% else %}
+                      {{ annonce.vendeur.get_full_name|default:annonce.vendeur.username }}
+                    {% endif %}
+                  </a>
+                </strong>
+                {% if profil and profil.est_verifie %}
+                  <span class="ann-badge ann-badge--verifie">✅ Vérifié</span>
+                {% endif %}
+                {% if profil and profil.est_premium %}
+                  <span class="ann-badge ann-badge--premium">⭐ Premium</span>
+                {% endif %}
+              </div>
+            {% endwith %}
+          </div>
+        </div>
+
+        <!-- Signaler -->
+        <div class="mt-3 text-center">
+          <a href="{% url 'annonces:signaler_annonce' annonce_id=annonce.pk %}"
+             class="ann-lien-signaler">
+            <i class="fa-solid fa-flag"></i> Signaler cette annonce
+          </a>
+        </div>
+
+        <!-- Stats (propriétaire) -->
+        {% if stats %}
+          <div class="ann-detail__stats mt-4">
+            <h3 class="ann-detail__section-titre">
+              <i class="fa-solid fa-chart-simple"></i> Statistiques
+            </h3>
+            <ul class="ann-stats-list">
+              <li><i class="fa-solid fa-eye"></i> {{ stats.vues }} vue{{ stats.vues|pluralize }}</li>
+              <li><i class="fa-solid fa-heart"></i> {{ stats.favoris }} favori{{ stats.favoris|pluralize }}</li>
+              <li><i class="fa-solid fa-comment"></i> {{ stats.contacts }} contact{{ stats.contacts|pluralize }}</li>
+            </ul>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block ann_extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // ── Swiper ──────────────────────────────────────────────────────
+  const thumbs = new Swiper(".ann-swiper-thumbs", {
+    slidesPerView: 4, spaceBetween: 8,
+    freeMode: true, watchSlidesProgress: true,
+  });
+  new Swiper(".ann-swiper-main", {
+    slidesPerView: 1, spaceBetween: 0,
+    navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+    pagination: { el: ".swiper-pagination", clickable: true },
+    thumbs: { swiper: thumbs },
+  });
+
+  // ── GLightbox ────────────────────────────────────────────────────
+  GLightbox({ selector: ".glightbox", touchNavigation: true, loop: true });
+
+  // ── Marquer vendue ───────────────────────────────────────────────
+  const btnVendue = document.getElementById("btn-marquer-vendue");
+  if (btnVendue) {
+    btnVendue.addEventListener("click", async () => {
+      const slug = btnVendue.dataset.slug;
+      const resp = await fetch(`/annonces/ajax/marquer-vendue/${slug}/`, {
+        method: "POST",
+        headers: { "X-CSRFToken": getCookie("csrftoken") },
+      });
+      if (resp.ok) {
+        btnVendue.textContent = "✔️ Vendu";
+        btnVendue.disabled = true;
+      }
+    });
+  }
+
+  // ── Leaflet map ──────────────────────────────────────────────────
+  const mapEl = document.getElementById("ann-map");
+  if (mapEl && typeof L !== "undefined") {
+    const lat = parseFloat(mapEl.dataset.lat);
+    const lng = parseFloat(mapEl.dataset.lng);
+    const map = L.map("ann-map").setView([lat, lng], 15);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap contributors"
+    }).addTo(map);
+    L.marker([lat, lng]).addTo(map).bindPopup(mapEl.dataset.titre).openPopup();
+  }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "annonces_cam/base_annonces.html" %}
+
+{% block title %}Conversation — {{ conv.annonce.titre|truncatechars:40 }} | Annonces Cam{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item"><a href="{% url 'annonces:mes_messages' %}">Messages</a></li>
+  <li class="breadcrumb-item active">{{ conv.annonce.titre|truncatechars:30 }}</li>
+{% endblock %}
+
+{% block ann_content %}
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-lg-3">{% include "annonces_cam/mon_compte/_nav.html" %}</div>
+    <div class="col-lg-9">
+
+      <!-- En-tête conversation -->
+      <div class="ann-conv-header mb-4">
+        <a href="{{ conv.annonce.get_absolute_url }}" class="ann-conv-header__annonce">
+          {% with photo=conv.annonce.photo_principale %}
+            {% if photo and photo.image %}
+              <img src="{{ photo.image.url }}" alt="{{ conv.annonce.titre }}" class="ann-conv-header__img">
+            {% endif %}
+          {% endwith %}
+          <div>
+            <strong>{{ conv.annonce.titre }}</strong>
+            <span>{{ conv.annonce.prix_formate }}</span>
+          </div>
+        </a>
+        <div class="ann-conv-header__interlocuteur">
+          {% if user == conv.acheteur %}
+            Vendeur : <strong>{{ conv.vendeur.get_full_name|default:conv.vendeur.username }}</strong>
+          {% else %}
+            Acheteur : <strong>{{ conv.acheteur.get_full_name|default:conv.acheteur.username }}</strong>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="ann-messages-thread mb-4">
+        {% for msg in messages_list %}
+          <div class="ann-msg {% if msg.expediteur == user %}ann-msg--moi{% else %}ann-msg--autre{% endif %}">
+            <div class="ann-msg__contenu">{{ msg.contenu|linebreaks }}</div>
+            <div class="ann-msg__meta">{{ msg.created_at|date:"d/m/Y H:i" }}</div>
+          </div>
+        {% empty %}
+          <p class="text-muted text-center">Aucun message. Démarrez la conversation !</p>
+        {% endfor %}
+      </div>
+
+      <!-- Formulaire réponse -->
+      <form method="post">
+        {% csrf_token %}
+        <div class="d-flex gap-2 align-items-end">
+          {{ form.contenu }}
+          <button type="submit" class="ann-btn ann-btn--primary">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block ann_extra_js %}
+<script>
+// Auto-scroll vers le bas du thread
+document.addEventListener("DOMContentLoaded", () => {
+  const thread = document.querySelector(".ann-messages-thread");
+  if (thread) thread.scrollTop = thread.scrollHeight;
+});
+</script>
+{% endblock %}

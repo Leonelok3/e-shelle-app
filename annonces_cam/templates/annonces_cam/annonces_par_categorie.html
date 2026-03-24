@@ -1,0 +1,80 @@
+{% extends "annonces_cam/base_annonces.html" %}
+{% load static %}
+
+{% block title %}{{ categorie.nom }} — Annonces Cam{% endblock %}
+{% block meta_description %}{{ categorie.description|default:"Annonces " }}{{ categorie.nom }} au Cameroun.{% endblock %}
+
+{% block breadcrumb_items %}
+  {% if categorie.parent %}
+    <li class="breadcrumb-item">
+      <a href="{% url 'annonces:annonces_par_categorie' slug_categorie=categorie.parent.slug %}">{{ categorie.parent.nom }}</a>
+    </li>
+  {% endif %}
+  <li class="breadcrumb-item active">{{ categorie.nom }}</li>
+{% endblock %}
+
+{% block ann_content %}
+<div class="container py-4">
+
+  <!-- En-tête catégorie -->
+  <div class="ann-cat-header mb-4" style="border-left: 4px solid {{ categorie.couleur_hex }}">
+    <i class="fa-solid {{ categorie.icone }} fa-2x" style="color: {{ categorie.couleur_hex }}"></i>
+    <div>
+      <h1 class="ann-cat-header__titre">{{ categorie.nom }}</h1>
+      <p class="ann-cat-header__sub">{{ total }} annonce{{ total|pluralize }}</p>
+    </div>
+  </div>
+
+  <!-- Barre de tri -->
+  <div class="ann-toolbar mb-3">
+    <div class="ann-toolbar__tri">
+      <select onchange="window.location.href=this.value" class="ann-input ann-input--sm">
+        <option value="?tri=-est_mise_en_avant">Pertinence</option>
+        <option value="?tri=-date_publication" {% if request.GET.tri == '-date_publication' %}selected{% endif %}>Plus récentes</option>
+        <option value="?tri=prix" {% if request.GET.tri == 'prix' %}selected{% endif %}>Prix croissant</option>
+        <option value="?tri=-prix" {% if request.GET.tri == '-prix' %}selected{% endif %}>Prix décroissant</option>
+      </select>
+    </div>
+    <a href="{% url 'annonces:publier_annonce' %}" class="ann-btn ann-btn--primary ann-btn--sm">
+      <i class="fa-solid fa-plus"></i> Publier dans {{ categorie.nom }}
+    </a>
+  </div>
+
+  {% if annonces %}
+    <div class="ann-grid ann-grid--4">
+      {% for a in annonces %}
+        {% include "annonces_cam/partials/_card_annonce.html" with annonce=a %}
+      {% endfor %}
+    </div>
+
+    {% if annonces.has_other_pages %}
+      <nav class="ann-pagination mt-5">
+        <ul class="pagination justify-content-center">
+          {% if annonces.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ annonces.previous_page_number }}">‹</a></li>
+          {% endif %}
+          {% for num in annonces.paginator.page_range %}
+            {% if annonces.number == num %}
+              <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > annonces.number|add:'-3' and num < annonces.number|add:'3' %}
+              <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if annonces.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ annonces.next_page_number }}">›</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  {% else %}
+    <div class="ann-empty">
+      <i class="fa-solid fa-box-open fa-3x"></i>
+      <p>Aucune annonce dans cette catégorie pour le moment.</p>
+      <a href="{% url 'annonces:publier_annonce' %}" class="ann-btn ann-btn--primary mt-3">
+        <i class="fa-solid fa-plus"></i> Soyez le premier à publier !
+      </a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

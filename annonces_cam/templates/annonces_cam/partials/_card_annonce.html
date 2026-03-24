@@ -1,0 +1,41 @@
+{% load static %}
+{% with photo=annonce.photo_principale %}
+<div class="ann-card {% if annonce.est_mise_en_avant %}ann-card--premium{% endif %} {% if annonce.est_urgente %}ann-card--urgent{% endif %}">
+  <a href="{{ annonce.get_absolute_url }}" class="ann-card__img-link">
+    {% if photo and photo.image %}
+      <img src="{{ photo.image.url }}" alt="{{ annonce.titre }}" class="ann-card__img" loading="lazy">
+    {% else %}
+      <div class="ann-card__img-placeholder">
+        <i class="fa-solid fa-tag fa-2x"></i>
+      </div>
+    {% endif %}
+    <div class="ann-card__badges">
+      {% if annonce.est_urgente %}
+        <span class="ann-badge ann-badge--urgent">🔥 Urgent</span>
+      {% endif %}
+      {% if annonce.est_mise_en_avant %}
+        <span class="ann-badge ann-badge--premium">⭐ En avant</span>
+      {% endif %}
+      {% if annonce.est_coup_de_coeur %}
+        <span class="ann-badge ann-badge--coeur">❤️</span>
+      {% endif %}
+    </div>
+  </a>
+  <div class="ann-card__body">
+    <div class="ann-card__cat">{{ annonce.categorie }}</div>
+    <h3 class="ann-card__titre">
+      <a href="{{ annonce.get_absolute_url }}">{{ annonce.titre|truncatechars:60 }}</a>
+    </h3>
+    <div class="ann-card__prix">{{ annonce.prix_formate }}</div>
+    <div class="ann-card__meta">
+      <span><i class="fa-solid fa-location-dot"></i> {{ annonce.ville }}</span>
+      <span><i class="fa-regular fa-clock"></i> {{ annonce.created_at|timesince }}</span>
+    </div>
+    <div class="ann-card__etat">
+      <span class="ann-badge ann-badge--etat ann-badge--etat-{{ annonce.etat_produit|lower }}">
+        {{ annonce.get_etat_produit_display }}
+      </span>
+    </div>
+  </div>
+</div>
+{% endwith %}

@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "preparation_tests.apps.PreparationTestsConfig",
     "immobilier_cameroun.apps.ImmobilierCamerounConfig",
     "auto_cameroun.apps.AutoCamerounConfig",
+    "annonces_cam.apps.AnnoncesCamConfig",
 
     # Sites framework (utilisé pour les URLs absolues de partage)
     "django.contrib.sites",

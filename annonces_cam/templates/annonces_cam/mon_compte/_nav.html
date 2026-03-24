@@ -1,0 +1,44 @@
+<div class="ann-compte-nav">
+  <div class="ann-compte-nav__user">
+    <i class="fa-solid fa-circle-user fa-2x"></i>
+    <span>{{ user.get_full_name|default:user.username }}</span>
+  </div>
+  <ul class="ann-compte-nav__links">
+    <li>
+      <a href="{% url 'annonces:mon_compte' %}"
+         class="ann-compte-nav__link {% if request.resolver_match.url_name == 'mon_compte' %}active{% endif %}">
+        <i class="fa-solid fa-gauge"></i> Tableau de bord
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'annonces:mes_annonces' %}"
+         class="ann-compte-nav__link {% if request.resolver_match.url_name == 'mes_annonces' %}active{% endif %}">
+        <i class="fa-solid fa-list"></i> Mes annonces
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'annonces:publier_annonce' %}"
+         class="ann-compte-nav__link {% if request.resolver_match.url_name == 'publier_annonce' %}active{% endif %}">
+        <i class="fa-solid fa-plus-circle"></i> Publier une annonce
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'annonces:mes_messages' %}"
+         class="ann-compte-nav__link {% if request.resolver_match.url_name == 'mes_messages' %}active{% endif %}">
+        <i class="fa-solid fa-comments"></i> Messages
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'annonces:mes_favoris' %}"
+         class="ann-compte-nav__link {% if request.resolver_match.url_name == 'mes_favoris' %}active{% endif %}">
+        <i class="fa-solid fa-heart"></i> Favoris
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'annonces:upgrade_premium' %}"
+         class="ann-compte-nav__link {% if request.resolver_match.url_name == 'upgrade_premium' %}active{% endif %}">
+        <i class="fa-solid fa-star"></i> Passer Premium
+      </a>
+    </li>
+  </ul>
+</div>

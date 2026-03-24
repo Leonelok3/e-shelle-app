@@ -1,0 +1,164 @@
+{% extends "annonces_cam/base_annonces.html" %}
+
+{% block title %}{% if annonce %}Modifier{% else %}Publier une annonce{% endif %} — Annonces Cam{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item"><a href="{% url 'annonces:mon_compte' %}">Mon compte</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'annonces:mes_annonces' %}">Mes annonces</a></li>
+  <li class="breadcrumb-item active">{% if annonce %}Modifier{% else %}Publier{% endif %}</li>
+{% endblock %}
+
+{% block ann_content %}
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-lg-3">{% include "annonces_cam/mon_compte/_nav.html" %}</div>
+    <div class="col-lg-9">
+
+      <div class="ann-form-card">
+        <h2 class="ann-form-card__titre">
+          <i class="fa-solid fa-{% if annonce %}pen{% else %}plus-circle{% endif %}"></i>
+          {% if annonce %}Modifier l'annonce{% else %}Publier une annonce{% endif %}
+        </h2>
+
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <!-- Infos principales -->
+          <div class="ann-form-section">
+            <h3 class="ann-form-section__titre">📋 Informations</h3>
+            <div class="mb-3">
+              <label class="ann-form-label" for="{{ form.titre.id_for_label }}">Titre *</label>
+              {{ form.titre }}
+              {% if form.titre.errors %}<div class="ann-form-error">{{ form.titre.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="ann-form-label" for="{{ form.categorie.id_for_label }}">Catégorie *</label>
+                {{ form.categorie }}
+                {% if form.categorie.errors %}<div class="ann-form-error">{{ form.categorie.errors.0 }}</div>{% endif %}
+              </div>
+              <div class="col-md-6">
+                <label class="ann-form-label" for="{{ form.etat_produit.id_for_label }}">État *</label>
+                {{ form.etat_produit }}
+              </div>
+            </div>
+            <div class="mb-3 mt-3">
+              <label class="ann-form-label" for="{{ form.description.id_for_label }}">Description *</label>
+              {{ form.description }}
+              {% if form.description.errors %}<div class="ann-form-error">{{ form.description.errors.0 }}</div>{% endif %}
+            </div>
+          </div>
+
+          <!-- Prix -->
+          <div class="ann-form-section">
+            <h3 class="ann-form-section__titre">💰 Prix</h3>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="ann-form-label" for="{{ form.prix.id_for_label }}">Prix</label>
+                {{ form.prix }}
+                {% if form.prix.errors %}<div class="ann-form-error">{{ form.prix.errors.0 }}</div>{% endif %}
+              </div>
+              <div class="col-md-3">
+                <label class="ann-form-label" for="{{ form.devise.id_for_label }}">Devise</label>
+                {{ form.devise }}
+              </div>
+              <div class="col-md-3 d-flex flex-column justify-content-center">
+                <div class="form-check mt-3">
+                  {{ form.prix_a_debattre }}
+                  <label class="form-check-label" for="{{ form.prix_a_debattre.id_for_label }}">Prix à débattre</label>
+                </div>
+                <div class="form-check">
+                  {{ form.gratuit }}
+                  <label class="form-check-label" for="{{ form.gratuit.id_for_label }}">Gratuit / Don</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Localisation -->
+          <div class="ann-form-section">
+            <h3 class="ann-form-section__titre">📍 Localisation</h3>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="ann-form-label" for="{{ form.ville.id_for_label }}">Ville *</label>
+                {{ form.ville }}
+                {% if form.ville.errors %}<div class="ann-form-error">{{ form.ville.errors.0 }}</div>{% endif %}
+              </div>
+              <div class="col-md-6">
+                <label class="ann-form-label" for="{{ form.quartier.id_for_label }}">Quartier</label>
+                {{ form.quartier }}
+              </div>
+            </div>
+            <div class="mb-3 mt-3">
+              <label class="ann-form-label" for="{{ form.adresse_precise.id_for_label }}">Adresse précise</label>
+              {{ form.adresse_precise }}
+            </div>
+          </div>
+
+          <!-- Contact -->
+          <div class="ann-form-section">
+            <h3 class="ann-form-section__titre">📞 Contact</h3>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="ann-form-label" for="{{ form.telephone_contact.id_for_label }}">Téléphone *</label>
+                {{ form.telephone_contact }}
+                {% if form.telephone_contact.errors %}<div class="ann-form-error">{{ form.telephone_contact.errors.0 }}</div>{% endif %}
+              </div>
+              <div class="col-md-6">
+                <label class="ann-form-label" for="{{ form.whatsapp_contact.id_for_label }}">WhatsApp</label>
+                {{ form.whatsapp_contact }}
+              </div>
+              <div class="col-md-6">
+                <label class="ann-form-label" for="{{ form.email_contact.id_for_label }}">Email</label>
+                {{ form.email_contact }}
+              </div>
+              <div class="col-md-6">
+                <label class="ann-form-label" for="{{ form.mode_contact.id_for_label }}">Mode de contact</label>
+                {{ form.mode_contact }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Photos -->
+          <div class="ann-form-section">
+            <h3 class="ann-form-section__titre">📷 Photos (jusqu'à 10)</h3>
+            {{ formset.management_form }}
+            <div class="ann-photos-formset">
+              {% for f in formset %}
+                <div class="ann-photo-row">
+                  {% if f.instance.pk and f.instance.image %}
+                    <img src="{{ f.instance.image.url }}" alt="" class="ann-photo-row__preview" loading="lazy">
+                  {% endif %}
+                  {{ f.image }}
+                  {{ f.legende }}
+                  <div class="ann-photo-row__checks">
+                    {{ f.est_photo_principale }} <label>Photo principale</label>
+                    {{ f.DELETE }} <label>Supprimer</label>
+                  </div>
+                  {% for err in f.errors.values %}<div class="ann-form-error">{{ err.0 }}</div>{% endfor %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="d-flex gap-3 mt-4">
+            <button type="submit" class="ann-btn ann-btn--primary">
+              <i class="fa-solid fa-paper-plane"></i>
+              {% if annonce %}Enregistrer les modifications{% else %}Soumettre l'annonce{% endif %}
+            </button>
+            <a href="{% url 'annonces:mes_annonces' %}" class="ann-btn ann-btn--outline">Annuler</a>
+          </div>
+
+          {% if not annonce %}
+            <p class="text-muted mt-3 small">
+              <i class="fa-solid fa-info-circle"></i>
+              Votre annonce sera publiée après validation par notre équipe (sous 24h).
+            </p>
+          {% endif %}
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

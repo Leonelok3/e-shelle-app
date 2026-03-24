@@ -1,0 +1,71 @@
+{% extends "annonces_cam/base_annonces.html" %}
+
+{% block title %}Messages — Annonces Cam{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item"><a href="{% url 'annonces:mon_compte' %}">Mon compte</a></li>
+  <li class="breadcrumb-item active">Messages</li>
+{% endblock %}
+
+{% block ann_content %}
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-lg-3">{% include "annonces_cam/mon_compte/_nav.html" %}</div>
+    <div class="col-lg-9">
+
+      <h2 class="ann-section__titre mb-4">
+        <i class="fa-solid fa-comments"></i> Mes messages
+      </h2>
+
+      <!-- Messages reçus (vendeur) -->
+      {% if conversations_vendeur %}
+        <h3 class="ann-sub-titre mb-3">Messages reçus</h3>
+        <div class="ann-conv-list mb-5">
+          {% for conv in conversations_vendeur %}
+            <a href="{% url 'annonces:conversation' conv_id=conv.pk %}" class="ann-conv-item">
+              <div class="ann-conv-item__info">
+                <strong>{{ conv.acheteur.get_full_name|default:conv.acheteur.username }}</strong>
+                <span class="ann-conv-item__annonce">{{ conv.annonce.titre|truncatechars:40 }}</span>
+              </div>
+              <div class="ann-conv-item__meta">
+                <span>{{ conv.derniere_activite|timesince }}</span>
+                {% with non_lus=conv.messages_non_lus_pour(request.user) %}
+                  {% if non_lus > 0 %}
+                    <span class="ann-badge ann-badge--new">{{ non_lus }}</span>
+                  {% endif %}
+                {% endwith %}
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- Messages envoyés (acheteur) -->
+      {% if conversations_acheteur %}
+        <h3 class="ann-sub-titre mb-3">Messages envoyés</h3>
+        <div class="ann-conv-list">
+          {% for conv in conversations_acheteur %}
+            <a href="{% url 'annonces:conversation' conv_id=conv.pk %}" class="ann-conv-item">
+              <div class="ann-conv-item__info">
+                <strong>{{ conv.annonce.titre|truncatechars:40 }}</strong>
+                <span class="ann-conv-item__annonce">Vendeur : {{ conv.vendeur.get_full_name|default:conv.vendeur.username }}</span>
+              </div>
+              <div class="ann-conv-item__meta">
+                <span>{{ conv.derniere_activite|timesince }}</span>
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if not conversations_vendeur and not conversations_acheteur %}
+        <div class="ann-empty">
+          <i class="fa-solid fa-comment-slash fa-3x"></i>
+          <p>Aucun message pour le moment.</p>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}

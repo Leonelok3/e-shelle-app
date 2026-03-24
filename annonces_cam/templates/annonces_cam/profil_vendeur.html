@@ -1,0 +1,71 @@
+{% extends "annonces_cam/base_annonces.html" %}
+
+{% block title %}
+  {% if profil and profil.nom_boutique %}{{ profil.nom_boutique }}{% else %}{{ vendeur.get_full_name|default:vendeur.username }}{% endif %} | Annonces Cam
+{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item active">
+    {% if profil and profil.nom_boutique %}{{ profil.nom_boutique }}{% else %}{{ vendeur.username }}{% endif %}
+  </li>
+{% endblock %}
+
+{% block ann_content %}
+<div class="container py-4">
+
+  <div class="row g-4">
+    <!-- Profil vendeur -->
+    <div class="col-lg-3">
+      <div class="ann-profil-card">
+        {% if profil and profil.photo_profil %}
+          <img src="{{ profil.photo_profil.url }}" alt="{{ vendeur.get_full_name }}" class="ann-profil-card__avatar">
+        {% else %}
+          <div class="ann-profil-card__avatar--placeholder">
+            <i class="fa-solid fa-user fa-3x"></i>
+          </div>
+        {% endif %}
+        <h2 class="ann-profil-card__nom">
+          {% if profil and profil.nom_boutique %}{{ profil.nom_boutique }}{% else %}{{ vendeur.get_full_name|default:vendeur.username }}{% endif %}
+        </h2>
+        {% if profil %}
+          {% if profil.est_verifie %}
+            <span class="ann-badge ann-badge--verifie">✅ Vendeur vérifié</span>
+          {% endif %}
+          {% if profil.est_premium %}
+            <span class="ann-badge ann-badge--premium">⭐ Premium</span>
+          {% endif %}
+          {% if profil.ville %}<p class="ann-profil-card__ville"><i class="fa-solid fa-location-dot"></i> {{ profil.ville }}</p>{% endif %}
+          {% if profil.description_boutique %}
+            <p class="ann-profil-card__desc">{{ profil.description_boutique }}</p>
+          {% endif %}
+          {% if profil.note_moyenne > 0 %}
+            <div class="ann-profil-card__note">
+              ⭐ {{ profil.note_moyenne }}/5 ({{ profil.nombre_avis }} avis)
+            </div>
+          {% endif %}
+        {% endif %}
+        <p class="ann-profil-card__membre">Membre depuis {{ vendeur.date_joined|date:"M Y" }}</p>
+      </div>
+    </div>
+
+    <!-- Annonces du vendeur -->
+    <div class="col-lg-9">
+      <h2 class="ann-section__titre mb-4">
+        Annonces de ce vendeur ({{ annonces|length }})
+      </h2>
+      {% if annonces %}
+        <div class="ann-grid ann-grid--3">
+          {% for a in annonces %}
+            {% include "annonces_cam/partials/_card_annonce.html" with annonce=a %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="ann-empty">
+          <p>Ce vendeur n'a pas d'annonces actives pour le moment.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

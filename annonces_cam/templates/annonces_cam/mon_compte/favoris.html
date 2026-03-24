@@ -1,0 +1,34 @@
+{% extends "annonces_cam/base_annonces.html" %}
+
+{% block title %}Mes favoris — Annonces Cam{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item"><a href="{% url 'annonces:mon_compte' %}">Mon compte</a></li>
+  <li class="breadcrumb-item active">Favoris</li>
+{% endblock %}
+
+{% block ann_content %}
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-lg-3">{% include "annonces_cam/mon_compte/_nav.html" %}</div>
+    <div class="col-lg-9">
+      <h2 class="ann-section__titre mb-4">
+        <i class="fa-solid fa-heart text-danger"></i> Mes favoris
+      </h2>
+      {% if favoris %}
+        <div class="ann-grid ann-grid--3">
+          {% for fav in favoris %}
+            {% include "annonces_cam/partials/_card_annonce.html" with annonce=fav.annonce %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="ann-empty">
+          <i class="fa-regular fa-heart fa-3x"></i>
+          <p>Vous n'avez pas encore d'annonces en favoris.</p>
+          <a href="{% url 'annonces:liste_annonces' %}" class="ann-btn ann-btn--primary mt-3">Parcourir les annonces</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

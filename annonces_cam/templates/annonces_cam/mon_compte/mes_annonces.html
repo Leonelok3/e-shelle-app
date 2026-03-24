@@ -1,0 +1,91 @@
+{% extends "annonces_cam/base_annonces.html" %}
+
+{% block title %}Mes annonces — Annonces Cam{% endblock %}
+
+{% block breadcrumb_items %}
+  <li class="breadcrumb-item"><a href="{% url 'annonces:mon_compte' %}">Mon compte</a></li>
+  <li class="breadcrumb-item active">Mes annonces</li>
+{% endblock %}
+
+{% block ann_content %}
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-lg-3">{% include "annonces_cam/mon_compte/_nav.html" %}</div>
+    <div class="col-lg-9">
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="ann-section__titre mb-0">Mes annonces</h2>
+        <a href="{% url 'annonces:publier_annonce' %}" class="ann-btn ann-btn--primary ann-btn--sm">
+          <i class="fa-solid fa-plus"></i> Nouvelle annonce
+        </a>
+      </div>
+
+      {% if annonces %}
+        <div class="ann-mes-annonces-list">
+          {% for a in annonces %}
+            <div class="ann-mes-annonces-item">
+              <div class="ann-mes-annonces-item__img">
+                {% with photo=a.photo_principale %}
+                  {% if photo and photo.image %}
+                    <img src="{{ photo.image.url }}" alt="{{ a.titre }}" loading="lazy">
+                  {% else %}
+                    <div class="ann-mes-annonces-item__img-placeholder">
+                      <i class="fa-solid fa-tag"></i>
+                    </div>
+                  {% endif %}
+                {% endwith %}
+              </div>
+              <div class="ann-mes-annonces-item__info">
+                <h3 class="ann-mes-annonces-item__titre">
+                  <a href="{{ a.get_absolute_url }}">{{ a.titre }}</a>
+                </h3>
+                <div class="ann-mes-annonces-item__meta">
+                  <span class="ann-badge ann-badge--statut ann-badge--{{ a.statut|lower }}">{{ a.get_statut_display }}</span>
+                  <span>{{ a.prix_formate }}</span>
+                  <span><i class="fa-solid fa-eye"></i> {{ a.vues }}</span>
+                  <span>{{ a.created_at|date:"d/m/Y" }}</span>
+                </div>
+                {% if a.jours_restants is not None and a.jours_restants <= 5 and a.statut == 'PUBLIEE' %}
+                  <div class="ann-alert ann-alert--warning ann-alert--sm mt-1">
+                    ⏰ Expire dans {{ a.jours_restants }} jour{{ a.jours_restants|pluralize }}
+                  </div>
+                {% endif %}
+              </div>
+              <div class="ann-mes-annonces-item__actions">
+                <a href="{% url 'annonces:modifier_annonce' slug=a.slug %}" class="ann-btn ann-btn--outline ann-btn--xs">
+                  <i class="fa-solid fa-pen"></i>
+                </a>
+                {% if a.statut == 'PUBLIEE' %}
+                  <form method="post" action="{% url 'annonces:marquer_vendue' slug=a.slug %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="ann-btn ann-btn--success ann-btn--xs"
+                            onclick="return confirm('Marquer cette annonce comme vendue ?')">
+                      <i class="fa-solid fa-check"></i>
+                    </button>
+                  </form>
+                {% endif %}
+                <form method="post" action="{% url 'annonces:supprimer_annonce' slug=a.slug %}" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="ann-btn ann-btn--danger ann-btn--xs"
+                          onclick="return confirm('Supprimer définitivement cette annonce ?')">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="ann-empty">
+          <i class="fa-solid fa-tag fa-3x"></i>
+          <p>Vous n'avez pas encore publié d'annonce.</p>
+          <a href="{% url 'annonces:publier_annonce' %}" class="ann-btn ann-btn--primary mt-3">
+            <i class="fa-solid fa-plus"></i> Publier ma première annonce
+          </a>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}

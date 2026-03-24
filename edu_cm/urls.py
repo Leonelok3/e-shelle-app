@@ -45,6 +45,9 @@ urlpatterns = [
     # Auto Cameroun
     path("auto/", include("auto_cameroun.urls", namespace="auto")),
 
+    # Annonces Cam (marketplace généraliste)
+    path("annonces/", include("annonces_cam.urls", namespace="annonces")),
+
     # Page d'accueil
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
 ]
