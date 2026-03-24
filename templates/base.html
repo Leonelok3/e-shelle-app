@@ -24,12 +24,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  {# Design System E-Shelle #}
+  {# Vendors CSS (Bootstrap, etc.) — chargés AVANT eshelle.css pour que le design system gagne #}
   {% load static %}
+  {% block vendors_css %}{% endblock %}
+
+  {# Design System E-Shelle — écrase les vendors #}
   <link rel="stylesheet" href="{% static 'css/eshelle.css' %}">
   <link rel="stylesheet" href="{% static 'css/langues.css' %}">
   <link rel="stylesheet" href="{% static 'css/lesson_engine.css' %}">
 
+  {# CSS spécifique à l'app — écrase le design system #}
   {% block extra_css %}{% endblock %}
 
   {# Favicon SVG inline #}
@@ -59,13 +63,63 @@
 
     {# Liens de navigation #}
     <ul class="navbar-nav" role="list">
-      <li><a href="/"                            class="nav-link {% block nav_home %}{% endblock %}">Accueil</a></li>
-      <li><a href="/formations/"                 class="nav-link {% block nav_formations %}{% endblock %}">Formations</a></li>
-      <li><a href="/langues/"                    class="nav-link {% block nav_langues %}{% endblock %}">Langues</a></li>
-      <li><a href="/boutique/"                   class="nav-link {% block nav_boutique %}{% endblock %}">Boutique</a></li>
-      <li><a href="/services/"                   class="nav-link {% block nav_services %}{% endblock %}">Services</a></li>
-      <li><a href="/#tarifs"                     class="nav-link">Tarifs</a></li>
-      <li><a href="/services/contact/"           class="nav-link {% block nav_contact %}{% endblock %}">Contact</a></li>
+      <li><a href="/" class="nav-link {% block nav_home %}{% endblock %}">Accueil</a></li>
+
+      {# Dropdown : Apprendre #}
+      <li class="nav-dropdown">
+        <button class="nav-link nav-dropdown__toggle {% block nav_formations %}{% endblock %} {% block nav_langues %}{% endblock %}" aria-expanded="false" aria-haspopup="true">
+          Apprendre
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:.25rem"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-dropdown__menu" role="menu">
+          <a href="/formations/" class="nav-dropdown__item" role="menuitem">
+            <span class="nav-dropdown__icon">📚</span>
+            <span><strong>Formations</strong><small>Mathématiques & programmes MINESEC</small></span>
+          </a>
+          <a href="/langues/" class="nav-dropdown__item" role="menuitem">
+            <span class="nav-dropdown__icon">🌍</span>
+            <span><strong>Langues</strong><small>Anglais, Allemand, Italien</small></span>
+          </a>
+          <a href="/prep/" class="nav-dropdown__item" role="menuitem">
+            <span class="nav-dropdown__icon">🎓</span>
+            <span><strong>Tests de langue</strong><small>TEF, TCF, IELTS, DELF…</small></span>
+          </a>
+          <a href="/maths/" class="nav-dropdown__item" role="menuitem">
+            <span class="nav-dropdown__icon">📐</span>
+            <span><strong>Maths CM</strong><small>Cours secondaire MINESEC</small></span>
+          </a>
+        </div>
+      </li>
+
+      {# Dropdown : Marketplace #}
+      <li class="nav-dropdown">
+        <button class="nav-link nav-dropdown__toggle {% block nav_marketplace %}{% endblock %}" aria-expanded="false" aria-haspopup="true">
+          Marketplace
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:.25rem"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-dropdown__menu" role="menu">
+          <a href="/boutique/" class="nav-dropdown__item {% block nav_boutique %}{% endblock %}" role="menuitem">
+            <span class="nav-dropdown__icon">🛍️</span>
+            <span><strong>Boutique digitale</strong><small>Templates, ebooks, outils</small></span>
+          </a>
+          <a href="/annonces/" class="nav-dropdown__item" role="menuitem">
+            <span class="nav-dropdown__icon">📋</span>
+            <span><strong>Annonces Cam</strong><small>Petites annonces généralistes</small></span>
+          </a>
+          <a href="/immobilier/" class="nav-dropdown__item" role="menuitem">
+            <span class="nav-dropdown__icon">🏠</span>
+            <span><strong>Immobilier</strong><small>Acheter, louer au Cameroun</small></span>
+          </a>
+          <a href="/auto/" class="nav-dropdown__item" role="menuitem">
+            <span class="nav-dropdown__icon">🚗</span>
+            <span><strong>Auto Cameroun</strong><small>Véhicules d'occasion & neufs</small></span>
+          </a>
+        </div>
+      </li>
+
+      <li><a href="/services/" class="nav-link {% block nav_services %}{% endblock %}">Services</a></li>
+      <li><a href="/#tarifs"   class="nav-link">Tarifs</a></li>
+      <li><a href="/services/contact/" class="nav-link {% block nav_contact %}{% endblock %}">Contact</a></li>
     </ul>
 
     {# Boutons d'action #}
@@ -110,12 +164,23 @@
   <div class="navbar-mobile" id="navbar-mobile" role="menu">
     <div style="padding:0 .5rem">
       <a href="/"                   class="nav-link" role="menuitem">🏠 Accueil</a>
-      <a href="/formations/"        class="nav-link" role="menuitem">📚 Formations</a>
-      <a href="/langues/"           class="nav-link" role="menuitem">🌍 Langues</a>
-      <a href="/boutique/"          class="nav-link" role="menuitem">🛒 Boutique</a>
+
+      <div class="mobile-section-label">Apprendre</div>
+      <a href="/formations/"        class="nav-link mobile-sub" role="menuitem">📚 Formations</a>
+      <a href="/langues/"           class="nav-link mobile-sub" role="menuitem">🌍 Langues</a>
+      <a href="/prep/"              class="nav-link mobile-sub" role="menuitem">🎓 Tests de langue</a>
+      <a href="/maths/"             class="nav-link mobile-sub" role="menuitem">📐 Maths CM</a>
+
+      <div class="mobile-section-label">Marketplace</div>
+      <a href="/boutique/"          class="nav-link mobile-sub" role="menuitem">🛍️ Boutique digitale</a>
+      <a href="/annonces/"          class="nav-link mobile-sub" role="menuitem">📋 Annonces Cam</a>
+      <a href="/immobilier/"        class="nav-link mobile-sub" role="menuitem">🏠 Immobilier</a>
+      <a href="/auto/"              class="nav-link mobile-sub" role="menuitem">🚗 Auto Cameroun</a>
+
       <a href="/services/"          class="nav-link" role="menuitem">🌐 Services</a>
       <a href="/#tarifs"            class="nav-link" role="menuitem">💰 Tarifs</a>
       <a href="/services/contact/"  class="nav-link" role="menuitem">📩 Contact</a>
+
       <div style="display:flex;gap:.75rem;padding:.75rem 1rem 1rem">
         {% if user.is_authenticated %}
           <a href="/dashboard/"     class="btn btn-primary btn-sm" style="flex:1">Mon espace →</a>

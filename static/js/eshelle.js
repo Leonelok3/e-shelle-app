@@ -203,6 +203,40 @@ function initMobileMenu() {
 }
 
 /* ========================================================
+   5b. NAV DROPDOWNS (desktop)
+   ======================================================== */
+function initNavDropdowns() {
+  document.querySelectorAll('.nav-dropdown__toggle').forEach(btn => {
+    // Click pour touch / accessibilité
+    btn.addEventListener('click', (e) => {
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+      // Fermer tous les autres
+      document.querySelectorAll('.nav-dropdown__toggle').forEach(b => {
+        if (b !== btn) b.setAttribute('aria-expanded', 'false');
+      });
+      btn.setAttribute('aria-expanded', String(!isOpen));
+      e.stopPropagation();
+    });
+  });
+
+  // Fermer au clic ailleurs
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.nav-dropdown__toggle').forEach(b => {
+      b.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Fermer avec Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.nav-dropdown__toggle').forEach(b => {
+        b.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
+}
+
+/* ========================================================
    6. SLIDER TÉMOIGNAGES
    ======================================================== */
 function initTestimonialSlider() {
@@ -662,6 +696,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollAnimations();
   initMobileMenu();
   initTestimonialSlider();
+  initNavDropdowns();
   Modal.init();
   initCart();
   initSidebar();

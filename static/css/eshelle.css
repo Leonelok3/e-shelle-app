@@ -333,6 +333,111 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-display); line-height: 1.2; }
 }
 .navbar-mobile .nav-link:hover { color: var(--primary-light); background: rgba(76,175,80,0.06); }
 .navbar-mobile .nav-link:last-child { border-bottom: none; }
+.mobile-section-label {
+  padding: .5rem 1.5rem .25rem;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: .25rem;
+}
+.navbar-mobile .nav-link.mobile-sub {
+  padding-left: 2.25rem;
+  font-size: .9rem;
+  color: var(--text-muted);
+}
+
+/* ── NAV DROPDOWN (desktop) ───────────────────────────────── */
+.nav-dropdown {
+  position: relative;
+}
+.nav-dropdown__toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-family: inherit;
+}
+.nav-dropdown__toggle svg {
+  transition: transform .2s ease;
+  flex-shrink: 0;
+}
+.nav-dropdown:hover .nav-dropdown__toggle svg,
+.nav-dropdown__toggle[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+.nav-dropdown__menu {
+  position: absolute;
+  top: calc(100% + .65rem);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 300px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 16px 48px rgba(0,0,0,.55);
+  padding: .5rem;
+  display: none;
+  flex-direction: column;
+  z-index: calc(var(--z-sticky) + 5);
+}
+.nav-dropdown__menu::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 6px;
+  background: var(--bg-surface);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+}
+.nav-dropdown:hover .nav-dropdown__menu,
+.nav-dropdown__toggle[aria-expanded="true"] + .nav-dropdown__menu {
+  display: flex;
+}
+.nav-dropdown__item {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .7rem .9rem;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  transition: all .15s;
+  text-decoration: none;
+}
+.nav-dropdown__item:hover {
+  background: rgba(46,125,50,.1);
+  color: var(--text-primary);
+}
+.nav-dropdown__icon {
+  font-size: 1.4rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,.05);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+.nav-dropdown__item strong {
+  display: block;
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+.nav-dropdown__item small {
+  display: block;
+  font-size: .75rem;
+  color: var(--text-muted);
+  margin-top: .1rem;
+}
 
 /* ---- 8. BOUTONS ------------------------------------------ */
 .btn {
