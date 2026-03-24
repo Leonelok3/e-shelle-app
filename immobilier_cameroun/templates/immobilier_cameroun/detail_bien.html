@@ -281,7 +281,7 @@
             <i class="fa-solid fa-user-tie"></i> Annonceur
           </h3>
           <div class="immo-detail__proprietaire__card">
-            {% try %}{% with profil=bien.proprietaire.profil_immo %}
+            {% with profil=bien.proprietaire.profil_immo %}
               {% if profil.photo_profil %}
                 <img src="{{ profil.photo_profil.url }}" alt="{{ bien.proprietaire.get_full_name }}" class="immo-detail__proprietaire__avatar">
               {% else %}
@@ -296,7 +296,7 @@
                   <span class="immo-badge immo-badge--verifie">✅ Vérifié</span>
                 {% endif %}
               </div>
-            {% endwith %}{% endtry %}
+            {% endwith %}
           </div>
         </div>
 
