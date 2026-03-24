@@ -161,6 +161,9 @@ LOGIN_REDIRECT_URL = "/dashboard/"
 # Anthropic / Claude AI
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 
+# OpenAI (EnglishPrepApp, GermanPrepApp, italian_courses)
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+
 # Email (dev : console, prod : SMTP)
 EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
 EMAIL_HOST     = os.getenv("EMAIL_HOST", "smtp.gmail.com")
