@@ -30,12 +30,26 @@
 .auto-filtres, .auto-fiche, .auto-hero,
 .auto-detail__essai-form, .auto-detail__vendeur, .auto-detail__stats,
 .auto-pricing-card {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', sans-serif !important;
 }
 
-h1.auto-detail__titre, h1.auto-hero__titre,
-.auto-section-titre, .auto-panel__titre {
-  font-family: 'Playfair Display', serif;
+/* Neutralise les overrides du thème global sur les titres auto */
+.auto-hero__titre,
+.auto-detail__titre,
+.auto-section-titre,
+.auto-panel__titre,
+.auto-filtres__titre,
+.auto-pricing-card__header h3 {
+  font-family: 'Playfair Display', serif !important;
+}
+
+.auto-hero__titre {
+  color: #fff !important;
+}
+.auto-detail__titre,
+.auto-section-titre,
+.auto-panel__titre {
+  color: var(--auto-bleu) !important;
 }
 
 /* ── Breadcrumb ──────────────────────────────────────────────── */
