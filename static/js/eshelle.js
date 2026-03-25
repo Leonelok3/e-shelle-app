@@ -231,9 +231,10 @@ function initNavDropdowns() {
   }
 
   items.forEach(li => {
-    // Hover desktop
-    li.addEventListener('mouseenter', () => openMenu(li));
-    li.addEventListener('mouseleave', () => closeMenu(li));
+    let closeTimer;
+    // Hover desktop — délai 200ms pour éviter fermeture dans le gap bouton/menu
+    li.addEventListener('mouseenter', () => { clearTimeout(closeTimer); openMenu(li); });
+    li.addEventListener('mouseleave', () => { closeTimer = setTimeout(() => closeMenu(li), 200); });
 
     // Click/touch (mobile + accessibilité)
     const btn = li.querySelector('.nav-dropdown__toggle');
