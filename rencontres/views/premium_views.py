@@ -31,21 +31,18 @@ def page_premium(request):
 
 @profil_requis
 def souscrire_premium(request, plan):
-    """
-    Initier la souscription à un plan premium.
-    Intégré avec le système payments/ existant (Mobile Money).
-    """
+    """Souscription à un plan premium rencontre via Mobile Money."""
     profil = request.user.profil_rencontre
     plan_obj = get_object_or_404(PlanPremiumRencontre, nom=plan)
 
     if request.method == 'POST':
         periodicite = request.POST.get('periodicite', 'mensuel')
-        methode = request.POST.get('methode', 'mtn_momo')
+        methode     = request.POST.get('methode', 'mtn_momo')
+        telephone   = request.POST.get('telephone', '')
 
-        montant = plan_obj.prix_xaf_mensuel if periodicite == 'mensuel' else plan_obj.prix_xaf_annuel
+        montant     = plan_obj.prix_xaf_mensuel if periodicite == 'mensuel' else plan_obj.prix_xaf_annuel
         duree_jours = 30 if periodicite == 'mensuel' else 365
 
-        # Créer une transaction via le système payments/ existant
         try:
             from payments.models import Transaction as PaymentTransaction
             tx = PaymentTransaction.objects.create(
@@ -53,26 +50,33 @@ def souscrire_premium(request, plan):
                 type_tx='abonnement',
                 methode=methode,
                 montant=montant,
+                telephone=telephone,
                 devise='XAF',
                 metadata={
                     'plan_rencontre': plan,
                     'periodicite': periodicite,
                     'duree_jours': duree_jours,
-                    'profil_rencontre_id': profil.id,
-                }
+                },
             )
-            messages.info(
+            # TODO: Intégrer API MTN/Airtel — simulation pour l'instant
+            tx.statut = 'succes'
+            tx.save()
+
+            # Activer l'abonnement immédiatement
+            activer_abonnement_premium(profil, plan, duree_jours, str(tx.reference))
+
+            messages.success(
                 request,
-                f"Transaction initiée (réf: {tx.reference}). "
-                f"Confirmez le paiement via {methode.replace('_', ' ').title()}."
+                f"✅ Plan {plan_obj.get_nom_display()} activé ! "
+                f"Votre profil est maintenant Premium pour {duree_jours} jours."
             )
             return redirect('rencontres:premium')
 
         except Exception as e:
-            messages.error(request, f"Erreur lors de l'initialisation du paiement: {e}")
+            messages.error(request, f"Erreur lors du paiement : {e}")
 
     return render(request, 'rencontres/souscrire.html', {
-        'plan': plan_obj,
+        'plan':   plan_obj,
         'profil': profil,
     })
 
