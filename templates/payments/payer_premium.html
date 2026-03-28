@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Pack {{ plan.nom }} — {{ module_label }} · E-Shelle{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:520px;padding:6rem 1rem 3rem;">
+  <div class="glass-card" style="padding:2.5rem;">
+
+    <!-- En-tête -->
+    <div style="text-align:center;margin-bottom:1.75rem;">
+      <div style="font-size:2.5rem;margin-bottom:.5rem;">{{ plan.emoji }}</div>
+      <h1 class="section-title" style="font-size:1.35rem;margin-bottom:.25rem;">
+        Pack {{ plan.nom }} · {{ module_icon }} {{ module_label }}
+      </h1>
+      <p style="color:var(--text-secondary);font-size:.88rem;">
+        {{ plan.duree_jours }} jours · Activation immédiate
+      </p>
+    </div>
+
+    <!-- Récap plan -->
+    <div style="background:rgba(46,125,50,.08);border:1px solid rgba(46,125,50,.2);
+         border-radius:var(--radius-md);padding:1.25rem;margin-bottom:1.75rem;">
+      <ul style="list-style:none;padding:0;margin:0 0 1rem;font-size:.88rem;">
+        {% for feature in plan.features %}
+        <li style="padding:.3rem 0;">
+          <span style="color:var(--primary-light);margin-right:.5rem;">✓</span>{{ feature }}
+        </li>
+        {% endfor %}
+      </ul>
+      <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.08);padding-top:.85rem;">
+        <span style="color:var(--text-secondary);font-size:.88rem;">Montant à payer</span>
+        <span style="font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--primary-light);">
+          {{ plan.prix|floatformat:"0" }} FCFA
+        </span>
+      </div>
+    </div>
+
+    <!-- Formulaire paiement -->
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label class="form-label fw-semibold small">Méthode de paiement</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1.5rem;">
+          <label style="cursor:pointer;">
+            <input type="radio" name="methode" value="mtn_momo" checked style="display:none;" class="payment-radio">
+            <div class="payment-method-card" style="border:2px solid var(--primary-light);border-radius:var(--radius-md);padding:.85rem;text-align:center;background:rgba(46,125,50,.08);">
+              <div style="font-size:1.4rem;">📱</div>
+              <div style="font-size:.72rem;font-weight:600;margin-top:.2rem;">MTN MoMo</div>
+            </div>
+          </label>
+          <label style="cursor:pointer;">
+            <input type="radio" name="methode" value="airtel" style="display:none;" class="payment-radio">
+            <div class="payment-method-card" style="border:2px solid rgba(255,255,255,.1);border-radius:var(--radius-md);padding:.85rem;text-align:center;">
+              <div style="font-size:1.4rem;">📱</div>
+              <div style="font-size:.72rem;font-weight:600;margin-top:.2rem;">Airtel</div>
+            </div>
+          </label>
+          <label style="cursor:pointer;">
+            <input type="radio" name="methode" value="orange" style="display:none;" class="payment-radio">
+            <div class="payment-method-card" style="border:2px solid rgba(255,255,255,.1);border-radius:var(--radius-md);padding:.85rem;text-align:center;">
+              <div style="font-size:1.4rem;">📱</div>
+              <div style="font-size:.72rem;font-weight:600;margin-top:.2rem;">Orange</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-semibold small">Numéro Mobile Money</label>
+        <input type="tel" name="telephone" class="form-control"
+               placeholder="6XXXXXXXX" pattern="[0-9]{9}" required
+               style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);color:#fff;padding:.85rem 1rem;border-radius:var(--radius-md);">
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width:100%;padding:1rem;font-size:1rem;margin-top:.5rem;">
+        Payer {{ plan.prix|floatformat:"0" }} FCFA →
+      </button>
+    </form>
+
+    <div style="text-align:center;margin-top:1rem;">
+      <a href="{% url 'payments:premium_marketplace' module=module %}"
+         style="color:var(--text-muted);font-size:.82rem;">← Changer de plan</a>
+    </div>
+
+    <p style="text-align:center;color:var(--text-muted);font-size:.75rem;margin-top:1rem;">
+      🔒 Paiement sécurisé · Activation immédiate après confirmation
+    </p>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.payment-radio').forEach(r => {
+  r.addEventListener('change', () => {
+    document.querySelectorAll('.payment-method-card').forEach(c => {
+      c.style.border = '2px solid rgba(255,255,255,.1)';
+      c.style.background = 'transparent';
+    });
+    r.nextElementSibling.style.border = '2px solid var(--primary-light)';
+    r.nextElementSibling.style.background = 'rgba(46,125,50,.08)';
+  });
+});
+</script>
+{% endblock %}

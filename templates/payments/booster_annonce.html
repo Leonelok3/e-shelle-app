@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Booster « {{ annonce.titre|truncatechars:40 }} » · E-Shelle{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:580px;padding:6rem 1rem 3rem;">
+  <div class="glass-card" style="padding:2.5rem;">
+
+    <h1 class="section-title" style="font-size:1.3rem;margin-bottom:.25rem;">⚡ Booster une annonce</h1>
+    <p style="color:var(--text-secondary);font-size:.88rem;margin-bottom:2rem;">
+      <strong style="color:var(--primary-light);">{{ annonce.titre|truncatechars:60 }}</strong>
+    </p>
+
+    <!-- Sélection boost -->
+    <div style="margin-bottom:2rem;">
+      <label class="form-label fw-semibold small">Choisissez votre boost</label>
+      <div style="display:flex;flex-direction:column;gap:.6rem;" id="boost-options">
+        {% for key, b in tous_boosts.items %}
+        <label style="cursor:pointer;" class="boost-option {% if key == type_boost %}selected{% endif %}">
+          <input type="radio" name="boost_select" value="{{ key }}"
+                 {% if key == type_boost %}checked{% endif %}
+                 style="display:none;">
+          <div style="display:flex;align-items:center;justify-content:space-between;
+               padding:1rem 1.15rem;border-radius:var(--radius-md);
+               border:2px solid {% if key == type_boost %}var(--primary-light){% else %}rgba(255,255,255,.1){% endif %};
+               background:{% if key == type_boost %}rgba(46,125,50,.08){% else %}transparent{% endif %};
+               transition:all .15s;" class="boost-card">
+            <div style="display:flex;align-items:center;gap:.85rem;">
+              <span style="font-size:1.5rem;">{{ b.emoji }}</span>
+              <div>
+                <div style="font-weight:600;font-size:.92rem;">{{ b.nom }}</div>
+                <div style="font-size:.78rem;color:var(--text-secondary);">{{ b.desc }}</div>
+              </div>
+            </div>
+            <div style="text-align:right;white-space:nowrap;">
+              <div style="font-weight:700;color:var(--primary-light);">{{ b.prix }} FCFA</div>
+              <div style="font-size:.75rem;color:var(--text-muted);">{{ b.duree_jours }}j</div>
+            </div>
+          </div>
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Lien dynamique pour acheter le boost sélectionné -->
+    <a id="boost-link"
+       href="{% url 'payments:booster_annonce' annonce_id=annonce.pk type_boost=type_boost %}"
+       class="btn btn-primary" style="width:100%;display:block;padding:1rem;text-align:center;font-size:1rem;">
+      Booster pour <span id="boost-prix">{{ boost_info.prix }}</span> FCFA →
+    </a>
+
+    <p style="text-align:center;color:var(--text-muted);font-size:.75rem;margin-top:1rem;">
+      🔒 Paiement sécurisé · Activation immédiate
+    </p>
+  </div>
+</div>
+
+<script>
+const boosts = {
+  {% for key, b in tous_boosts.items %}
+  "{{ key }}": { prix: {{ b.prix }}, url: "{% url 'payments:booster_annonce' annonce_id=annonce.pk type_boost=key %}" },
+  {% endfor %}
+};
+document.querySelectorAll('.boost-option input[type=radio]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    document.querySelectorAll('.boost-card').forEach(c => {
+      c.style.border = '2px solid rgba(255,255,255,.1)';
+      c.style.background = 'transparent';
+    });
+    const card = radio.nextElementSibling;
+    card.style.border = '2px solid var(--primary-light)';
+    card.style.background = 'rgba(46,125,50,.08)';
+    const info = boosts[radio.value];
+    document.getElementById('boost-prix').textContent = info.prix.toLocaleString();
+    document.getElementById('boost-link').href = info.url;
+  });
+});
+</script>
+{% endblock %}

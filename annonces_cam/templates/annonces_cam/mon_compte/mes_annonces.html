@@ -56,6 +56,14 @@
                   <i class="fa-solid fa-pen"></i>
                 </a>
                 {% if a.statut == 'PUBLIEE' %}
+                <a href="{% url 'payments:booster_annonce' annonce_id=a.pk type_boost='MISE_EN_AVANT_7J' %}"
+                   class="ann-btn ann-btn--xs"
+                   style="background:#2e7d32;color:#fff;border:none;"
+                   title="Booster cette annonce">
+                  ⚡
+                </a>
+                {% endif %}
+                {% if a.statut == 'PUBLIEE' %}
                   <form method="post" action="{% url 'annonces:marquer_vendue' slug=a.slug %}" class="d-inline">
                     {% csrf_token %}
                     <button type="submit" class="ann-btn ann-btn--success ann-btn--xs"

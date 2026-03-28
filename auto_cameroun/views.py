@@ -220,8 +220,7 @@ def mes_favoris_auto(request):
 
 @login_required
 def upgrade_premium_auto(request):
-    profil = _get_or_create_profil(request.user)
-    return render(request, "auto_cameroun/mon_compte/premium.html", {"profil": profil})
+    return redirect("payments:premium_marketplace", module="auto")
 
 
 # ─────────────────────────────────────────────────────────────────

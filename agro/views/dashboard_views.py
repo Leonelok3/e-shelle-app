@@ -171,20 +171,13 @@ def page_premium(request):
 
 @login_required
 def souscrire(request, plan):
-    """Redirection vers billing/ pour la souscription."""
-    if plan not in PLANS:
+    """Redirige vers le paiement du pack premium Agro."""
+    # Mapping plans Agro → plans payments
+    plan_map = {'silver': 'starter', 'gold': 'pro', 'platinum': 'expert'}
+    if plan not in plan_map:
         messages.error(request, "Plan invalide.")
         return redirect('agro:premium')
-
-    # Intégration avec billing/ existant
-    # On passe le plan en session et on redirige vers le billing
-    request.session['agro_plan_souhaite'] = plan
-    request.session['agro_plan_label']    = PLANS[plan]['nom']
-    request.session['agro_plan_prix_xaf'] = PLANS[plan]['prix_xaf']
-
-    messages.info(request, f"Souscription au plan {PLANS[plan]['nom']} — finalisez votre paiement.")
-    # Rediriger vers la page de paiement billing/ ou payments/
-    return redirect('billing:pricing')
+    return redirect('payments:payer_premium', module='agro', plan_slug=plan_map[plan])
 
 
 @login_required

@@ -315,8 +315,7 @@ def detail_conversation(request, conv_id):
 
 @login_required
 def upgrade_premium(request):
-    profil = _get_or_create_profil(request.user)
-    return render(request, "annonces_cam/mon_compte/premium.html", {"profil": profil})
+    return redirect("payments:premium_marketplace", module="annonces")
 
 
 # ─────────────────────────────────────────────────────────────────

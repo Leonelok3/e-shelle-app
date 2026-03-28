@@ -25,11 +25,13 @@ class Transaction(models.Model):
         ("rembourse",  "Remboursé"),
     ]
     TYPES = [
-        ("achat_cours",   "Achat formation"),
-        ("achat_produit", "Achat produit boutique"),
-        ("abonnement",    "Abonnement Pro/Enterprise"),
-        ("service",       "Paiement service"),
-        ("remboursement", "Remboursement"),
+        ("achat_cours",        "Achat formation"),
+        ("achat_produit",      "Achat produit boutique"),
+        ("abonnement",         "Abonnement Pro/Enterprise"),
+        ("service",            "Paiement service"),
+        ("remboursement",      "Remboursement"),
+        ("premium_marketplac", "Pack Premium marketplace"),
+        ("boost_annonce",      "Boost annonce/bien/véhicule"),
     ]
 
     reference    = models.CharField(max_length=40, unique=True, blank=True)
