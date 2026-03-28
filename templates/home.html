@@ -508,16 +508,42 @@ function handleNewsletter(e) {
 </script>
 <style>
 .grid-responsive-2 { display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; }
+
+/* ── Tablet (≤ 992px) ── */
+@media(max-width:992px) {
+  .modules-grid { grid-template-columns:repeat(2,1fr) !important; }
+  section > .container > div[style*="grid-template-columns:repeat(3"] { grid-template-columns:repeat(2,1fr) !important; }
+}
+
+/* ── Mobile (≤ 768px) ── */
 @media(max-width:768px) {
-  .grid-responsive-2 { grid-template-columns:repeat(2,1fr); gap:1.5rem; }
-  .hero > .container { grid-template-columns:1fr !important; }
+  .grid-responsive-2 { grid-template-columns:repeat(2,1fr); gap:1.25rem; }
+  .hero > .container { grid-template-columns:1fr !important; gap:2rem !important; }
   .hero-visual { display:none; }
+  .hero-title { font-size:2.4rem !important; }
+  .hero-actions { flex-direction:column; gap:.75rem; }
+  .hero-actions .btn { width:100%; text-align:center; justify-content:center; }
+  .hero-stats { grid-template-columns:repeat(2,1fr) !important; gap:1rem; }
   .modules-grid { grid-template-columns:1fr !important; }
   .steps-grid { grid-template-columns:1fr !important; }
   .pricing-grid { grid-template-columns:1fr !important; max-width:420px; margin:0 auto; }
   .pricing-card.featured { transform:none !important; }
   .spotlight-grid { grid-template-columns:1fr !important; }
+  section > .container > div[style*="grid-template-columns:repeat(3"] { grid-template-columns:1fr !important; }
+  .section-title { font-size:1.65rem !important; }
+  .testimonials-wrapper { padding:0 !important; }
+  /* Footer */
+  .footer-grid { grid-template-columns:1fr !important; }
+  .newsletter-form { flex-direction:column !important; }
+  .newsletter-form .btn { width:100%; }
 }
-@media(max-width:480px) { .grid-responsive-2 { grid-template-columns:1fr; } }
+
+/* ── Petit mobile (≤ 480px) ── */
+@media(max-width:480px) {
+  .grid-responsive-2 { grid-template-columns:1fr; }
+  .hero-title { font-size:1.9rem !important; }
+  .hero-stat-value { font-size:1.5rem !important; }
+  .spotlight-grid > .glass-card { padding:1.5rem !important; }
+}
 </style>
 {% endblock %}

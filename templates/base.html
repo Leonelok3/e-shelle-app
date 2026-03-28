@@ -83,18 +83,26 @@
     .nav-dropdown__menu {
       display: none;
       position: absolute;
-      top: calc(100% + .6rem);
+      top: 100%;                        /* pas de gap — zone hover continue */
       left: 50%;
       transform: translateX(-50%);
-      min-width: 280px;
+      min-width: 290px;
       background: #161616;
       border: 1px solid rgba(255,255,255,.1);
       border-radius: 12px;
       box-shadow: 0 24px 64px rgba(0,0,0,.7);
-      padding: .4rem;
+      padding: .6rem .4rem .4rem;       /* padding-top = bridge invisible */
       flex-direction: column;
       gap: .1rem;
       z-index: 9999;
+    }
+    /* Pont transparent au-dessus du menu pour ne pas casser le hover */
+    .nav-dropdown__menu::before {
+      content: '';
+      position: absolute;
+      top: -.6rem;
+      left: 0; right: 0;
+      height: .6rem;
     }
     .nav-dropdown__menu.dd-open { display: flex; }
     .nav-dropdown__item {
@@ -106,13 +114,15 @@
       color: rgba(255,255,255,.82);
       text-decoration: none;
       transition: background .15s;
+      white-space: nowrap;
     }
     .nav-dropdown__item:hover { background: rgba(255,255,255,.07); color: #fff; }
     .nav-dropdown__item strong { display: block; font-size: .88rem; font-weight: 600; }
-    .nav-dropdown__item small  { display: block; font-size: .75rem; opacity: .55; }
+    .nav-dropdown__item small  { display: block; font-size: .75rem; opacity: .55; white-space: normal; }
     .nav-dropdown__icon { font-size: 1.2rem; width: 28px; text-align: center; flex-shrink: 0; }
     .nav-dropdown__toggle { background: none; border: none; cursor: pointer; }
-    /* Ouverture au hover CSS — toujours prioritaire */
+    .nav-dropdown__sep { height: 1px; background: rgba(255,255,255,.08); margin: .25rem .5rem; }
+    /* Ouverture au hover — délai mouseleave pour éviter fermeture accidentelle */
     .nav-dropdown:hover .nav-dropdown__menu { display: flex; }
     .mobile-section-label {
       font-size: .7rem;
@@ -198,6 +208,11 @@
             <span class="nav-dropdown__icon">🚗</span>
             <span><strong>Auto Cameroun</strong><small>Véhicules d'occasion & neufs</small></span>
           </a>
+          <div class="nav-dropdown__sep"></div>
+          <a href="/agro/" class="nav-dropdown__item {% block nav_agro %}{% endblock %}" role="menuitem">
+            <span class="nav-dropdown__icon">🌿</span>
+            <span><strong>E-Shelle Agro</strong><small>Marketplace agroalimentaire B2B</small></span>
+          </a>
         </div>
       </li>
 
@@ -266,9 +281,12 @@
       <a href="/annonces/"          class="nav-link mobile-sub" role="menuitem">📋 Annonces Cam</a>
       <a href="/immobilier/"        class="nav-link mobile-sub" role="menuitem">🏠 Immobilier</a>
       <a href="/auto/"              class="nav-link mobile-sub" role="menuitem">🚗 Auto Cameroun</a>
+      <a href="/agro/"              class="nav-link mobile-sub" role="menuitem" style="color:#2D6A4F;font-weight:600">🌿 E-Shelle Agro</a>
+
+      <div class="mobile-section-label">Communauté</div>
+      <a href="/rencontres/"        class="nav-link mobile-sub" role="menuitem" style="color:#E8436A;font-weight:600">❤️ E-Shelle Love</a>
 
       <a href="/services/"          class="nav-link" role="menuitem">🌐 Services</a>
-      <a href="/rencontres/"        class="nav-link" role="menuitem" style="color:#E8436A;font-weight:600">❤️ Rencontres</a>
       <a href="/#tarifs"            class="nav-link" role="menuitem">💰 Tarifs</a>
       <a href="/services/contact/"  class="nav-link" role="menuitem">📩 Contact</a>
 
@@ -397,8 +415,8 @@
           <li><a href="/formations/">📚 Formations en ligne</a></li>
           <li><a href="/boutique/">🛍️ Boutique digitale</a></li>
           <li><a href="/services/">🌐 Création web IA</a></li>
-          <li><a href="/services/configurateur/">⚙️ Configurateur</a></li>
-          <li><a href="/services/portfolio/">🖼️ Portfolio</a></li>
+          <li><a href="/agro/" style="color:#40916C;font-weight:600">🌿 E-Shelle Agro</a></li>
+          <li><a href="/rencontres/" style="color:#E8436A;font-weight:600">❤️ E-Shelle Love</a></li>
         </ul>
       </div>
 
