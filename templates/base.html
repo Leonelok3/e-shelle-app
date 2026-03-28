@@ -150,6 +150,15 @@
       /* Menu mobile ouvert */
       .navbar-mobile.open { display: flex !important; }
     }
+
+    /* ── SOUS-APPS : espace sous la navbar fixe (70px desktop, 60px mobile) ── */
+    /* Inline = toujours frais, résiste au cache des CSS statiques */
+    .ann-page, .auto-page { padding-top: 4.5rem !important; }
+    .immo-breadcrumb       { padding-top: 4.5rem !important; }
+    @media (max-width: 900px) {
+      .ann-page, .auto-page { padding-top: 4rem !important; }
+      .immo-breadcrumb       { padding-top: 4rem !important; }
+    }
   </style>
 </head>
 <body class="{% block body_class %}{% endblock %}">
