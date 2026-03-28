@@ -133,6 +133,20 @@
       padding: .85rem 1rem .3rem;
     }
     .nav-link.mobile-sub { padding-left: 1.75rem; font-size: .88rem; }
+
+    /* ── RESPONSIVE MOBILE — prioritaire sur tout le reste ── */
+    @media (max-width: 900px) {
+      /* Cacher les liens desktop */
+      .navbar-nav        { display: none !important; }
+      /* Afficher le burger */
+      .burger            { display: flex !important; }
+      /* Cacher tout dans actions sauf burger */
+      .navbar-actions > *:not(#burger-btn) { display: none !important; }
+    }
+    @media (max-width: 900px) {
+      /* Menu mobile ouvert */
+      .navbar-mobile.open { display: flex !important; }
+    }
   </style>
 </head>
 <body class="{% block body_class %}{% endblock %}">
