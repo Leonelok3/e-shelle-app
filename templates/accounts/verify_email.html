@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Vérifiez votre email · E-Shelle{% endblock %}
+
+{% block content %}
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem;">
+<div class="glass-card" style="width:100%;max-width:440px;padding:2.5rem 2rem;text-align:center;">
+
+  <!-- Icône -->
+  <div style="width:72px;height:72px;border-radius:50%;background:rgba(46,125,50,.15);
+       border:2px solid rgba(46,125,50,.4);display:flex;align-items:center;
+       justify-content:center;margin:0 auto 1.5rem;font-size:2rem;">
+    📧
+  </div>
+
+  <h1 style="font-family:var(--font-display);font-size:1.5rem;font-weight:800;margin-bottom:.5rem;">
+    Vérifiez votre email
+  </h1>
+  <p style="color:var(--text-secondary);font-size:.9rem;margin-bottom:2rem;line-height:1.6;">
+    Nous avons envoyé un code à 6 chiffres à<br>
+    <strong style="color:var(--primary-light)">{{ email_masque }}</strong><br>
+    <span style="font-size:.8rem;color:var(--text-muted);">Valable 15 minutes · Vérifiez vos spams</span>
+  </p>
+
+  {% if messages %}
+    {% for message in messages %}
+    <div style="padding:.85rem 1rem;border-radius:var(--radius-md);margin-bottom:1.25rem;font-size:.88rem;
+         {% if message.tags == 'error' %}background:rgba(244,67,54,.1);border:1px solid rgba(244,67,54,.3);color:#ef5350;
+         {% else %}background:rgba(46,125,50,.1);border:1px solid rgba(46,125,50,.3);color:#66BB6A;{% endif %}">
+      {{ message }}
+    </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Formulaire OTP -->
+  <form method="post" id="otp-form">
+    {% csrf_token %}
+    <div style="display:flex;gap:.6rem;justify-content:center;margin-bottom:2rem;" id="otp-boxes">
+      {% for i in "123456" %}
+      <input type="text" name="d{{ forloop.counter }}" id="d{{ forloop.counter }}"
+             maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"
+             style="width:48px;height:56px;text-align:center;font-size:1.5rem;font-weight:700;
+                    font-family:var(--font-mono);border-radius:10px;
+                    border:2px solid rgba(255,255,255,.15);
+                    background:rgba(255,255,255,.05);color:#fff;
+                    transition:border-color .15s;outline:none;"
+             onfocus="this.style.borderColor='var(--primary-light)'"
+             onblur="this.style.borderColor='rgba(255,255,255,.15)'">
+      {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="width:100%;padding:1rem;font-size:1rem;">
+      Vérifier mon compte →
+    </button>
+  </form>
+
+  <!-- Renvoyer le code -->
+  <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.08);">
+    <p style="color:var(--text-secondary);font-size:.85rem;margin-bottom:.75rem;">
+      Vous n'avez pas reçu le code ?
+    </p>
+    <a href="{% url 'accounts:resend_code' %}"
+       style="color:var(--primary-light);font-size:.9rem;font-weight:600;text-decoration:none;">
+      📨 Renvoyer un nouveau code
+    </a>
+  </div>
+
+  <div style="margin-top:1.25rem;">
+    <a href="{% url 'accounts:register' %}"
+       style="color:var(--text-muted);font-size:.8rem;text-decoration:none;">
+      ← Utiliser une autre adresse email
+    </a>
+  </div>
+
+</div>
+</div>
+
+<script>
+// Auto-avancement entre les cases + gestion backspace
+const inputs = document.querySelectorAll('#otp-boxes input');
+
+inputs.forEach((inp, i) => {
+  inp.addEventListener('input', () => {
+    // N'accepte que les chiffres
+    inp.value = inp.value.replace(/\D/g, '').slice(-1);
+    if (inp.value && i < inputs.length - 1) {
+      inputs[i + 1].focus();
+    }
+    // Auto-submit si tous remplis
+    if ([...inputs].every(x => x.value)) {
+      document.getElementById('otp-form').submit();
+    }
+  });
+
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Backspace' && !inp.value && i > 0) {
+      inputs[i - 1].focus();
+      inputs[i - 1].value = '';
+    }
+    // Coller un code complet (ex: depuis l'email)
+    if (e.key === 'v' && (e.ctrlKey || e.metaKey)) return;
+  });
+});
+
+// Coller le code d'un coup
+inputs[0].addEventListener('paste', e => {
+  e.preventDefault();
+  const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+  inputs.forEach((inp, i) => { inp.value = text[i] || ''; });
+  if (text.length >= 6) document.getElementById('otp-form').submit();
+});
+
+// Focus auto sur le premier champ
+inputs[0].focus();
+</script>
+{% endblock %}

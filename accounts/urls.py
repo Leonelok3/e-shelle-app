@@ -1,6 +1,6 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from .views import AppLoginView, AppLogoutView, role_redirect, register, profil
+from .views import AppLoginView, AppLogoutView, role_redirect, register, profil, verify_email, resend_code
 
 app_name = "accounts"
 
@@ -9,6 +9,8 @@ urlpatterns = [
     path("logout/",          AppLogoutView.as_view(),                         name="logout"),
     path("go/",              role_redirect,                                   name="go"),
     path("register/",        register,                                        name="register"),
+    path("verify/",          verify_email,                                    name="verify_email"),
+    path("verify/resend/",   resend_code,                                     name="resend_code"),
     path("profil/",          profil,                                          name="profil"),
     path("password/change/", auth_views.PasswordChangeView.as_view(
         template_name="accounts/password_change.html",

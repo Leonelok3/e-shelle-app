@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
+from datetime import timedelta
+import random
 
 
 class Role(models.TextChoices):
@@ -89,3 +92,41 @@ class ParentStudentLink(models.Model):
 
     def __str__(self):
         return f"{self.parent.username} -> {self.student.username}"
+
+
+# ─── Vérification d'email par code 6 chiffres ────────────────────
+
+class EmailVerification(models.Model):
+    user        = models.OneToOneField(
+        CustomUser, on_delete=models.CASCADE, related_name="email_verification"
+    )
+    code        = models.CharField(max_length=6)
+    created_at  = models.DateTimeField(auto_now_add=True)
+    expires_at  = models.DateTimeField()
+    tentatives  = models.PositiveSmallIntegerField(default=0)
+    is_verified = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = "Vérification email"
+
+    def __str__(self):
+        return f"{self.user.email} — code:{self.code} — vérifié:{self.is_verified}"
+
+    @property
+    def est_expire(self):
+        return timezone.now() > self.expires_at
+
+    @classmethod
+    def generer(cls, user):
+        """Génère (ou renouvelle) un code 6 chiffres, valable 15 min."""
+        code = str(random.randint(100000, 999999))
+        obj, _ = cls.objects.update_or_create(
+            user=user,
+            defaults={
+                "code":        code,
+                "expires_at":  timezone.now() + timedelta(minutes=15),
+                "tentatives":  0,
+                "is_verified": False,
+            },
+        )
+        return obj
