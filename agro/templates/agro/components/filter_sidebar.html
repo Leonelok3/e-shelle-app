@@ -1,0 +1,105 @@
+{% load static %}
+<div class="agro-filter-sidebar">
+  <div class="agro-filter-header">
+    <h5 class="mb-0"><i class="bi bi-funnel me-2"></i>Filtres</h5>
+    <a href="{{ request.path }}" class="btn btn-sm btn-outline-secondary">
+      <i class="bi bi-x-circle me-1"></i>Effacer
+    </a>
+  </div>
+
+  <form method="get" id="filterForm">
+    <!-- Conserver la recherche textuelle -->
+    {% if request.GET.q %}
+    <input type="hidden" name="q" value="{{ request.GET.q }}">
+    {% endif %}
+
+    <!-- Disponibilité -->
+    <div class="agro-filter-group">
+      <label class="agro-filter-label">Disponibilité</label>
+      <div class="d-flex flex-column gap-1">
+        {% for val, label in disponibilites %}
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="disponibilite"
+                 id="dispo_{{ val }}" value="{{ val }}"
+                 {% if request.GET.disponibilite == val %}checked{% endif %}
+                 onchange="document.getElementById('filterForm').submit()">
+          <label class="form-check-label small" for="dispo_{{ val }}">{{ label }}</label>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Fourchette de prix -->
+    <div class="agro-filter-group">
+      <label class="agro-filter-label">Prix (par unité)</label>
+      <div class="row g-2">
+        <div class="col-6">
+          <input type="number" name="prix_min" class="form-control form-control-sm"
+                 placeholder="Min" value="{{ request.GET.prix_min }}" min="0">
+        </div>
+        <div class="col-6">
+          <input type="number" name="prix_max" class="form-control form-control-sm"
+                 placeholder="Max" value="{{ request.GET.prix_max }}" min="0">
+        </div>
+      </div>
+    </div>
+
+    <!-- Labels qualité -->
+    <div class="agro-filter-group">
+      <label class="agro-filter-label">Labels qualité</label>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="est_bio" value="true"
+               id="filterBio" {% if request.GET.est_bio == 'true' %}checked{% endif %}
+               onchange="document.getElementById('filterForm').submit()">
+        <label class="form-check-label small" for="filterBio">🌿 Agriculture Biologique</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="est_equitable" value="true"
+               id="filterEqui" {% if request.GET.est_equitable == 'true' %}checked{% endif %}
+               onchange="document.getElementById('filterForm').submit()">
+        <label class="form-check-label small" for="filterEqui">🤝 Commerce Équitable</label>
+      </div>
+    </div>
+
+    <!-- Export -->
+    <div class="agro-filter-group">
+      <label class="agro-filter-label">Capacité export</label>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="peut_exporter" value="true"
+               id="filterExport" {% if request.GET.peut_exporter == 'true' %}checked{% endif %}
+               onchange="document.getElementById('filterForm').submit()">
+        <label class="form-check-label small" for="filterExport">🚢 Peut exporter</label>
+      </div>
+    </div>
+
+    <!-- Vendeur vérifié -->
+    <div class="agro-filter-group">
+      <label class="agro-filter-label">Vendeur</label>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="est_verifie" value="true"
+               id="filterVerif" {% if request.GET.est_verifie == 'true' %}checked{% endif %}
+               onchange="document.getElementById('filterForm').submit()">
+        <label class="form-check-label small" for="filterVerif">
+          <i class="bi bi-patch-check-fill text-success me-1"></i>Vendeur vérifié
+        </label>
+      </div>
+    </div>
+
+    <!-- Tri -->
+    <div class="agro-filter-group">
+      <label class="agro-filter-label">Trier par</label>
+      <select name="tri" class="form-select form-select-sm"
+              onchange="document.getElementById('filterForm').submit()">
+        <option value="populaire" {% if request.GET.tri == 'populaire' %}selected{% endif %}>Plus populaires</option>
+        <option value="recent"    {% if request.GET.tri == 'recent' %}selected{% endif %}>Plus récents</option>
+        <option value="prix_asc"  {% if request.GET.tri == 'prix_asc' %}selected{% endif %}>Prix croissant</option>
+        <option value="prix_desc" {% if request.GET.tri == 'prix_desc' %}selected{% endif %}>Prix décroissant</option>
+        <option value="note"      {% if request.GET.tri == 'note' %}selected{% endif %}>Meilleures notes</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-agro w-100">
+      <i class="bi bi-funnel me-1"></i>Appliquer les filtres
+    </button>
+  </form>
+</div>

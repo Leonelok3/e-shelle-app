@@ -1,0 +1,71 @@
+{% extends 'agro/base_agro.html' %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 860px;">
+  <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+    <a href="{% url 'agro:appels_offre' %}" class="btn btn-agro-outline btn-sm">
+      <i class="bi bi-arrow-left me-1"></i>Retour
+    </a>
+    <h1 class="h4 fw-bold mb-0">{{ ao.titre }}</h1>
+    {% if ao.est_urgent %}<span class="badge bg-danger">URGENT</span>{% endif %}
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-8">
+      <div class="card agro-card mb-4">
+        <div class="card-header agro-card-header">Détails</div>
+        <div class="card-body">
+          <dl class="row small mb-0">
+            <dt class="col-4 text-muted">Acheteur</dt><dd class="col-8">{{ ao.acheteur.nom_entreprise }} — {{ ao.acheteur.pays }}</dd>
+            {% if ao.categorie %}<dt class="col-4 text-muted">Catégorie</dt><dd class="col-8">{{ ao.categorie.nom }}</dd>{% endif %}
+            <dt class="col-4 text-muted">Quantité</dt><dd class="col-8">{{ ao.quantite_min }}{% if ao.quantite_max %}–{{ ao.quantite_max }}{% endif %} {{ ao.unite_mesure }}</dd>
+            {% if ao.budget_max %}<dt class="col-4 text-muted fw-bold">Budget max</dt><dd class="col-8 fw-bold text-success">{{ ao.budget_max }} {{ ao.devise }}</dd>{% endif %}
+            {% if ao.pays_livraison %}<dt class="col-4 text-muted">Livraison</dt><dd class="col-8">{{ ao.pays_livraison }}</dd>{% endif %}
+            <dt class="col-4 text-muted">Date limite</dt><dd class="col-8">{{ ao.date_limite|date:"d/m/Y" }}</dd>
+            <dt class="col-4 text-muted">Réponses</dt><dd class="col-8">{{ ao.nb_reponses }}</dd>
+          </dl>
+          {% if ao.description %}
+          <hr><p class="small mb-0">{{ ao.description }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Réponses (vendeur uniquement) -->
+      {% if user.is_authenticated and user.profil_agro and user.profil_agro != ao.acheteur %}
+      <div class="card agro-card">
+        <div class="card-header agro-card-header">Répondre à cet appel d'offre</div>
+        <div class="card-body">
+          {% if deja_repondu %}
+          <div class="alert alert-success"><i class="bi bi-check-circle me-2"></i>Vous avez déjà répondu à cet appel d'offre.</div>
+          {% elif ao.est_expire %}
+          <div class="alert alert-secondary">Cet appel d'offre est clôturé.</div>
+          {% else %}
+          <a href="{% url 'agro:repondre_ao' pk=ao.pk %}" class="btn btn-agro">
+            <i class="bi bi-reply me-1"></i>Envoyer une proposition
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="col-md-4">
+      <div class="card agro-card">
+        <div class="card-header agro-card-header">Acheteur</div>
+        <div class="card-body text-center">
+          {% if ao.acheteur.logo %}
+          <img src="{{ ao.acheteur.logo.url }}" class="rounded-circle mb-2" style="width:60px;height:60px;object-fit:cover;" alt="">
+          {% else %}
+          <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2" style="width:60px;height:60px;background:#2D6A4F;color:#fff;font-weight:700;font-size:1.2rem;">
+            {{ ao.acheteur.nom_entreprise|first|upper }}
+          </div>
+          {% endif %}
+          <div class="fw-bold small">{{ ao.acheteur.nom_entreprise }}</div>
+          <div class="small text-muted">{{ ao.acheteur.pays }}</div>
+          {% if ao.acheteur.est_verifie %}<span class="badge bg-success mt-1"><i class="bi bi-check-circle me-1"></i>Vérifié</span>{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

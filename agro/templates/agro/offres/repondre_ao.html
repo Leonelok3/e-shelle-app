@@ -1,0 +1,48 @@
+{% extends 'agro/base_agro.html' %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 700px;">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'agro:detail_ao' pk=ao.pk %}" class="btn btn-agro-outline btn-sm">
+      <i class="bi bi-arrow-left me-1"></i>Retour
+    </a>
+    <h1 class="h4 fw-bold mb-0">Répondre à l'appel d'offre</h1>
+  </div>
+
+  <!-- Récap AO -->
+  <div class="card agro-card mb-4">
+    <div class="card-header agro-card-header">{{ ao.titre }}</div>
+    <div class="card-body small">
+      <dl class="row mb-0">
+        <dt class="col-4 text-muted">Quantité</dt><dd class="col-8">{{ ao.quantite_min }}{% if ao.quantite_max %}–{{ ao.quantite_max }}{% endif %} {{ ao.unite_mesure }}</dd>
+        {% if ao.budget_max %}<dt class="col-4 text-muted">Budget max</dt><dd class="col-8 text-success fw-bold">{{ ao.budget_max }} {{ ao.devise }}</dd>{% endif %}
+        <dt class="col-4 text-muted">Date limite</dt><dd class="col-8">{{ ao.date_limite|date:"d/m/Y" }}</dd>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Formulaire réponse -->
+  <div class="card agro-card">
+    <div class="card-header agro-card-header">Votre proposition</div>
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="mb-3">
+          <label class="form-label fw-semibold small">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}<div class="text-danger small mt-1">{{ field.errors.0 }}</div>{% endif %}
+          {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+        </div>
+        {% endfor %}
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-agro">
+            <i class="bi bi-send me-1"></i>Envoyer ma proposition
+          </button>
+          <a href="{% url 'agro:detail_ao' pk=ao.pk %}" class="btn btn-agro-outline">Annuler</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

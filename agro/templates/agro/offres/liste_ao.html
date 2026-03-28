@@ -1,0 +1,59 @@
+{% extends 'agro/base_agro.html' %}
+
+{% block content %}
+<div class="container-xl py-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h1 class="h3 fw-bold mb-1">Appels d'Offre</h1>
+      <p class="text-muted mb-0">{{ page_obj.paginator.count }} appel{{ page_obj.paginator.count|pluralize }} d'offre actif{{ page_obj.paginator.count|pluralize }}</p>
+    </div>
+    {% if user.is_authenticated %}
+    {% if user.profil_agro %}
+    <a href="{% url 'agro:lancer_ao' %}" class="btn btn-agro">
+      <i class="bi bi-megaphone me-1"></i>Lancer un appel d'offre
+    </a>
+    {% endif %}
+    {% endif %}
+  </div>
+
+  <!-- Filtres catégories -->
+  <div class="d-flex flex-wrap gap-2 mb-4">
+    <a href="{% url 'agro:appels_offre' %}" class="btn btn-sm btn-agro-outline">Toutes catégories</a>
+    {% for cat in categories %}
+    <a href="?categorie={{ cat.slug }}" class="btn btn-sm btn-agro-outline">
+      {{ cat.icone }} {{ cat.nom }}
+    </a>
+    {% endfor %}
+  </div>
+
+  <div class="row g-3">
+    {% for ao in page_obj %}
+    <div class="col-12 col-md-6">
+      <a href="{% url 'agro:detail_ao' pk=ao.pk %}" class="agro-ao-card d-block text-decoration-none">
+        <div class="d-flex align-items-start gap-3">
+          <div class="agro-ao-icon {% if ao.est_urgent %}bg-danger{% else %}bg-warning{% endif %}">
+            {% if ao.est_urgent %}🔴{% else %}🟡{% endif %}
+          </div>
+          <div class="flex-grow-1">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <h6 class="fw-semibold mb-0">{{ ao.titre }}</h6>
+              {% if ao.est_urgent %}<span class="badge bg-danger">URGENT</span>{% endif %}
+            </div>
+            <div class="text-muted small mt-1">{{ ao.acheteur.nom_entreprise }} — {{ ao.acheteur.pays }}</div>
+            <div class="d-flex gap-3 small text-muted mt-1 flex-wrap">
+              <span>{{ ao.quantite_min }}{% if ao.quantite_max %}-{{ ao.quantite_max }}{% endif %} {{ ao.unite_mesure }}</span>
+              {% if ao.budget_max %}<span class="text-success fw-semibold">Budget max : {{ ao.budget_max }} {{ ao.devise }}</span>{% endif %}
+              <span>{{ ao.nb_reponses }} répons{{ ao.nb_reponses|pluralize:"e,es" }}</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+      <p class="text-muted">Aucun appel d'offre en cours.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

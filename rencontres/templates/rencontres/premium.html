@@ -1,0 +1,131 @@
+{% extends 'rencontres/base_rencontre.html' %}
+{% load static %}
+
+{% block title %}Premium — E-Shelle Love{% endblock %}
+
+{% block content %}
+<div style="max-width:900px;margin:0 auto;padding:1.5rem 1rem 5rem">
+
+    <div style="text-align:center;margin-bottom:2.5rem">
+        <h1 style="font-size:1.8rem;font-weight:900;margin-bottom:0.5rem">
+            <span style="background:var(--gradient-premium);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">
+                Passez en Premium
+            </span>
+        </h1>
+        <p style="color:var(--love-muted)">Débloquez toutes les fonctionnalités pour des rencontres sans limites.</p>
+
+        {% if abonnement_actif %}
+        <div style="display:inline-block;background:var(--love-card);border:1px solid var(--love-gold);border-radius:12px;padding:0.75rem 1.5rem;margin-top:1rem">
+            <span style="color:var(--love-gold);font-weight:700">⭐ Abonnement {{ abonnement_actif.plan.get_nom_display }} actif</span>
+            <span style="color:var(--love-muted);font-size:0.85rem;display:block;margin-top:0.2rem">
+                Expire dans {{ abonnement_actif.jours_restants }} jour{{ abonnement_actif.jours_restants|pluralize }}
+            </span>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Comparaison périodicité -->
+    <div style="display:flex;justify-content:center;gap:1rem;margin-bottom:2rem">
+        <button onclick="switchPeriode('mensuel')" id="btn-mensuel"
+            class="btn-love" style="padding:0.5rem 1.5rem;font-size:0.85rem">
+            Mensuel
+        </button>
+        <button onclick="switchPeriode('annuel')" id="btn-annuel"
+            class="btn-love-outline" style="padding:0.5rem 1.5rem;font-size:0.85rem">
+            Annuel <span style="background:var(--gradient-love);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700"> -30%</span>
+        </button>
+    </div>
+
+    <!-- Plans -->
+    <div class="plans-grid">
+        {% for plan in plans %}
+        <div class="plan-card {% if plan.nom == 'gold' %}plan-gold{% endif %}">
+            <div class="plan-name">
+                {{ plan.get_icon }} {{ plan.get_nom_display }}
+            </div>
+
+            <div class="plan-price" id="price-{{ plan.nom }}-mensuel">
+                {{ plan.prix_xaf_mensuel|floatformat:0 }} FCFA
+                <span>/ mois</span>
+            </div>
+            <div class="plan-price" id="price-{{ plan.nom }}-annuel" style="display:none">
+                {{ plan.prix_xaf_annuel|floatformat:0 }} FCFA
+                <span>/ an</span>
+            </div>
+
+            <ul class="plan-features">
+                <li class="included">
+                    {% if plan.likes_par_jour == -1 %}Likes illimités{% else %}{{ plan.likes_par_jour }} likes/jour{% endif %}
+                </li>
+                <li class="included">
+                    {{ plan.super_likes_par_jour }} super like{{ plan.super_likes_par_jour|pluralize }}/jour
+                </li>
+                <li class="included">
+                    {% if plan.messages_par_jour == -1 %}Messages illimités{% else %}{{ plan.messages_par_jour }} messages/jour{% endif %}
+                </li>
+                <li class="included">{{ plan.photos_max }} photos maximum</li>
+                <li class="{% if plan.peut_voir_qui_a_like %}included{% else %}excluded{% endif %}">
+                    Voir qui a liké
+                </li>
+                <li class="{% if plan.peut_rembobiner %}included{% else %}excluded{% endif %}">
+                    Rembobiner le dernier profil
+                </li>
+                {% if plan.boost_profil_par_semaine %}
+                <li class="included">
+                    {{ plan.boost_profil_par_semaine }} boost{{ plan.boost_profil_par_semaine|pluralize }}/semaine
+                </li>
+                {% else %}
+                <li class="excluded">Boost de profil</li>
+                {% endif %}
+                <li class="{% if plan.filtre_avance %}included{% else %}excluded{% endif %}">
+                    Filtres avancés
+                </li>
+                <li class="{% if plan.mode_incognito %}included{% else %}excluded{% endif %}">
+                    Mode incognito
+                </li>
+                <li class="{% if plan.stats_profil %}included{% else %}excluded{% endif %}">
+                    Statistiques de profil
+                </li>
+            </ul>
+
+            <a href="{% url 'rencontres:souscrire' plan.nom %}" class="btn-premium">
+                Choisir {{ plan.get_nom_display }}
+            </a>
+        </div>
+        {% empty %}
+        <div style="text-align:center;color:var(--love-muted);grid-column:1/-1;padding:2rem">
+            Les plans premium seront bientôt disponibles.
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Sécurité paiement -->
+    <div style="text-align:center;margin-top:2rem;color:var(--love-muted);font-size:0.8rem">
+        <p>🔒 Paiement sécurisé · MTN Mobile Money · Orange Money · Airtel Money</p>
+        <p>Annulez à tout moment · Pas d'engagement</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let periodeActive = 'mensuel';
+
+function switchPeriode(periode) {
+    periodeActive = periode;
+
+    document.querySelectorAll('[id^="price-"]').forEach(el => {
+        el.style.display = 'none';
+    });
+    document.querySelectorAll(`[id$="-${periode}"]`).forEach(el => {
+        el.style.display = 'block';
+    });
+
+    document.getElementById('btn-mensuel').className = periode === 'mensuel' ? 'btn-love' : 'btn-love-outline';
+    document.getElementById('btn-annuel').className = periode === 'annuel' ? 'btn-love' : 'btn-love-outline';
+    if (periode === 'annuel') {
+        document.getElementById('btn-annuel').innerHTML = 'Annuel <span style="background:var(--gradient-love);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700"> -30%</span>';
+    }
+}
+</script>
+{% endblock %}

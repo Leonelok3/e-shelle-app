@@ -1,0 +1,38 @@
+{% extends 'agro/base_agro.html' %}
+
+{% block content %}
+<div class="container-xl py-4">
+  <h1 class="h3 fw-bold mb-4">Statistiques</h1>
+
+  <div class="card agro-card">
+    <div class="card-header agro-card-header">Évolution des vues — 30 derniers jours</div>
+    <div class="card-body">
+      <canvas id="statsChart" height="80"></canvas>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+new Chart(document.getElementById('statsChart'), {
+  type: 'line',
+  data: {
+    labels: {{ dates|safe }},
+    datasets: [{
+      label: 'Vues',
+      data: {{ vues|safe }},
+      borderColor: '#2D6A4F',
+      backgroundColor: 'rgba(45,106,79,.1)',
+      tension: .4, fill: true,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true } }
+  }
+});
+</script>
+{% endblock %}

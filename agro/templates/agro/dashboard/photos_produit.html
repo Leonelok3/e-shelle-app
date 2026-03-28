@@ -1,0 +1,51 @@
+{% extends 'agro/base_agro.html' %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 800px;">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'agro:mes_produits' %}" class="btn btn-agro-outline btn-sm">
+      <i class="bi bi-arrow-left me-1"></i>Mes produits
+    </a>
+    <h1 class="h4 fw-bold mb-0">Photos — {{ produit.nom }}</h1>
+  </div>
+
+  {% if photos %}
+  <div class="row g-2 mb-4">
+    {% for photo in photos %}
+    <div class="col-4 col-md-3">
+      <div class="position-relative">
+        <img src="{{ photo.image.url }}" class="img-thumbnail w-100" style="height:120px;object-fit:cover;" alt="{{ photo.legende }}">
+        {% if photo.est_principale %}<span class="badge bg-agro-primary position-absolute top-0 start-0 m-1" style="background:#2D6A4F!important;">Principale</span>{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="card agro-card">
+    <div class="card-header agro-card-header">Ajouter des photos (max {{ max_photos }} au total)</div>
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        {% for f in formset %}
+        <div class="mb-3 p-3 border rounded">
+          {% for field in f %}
+            {% if not field.is_hidden %}
+            <div class="mb-2">
+              <label class="form-label small fw-semibold">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}<div class="text-danger small">{{ field.errors.0 }}</div>{% endif %}
+            </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-agro">
+          <i class="bi bi-upload me-1"></i>Enregistrer les photos
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

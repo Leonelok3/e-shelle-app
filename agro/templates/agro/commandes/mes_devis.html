@@ -1,0 +1,82 @@
+{% extends 'agro/base_agro.html' %}
+
+{% block content %}
+<div class="container-xl py-4">
+  <h1 class="h3 fw-bold mb-4">Mes Devis</h1>
+
+  <ul class="nav nav-tabs mb-4" id="devisTabs">
+    <li class="nav-item">
+      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#recus">
+        Reçus <span class="badge bg-danger ms-1">{{ devis_recus|length }}</span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#envoyes">
+        Envoyés <span class="badge bg-secondary ms-1">{{ devis_envoyes|length }}</span>
+      </button>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="recus">
+      {% if devis_recus %}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr><th>Réf.</th><th>Acheteur</th><th>Produit</th><th>Qté</th><th>Statut</th><th>Date</th><th></th></tr>
+          </thead>
+          <tbody>
+            {% for d in devis_recus %}
+            <tr>
+              <td><code>{{ d.reference }}</code></td>
+              <td>{{ d.acheteur.nom_entreprise }}</td>
+              <td>{{ d.produit.nom|default:"-"|truncatechars:30 }}</td>
+              <td>{{ d.quantite }} {{ d.unite_mesure }}</td>
+              <td><span class="badge {% if d.statut == 'en_attente' %}bg-danger{% elif d.statut == 'devis_envoye' %}bg-info{% elif d.statut == 'accepte' %}bg-success{% else %}bg-secondary{% endif %}">{{ d.get_statut_display }}</span></td>
+              <td><small>{{ d.date_creation|date:"d/m/Y" }}</small></td>
+              <td>
+                <a href="{% url 'agro:detail_devis' reference=d.reference %}" class="btn btn-sm btn-agro-outline">Voir</a>
+                {% if d.statut in 'en_attente vue' %}
+                <a href="{% url 'agro:repondre_devis' reference=d.reference %}" class="btn btn-sm btn-agro ms-1">Répondre</a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}<p class="text-muted text-center py-5">Aucune demande de devis reçue.</p>{% endif %}
+    </div>
+
+    <div class="tab-pane fade" id="envoyes">
+      {% if devis_envoyes %}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr><th>Réf.</th><th>Vendeur</th><th>Produit</th><th>Qté</th><th>Statut</th><th>Date</th><th></th></tr>
+          </thead>
+          <tbody>
+            {% for d in devis_envoyes %}
+            <tr>
+              <td><code>{{ d.reference }}</code></td>
+              <td>{{ d.vendeur.nom_entreprise }}</td>
+              <td>{{ d.produit.nom|default:"-"|truncatechars:30 }}</td>
+              <td>{{ d.quantite }} {{ d.unite_mesure }}</td>
+              <td><span class="badge {% if d.statut == 'accepte' %}bg-success{% elif d.statut == 'devis_envoye' %}bg-info{% elif d.statut == 'refuse' %}bg-danger{% else %}bg-secondary{% endif %}">{{ d.get_statut_display }}</span></td>
+              <td><small>{{ d.date_creation|date:"d/m/Y" }}</small></td>
+              <td>
+                <a href="{% url 'agro:detail_devis' reference=d.reference %}" class="btn btn-sm btn-agro-outline">Voir</a>
+                {% if d.statut == 'devis_envoye' %}
+                <a href="{% url 'agro:accepter_devis' reference=d.reference %}" class="btn btn-sm btn-agro ms-1">Accepter</a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}<p class="text-muted text-center py-5">Aucun devis envoyé.</p>{% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

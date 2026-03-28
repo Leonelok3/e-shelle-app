@@ -1,0 +1,250 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ page_title|default:"E-Shelle Agro" }}{% endblock %}</title>
+
+  <!-- SEO -->
+  {% block meta %}
+  <meta name="description" content="{{ meta_description|default:'La plateforme agroalimentaire africaine de référence internationale.' }}">
+  <meta property="og:title" content="{{ page_title|default:'E-Shelle Agro' }}">
+  <meta property="og:description" content="{{ meta_description|default:'' }}">
+  {% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+  <meta property="og:type" content="website">
+  {% endblock %}
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <!-- E-Shelle Agro CSS -->
+  <link rel="stylesheet" href="{% static 'agro/css/agro.css' %}">
+
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- ═══ NAVBAR ══════════════════════════════════════════════════════════════ -->
+<nav class="navbar navbar-expand-lg agro-navbar sticky-top">
+  <div class="container-xl">
+
+    <!-- Logo -->
+    <a class="navbar-brand agro-brand" href="{% url 'agro:accueil' %}">
+      <span class="agro-brand-icon">🌿</span>
+      <span class="agro-brand-text">E-Shelle <strong>Agro</strong></span>
+    </a>
+
+    <!-- Barre de recherche (desktop) -->
+    <form class="d-none d-lg-flex agro-search-form mx-3 flex-grow-1"
+          action="{% url 'agro:recherche' %}" method="get">
+      <div class="input-group">
+        <span class="input-group-text bg-white border-end-0">
+          <i class="bi bi-search text-muted"></i>
+        </span>
+        <input type="text" name="q" class="form-control border-start-0 border-end-0"
+               placeholder="Rechercher : cacao, maïs, café, tilapia..."
+               value="{{ request.GET.q }}"
+               autocomplete="off"
+               data-agro-search>
+        <button class="btn btn-agro-accent px-3" type="submit">Rechercher</button>
+      </div>
+      <!-- Autocomplete dropdown -->
+      <div class="agro-search-results d-none" id="searchResults"></div>
+    </form>
+
+    <!-- Bouton mobile -->
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+            data-bs-target="#agro-nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Nav links -->
+    <div class="collapse navbar-collapse" id="agro-nav">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+
+        <li class="nav-item">
+          <a class="nav-link agro-nav-link" href="{% url 'agro:catalogue' %}">
+            <i class="bi bi-grid-3x3-gap me-1"></i>Catalogue
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link agro-nav-link" href="{% url 'agro:appels_offre' %}">
+            <i class="bi bi-megaphone me-1"></i>Appels d'offre
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link agro-nav-link" href="{% url 'agro:annuaire' %}">
+            <i class="bi bi-people me-1"></i>Acteurs
+          </a>
+        </li>
+
+        {% if user.is_authenticated %}
+          {% if user.profil_agro %}
+            <li class="nav-item dropdown">
+              <a class="nav-link agro-nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                <i class="bi bi-person-circle me-1"></i>
+                {{ user.profil_agro.nom_entreprise|truncatechars:20 }}
+                {% if user.profil_agro.plan_premium != 'free' %}
+                  <span class="badge-plan-mini ms-1">{{ user.profil_agro.badge_plan }}</span>
+                {% endif %}
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end agro-dropdown">
+                <li><a class="dropdown-item" href="{% url 'agro:dashboard' %}">
+                  <i class="bi bi-speedometer2 me-2"></i>Tableau de bord</a></li>
+                <li><a class="dropdown-item" href="{% url 'agro:mes_produits' %}">
+                  <i class="bi bi-box-seam me-2"></i>Mes produits</a></li>
+                <li><a class="dropdown-item" href="{% url 'agro:mes_devis' %}">
+                  <i class="bi bi-file-text me-2"></i>Mes devis</a></li>
+                <li><a class="dropdown-item" href="{% url 'agro:mes_commandes' %}">
+                  <i class="bi bi-bag-check me-2"></i>Mes commandes</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'agro:modifier_profil' %}">
+                  <i class="bi bi-pencil-square me-2"></i>Modifier profil</a></li>
+                {% if user.profil_agro.plan_premium == 'free' %}
+                <li><a class="dropdown-item text-warning" href="{% url 'agro:premium' %}">
+                  <i class="bi bi-star me-2"></i>Passer Premium</a></li>
+                {% endif %}
+              </ul>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="btn btn-agro-outline btn-sm ms-2" href="{% url 'agro:inscription' %}">
+                <i class="bi bi-plus-circle me-1"></i>Rejoindre
+              </a>
+            </li>
+          {% endif %}
+
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link agro-nav-link" href="{% url 'accounts:login' %}">
+              <i class="bi bi-box-arrow-in-right me-1"></i>Connexion
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-agro ms-2" href="{% url 'agro:inscription' %}">
+              <i class="bi bi-person-plus me-1"></i>S'inscrire
+            </a>
+          </li>
+        {% endif %}
+
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Barre de recherche mobile -->
+<div class="d-lg-none bg-white border-bottom px-3 py-2">
+  <form action="{% url 'agro:recherche' %}" method="get">
+    <div class="input-group input-group-sm">
+      <span class="input-group-text bg-white border-end-0">
+        <i class="bi bi-search text-muted"></i>
+      </span>
+      <input type="text" name="q" class="form-control border-start-0"
+             placeholder="Rechercher un produit..." value="{{ request.GET.q }}">
+      <button class="btn btn-agro-accent px-3" type="submit">OK</button>
+    </div>
+  </form>
+</div>
+
+<!-- ═══ MESSAGES ════════════════════════════════════════════════════════════ -->
+{% if messages %}
+<div class="container-xl pt-3">
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show agro-alert" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- ═══ CONTENU PRINCIPAL ════════════════════════════════════════════════════ -->
+<main id="agro-main">
+  {% block content %}{% endblock %}
+</main>
+
+<!-- ═══ FOOTER ══════════════════════════════════════════════════════════════ -->
+<footer class="agro-footer mt-5">
+  <div class="container-xl py-5">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="agro-footer-brand mb-3">
+          <span class="fs-4">🌿</span>
+          <span class="ms-2 fw-bold text-white fs-5">E-Shelle Agro</span>
+        </div>
+        <p class="text-white-50 small">
+          La plateforme agroalimentaire africaine qui connecte producteurs et acheteurs du monde entier.
+        </p>
+        <div class="d-flex gap-2 mt-3">
+          <a href="#" class="agro-social-btn"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="agro-social-btn"><i class="bi bi-linkedin"></i></a>
+          <a href="#" class="agro-social-btn"><i class="bi bi-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="text-white fw-semibold mb-3">Marketplace</h6>
+        <ul class="list-unstyled">
+          <li><a href="{% url 'agro:catalogue' %}" class="agro-footer-link">Catalogue</a></li>
+          <li><a href="{% url 'agro:appels_offre' %}" class="agro-footer-link">Appels d'offre</a></li>
+          <li><a href="{% url 'agro:offres' %}" class="agro-footer-link">Offres commerciales</a></li>
+          <li><a href="{% url 'agro:annuaire' %}" class="agro-footer-link">Annuaire acteurs</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="text-white fw-semibold mb-3">Catégories</h6>
+        <ul class="list-unstyled">
+          <li><a href="{% url 'agro:catalogue' %}?categorie=cereales-legumineuses" class="agro-footer-link">🌾 Céréales</a></li>
+          <li><a href="{% url 'agro:catalogue' %}?categorie=cultures-de-rente" class="agro-footer-link">🍃 Cultures de rente</a></li>
+          <li><a href="{% url 'agro:catalogue' %}?categorie=fruits-legumes" class="agro-footer-link">🥬 Fruits & Légumes</a></li>
+          <li><a href="{% url 'agro:catalogue' %}?categorie=produits-transformes" class="agro-footer-link">🫙 Transformés</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="text-white fw-semibold mb-3">Espace pro</h6>
+        <ul class="list-unstyled">
+          <li><a href="{% url 'agro:inscription' %}" class="agro-footer-link">Rejoindre</a></li>
+          <li><a href="{% url 'agro:premium' %}" class="agro-footer-link">Plans Premium</a></li>
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'agro:dashboard' %}" class="agro-footer-link">Tableau de bord</a></li>
+          {% endif %}
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6 class="text-white fw-semibold mb-3">Support</h6>
+        <ul class="list-unstyled">
+          <li><span class="agro-footer-link">📞 +237 680 625 082</span></li>
+          <li><span class="agro-footer-link">✉️ agro@e-shelle.com</span></li>
+          <li><a href="https://wa.me/237680625082" class="agro-footer-link">
+            <i class="bi bi-whatsapp me-1"></i>WhatsApp</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr class="border-secondary my-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <p class="text-white-50 small mb-0">
+        © 2026 E-Shelle Agro — IMAGENAF. Tous droits réservés.
+      </p>
+      <div class="d-flex gap-3">
+        <a href="#" class="agro-footer-link small">Mentions légales</a>
+        <a href="#" class="agro-footer-link small">CGU</a>
+        <a href="#" class="agro-footer-link small">Confidentialité</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Catalogue & Search JS -->
+<script src="{% static 'agro/js/catalogue.js' %}"></script>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

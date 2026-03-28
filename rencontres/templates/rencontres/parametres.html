@@ -1,0 +1,62 @@
+{% extends 'rencontres/base_rencontre.html' %}
+
+{% block title %}Paramètres — E-Shelle Love{% endblock %}
+
+{% block content %}
+<div style="max-width:600px;margin:0 auto;padding:1.5rem 1rem 5rem">
+
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+        <a href="{% url 'rencontres:detail_profil' profil.pk %}" style="color:var(--love-muted);text-decoration:none">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <h2 style="font-size:1.3rem;font-weight:700;margin:0">Paramètres</h2>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div style="background:var(--love-card);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem">
+            <h4 style="font-size:0.9rem;color:var(--love-primary);margin-bottom:1rem">Confidentialité</h4>
+
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" name="afficher_en_ligne" id="afficher-online"
+                    {% if profil.afficher_en_ligne %}checked{% endif %}>
+                <label class="form-check-label" for="afficher-online">
+                    Afficher mon statut en ligne
+                </label>
+            </div>
+
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" name="afficher_distance" id="afficher-dist"
+                    {% if profil.afficher_distance %}checked{% endif %}>
+                <label class="form-check-label" for="afficher-dist">
+                    Afficher la distance approximative
+                </label>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" style="font-size:0.85rem;color:var(--love-muted)">Qui peut m'écrire</label>
+                <select name="qui_peut_ecrire" class="form-select" style="background:rgba(255,255,255,0.05);border:1px solid var(--love-border);color:var(--love-text)">
+                    <option value="tous" {% if profil.qui_peut_ecrire == 'tous' %}selected{% endif %}>Tout le monde</option>
+                    <option value="matchs" {% if profil.qui_peut_ecrire == 'matchs' %}selected{% endif %}>Mes matchs uniquement</option>
+                    <option value="premium" {% if profil.qui_peut_ecrire == 'premium' %}selected{% endif %}>Membres premium uniquement</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-love" style="width:100%;justify-content:center;margin-bottom:1rem">
+            Sauvegarder
+        </button>
+    </form>
+
+    <!-- Actions dangereuses -->
+    <div style="background:var(--love-card);border-radius:var(--radius);padding:1.5rem;border:1px solid rgba(231,76,60,0.2)">
+        <h4 style="font-size:0.9rem;color:var(--love-danger);margin-bottom:1rem">Zone dangereuse</h4>
+        <a href="{% url 'rencontres:desactiver' %}"
+            style="color:var(--love-danger);text-decoration:none;font-size:0.9rem;display:flex;align-items:center;gap:0.5rem">
+            <i class="bi bi-pause-circle"></i>
+            Désactiver temporairement mon profil
+        </a>
+    </div>
+</div>
+{% endblock %}

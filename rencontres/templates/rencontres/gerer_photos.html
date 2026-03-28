@@ -1,0 +1,92 @@
+{% extends 'rencontres/base_rencontre.html' %}
+
+{% block title %}Mes photos — E-Shelle Love{% endblock %}
+
+{% block content %}
+<div style="max-width:600px;margin:0 auto;padding:1.5rem 1rem 5rem">
+
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+        <a href="{% url 'rencontres:detail_profil' profil.pk %}" style="color:var(--love-muted);text-decoration:none">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <h2 style="font-size:1.3rem;font-weight:700;margin:0">
+            Mes photos
+            <span style="color:var(--love-muted);font-size:0.9rem;font-weight:400">
+                {{ photos.count }}/{{ photos_max }}
+            </span>
+        </h2>
+    </div>
+
+    <!-- Grille photos -->
+    <div class="photos-grid" style="margin-bottom:1.5rem">
+        {% for photo in photos %}
+        <div style="position:relative">
+            <img src="{{ photo.image.url }}" alt="Photo {{ forloop.counter }}">
+            {% if photo.est_principale %}
+            <span style="position:absolute;top:4px;left:4px;background:var(--love-primary);color:white;font-size:0.65rem;padding:0.15rem 0.4rem;border-radius:4px">
+                Principale
+            </span>
+            {% endif %}
+            <!-- Supprimer -->
+            <form method="post" style="position:absolute;top:4px;right:4px">
+                {% csrf_token %}
+                <input type="hidden" name="photo_id" value="{{ photo.id }}">
+                <button type="submit" name="supprimer"
+                    style="background:rgba(0,0,0,0.6);border:none;color:white;width:24px;height:24px;border-radius:50%;cursor:pointer;font-size:0.75rem;display:flex;align-items:center;justify-content:center"
+                    onclick="return confirm('Supprimer cette photo ?')">
+                    ✕
+                </button>
+            </form>
+        </div>
+        {% empty %}
+        <div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--love-muted)">
+            Ajoutez votre première photo !
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Ajouter photo -->
+    {% if peut_ajouter %}
+    <div style="background:var(--love-card);border-radius:var(--radius);padding:1.5rem;border:2px dashed var(--love-border)">
+        <h4 style="font-size:0.9rem;color:var(--love-primary);margin-bottom:1rem">
+            <i class="bi bi-plus-circle"></i> Ajouter une photo
+        </h4>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <input type="file" name="image" accept="image/jpeg,image/png,image/webp"
+                    class="form-control"
+                    style="background:rgba(255,255,255,0.05);border:1px solid var(--love-border);color:var(--love-text)">
+                <div class="small" style="color:var(--love-muted);margin-top:0.3rem">
+                    Formats : JPG, PNG, WebP · Max 5 Mo · Min 300×300px
+                </div>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" name="est_principale" id="est-principale">
+                <label class="form-check-label" for="est-principale">
+                    Définir comme photo principale
+                </label>
+            </div>
+            <button type="submit" class="btn-love" style="width:100%;justify-content:center">
+                <i class="bi bi-cloud-upload"></i> Uploader
+            </button>
+        </form>
+    </div>
+    {% else %}
+    <div style="text-align:center;padding:1.5rem;background:var(--love-card);border-radius:var(--radius)">
+        <p style="color:var(--love-muted)">Vous avez atteint la limite de {{ photos_max }} photos.</p>
+        {% if not profil.est_premium %}
+        <a href="{% url 'rencontres:premium' %}" class="btn-premium" style="display:inline-flex;width:auto;padding:0.6rem 1.5rem">
+            ⭐ Passer en Premium pour 12 photos
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div style="margin-top:1rem;font-size:0.8rem;color:var(--love-muted)">
+        <i class="bi bi-info-circle"></i>
+        Les photos sont soumises à validation avant publication.
+        Photos approuvées : {{ photos.count }}
+    </div>
+</div>
+{% endblock %}

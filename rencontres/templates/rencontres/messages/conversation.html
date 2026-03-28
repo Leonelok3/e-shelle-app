@@ -1,0 +1,124 @@
+{% extends 'rencontres/base_rencontre.html' %}
+{% load static %}
+
+{% block title %}{{ autre_profil.prenom_affiche }} — E-Shelle Love{% endblock %}
+
+{% block extra_css %}
+<style>
+body { overflow: hidden; }
+.rencontres-app { display: flex; flex-direction: column; height: 100vh; }
+main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.conv-wrapper { display: flex; flex-direction: column; height: 100%; max-width: 600px; margin: 0 auto; width: 100%; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Données cachées pour JS -->
+<div id="conversation-data"
+    data-conv-id="{{ conversation.id }}"
+    data-mon-profil-id="{{ profil.id }}"
+    style="display:none"></div>
+
+<div class="conv-wrapper">
+    <!-- Header conversation -->
+    <div style="background:var(--love-card);border-bottom:1px solid var(--love-border);padding:0.75rem 1rem;display:flex;align-items:center;gap:1rem;flex-shrink:0">
+        <a href="{% url 'rencontres:inbox' %}" style="color:var(--love-muted);text-decoration:none;font-size:1.2rem">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <a href="{% url 'rencontres:detail_profil' autre_profil.pk %}" style="text-decoration:none;display:flex;align-items:center;gap:0.75rem;flex:1">
+            {% if autre_profil.photo_principale %}
+            <img src="{{ autre_profil.photo_principale.url }}" alt="{{ autre_profil.prenom_affiche }}"
+                style="width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--love-border)">
+            {% else %}
+            <div style="width:42px;height:42px;border-radius:50%;background:var(--gradient-love);display:flex;align-items:center;justify-content:center;font-weight:700;color:white">
+                {{ autre_profil.prenom_affiche|first }}
+            </div>
+            {% endif %}
+            <div>
+                <div style="font-weight:600;color:var(--love-text)">{{ autre_profil.prenom_affiche }}, {{ autre_profil.age }} ans</div>
+                <div style="font-size:0.75rem;color:var(--love-muted)">
+                    {% if autre_profil.afficher_en_ligne %}
+                    <span style="color:var(--love-success)">● En ligne</span>
+                    {% else %}
+                    📍 {{ autre_profil.ville }}
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+        <a href="{% url 'rencontres:signaler' autre_profil.pk %}" style="color:var(--love-muted);text-decoration:none" title="Signaler">
+            <i class="bi bi-three-dots-vertical"></i>
+        </a>
+    </div>
+
+    <!-- Messages -->
+    <div class="messages-container" id="messages-container" style="flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.75rem">
+        {% for msg in messages_list %}
+        <div class="message-wrapper {% if msg.expediteur == profil %}sent-wrapper{% else %}received-wrapper{% endif %}"
+            data-message-id="{{ msg.id }}"
+            style="display:flex;{% if msg.expediteur == profil %}justify-content:flex-end{% else %}justify-content:flex-start{% endif %}">
+            <div class="message-bubble {% if msg.expediteur == profil %}sent{% else %}received{% endif %}">
+                {{ msg.contenu|linebreaksbr }}
+                <div class="message-time">
+                    {{ msg.date_envoi|date:"H:i" }}
+                    {% if msg.expediteur == profil %}
+                    {% if msg.est_lu %}
+                    <span style="color:var(--love-accent)">✓✓</span>
+                    {% else %}
+                    <span>✓</span>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div style="text-align:center;color:var(--love-muted);padding:2rem">
+            <div style="font-size:2rem;margin-bottom:0.75rem">👋</div>
+            <p>Dites bonjour à {{ autre_profil.prenom_affiche }} !</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Zone de saisie -->
+    {% if can_write %}
+    <div style="flex-shrink:0">
+        {% if msgs_restants == 0 %}
+        <div style="background:var(--love-card);padding:1rem;text-align:center;border-top:1px solid var(--love-border)">
+            <p style="color:var(--love-muted);font-size:0.85rem;margin-bottom:0.5rem">
+                Limite de messages atteinte pour aujourd'hui.
+            </p>
+            <a href="{% url 'rencontres:premium' %}" class="btn-premium" style="display:inline-flex;width:auto;padding:0.5rem 1.5rem">
+                ⭐ Passer en Premium
+            </a>
+        </div>
+        {% else %}
+        <form class="message-input-zone" id="message-form">
+            {% csrf_token %}
+            <input type="text" id="message-input"
+                placeholder="Votre message..."
+                maxlength="2000"
+                autocomplete="off"
+                {% if msgs_restants == 0 %}disabled{% endif %}>
+            <button type="submit" class="btn-send" id="btn-send" aria-label="Envoyer">
+                <i class="bi bi-send-fill"></i>
+            </button>
+        </form>
+        {% if not profil.est_premium and msgs_restants >= 0 %}
+        <div style="text-align:center;font-size:0.72rem;color:var(--love-muted);padding:0.25rem" id="msgs-counter">
+            {{ msgs_restants }} message{{ msgs_restants|pluralize }} restant{{ msgs_restants|pluralize }} aujourd'hui
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+    {% else %}
+    <div style="background:var(--love-card);padding:1rem;text-align:center;border-top:1px solid var(--love-border)">
+        <p style="color:var(--love-muted);font-size:0.85rem;margin:0">
+            {{ autre_profil.prenom_affiche }} n'accepte pas de messages pour le moment.
+        </p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'rencontres/js/messaging.js' %}"></script>
+{% endblock %}

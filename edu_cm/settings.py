@@ -62,6 +62,12 @@ INSTALLED_APPS = [
 
     # Sites framework (utilisé pour les URLs absolues de partage)
     "django.contrib.sites",
+
+    # ── E-Shelle Love — Application de rencontres ──────────────────
+    "rencontres.apps.RencontresConfig",
+
+    # ── E-Shelle Agro — Marketplace Agroalimentaire Africaine ───────
+    "agro.apps.AgroConfig",
 ]
 
 SITE_ID = 1
@@ -198,6 +204,29 @@ AUTO_TAILLE_MAX_IMAGE_MB    = 5
 AUTO_WHATSAPP_CONTACT       = "+237680625082"
 
 # DRF
+# ── Rencontres ────────────────────────────────────────────────────
+RENCONTRES_SETTINGS = {
+    'MAX_PHOTOS_FREE': 6,
+    'MAX_PHOTOS_PREMIUM': 12,
+    'LIKES_PAR_JOUR_FREE': 10,
+    'SUPER_LIKES_PAR_JOUR_FREE': 1,
+    'MESSAGES_PAR_JOUR_FREE': 5,
+    'AGE_MINIMUM': 18,
+    'BOOST_DUREE_MINUTES': 30,
+}
+
+# ── E-Shelle Agro ────────────────────────────────────────────────
+AGRO_SETTINGS = {
+    'PRODUITS_PAR_PAGE':        24,
+    'PHOTOS_MAX_PAR_PRODUIT':   8,
+    'TAILLE_MAX_PHOTO_MB':      5,
+    'MODERATION_AUTO':          False,   # True = publication directe sans validation
+    'DEVISE_DEFAUT':            'XAF',
+    'PAYS_DEFAUT':              'CM',
+    'LANGUES_SUPPORTEES':       ['fr', 'en', 'pt', 'es', 'ar'],
+    'WHATSAPP_SUPPORT':         '+237680625082',
+}
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",

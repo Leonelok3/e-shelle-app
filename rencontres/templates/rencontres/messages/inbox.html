@@ -1,0 +1,85 @@
+{% extends 'rencontres/base_rencontre.html' %}
+{% load static %}
+
+{% block title %}Messages — E-Shelle Love{% endblock %}
+
+{% block content %}
+<div style="max-width:600px;margin:0 auto;padding-bottom:5rem">
+    <div style="padding:1.25rem 1rem;display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:1.2rem;font-weight:700">💬 Messages</span>
+    </div>
+
+    <!-- Matchs récents (barre horizontale) -->
+    {% if matchs_recents %}
+    <div style="border-bottom:1px solid var(--love-border);padding-bottom:0.75rem;margin-bottom:0.5rem">
+        <div style="padding:0 1rem;font-size:0.78rem;color:var(--love-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em">
+            Matchs récents
+        </div>
+        <div class="recent-matches-bar">
+            {% for item in matchs_recents %}
+            <a href="{% if item.match.conversation %}{% url 'rencontres:conversation' item.match.conversation.id %}{% else %}{% url 'rencontres:detail_profil' item.profil.pk %}{% endif %}"
+                class="recent-match-avatar">
+                {% if item.profil.photo_principale %}
+                <img src="{{ item.profil.photo_principale.url }}" alt="{{ item.profil.prenom_affiche }}">
+                {% else %}
+                <div class="avatar-placeholder">{{ item.profil.prenom_affiche|first }}</div>
+                {% endif %}
+                <span>{{ item.profil.prenom_affiche }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Liste conversations -->
+    {% if conversations %}
+    <ul class="conversation-list">
+        {% for item in conversations %}
+        <li>
+            <a href="{% url 'rencontres:conversation' item.conv.id %}" class="conversation-item">
+                {% if item.autre.photo_principale %}
+                <img src="{{ item.autre.photo_principale.url }}" alt="{{ item.autre.prenom_affiche }}" class="conv-avatar">
+                {% else %}
+                <div class="conv-avatar-placeholder">{{ item.autre.prenom_affiche|first }}</div>
+                {% endif %}
+
+                <div class="conv-info">
+                    <div class="conv-name" style="{% if item.nb_non_lus %}font-weight:700{% endif %}">
+                        {{ item.autre.prenom_affiche }}, {{ item.autre.age }} ans
+                    </div>
+                    <div class="conv-preview" style="{% if item.nb_non_lus %}color:var(--love-text){% endif %}">
+                        {% if item.dernier_message %}
+                            {% if item.dernier_message.expediteur == profil %}Vous: {% endif %}
+                            {{ item.dernier_message.contenu|truncatechars:55 }}
+                        {% else %}
+                            Commencez la conversation !
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="conv-meta">
+                    {% if item.dernier_message %}
+                    <div>{{ item.dernier_message.date_envoi|date:"H:i" }}</div>
+                    {% endif %}
+                    {% if item.nb_non_lus %}
+                    <div style="background:var(--love-primary);color:white;border-radius:10px;padding:0.1rem 0.4rem;font-size:0.7rem;font-weight:700;text-align:center;margin-top:0.25rem">
+                        {{ item.nb_non_lus }}
+                    </div>
+                    {% endif %}
+                </div>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div style="text-align:center;padding:4rem 1.5rem;color:var(--love-muted)">
+        <div style="font-size:4rem;margin-bottom:1rem">💬</div>
+        <h3 style="color:var(--love-text)">Aucun message</h3>
+        <p>Obtenez des matchs pour commencer à discuter.</p>
+        <a href="{% url 'rencontres:decouverte' %}" class="btn-love" style="margin-top:1rem">
+            Découvrir des profils
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

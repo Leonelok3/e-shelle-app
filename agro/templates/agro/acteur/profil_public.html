@@ -1,0 +1,285 @@
+{% extends 'agro/base_agro.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Couverture -->
+<div class="agro-profil-cover position-relative">
+  {% if acteur.photo_couverture %}
+  <img src="{{ acteur.photo_couverture.url }}" alt="Couverture {{ acteur.nom_entreprise }}"
+       class="w-100 agro-cover-img">
+  {% else %}
+  <div class="agro-cover-default"></div>
+  {% endif %}
+
+  <!-- Logo + infos en overlay -->
+  <div class="container-xl">
+    <div class="agro-profil-header d-flex align-items-end gap-4">
+      <div class="agro-profil-logo-wrap">
+        {% if acteur.logo %}
+        <img src="{{ acteur.logo.url }}" alt="{{ acteur.nom_entreprise }}"
+             class="agro-profil-logo">
+        {% else %}
+        <div class="agro-profil-logo-placeholder">
+          {{ acteur.nom_entreprise|slice:":2"|upper }}
+        </div>
+        {% endif %}
+        {% if acteur.est_verifie %}
+        <span class="agro-profil-verified">
+          <i class="bi bi-patch-check-fill"></i>
+        </span>
+        {% endif %}
+      </div>
+      <div class="flex-grow-1 pb-3">
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+          <h1 class="h3 fw-bold text-white mb-0">{{ acteur.nom_entreprise }}</h1>
+          {% if acteur.plan_premium != 'free' %}
+          <span class="badge bg-warning text-dark">{{ acteur.badge_plan }} {{ acteur.plan_premium|capfirst }}</span>
+          {% endif %}
+        </div>
+        <div class="text-white-75 mt-1">
+          {{ acteur.get_type_acteur_display }}
+          <span class="mx-2 opacity-50">|</span>
+          <i class="bi bi-geo-alt me-1"></i>{{ acteur.ville }}, {{ acteur.pays }}
+          {% if acteur.vend_internationalement %}
+          <span class="badge bg-info ms-2">🌍 Export</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-xl py-4">
+  <div class="row g-4">
+
+    <!-- Colonne principale -->
+    <div class="col-lg-8">
+
+      <!-- Description -->
+      {% if acteur.description %}
+      <div class="card agro-card mb-4">
+        <div class="card-header agro-card-header">
+          <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>À propos</h5>
+        </div>
+        <div class="card-body">
+          <p>{{ acteur.description|linebreaksbr }}</p>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Produits -->
+      {% if produits %}
+      <div class="card agro-card mb-4">
+        <div class="card-header agro-card-header d-flex align-items-center justify-content-between">
+          <h5 class="mb-0"><i class="bi bi-box-seam me-2"></i>Produits ({{ acteur.nb_produits }})</h5>
+          <a href="{% url 'agro:catalogue' %}?acteur={{ acteur.slug }}" class="btn btn-sm btn-agro-outline">
+            Voir tout
+          </a>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            {% for p in produits %}
+            <div class="col-6 col-md-4">
+              {% include 'agro/components/product_card.html' with produit=p %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Avis -->
+      {% if avis %}
+      <div class="card agro-card mb-4">
+        <div class="card-header agro-card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-star me-2"></i>Avis clients
+            <span class="badge bg-agro-primary ms-2">{{ acteur.note_moyenne|floatformat:1 }}/5</span>
+          </h5>
+        </div>
+        <div class="card-body">
+          {% for a in avis %}
+          <div class="mb-3 pb-3 border-bottom">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <strong class="small">{{ a.evaluateur.nom_entreprise }}</strong>
+              <span class="text-warning">
+                {% for i in "12345" %}
+                  {% if forloop.counter <= a.note_globale %}★{% else %}☆{% endif %}
+                {% endfor %}
+              </span>
+              {% if a.est_verifie %}
+              <span class="badge bg-success-subtle text-success small">
+                <i class="bi bi-check-circle me-1"></i>Vérifié
+              </span>
+              {% endif %}
+              <small class="text-muted ms-auto">{{ a.date_avis|date:"d/m/Y" }}</small>
+            </div>
+            <p class="mb-1 small">{{ a.commentaire }}</p>
+            {% if a.reponse_vendeur %}
+            <div class="bg-agro-light rounded p-2 small mt-2">
+              <strong>Réponse du vendeur :</strong> {{ a.reponse_vendeur }}
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+
+      <!-- Contact card -->
+      <div class="card agro-card mb-3 sticky-lg-top" style="top: 80px;">
+        <div class="card-body">
+          <h5 class="fw-bold mb-3">Contacter {{ acteur.nom_contact }}</h5>
+
+          {% if acteur.telephone %}
+          <a href="tel:{{ acteur.telephone }}"
+             class="btn btn-agro w-100 mb-2">
+            <i class="bi bi-telephone me-2"></i>{{ acteur.telephone }}
+          </a>
+          {% endif %}
+
+          {% if acteur.whatsapp %}
+          <a href="https://wa.me/{{ acteur.whatsapp|slice:'1:'|cut:' '|cut:'-' }}"
+             target="_blank" rel="noopener"
+             class="btn btn-success w-100 mb-2">
+            <i class="bi bi-whatsapp me-2"></i>WhatsApp
+          </a>
+          {% endif %}
+
+          {% if acteur.email_pro %}
+          <a href="mailto:{{ acteur.email_pro }}"
+             class="btn btn-agro-outline w-100 mb-2">
+            <i class="bi bi-envelope me-2"></i>{{ acteur.email_pro }}
+          </a>
+          {% endif %}
+
+          {% if acteur.site_web %}
+          <a href="{{ acteur.site_web }}" target="_blank" rel="noopener"
+             class="btn btn-outline-secondary w-100 mb-2">
+            <i class="bi bi-globe me-2"></i>Site web
+          </a>
+          {% endif %}
+
+          <hr>
+          <!-- Stats -->
+          <div class="row text-center g-2">
+            <div class="col-4">
+              <div class="fw-bold text-agro-primary">{{ acteur.nb_produits }}</div>
+              <small class="text-muted">Produits</small>
+            </div>
+            <div class="col-4">
+              <div class="fw-bold text-agro-primary">{{ acteur.note_moyenne|floatformat:1 }}</div>
+              <small class="text-muted">Note</small>
+            </div>
+            <div class="col-4">
+              <div class="fw-bold text-agro-primary">{{ acteur.nb_commandes }}</div>
+              <small class="text-muted">Commandes</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Infos activité -->
+      <div class="card agro-card mb-3">
+        <div class="card-header agro-card-header">
+          <h6 class="mb-0"><i class="bi bi-building me-2"></i>Informations</h6>
+        </div>
+        <div class="card-body">
+          <dl class="row mb-0 small">
+            {% if acteur.annee_creation %}
+            <dt class="col-6 text-muted">Fondée en</dt>
+            <dd class="col-6">{{ acteur.annee_creation }}</dd>
+            {% endif %}
+            {% if acteur.nb_employes %}
+            <dt class="col-6 text-muted">Effectif</dt>
+            <dd class="col-6">{{ acteur.get_nb_employes_display }}</dd>
+            {% endif %}
+            {% if acteur.modes_paiement %}
+            <dt class="col-6 text-muted">Paiements</dt>
+            <dd class="col-6">{{ acteur.modes_paiement|join:", " }}</dd>
+            {% endif %}
+            {% if acteur.langues_travail %}
+            <dt class="col-6 text-muted">Langues</dt>
+            <dd class="col-6">{{ acteur.langues_travail|join:", " }}</dd>
+            {% endif %}
+            {% if acteur.devises_acceptees %}
+            <dt class="col-6 text-muted">Devises</dt>
+            <dd class="col-6">{{ acteur.devises_acceptees|join:", " }}</dd>
+            {% endif %}
+          </dl>
+        </div>
+      </div>
+
+      <!-- Certifications -->
+      {% if acteur.certifications.all %}
+      <div class="card agro-card">
+        <div class="card-header agro-card-header">
+          <h6 class="mb-0"><i class="bi bi-award me-2"></i>Certifications</h6>
+        </div>
+        <div class="card-body">
+          {% for cert in acteur.certifications.all %}
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="fs-5">{{ cert.icone }}</span>
+            <div>
+              <div class="small fw-semibold">{{ cert.nom }}</div>
+              <div class="text-muted" style="font-size:.75rem">{{ cert.organisme }}</div>
+            </div>
+            {% if cert.est_verifie_admin %}
+            <i class="bi bi-patch-check-fill text-success ms-auto"></i>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+
+<style>
+.agro-cover-img { height: 220px; object-fit: cover; width: 100%; }
+.agro-cover-default {
+  height: 220px;
+  background: var(--gradient-hero);
+}
+.agro-profil-header {
+  margin-top: -50px;
+  position: relative;
+  z-index: 2;
+  padding-bottom: 1rem;
+}
+.agro-profil-logo-wrap { position: relative; flex-shrink: 0; }
+.agro-profil-logo {
+  width: 100px;
+  height: 100px;
+  border-radius: 16px;
+  border: 4px solid #fff;
+  object-fit: contain;
+  background: #fff;
+}
+.agro-profil-logo-placeholder {
+  width: 100px; height: 100px;
+  background: var(--gradient-agro);
+  border-radius: 16px;
+  border: 4px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 900;
+  font-size: 2rem;
+}
+.agro-profil-verified {
+  position: absolute; bottom: 4px; right: 4px;
+  color: #28a745; font-size: 1.3rem; background: #fff; border-radius: 50%;
+}
+.text-white-75 { color: rgba(255,255,255,.75) !important; }
+</style>
+{% endblock %}

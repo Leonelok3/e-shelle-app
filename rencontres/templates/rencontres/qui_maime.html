@@ -1,0 +1,73 @@
+{% extends 'rencontres/base_rencontre.html' %}
+
+{% block title %}Qui m'aime — E-Shelle Love{% endblock %}
+
+{% block content %}
+<div style="max-width:600px;margin:0 auto;padding:1rem 1rem 5rem">
+
+    <div style="padding:0.5rem 0 1.5rem">
+        <h2 style="font-size:1.3rem;font-weight:700">
+            Qui m'aime
+            <span style="color:var(--love-primary)">{{ nb_likes }}</span>
+        </h2>
+    </div>
+
+    {% if not est_premium %}
+    <!-- Teaser premium -->
+    <div style="position:relative;border-radius:var(--radius);overflow:hidden;margin-bottom:1.5rem">
+        <!-- Cartes floutées -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;filter:blur(8px);pointer-events:none">
+            {% for i in "123456789" %}
+            <div style="aspect-ratio:3/4;background:var(--love-card);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:3rem;color:var(--love-border)">👤</div>
+            {% endfor %}
+        </div>
+        <!-- Overlay -->
+        <div class="premium-lock-overlay">
+            <div style="font-size:3rem">🔒</div>
+            <h3 style="color:var(--love-text)">{{ nb_likes }} personne{{ nb_likes|pluralize }} vous a aimé{{ nb_likes|pluralize }}</h3>
+            <p style="color:var(--love-muted)">Passez en Silver ou plus pour voir qui vous a liké.</p>
+            <a href="{% url 'rencontres:premium' %}" class="btn-premium" style="width:auto;padding:0.75rem 2rem">
+                ⭐ Voir qui m'aime
+            </a>
+        </div>
+    </div>
+    {% else %}
+    <!-- Liste des likes (premium) -->
+    {% if likes_recus %}
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1rem">
+        {% for like in likes_recus %}
+        {% with p=like.envoyeur %}
+        <a href="{% url 'rencontres:detail_profil' p.pk %}" style="text-decoration:none">
+            <div style="background:var(--love-card);border-radius:var(--radius);overflow:hidden;border:1px solid var(--love-border);transition:transform 0.2s" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
+                {% if p.photo_principale %}
+                <img src="{{ p.photo_principale.url }}" alt="{{ p.prenom_affiche }}"
+                    style="width:100%;aspect-ratio:1;object-fit:cover">
+                {% else %}
+                <div style="width:100%;aspect-ratio:1;background:var(--gradient-love);display:flex;align-items:center;justify-content:center;font-size:3rem;color:white">
+                    {{ p.prenom_affiche|first }}
+                </div>
+                {% endif %}
+                <div style="padding:0.75rem">
+                    <div style="font-weight:600;font-size:0.9rem">{{ p.prenom_affiche }}, {{ p.age }} ans</div>
+                    <div style="font-size:0.78rem;color:var(--love-muted)">📍 {{ p.ville }}</div>
+                    {% if like.type_like == 'super_like' %}
+                    <div style="color:var(--love-accent);font-size:0.75rem;margin-top:0.2rem">⭐ Super Like</div>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+        {% endwith %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align:center;padding:3rem;color:var(--love-muted)">
+        <div style="font-size:3rem;margin-bottom:1rem">💔</div>
+        <p>Personne ne vous a encore liké. Complétez votre profil pour attirer plus d'attention !</p>
+        <a href="{% url 'rencontres:modifier_profil' %}" class="btn-love" style="margin-top:1rem">
+            Améliorer mon profil
+        </a>
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

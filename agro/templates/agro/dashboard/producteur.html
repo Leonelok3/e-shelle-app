@@ -1,0 +1,197 @@
+{% extends 'agro/base_agro.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-xl py-4">
+
+  <!-- En-tête dashboard -->
+  <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+    <div>
+      <h1 class="h3 fw-bold mb-1">
+        Bonjour, {{ acteur.nom_contact.split.0 }} 👋
+      </h1>
+      <p class="text-muted mb-0">
+        {{ acteur.nom_entreprise }}
+        {% if acteur.est_verifie %}
+        <span class="badge bg-success ms-2">
+          <i class="bi bi-patch-check-fill me-1"></i>Vérifié
+        </span>
+        {% endif %}
+        {% if acteur.plan_premium != 'free' %}
+        <span class="badge bg-warning text-dark ms-1">
+          {{ acteur.badge_plan }} {{ acteur.plan_premium|capfirst }}
+        </span>
+        {% endif %}
+      </p>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{% url 'agro:ajouter_produit' %}" class="btn btn-agro">
+        <i class="bi bi-plus-circle me-1"></i>Nouveau produit
+      </a>
+      <a href="{% url 'agro:modifier_profil' %}" class="btn btn-agro-outline">
+        <i class="bi bi-pencil me-1"></i>Mon profil
+      </a>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="agro-kpi-card">
+        <div class="agro-kpi-nb">{{ stats.nb_vues_7j }}</div>
+        <div class="agro-kpi-label">Vues (7 jours)</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="agro-kpi-card" style="background:var(--gradient-premium);color:var(--agro-dark)">
+        <div class="agro-kpi-nb">{{ stats.devis_recus }}</div>
+        <div class="agro-kpi-label">Devis en attente</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="agro-kpi-card" style="background:linear-gradient(135deg,#023E8A,#0077B6)">
+        <div class="agro-kpi-nb">{{ stats.commandes_cours }}</div>
+        <div class="agro-kpi-label">Commandes en cours</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="agro-kpi-card" style="background:linear-gradient(135deg,#2ecc71,#27ae60)">
+        <div class="agro-kpi-nb">{{ acteur.note_moyenne|floatformat:1 }}/5</div>
+        <div class="agro-kpi-label">Note clients</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+
+    <!-- Mes produits -->
+    <div class="col-lg-8">
+      <div class="agro-dash-card">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <h5 class="fw-bold mb-0">
+            <i class="bi bi-box-seam me-2 text-agro-primary"></i>Mes produits
+          </h5>
+          <a href="{% url 'agro:mes_produits' %}" class="btn btn-sm btn-agro-outline">
+            Voir tout <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
+
+        {% if produits_recents %}
+        <div class="table-responsive">
+          <table class="table table-hover table-sm align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Produit</th>
+                <th>Statut</th>
+                <th>Vues</th>
+                <th>Devis</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in produits_recents %}
+              <tr>
+                <td>
+                  <div class="fw-semibold small">{{ p.nom|truncatechars:35 }}</div>
+                  <div class="text-muted" style="font-size:.75rem">{{ p.categorie.nom }}</div>
+                </td>
+                <td>
+                  <span class="badge {% if p.statut == 'publie' %}bg-success{% elif p.statut == 'en_attente' %}bg-warning text-dark{% elif p.statut == 'brouillon' %}bg-secondary{% else %}bg-danger{% endif %}">
+                    {{ p.get_statut_display }}
+                  </span>
+                </td>
+                <td><small>{{ p.nb_vues }}</small></td>
+                <td><small>{{ p.nb_demandes }}</small></td>
+                <td>
+                  <a href="{% url 'agro:modifier_produit' slug=p.slug %}"
+                     class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4">
+          <p class="text-muted">Vous n'avez pas encore de produits.</p>
+          <a href="{% url 'agro:ajouter_produit' %}" class="btn btn-agro">
+            <i class="bi bi-plus-circle me-2"></i>Ajouter mon premier produit
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Devis reçus -->
+    <div class="col-lg-4">
+      <div class="agro-dash-card">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <h5 class="fw-bold mb-0">
+            <i class="bi bi-envelope me-2 text-agro-primary"></i>Devis reçus
+          </h5>
+          <a href="{% url 'agro:mes_devis' %}" class="btn btn-sm btn-agro-outline">
+            Voir tout
+          </a>
+        </div>
+
+        {% if devis_recents %}
+        <div class="d-flex flex-column gap-2">
+          {% for devis in devis_recents %}
+          <a href="{% url 'agro:detail_devis' reference=devis.reference %}"
+             class="text-decoration-none">
+            <div class="border rounded p-2 {% if devis.statut == 'en_attente' %}border-danger{% elif devis.statut == 'vue' %}border-warning{% else %}border-light{% endif %}">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="fw-semibold small">
+                  {{ devis.acheteur.nom_entreprise|truncatechars:20 }}
+                </div>
+                <span class="badge {% if devis.statut == 'en_attente' %}bg-danger{% elif devis.statut == 'vue' %}bg-warning text-dark{% else %}bg-secondary{% endif %} small">
+                  {{ devis.get_statut_display }}
+                </span>
+              </div>
+              <div class="text-muted small mt-1">
+                {% if devis.produit %}{{ devis.produit.nom|truncatechars:25 }}{% endif %}
+                — {{ devis.quantite }} {{ devis.unite_mesure }}
+              </div>
+              <div class="text-muted" style="font-size:.72rem">{{ devis.date_creation|date:"d/m/Y" }}</div>
+            </div>
+          </a>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted text-center py-3 mb-0">Aucune demande pour l'instant.</p>
+        {% endif %}
+      </div>
+
+      <!-- Complétion profil -->
+      {% if acteur.profil_complet < 100 %}
+      <div class="agro-dash-card mt-3 border-warning">
+        <h6 class="fw-bold mb-2">
+          <i class="bi bi-person-check me-2 text-warning"></i>Complétez votre profil
+        </h6>
+        <div class="progress mb-2" style="height:8px">
+          <div class="progress-bar bg-agro-primary" style="width:{{ acteur.profil_complet }}%"></div>
+        </div>
+        <p class="text-muted small mb-2">{{ acteur.profil_complet }}% complété</p>
+        <a href="{% url 'agro:modifier_profil' %}" class="btn btn-sm btn-agro w-100">
+          Compléter maintenant
+        </a>
+      </div>
+      {% endif %}
+
+      <!-- Upgrade plan -->
+      {% if acteur.plan_premium == 'free' %}
+      <div class="agro-dash-card mt-3" style="background:var(--gradient-premium)">
+        <h6 class="fw-bold mb-2">🚀 Passez Premium</h6>
+        <p class="small mb-2">Publiez jusqu'à 20 produits et soyez visible en priorité.</p>
+        <a href="{% url 'agro:premium' %}" class="btn btn-sm btn-dark w-100">
+          Voir les plans
+        </a>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}

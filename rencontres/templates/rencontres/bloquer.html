@@ -1,0 +1,28 @@
+{% extends 'rencontres/base_rencontre.html' %}
+
+{% block title %}Bloquer — E-Shelle Love{% endblock %}
+
+{% block content %}
+<div style="max-width:500px;margin:0 auto;padding:2rem 1rem;text-align:center">
+    <div style="font-size:3rem;margin-bottom:1rem">🚫</div>
+    <h2 style="font-size:1.3rem;font-weight:700;margin-bottom:0.5rem">
+        Bloquer {{ profil_cible.prenom_affiche }} ?
+    </h2>
+    <p style="color:var(--love-muted);font-size:0.9rem;margin-bottom:2rem">
+        Ce profil ne pourra plus vous contacter et n'apparaîtra plus dans votre découverte.
+        Vous ne serez plus visible dans la sienne non plus.
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        <div style="display:flex;gap:1rem;justify-content:center">
+            <a href="javascript:history.back()" class="btn-love-outline">
+                Annuler
+            </a>
+            <button type="submit" style="background:var(--love-danger);color:white;border:none;border-radius:25px;padding:0.75rem 2rem;font-weight:600;cursor:pointer">
+                Bloquer
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

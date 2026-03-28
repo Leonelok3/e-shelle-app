@@ -1,0 +1,43 @@
+{% extends 'rencontres/base_rencontre.html' %}
+
+{% block title %}Match avec {{ autre_profil.prenom_affiche }} — E-Shelle Love{% endblock %}
+
+{% block content %}
+<div style="max-width:600px;margin:0 auto;padding:2rem 1rem 5rem;text-align:center">
+
+    <div style="font-size:3rem;margin-bottom:1rem">❤️</div>
+    <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:0.5rem">
+        Vous avez matché avec {{ autre_profil.prenom_affiche }} !
+    </h2>
+    <p style="color:var(--love-muted);margin-bottom:2rem">
+        Compatibilité : <strong style="color:var(--love-primary)">{{ match.score_compatibilite|floatformat:0 }}%</strong>
+        · Match du {{ match.date_match|date:"d/m/Y" }}
+    </p>
+
+    <!-- Photo -->
+    <div style="margin-bottom:2rem">
+        {% if autre_profil.photo_principale %}
+        <img src="{{ autre_profil.photo_principale.url }}" alt="{{ autre_profil.prenom_affiche }}"
+            style="width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid var(--love-primary)">
+        {% else %}
+        <div style="width:120px;height:120px;border-radius:50%;background:var(--gradient-love);display:flex;align-items:center;justify-content:center;font-size:3rem;color:white;margin:0 auto">
+            {{ autre_profil.prenom_affiche|first }}
+        </div>
+        {% endif %}
+        <div style="margin-top:0.75rem;font-weight:600">{{ autre_profil.prenom_affiche }}, {{ autre_profil.age }} ans</div>
+        <div style="color:var(--love-muted);font-size:0.85rem">📍 {{ autre_profil.ville }}, {{ autre_profil.pays }}</div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex;gap:1rem;justify-content:center">
+        <a href="{% url 'rencontres:detail_profil' autre_profil.pk %}" class="btn-love-outline">
+            Voir le profil
+        </a>
+        {% if match.conversation %}
+        <a href="{% url 'rencontres:conversation' match.conversation.id %}" class="btn-love">
+            💬 Envoyer un message
+        </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

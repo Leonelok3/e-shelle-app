@@ -1,0 +1,82 @@
+{% extends 'agro/base_agro.html' %}
+
+{% block content %}
+<div class="container-xl py-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 fw-bold mb-0">Mes Produits</h1>
+    <a href="{% url 'agro:ajouter_produit' %}" class="btn btn-agro">
+      <i class="bi bi-plus-circle me-1"></i>Ajouter un produit
+    </a>
+  </div>
+
+  {% if page_obj %}
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Produit</th>
+          <th>Catégorie</th>
+          <th>Prix</th>
+          <th>Statut</th>
+          <th>Vues</th>
+          <th>Devis</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in page_obj %}
+        <tr>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              {% if p.image_principale %}
+              <img src="{{ p.image_principale.url }}" width="40" height="40"
+                   class="rounded" style="object-fit:cover">
+              {% endif %}
+              <div>
+                <div class="fw-semibold">{{ p.nom|truncatechars:40 }}</div>
+                <small class="text-muted">{{ p.reference }}</small>
+              </div>
+            </div>
+          </td>
+          <td><small>{{ p.categorie.nom }}</small></td>
+          <td class="fw-semibold">{{ p.prix_unitaire|floatformat:0 }} {{ p.devise }}</td>
+          <td>
+            <span class="badge {% if p.statut == 'publie' %}bg-success{% elif p.statut == 'en_attente' %}bg-warning text-dark{% elif p.statut == 'brouillon' %}bg-secondary{% else %}bg-danger{% endif %}">
+              {{ p.get_statut_display }}
+            </span>
+          </td>
+          <td>{{ p.nb_vues }}</td>
+          <td>{{ p.nb_demandes }}</td>
+          <td>
+            <div class="d-flex gap-1">
+              <a href="{{ p.get_absolute_url }}" class="btn btn-outline-primary btn-sm" title="Voir">
+                <i class="bi bi-eye"></i>
+              </a>
+              <a href="{% url 'agro:modifier_produit' slug=p.slug %}" class="btn btn-outline-secondary btn-sm" title="Modifier">
+                <i class="bi bi-pencil"></i>
+              </a>
+              <a href="{% url 'agro:photos_produit' pk=p.pk %}" class="btn btn-outline-info btn-sm" title="Photos">
+                <i class="bi bi-images"></i>
+              </a>
+              <a href="{% url 'agro:supprimer_produit' slug=p.slug %}" class="btn btn-outline-danger btn-sm" title="Archiver">
+                <i class="bi bi-archive"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="text-center py-5">
+    <div class="display-4 mb-3">📦</div>
+    <h4>Vous n'avez pas encore de produits</h4>
+    <p class="text-muted">Publiez vos premiers produits pour être visible par les acheteurs du monde entier.</p>
+    <a href="{% url 'agro:ajouter_produit' %}" class="btn btn-agro btn-lg mt-2">
+      <i class="bi bi-plus-circle me-2"></i>Ajouter mon premier produit
+    </a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

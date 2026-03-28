@@ -1,0 +1,72 @@
+{% extends 'agro/base_agro.html' %}
+
+{% block content %}
+<div class="container-xl py-4">
+  <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+    <div>
+      <h1 class="h3 fw-bold mb-1">Mon Espace Acheteur</h1>
+      <p class="text-muted mb-0">{{ acteur.nom_entreprise }}</p>
+    </div>
+    <a href="{% url 'agro:catalogue' %}" class="btn btn-agro">
+      <i class="bi bi-grid-3x3-gap me-1"></i>Explorer le catalogue
+    </a>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="agro-kpi-card">
+        <div class="agro-kpi-nb">{{ stats.devis_recus }}</div>
+        <div class="agro-kpi-label">Devis en attente</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="agro-kpi-card" style="background:linear-gradient(135deg,#023E8A,#0077B6)">
+        <div class="agro-kpi-nb">{{ stats.commandes_cours }}</div>
+        <div class="agro-kpi-label">Commandes en cours</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="agro-dash-card">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <h5 class="fw-bold mb-0"><i class="bi bi-envelope me-2 text-agro-primary"></i>Mes devis envoyés</h5>
+          <a href="{% url 'agro:mes_devis' %}" class="btn btn-sm btn-agro-outline">Voir tout</a>
+        </div>
+        {% if devis_recents %}
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead class="table-light"><tr><th>Vendeur</th><th>Produit</th><th>Statut</th><th></th></tr></thead>
+            <tbody>
+              {% for d in devis_recents %}
+              <tr>
+                <td class="small">{{ d.vendeur.nom_entreprise }}</td>
+                <td class="small">{{ d.produit.nom|default:"-"|truncatechars:25 }}</td>
+                <td><span class="badge bg-secondary small">{{ d.get_statut_display }}</span></td>
+                <td><a href="{% url 'agro:detail_devis' reference=d.reference %}" class="btn btn-sm btn-agro-outline">Voir</a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center py-3">Aucun devis pour l'instant.</p>
+        <a href="{% url 'agro:catalogue' %}" class="btn btn-agro">Explorer le catalogue</a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="agro-dash-card">
+        <h5 class="fw-bold mb-3"><i class="bi bi-megaphone me-2 text-agro-primary"></i>Appels d'offre urgents</h5>
+        <a href="{% url 'agro:lancer_ao' %}" class="btn btn-agro w-100 mb-2">
+          <i class="bi bi-plus-circle me-1"></i>Lancer un appel d'offre
+        </a>
+        <a href="{% url 'agro:appels_offre' %}" class="btn btn-agro-outline w-100">
+          Voir tous les AO
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

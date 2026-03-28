@@ -1,0 +1,52 @@
+{% extends 'agro/base_agro.html' %}
+
+{% block content %}
+<div class="container-xl py-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 fw-bold mb-0">Mes Certifications</h1>
+    <a href="{% url 'agro:dashboard' %}" class="btn btn-agro-outline btn-sm">
+      <i class="bi bi-arrow-left me-1"></i>Tableau de bord
+    </a>
+  </div>
+
+  {% if certifications %}
+  <div class="row g-3">
+    {% for cert in certifications %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card agro-card h-100">
+        <div class="card-body">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="fs-3">{{ cert.icone }}</span>
+            <div>
+              <div class="fw-bold">{{ cert.get_type_certification_display }}</div>
+              <div class="small text-muted">{{ cert.organisme_certificateur }}</div>
+            </div>
+          </div>
+          {% if cert.numero_certificat %}
+          <div class="small text-muted mb-1">N° {{ cert.numero_certificat }}</div>
+          {% endif %}
+          <div class="small">
+            Valide du {{ cert.date_emission|date:"d/m/Y" }}
+            {% if cert.date_expiration %} au {{ cert.date_expiration|date:"d/m/Y" }}{% endif %}
+          </div>
+          {% if cert.est_expire %}
+          <span class="badge bg-danger mt-2">Expiré</span>
+          {% elif cert.est_verifie %}
+          <span class="badge bg-success mt-2"><i class="bi bi-check-circle me-1"></i>Vérifié</span>
+          {% else %}
+          <span class="badge bg-warning text-dark mt-2">En attente de vérification</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center py-5">
+    <div class="fs-1 mb-3">🏅</div>
+    <p class="text-muted">Aucune certification enregistrée.</p>
+    <p class="small text-muted">Ajoutez vos certifications (Bio, ISO, GlobalGAP...) pour renforcer votre crédibilité.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

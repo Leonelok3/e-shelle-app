@@ -1,0 +1,109 @@
+{% extends 'agro/base_agro.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 700px;">
+
+  <div class="text-center mb-5">
+    <div class="display-4 mb-2">🌿</div>
+    <h1 class="h2 fw-bold">Rejoindre E-Shelle Agro</h1>
+    <p class="text-muted">
+      Créez votre profil professionnel et commencez à vendre ou acheter en Afrique et dans le monde.
+    </p>
+    <!-- Étapes -->
+    <div class="d-flex justify-content-center gap-2 mt-3">
+      <div class="agro-step {% if etape >= 1 %}active{% endif %}">1. Qui êtes-vous ?</div>
+      <div class="agro-step {% if etape >= 2 %}active{% endif %}">2. Contact</div>
+      <div class="agro-step {% if etape >= 3 %}active{% endif %}">3. Activité</div>
+    </div>
+  </div>
+
+  <div class="card agro-card shadow-sm">
+    <div class="card-body p-4">
+      <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <!-- Type d'acteur -->
+        <div class="mb-4">
+          <label class="form-label fw-semibold">
+            Je suis... <span class="text-danger">*</span>
+          </label>
+          {{ form.type_acteur }}
+          {% if form.type_acteur.errors %}
+          <div class="invalid-feedback d-block">{{ form.type_acteur.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Entreprise / Exploitation <span class="text-danger">*</span></label>
+            {{ form.nom_entreprise }}
+            {% if form.nom_entreprise.errors %}
+            <div class="invalid-feedback d-block">{{ form.nom_entreprise.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Votre nom <span class="text-danger">*</span></label>
+            {{ form.nom_contact }}
+            {% if form.nom_contact.errors %}
+            <div class="invalid-feedback d-block">{{ form.nom_contact.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Pays <span class="text-danger">*</span></label>
+            {{ form.pays }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Ville <span class="text-danger">*</span></label>
+            {{ form.ville }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Téléphone / WhatsApp <span class="text-danger">*</span></label>
+            {{ form.telephone }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Email professionnel <span class="text-danger">*</span></label>
+            {{ form.email_pro }}
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold">Décrivez votre activité</label>
+            {{ form.description }}
+          </div>
+        </div>
+
+        <div class="mt-4 d-grid">
+          <button type="submit" class="btn btn-agro btn-lg">
+            <i class="bi bi-person-plus me-2"></i>Créer mon profil gratuitement
+          </button>
+        </div>
+
+        <p class="text-center text-muted small mt-3">
+          En vous inscrivant, vous acceptez nos
+          <a href="#" class="text-agro-primary">Conditions d'utilisation</a>.
+          Inscription gratuite — aucune CB requise.
+        </p>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<style>
+.agro-step {
+  padding: .4rem 1rem;
+  border-radius: 20px;
+  background: #f0f5f2;
+  font-size: .85rem;
+  color: var(--agro-muted);
+  font-weight: 500;
+}
+.agro-step.active {
+  background: var(--gradient-agro);
+  color: #fff;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'agro/base_agro.html' %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 800px;">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'agro:mes_devis' %}" class="btn btn-agro-outline btn-sm">
+      <i class="bi bi-arrow-left me-1"></i>Retour
+    </a>
+    <h1 class="h4 fw-bold mb-0">Devis {{ devis.reference }}</h1>
+    <span class="badge {% if devis.statut == 'accepte' %}bg-success{% elif devis.statut == 'devis_envoye' %}bg-info{% elif devis.statut == 'en_attente' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+      {{ devis.get_statut_display }}
+    </span>
+    <a href="{% url 'agro:devis_pdf' reference=devis.reference %}" class="btn btn-outline-secondary btn-sm ms-auto">
+      <i class="bi bi-file-pdf me-1"></i>PDF
+    </a>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card agro-card">
+        <div class="card-header agro-card-header">Acheteur</div>
+        <div class="card-body small">
+          <div class="fw-bold">{{ devis.acheteur.nom_entreprise }}</div>
+          <div>{{ devis.acheteur.pays }}</div>
+          <div>{{ devis.acheteur.telephone }}</div>
+          <div>{{ devis.acheteur.email_pro }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card agro-card">
+        <div class="card-header agro-card-header">Vendeur</div>
+        <div class="card-body small">
+          <div class="fw-bold">{{ devis.vendeur.nom_entreprise }}</div>
+          <div>{{ devis.vendeur.pays }}</div>
+          <div>{{ devis.vendeur.telephone }}</div>
+          <div>{{ devis.vendeur.email_pro }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card agro-card">
+        <div class="card-header agro-card-header">Détail de la demande</div>
+        <div class="card-body">
+          <dl class="row small mb-0">
+            {% if devis.produit %}<dt class="col-4 text-muted">Produit</dt><dd class="col-8">{{ devis.produit.nom }}</dd>{% endif %}
+            <dt class="col-4 text-muted">Quantité</dt><dd class="col-8">{{ devis.quantite }} {{ devis.unite_mesure }}</dd>
+            <dt class="col-4 text-muted">Destination</dt><dd class="col-8">{{ devis.destination }}</dd>
+            <dt class="col-4 text-muted">Incoterm souhaité</dt><dd class="col-8">{{ devis.incoterm_souhaite|default:"Non précisé" }}</dd>
+            <dt class="col-4 text-muted">Message</dt><dd class="col-8">{{ devis.message }}</dd>
+            {% if devis.prix_propose %}
+            <dt class="col-4 text-muted fw-bold">Prix proposé</dt>
+            <dd class="col-8 fw-bold text-agro-primary">{{ devis.prix_propose }} {{ devis.devise_propose }}</dd>
+            {% endif %}
+            {% if devis.conditions_proposees %}
+            <dt class="col-4 text-muted">Conditions</dt><dd class="col-8">{{ devis.conditions_proposees }}</dd>
+            {% endif %}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="d-flex gap-2 mt-4 flex-wrap">
+    {% if est_vendeur and devis.statut in 'en_attente,vue' %}
+    <a href="{% url 'agro:repondre_devis' reference=devis.reference %}" class="btn btn-agro">
+      <i class="bi bi-reply me-1"></i>Envoyer mon devis
+    </a>
+    {% endif %}
+    {% if not est_vendeur and devis.statut == 'devis_envoye' %}
+    <a href="{% url 'agro:accepter_devis' reference=devis.reference %}" class="btn btn-agro">
+      <i class="bi bi-check-circle me-1"></i>Accepter ce devis
+    </a>
+    {% endif %}
+    <a href="{% url 'agro:devis_pdf' reference=devis.reference %}" class="btn btn-agro-outline">
+      <i class="bi bi-download me-1"></i>Télécharger PDF
+    </a>
+  </div>
+</div>
+{% endblock %}

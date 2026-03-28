@@ -1,0 +1,42 @@
+{% extends 'rencontres/base_rencontre.html' %}
+
+{% block title %}Signaler — E-Shelle Love{% endblock %}
+
+{% block content %}
+<div style="max-width:500px;margin:0 auto;padding:2rem 1rem">
+    <h2 style="font-size:1.3rem;font-weight:700;margin-bottom:0.5rem">Signaler ce profil</h2>
+    <p style="color:var(--love-muted);font-size:0.9rem;margin-bottom:1.5rem">
+        Votre signalement sera examiné par notre équipe de modération.
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div style="background:var(--love-card);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem">
+            <label class="form-label" style="color:var(--love-muted);font-size:0.85rem">Raison</label>
+            <select name="raison" class="form-select" style="background:rgba(255,255,255,0.05);border:1px solid var(--love-border);color:var(--love-text)" required>
+                {% for value, label in raisons %}
+                <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div style="background:var(--love-card);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.5rem">
+            <label class="form-label" style="color:var(--love-muted);font-size:0.85rem">Description (optionnel)</label>
+            <textarea name="description" rows="3" maxlength="500"
+                class="form-control"
+                style="background:rgba(255,255,255,0.05);border:1px solid var(--love-border);color:var(--love-text)"
+                placeholder="Décrivez le problème..."></textarea>
+        </div>
+
+        <div style="display:flex;gap:1rem">
+            <a href="javascript:history.back()" class="btn-love-outline" style="flex:1;justify-content:center;text-align:center">
+                Annuler
+            </a>
+            <button type="submit" style="flex:1;background:var(--love-danger);color:white;border:none;border-radius:25px;padding:0.75rem;font-weight:600;cursor:pointer">
+                Signaler
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

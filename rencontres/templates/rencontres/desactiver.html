@@ -1,0 +1,25 @@
+{% extends 'rencontres/base_rencontre.html' %}
+
+{% block title %}Désactiver mon profil — E-Shelle Love{% endblock %}
+
+{% block content %}
+<div style="max-width:500px;margin:0 auto;padding:2rem 1rem;text-align:center">
+    <div style="font-size:3rem;margin-bottom:1rem">⏸️</div>
+    <h2 style="font-size:1.3rem;font-weight:700;margin-bottom:0.5rem">
+        Désactiver mon profil ?
+    </h2>
+    <p style="color:var(--love-muted);font-size:0.9rem;margin-bottom:2rem">
+        Votre profil sera masqué de la découverte. Vous pourrez le réactiver à tout moment en vous reconnectant.
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        <div style="display:flex;gap:1rem;justify-content:center">
+            <a href="{% url 'rencontres:parametres' %}" class="btn-love-outline">Annuler</a>
+            <button type="submit" style="background:var(--love-muted);color:white;border:none;border-radius:25px;padding:0.75rem 2rem;font-weight:600;cursor:pointer">
+                Désactiver
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

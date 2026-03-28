@@ -1,0 +1,77 @@
+{% extends 'rencontres/base_rencontre.html' %}
+
+{% block title %}Souscrire {{ plan.get_nom_display }} — E-Shelle Love{% endblock %}
+
+{% block content %}
+<div style="max-width:500px;margin:0 auto;padding:2rem 1rem 5rem">
+
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+        <a href="{% url 'rencontres:premium' %}" style="color:var(--love-muted);text-decoration:none">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <h2 style="font-size:1.3rem;font-weight:700;margin:0">
+            {{ plan.get_icon }} Souscrire {{ plan.get_nom_display }}
+        </h2>
+    </div>
+
+    <div style="background:var(--love-card);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem;border:1px solid var(--love-border)">
+        <h3 style="font-size:1rem;margin-bottom:1rem">Récapitulatif</h3>
+        <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem">
+            <span style="color:var(--love-muted)">Plan</span>
+            <span style="font-weight:600">{{ plan.get_nom_display }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem">
+            <span style="color:var(--love-muted)">Mensuel</span>
+            <span>{{ plan.prix_xaf_mensuel|floatformat:0 }} FCFA</span>
+        </div>
+        <div style="display:flex;justify-content:space-between">
+            <span style="color:var(--love-muted)">Annuel (économisez 30%)</span>
+            <span>{{ plan.prix_xaf_annuel|floatformat:0 }} FCFA</span>
+        </div>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div style="background:var(--love-card);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem">
+            <h4 style="font-size:0.9rem;color:var(--love-primary);margin-bottom:0.75rem">Durée</h4>
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="periodicite" value="mensuel" id="mensuel" checked>
+                <label class="form-check-label" for="mensuel">
+                    Mensuel — {{ plan.prix_xaf_mensuel|floatformat:0 }} FCFA/mois
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="periodicite" value="annuel" id="annuel">
+                <label class="form-check-label" for="annuel">
+                    Annuel — {{ plan.prix_xaf_annuel|floatformat:0 }} FCFA/an <span style="color:var(--love-success);font-size:0.8rem">(-30%)</span>
+                </label>
+            </div>
+        </div>
+
+        <div style="background:var(--love-card);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.5rem">
+            <h4 style="font-size:0.9rem;color:var(--love-primary);margin-bottom:0.75rem">Méthode de paiement</h4>
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="methode" value="mtn_momo" id="mtn" checked>
+                <label class="form-check-label" for="mtn">📱 MTN Mobile Money</label>
+            </div>
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="methode" value="orange" id="orange">
+                <label class="form-check-label" for="orange">🟠 Orange Money</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="methode" value="airtel" id="airtel">
+                <label class="form-check-label" for="airtel">📱 Airtel Money</label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-premium" style="width:100%">
+            Payer maintenant 🔒
+        </button>
+
+        <p style="text-align:center;color:var(--love-muted);font-size:0.75rem;margin-top:1rem">
+            Paiement sécurisé · Annulable à tout moment
+        </p>
+    </form>
+</div>
+{% endblock %}

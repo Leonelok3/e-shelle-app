@@ -1,0 +1,96 @@
+{% extends 'rencontres/base_rencontre.html' %}
+
+{% block title %}Filtres — E-Shelle Love{% endblock %}
+
+{% block content %}
+<div style="max-width:560px;margin:0 auto;padding:1.5rem 1rem 5rem">
+
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+        <a href="{% url 'rencontres:decouverte' %}" style="color:var(--love-muted);text-decoration:none">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <h2 style="font-size:1.3rem;font-weight:700;margin:0">Filtres de recherche</h2>
+    </div>
+
+    <form method="post" class="love-form">
+        {% csrf_token %}
+
+        <div class="form-section">
+            <h4>Âge recherché</h4>
+            <div class="row g-3">
+                <div class="col-6">
+                    <label class="form-label">Âge minimum</label>
+                    {{ form.age_min }}
+                </div>
+                <div class="col-6">
+                    <label class="form-label">Âge maximum</label>
+                    {{ form.age_max }}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h4>Localisation</h4>
+            <div class="mb-3">
+                <label class="form-label">Pays</label>
+                {{ form.pays }}
+            </div>
+            <div>
+                <label class="form-label">Distance maximale (km)</label>
+                {{ form.distance_km }}
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h4>Religion</h4>
+            {{ form.religion }}
+        </div>
+
+        <div class="form-section">
+            <h4>Options</h4>
+            <div class="form-check mb-2">
+                {{ form.avec_photo }}
+                <label class="form-check-label" for="{{ form.avec_photo.id_for_label }}">
+                    Profils avec photo uniquement
+                </label>
+            </div>
+            <div class="form-check">
+                {{ form.verifie_seulement }}
+                <label class="form-check-label" for="{{ form.verifie_seulement.id_for_label }}">
+                    Profils vérifiés uniquement
+                </label>
+            </div>
+        </div>
+
+        {% if est_premium %}
+        <div class="form-section" style="border:1px solid var(--love-gold)">
+            <h4 style="color:var(--love-gold)">⭐ Filtres Premium</h4>
+            <div>
+                <label class="form-label">Niveau d'études minimum</label>
+                {{ form.niveau_etude }}
+            </div>
+        </div>
+        {% else %}
+        <div style="background:var(--love-card);border-radius:var(--radius);padding:1.25rem;border:1px solid var(--love-border);text-align:center">
+            <p style="color:var(--love-muted);margin-bottom:0.75rem;font-size:0.85rem">
+                ⭐ Débloquez les filtres avancés (niveau d'études, revenus, religion exacte...) avec Premium.
+            </p>
+            <a href="{% url 'rencontres:premium' %}" class="btn-premium" style="display:inline-flex;width:auto;padding:0.5rem 1.5rem;font-size:0.85rem">
+                Voir les offres
+            </a>
+        </div>
+        {% endif %}
+
+        <div style="position:fixed;bottom:0;left:0;right:0;background:rgba(26,26,46,0.97);padding:1rem;border-top:1px solid var(--love-border);z-index:100">
+            <div style="max-width:560px;margin:0 auto;display:flex;gap:1rem">
+                <a href="{% url 'rencontres:decouverte' %}" class="btn-love-outline" style="flex:1;justify-content:center;text-align:center">
+                    Annuler
+                </a>
+                <button type="submit" class="btn-love" style="flex:2;justify-content:center">
+                    Appliquer les filtres
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

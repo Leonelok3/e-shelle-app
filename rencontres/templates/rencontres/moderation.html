@@ -1,0 +1,86 @@
+{% extends 'rencontres/base_rencontre.html' %}
+
+{% block title %}Modération — E-Shelle Love{% endblock %}
+
+{% block content %}
+<div style="max-width:900px;margin:0 auto;padding:1.5rem 1rem">
+    <h2 style="margin-bottom:1.5rem">🛡️ Modération</h2>
+
+    <!-- Photos en attente -->
+    <div style="background:var(--love-card);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem">
+        <h3 style="font-size:1rem;margin-bottom:1rem">
+            Photos en attente de validation
+            <span style="color:var(--love-primary)">({{ photos_en_attente.count }})</span>
+        </h3>
+
+        {% if photos_en_attente %}
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem">
+            {% for photo in photos_en_attente %}
+            <div style="background:rgba(255,255,255,0.03);border-radius:var(--radius-sm);overflow:hidden">
+                <img src="{{ photo.image.url }}" alt="" style="width:100%;aspect-ratio:1;object-fit:cover">
+                <div style="padding:0.75rem">
+                    <div style="font-size:0.8rem;color:var(--love-muted);margin-bottom:0.5rem">
+                        {{ photo.profil.prenom_affiche }} — {{ photo.date_ajout|date:"d/m H:i" }}
+                    </div>
+                    <form method="post" style="display:flex;gap:0.5rem">
+                        {% csrf_token %}
+                        <input type="hidden" name="photo_id" value="{{ photo.id }}">
+                        <button type="submit" name="action" value="approuver"
+                            style="flex:1;background:var(--love-success);color:white;border:none;border-radius:6px;padding:0.4rem;cursor:pointer;font-size:0.8rem">
+                            ✓ OK
+                        </button>
+                        <button type="submit" name="action" value="rejeter"
+                            style="flex:1;background:var(--love-danger);color:white;border:none;border-radius:6px;padding:0.4rem;cursor:pointer;font-size:0.8rem">
+                            ✗ Rejeter
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p style="color:var(--love-muted)">Aucune photo en attente.</p>
+        {% endif %}
+    </div>
+
+    <!-- Signalements -->
+    <div style="background:var(--love-card);border-radius:var(--radius);padding:1.5rem">
+        <h3 style="font-size:1rem;margin-bottom:1rem">
+            Signalements récents
+            <span style="color:var(--love-danger)">({{ signalements.count }})</span>
+        </h3>
+
+        {% if signalements %}
+        <table style="width:100%;border-collapse:collapse;font-size:0.85rem">
+            <thead>
+                <tr style="color:var(--love-muted);text-align:left">
+                    <th style="padding:0.5rem">Signaleur</th>
+                    <th>Signalé</th>
+                    <th>Raison</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in signalements %}
+                <tr style="border-top:1px solid var(--love-border)">
+                    <td style="padding:0.75rem 0.5rem">{{ s.signaleur.prenom_affiche }}</td>
+                    <td>{{ s.signale.prenom_affiche }}</td>
+                    <td><span style="background:rgba(231,76,60,0.15);color:#e74c3c;padding:0.15rem 0.4rem;border-radius:4px;font-size:0.75rem">{{ s.get_raison_display }}</span></td>
+                    <td style="color:var(--love-muted)">{{ s.date_signalement|date:"d/m H:i" }}</td>
+                    <td>
+                        <a href="/admin/rencontres/signalement/{{ s.id }}/change/"
+                            style="color:var(--love-primary);text-decoration:none;font-size:0.8rem">
+                            Traiter →
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="color:var(--love-muted)">Aucun signalement en attente.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

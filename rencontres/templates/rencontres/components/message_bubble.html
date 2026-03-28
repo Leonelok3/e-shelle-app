@@ -1,0 +1,21 @@
+{% comment %}
+Composant : bulle de message
+Usage : {% include 'rencontres/components/message_bubble.html' with msg=message est_moi=True %}
+{% endcomment %}
+<div class="message-wrapper {% if est_moi %}sent-wrapper{% else %}received-wrapper{% endif %}"
+    data-message-id="{{ msg.id }}"
+    style="display:flex;{% if est_moi %}justify-content:flex-end{% else %}justify-content:flex-start{% endif %}">
+    <div class="message-bubble {% if est_moi %}sent{% else %}received{% endif %}">
+        {{ msg.contenu|linebreaksbr }}
+        <div class="message-time">
+            {{ msg.date_envoi|date:"H:i" }}
+            {% if est_moi %}
+                {% if msg.est_lu %}
+                <span style="color:var(--love-accent)">✓✓</span>
+                {% else %}
+                <span>✓</span>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>

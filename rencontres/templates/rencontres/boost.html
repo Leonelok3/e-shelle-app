@@ -1,0 +1,38 @@
+{% extends 'rencontres/base_rencontre.html' %}
+
+{% block title %}Boost profil — E-Shelle Love{% endblock %}
+
+{% block content %}
+<div style="max-width:480px;margin:0 auto;padding:3rem 1.5rem;text-align:center">
+    <div style="font-size:4rem;margin-bottom:1rem;animation:pulse-love 2s infinite">⚡</div>
+    <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:0.5rem">Booster mon profil</h2>
+    <p style="color:var(--love-muted);margin-bottom:2rem">
+        Votre profil sera mis en tête de liste pendant <strong style="color:var(--love-text)">30 minutes</strong>.
+        Plus de vues, plus de likes, plus de matchs !
+    </p>
+
+    <div style="background:var(--love-card);border-radius:var(--radius);padding:1.5rem;margin-bottom:2rem;border:1px solid var(--love-border)">
+        <div style="display:flex;justify-content:space-between;margin-bottom:0.75rem">
+            <span style="color:var(--love-muted)">Durée du boost</span>
+            <span style="font-weight:600">30 minutes</span>
+        </div>
+        <div style="display:flex;justify-content:space-between">
+            <span style="color:var(--love-muted)">Boosts restants cette semaine</span>
+            <span style="font-weight:600;color:var(--love-primary)">
+                {% if profil.est_premium %}disponible{% else %}0{% endif %}
+            </span>
+        </div>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn-love pulse-love" style="width:100%;justify-content:center;font-size:1.1rem">
+            ⚡ Activer le boost maintenant
+        </button>
+    </form>
+
+    <a href="{% url 'rencontres:decouverte' %}" style="display:block;margin-top:1rem;color:var(--love-muted);text-decoration:none;font-size:0.9rem">
+        Peut-être plus tard
+    </a>
+</div>
+{% endblock %}

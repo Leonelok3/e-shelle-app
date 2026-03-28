@@ -1,0 +1,325 @@
+{% extends 'agro/base_agro.html' %}
+{% load static %}
+
+{% block meta %}
+{{ block.super }}
+<meta name="description" content="{{ meta_description }}">
+<meta property="og:title" content="{{ page_title }}">
+<meta property="og:description" content="{{ meta_description }}">
+{% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container-xl py-4">
+
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'agro:accueil' %}">Accueil</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'agro:catalogue' %}">Catalogue</a></li>
+      <li class="breadcrumb-item">
+        <a href="{{ produit.categorie.get_absolute_url }}">{{ produit.categorie.nom }}</a>
+      </li>
+      <li class="breadcrumb-item active">{{ produit.nom }}</li>
+    </ol>
+  </nav>
+
+  <div class="row g-4">
+    <!-- Images + Infos principales -->
+    <div class="col-lg-8">
+      <!-- Galerie photos -->
+      <div class="agro-gallery mb-4">
+        <div class="agro-gallery-main">
+          {% if produit.image_principale %}
+          <img src="{{ produit.image_principale.url }}" alt="{{ produit.nom }}"
+               class="agro-gallery-img-main" id="mainImage">
+          {% elif produit.photos.all.0 %}
+          <img src="{{ produit.photos.all.0.image.url }}" alt="{{ produit.nom }}"
+               class="agro-gallery-img-main" id="mainImage">
+          {% else %}
+          <div class="agro-gallery-placeholder">
+            <span class="display-1">{{ produit.categorie.icone|default:"🌿" }}</span>
+          </div>
+          {% endif %}
+        </div>
+        {% if produit.photos.count > 1 %}
+        <div class="agro-gallery-thumbs mt-2 d-flex gap-2 flex-wrap">
+          {% for photo in produit.photos.all %}
+          <img src="{{ photo.image.url }}" alt="{{ photo.legende|default:produit.nom }}"
+               class="agro-gallery-thumb {% if forloop.first %}active{% endif %}"
+               onclick="document.getElementById('mainImage').src='{{ photo.image.url }}'">
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Description -->
+      <div class="card agro-card mb-4">
+        <div class="card-header agro-card-header">
+          <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Description</h5>
+        </div>
+        <div class="card-body">
+          <p>{{ produit.description|linebreaksbr }}</p>
+
+          {% if produit.caracteristiques %}
+          <hr>
+          <h6 class="fw-semibold">Caractéristiques techniques</h6>
+          <table class="table table-sm table-striped">
+            {% for cle, val in produit.caracteristiques.items %}
+            <tr>
+              <td class="fw-medium text-muted" style="width:40%">{{ cle|capfirst }}</td>
+              <td>{{ val }}</td>
+            </tr>
+            {% endfor %}
+          </table>
+          {% endif %}
+
+          {% if produit.autres_specs %}
+          <hr>
+          <p class="small text-muted">{{ produit.autres_specs }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Logistique export -->
+      {% if produit.peut_exporter %}
+      <div class="card agro-card mb-4">
+        <div class="card-header agro-card-header">
+          <h5 class="mb-0"><i class="bi bi-ship me-2"></i>Informations Export</h5>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            {% if produit.incoterms_disponibles %}
+            <div class="col-md-6">
+              <strong>Incoterms disponibles</strong>
+              <div class="mt-1">
+                {% for inc in produit.incoterms_disponibles %}
+                <span class="badge bg-agro-secondary text-white me-1">{{ inc }}</span>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+            {% if produit.port_embarquement %}
+            <div class="col-md-6">
+              <strong>Port d'embarquement</strong>
+              <p class="mb-0 text-muted">{{ produit.port_embarquement }}</p>
+            </div>
+            {% endif %}
+            {% if produit.documents_export_disponibles %}
+            <div class="col-12">
+              <strong>Documents disponibles</strong>
+              <div class="mt-1">
+                {% for doc in produit.documents_export_disponibles %}
+                <span class="badge bg-info-subtle text-info-emphasis me-1">{{ doc }}</span>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Sidebar informations -->
+    <div class="col-lg-4">
+
+      <!-- Infos produit -->
+      <div class="card agro-card agro-product-info-card mb-3 sticky-lg-top" style="top: 80px;">
+        <div class="card-body">
+          <!-- Nom & Référence -->
+          <div class="d-flex align-items-start justify-content-between mb-2">
+            <div>
+              <h1 class="h4 fw-bold mb-1">{{ produit.nom }}</h1>
+              {% if produit.nom_local %}
+              <p class="text-muted small mb-0">{{ produit.nom_local }}</p>
+              {% endif %}
+            </div>
+            <span class="badge bg-agro-light text-agro-primary small">{{ produit.reference }}</span>
+          </div>
+
+          <!-- Badges qualité -->
+          <div class="d-flex flex-wrap gap-1 mb-3">
+            {% if produit.est_bio %}
+            <span class="badge badge-bio">🌿 Bio</span>
+            {% endif %}
+            {% if produit.est_equitable %}
+            <span class="badge badge-equitable">🤝 Équitable</span>
+            {% endif %}
+            {% if produit.normes_qualite %}
+            {% for norme in produit.normes_qualite|slice:":2" %}
+            <span class="badge bg-info-subtle text-info-emphasis">{{ norme }}</span>
+            {% endfor %}
+            {% endif %}
+          </div>
+
+          <!-- Prix -->
+          <div class="agro-price-display mb-3">
+            <span class="agro-price-main">
+              {{ produit.prix_unitaire|floatformat:0 }} {{ produit.devise }}
+            </span>
+            <span class="agro-price-per"> / {{ produit.unite_mesure }}</span>
+            {% if produit.prix_negociable %}
+            <div class="text-success small mt-1">
+              <i class="bi bi-chat-dots me-1"></i>Prix négociable
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Disponibilité -->
+          <div class="mb-3">
+            <div class="d-flex align-items-center gap-2">
+              {% if produit.disponibilite == 'en_stock' %}
+              <span class="text-success fw-semibold">
+                <i class="bi bi-check-circle-fill me-1"></i>En stock
+              </span>
+              {% elif produit.disponibilite == 'sur_commande' %}
+              <span class="text-warning fw-semibold">
+                <i class="bi bi-clock me-1"></i>Sur commande
+              </span>
+              {% else %}
+              <span class="text-info fw-semibold">
+                <i class="bi bi-calendar2 me-1"></i>{{ produit.get_disponibilite_display }}
+              </span>
+              {% endif %}
+              <span class="text-muted small">— Délai : {{ produit.delai_livraison_jours }}j</span>
+            </div>
+            {% if produit.saison_disponible %}
+            <div class="text-muted small mt-1">
+              <i class="bi bi-calendar-range me-1"></i>{{ produit.saison_disponible }}
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- MOQ -->
+          <div class="bg-agro-light rounded p-2 mb-3 small">
+            <div><strong>Qté min. commande (MOQ) :</strong>
+              {{ produit.quantite_min_commande }} {{ produit.unite_mesure }}</div>
+            {% if produit.quantite_stock > 0 %}
+            <div><strong>Stock disponible :</strong>
+              {{ produit.quantite_stock }} {{ produit.unite_mesure }}</div>
+            {% endif %}
+            {% if produit.conditionnement %}
+            <div><strong>Conditionnement :</strong> {{ produit.conditionnement }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Origine -->
+          {% if produit.origine_geographique %}
+          <div class="text-muted small mb-3">
+            <i class="bi bi-geo-alt me-1"></i>{{ produit.origine_geographique }}
+          </div>
+          {% endif %}
+
+          <!-- CTA principal -->
+          {% if user.is_authenticated and profil_acheteur %}
+          <a href="{% url 'agro:demander_devis' produit_slug=produit.slug %}"
+             class="btn btn-agro w-100 btn-lg mb-2">
+            <i class="bi bi-envelope me-2"></i>Demander un devis
+          </a>
+          <button class="btn btn-agro-outline w-100 btn-sm"
+                  onclick="ajouterFavori({{ produit.pk }}, this)">
+            <i class="bi bi-heart me-1"></i>Ajouter aux favoris
+            <span class="ms-1">({{ produit.nb_favoris }})</span>
+          </button>
+          {% elif user.is_authenticated %}
+          <a href="{% url 'agro:inscription' %}" class="btn btn-agro w-100 mb-2">
+            Créer votre profil acheteur pour demander un devis
+          </a>
+          {% else %}
+          <a href="{% url 'accounts:login' %}?next={{ request.path }}"
+             class="btn btn-agro w-100 btn-lg mb-2">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Connexion pour demander un devis
+          </a>
+          {% endif %}
+
+          <!-- Stats -->
+          <div class="d-flex justify-content-around mt-3 pt-3 border-top text-center small text-muted">
+            <div><strong>{{ produit.nb_vues }}</strong><br>Vues</div>
+            <div><strong>{{ produit.nb_demandes }}</strong><br>Demandes</div>
+            <div><strong>{{ produit.note_moyenne|floatformat:1 }}</strong><br>Note</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vendeur card -->
+      <div class="card agro-card mb-3">
+        <div class="card-header agro-card-header">
+          <h6 class="mb-0"><i class="bi bi-shop me-2"></i>Vendeur</h6>
+        </div>
+        <div class="card-body">
+          <div class="d-flex align-items-center gap-3">
+            {% if produit.acteur.logo %}
+            <img src="{{ produit.acteur.logo.url }}" alt="{{ produit.acteur.nom_entreprise }}"
+                 class="rounded" width="50" height="50" style="object-fit:cover">
+            {% else %}
+            <div class="agro-actor-logo-placeholder-sm">
+              {{ produit.acteur.nom_entreprise|slice:":2"|upper }}
+            </div>
+            {% endif %}
+            <div>
+              <div class="fw-semibold">
+                {{ produit.acteur.nom_entreprise }}
+                {% if produit.acteur.est_verifie %}
+                <i class="bi bi-patch-check-fill text-success ms-1"></i>
+                {% endif %}
+              </div>
+              <div class="text-muted small">{{ produit.acteur.get_type_acteur_display }}</div>
+              <div class="text-muted small">
+                <i class="bi bi-geo-alt me-1"></i>{{ produit.acteur.ville }}, {{ produit.acteur.pays }}
+              </div>
+            </div>
+          </div>
+
+          {% if produit.acteur.note_moyenne > 0 %}
+          <div class="mt-2 small">
+            <span class="text-warning">★</span>
+            {{ produit.acteur.note_moyenne|floatformat:1 }}/5
+            ({{ produit.acteur.nb_avis }} avis)
+          </div>
+          {% endif %}
+
+          <div class="mt-3">
+            <a href="{{ produit.acteur.get_absolute_url }}" class="btn btn-agro-outline btn-sm w-100">
+              Voir le profil complet
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Produits similaires -->
+  {% if similaires %}
+  <div class="mt-5">
+    <h3 class="h4 fw-bold mb-4">Produits similaires</h3>
+    <div class="row g-4">
+      {% for p in similaires %}
+      <div class="col-6 col-md-4 col-lg-2">
+        {% include 'agro/components/product_card.html' with produit=p %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function ajouterFavori(produitId, btn) {
+  fetch(`/agro/ajax/favoris/${produitId}/`, {
+    method: 'GET',
+    headers: {'X-CSRFToken': '{{ csrf_token }}', 'X-Requested-With': 'XMLHttpRequest'}
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.est_favori) {
+      btn.innerHTML = `<i class="bi bi-heart-fill me-1"></i>Dans mes favoris (${data.nb_favoris})`;
+    } else {
+      btn.innerHTML = `<i class="bi bi-heart me-1"></i>Ajouter aux favoris (${data.nb_favoris})`;
+    }
+  });
+}
+</script>
+{% endblock %}

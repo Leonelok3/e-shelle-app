@@ -1,0 +1,185 @@
+{% extends 'agro/base_agro.html' %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 900px;">
+  <h1 class="h3 fw-bold mb-4">
+    {% if produit %}Modifier {{ produit.nom }}{% else %}Ajouter un produit{% endif %}
+  </h1>
+
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="row g-4">
+      <div class="col-md-8">
+
+        <!-- Identification -->
+        <div class="card agro-card mb-4">
+          <div class="card-header agro-card-header">Identification</div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label fw-semibold">Catégorie *</label>
+                {{ form.categorie }}
+              </div>
+              <div class="col-md-7">
+                <label class="form-label fw-semibold">Nom du produit *</label>
+                {{ form.nom }}
+              </div>
+              <div class="col-md-5">
+                <label class="form-label fw-semibold">Nom local / Variété</label>
+                {{ form.nom_local }}
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">Description *</label>
+                {{ form.description }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Origine géographique</label>
+                {{ form.origine_geographique }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Code HS douanier</label>
+                {{ form.code_hs }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Prix -->
+        <div class="card agro-card mb-4">
+          <div class="card-header agro-card-header">Prix & Quantités</div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">Prix unitaire *</label>
+                {{ form.prix_unitaire }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">Devise</label>
+                {{ form.devise }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">Unité de mesure *</label>
+                {{ form.unite_mesure }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">Stock disponible</label>
+                {{ form.quantite_stock }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">Qté min. (MOQ)</label>
+                {{ form.quantite_min_commande }}
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">Qté max.</label>
+                {{ form.quantite_max_commande }}
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">Conditionnement</label>
+                {{ form.conditionnement }}
+              </div>
+              <div class="col-12">
+                <div class="form-check">
+                  {{ form.prix_negociable }}
+                  <label class="form-check-label" for="{{ form.prix_negociable.id_for_label }}">
+                    Prix négociable
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Disponibilité & Qualité -->
+        <div class="card agro-card mb-4">
+          <div class="card-header agro-card-header">Disponibilité & Qualité</div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Disponibilité</label>
+                {{ form.disponibilite }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Délai livraison (jours)</label>
+                {{ form.delai_livraison_jours }}
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">Saison disponible</label>
+                {{ form.saison_disponible }}
+              </div>
+              <div class="col-md-6">
+                <div class="form-check">
+                  {{ form.est_bio }}
+                  <label class="form-check-label" for="{{ form.est_bio.id_for_label }}">
+                    🌿 Agriculture biologique certifiée
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-check">
+                  {{ form.est_equitable }}
+                  <label class="form-check-label" for="{{ form.est_equitable.id_for_label }}">
+                    🤝 Commerce équitable
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Export -->
+        <div class="card agro-card mb-4">
+          <div class="card-header agro-card-header">Export International</div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-12">
+                <div class="form-check">
+                  {{ form.peut_exporter }}
+                  <label class="form-check-label" for="{{ form.peut_exporter.id_for_label }}">
+                    🚢 Ce produit peut être exporté internationalement
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Port d'embarquement</label>
+                {{ form.port_embarquement }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Vidéo de présentation</label>
+                {{ form.video_url }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Sidebar -->
+      <div class="col-md-4">
+        <div class="card agro-card mb-3 sticky-top" style="top:80px">
+          <div class="card-header agro-card-header">Image principale</div>
+          <div class="card-body">
+            {% if produit.image_principale %}
+            <img src="{{ produit.image_principale.url }}" class="img-fluid rounded mb-2">
+            {% endif %}
+            {{ form.image_principale }}
+            <div class="form-text text-muted">Max 5 Mo, JPG/PNG/WebP, min 400x300px</div>
+          </div>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-agro btn-lg">
+            <i class="bi bi-check-circle me-2"></i>
+            {% if produit %}Enregistrer{% else %}Publier le produit{% endif %}
+          </button>
+          <a href="{% url 'agro:mes_produits' %}" class="btn btn-agro-outline">Annuler</a>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

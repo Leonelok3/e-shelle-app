@@ -1,0 +1,24 @@
+{% extends 'agro/base_agro.html' %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 500px;">
+  <div class="card agro-card">
+    <div class="card-body text-center p-5">
+      <div class="fs-1 mb-3">🗑️</div>
+      <h4 class="fw-bold mb-2">Confirmer la suppression</h4>
+      <p class="text-muted mb-4">
+        Êtes-vous sûr de vouloir supprimer le produit
+        <strong>{{ produit.nom }}</strong> ?
+        Cette action l'archivera et le retirera du catalogue.
+      </p>
+      <form method="post" class="d-flex gap-2 justify-content-center">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">
+          <i class="bi bi-trash me-1"></i>Supprimer
+        </button>
+        <a href="{% url 'agro:mes_produits' %}" class="btn btn-agro-outline">Annuler</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

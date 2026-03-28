@@ -1,0 +1,133 @@
+{% extends 'agro/base_agro.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 680px;">
+
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'agro:accueil' %}">Accueil</a></li>
+      <li class="breadcrumb-item">
+        <a href="{% url 'agro:produit' slug=produit.slug %}">{{ produit.nom }}</a>
+      </li>
+      <li class="breadcrumb-item active">Demande de devis</li>
+    </ol>
+  </nav>
+
+  <div class="row g-4">
+    <div class="col-md-8">
+      <div class="card agro-card shadow-sm">
+        <div class="card-header agro-card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-envelope me-2"></i>Demande de devis
+          </h5>
+        </div>
+        <div class="card-body p-4">
+          <form method="post" id="devisForm" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">
+                  Quantité <span class="text-danger">*</span>
+                </label>
+                {{ form.quantite }}
+                <div class="form-text text-muted">
+                  MOQ : {{ produit.quantite_min_commande }} {{ produit.unite_mesure }}
+                </div>
+                {% if form.quantite.errors %}
+                <div class="invalid-feedback d-block">{{ form.quantite.errors.0 }}</div>
+                {% endif %}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Unité de mesure</label>
+                {{ form.unite_mesure }}
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">
+                  Destination <span class="text-danger">*</span>
+                </label>
+                {{ form.destination }}
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">Incoterm souhaité</label>
+                {{ form.incoterm_souhaite }}
+                <div class="form-text text-muted">
+                  EXW = départ usine | FOB = chargé bateau | CIF = frais+assurance inclus | DAP = livré destination
+                </div>
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">
+                  Votre message <span class="text-danger">*</span>
+                </label>
+                {{ form.message }}
+                <div class="form-text text-muted">
+                  Précisez : qualité, certifications requises, délais, conditions de paiement...
+                </div>
+                {% if form.message.errors %}
+                <div class="invalid-feedback d-block">{{ form.message.errors.0 }}</div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Estimation prix -->
+            <div id="prixEstime" class="alert alert-info mt-3 d-none small"></div>
+
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-agro btn-lg">
+                <i class="bi bi-send me-2"></i>Envoyer ma demande de devis
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Récap produit -->
+    <div class="col-md-4">
+      <div class="card agro-card">
+        <div class="card-header agro-card-header">Produit demandé</div>
+        <div class="card-body">
+          {% if produit.image_principale %}
+          <img src="{{ produit.image_principale.url }}" alt="{{ produit.nom }}"
+               class="img-fluid rounded mb-3">
+          {% endif %}
+          <h6 class="fw-bold">{{ produit.nom }}</h6>
+          <div class="text-muted small mb-2">{{ produit.acteur.nom_entreprise }}</div>
+          <div class="agro-prix-montant">
+            {{ produit.prix_unitaire|floatformat:0 }} {{ produit.devise }}
+            <span class="text-muted fw-normal small">/ {{ produit.unite_mesure }}</span>
+          </div>
+          {% if produit.prix_negociable %}
+          <div class="text-success small mt-1">
+            <i class="bi bi-chat-dots me-1"></i>Prix négociable
+          </div>
+          {% endif %}
+          <hr>
+          <div class="small text-muted">
+            <div><strong>Délai :</strong> {{ produit.delai_livraison_jours }} jours</div>
+            {% if produit.incoterms_disponibles %}
+            <div class="mt-1"><strong>Incoterms :</strong>
+              {{ produit.incoterms_disponibles|join:", " }}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% block extra_js %}
+<script>
+window.PRIX_BASE      = {{ produit.prix_unitaire }};
+window.DEVISE         = '{{ produit.devise }}';
+window.PRIX_DEGRESSIF = {{ produit.prix_degressif|default:"[]" }};
+</script>
+<script src="{% static 'agro/js/devis.js' %}"></script>
+{% endblock %}
+{% endblock %}

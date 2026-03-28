@@ -1,0 +1,261 @@
+{% extends 'rencontres/base_rencontre.html' %}
+{% load static %}
+
+{% block title %}{{ profil.prenom_affiche }}, {{ profil.age }} ans — E-Shelle Love{% endblock %}
+
+{% block content %}
+<div style="max-width:600px;margin:0 auto;padding-bottom:5rem">
+
+    <!-- Header photo -->
+    <div class="profile-detail-header">
+        {% if profil.photo_principale %}
+        <img src="{{ profil.photo_principale.url }}" alt="{{ profil.prenom_affiche }}">
+        {% else %}
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,#2a2a4a,#1a1a3e);display:flex;align-items:center;justify-content:center;font-size:6rem;color:var(--love-muted)">👤</div>
+        {% endif %}
+        <div class="overlay"></div>
+        <div class="profile-header-info">
+            <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.35rem">
+                <h1 style="font-size:1.75rem;font-weight:800;color:white;margin:0">
+                    {{ profil.prenom_affiche }}, {{ profil.age }} ans
+                </h1>
+                {% if profil.badge_verifie %}<span class="badge-verifie">✓ Vérifié</span>{% endif %}
+                {% if profil.est_premium %}<span class="badge-premium-gold">⭐ Premium</span>{% endif %}
+            </div>
+            <div style="color:rgba(255,255,255,0.8);font-size:0.9rem;margin-bottom:0.35rem">
+                📍 {{ profil.ville }}, {{ profil.pays }}
+                {% if profil.est_diaspora %}· (Origine: {{ profil.nationalite }}){% endif %}
+            </div>
+            {% if profil.profession %}
+            <div style="color:rgba(255,255,255,0.7);font-size:0.85rem">
+                💼 {{ profil.profession }}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Retour arrière -->
+        <a href="javascript:history.back()"
+            style="position:absolute;top:1rem;left:1rem;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;color:white;text-decoration:none;backdrop-filter:blur(4px)">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+
+        <!-- Boutons action (si pas mon profil) -->
+        {% if not est_mon_profil %}
+        <div style="position:absolute;top:1rem;right:1rem;display:flex;gap:0.5rem">
+            <a href="{% url 'rencontres:signaler' profil.pk %}"
+                style="width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;color:var(--love-muted);text-decoration:none;backdrop-filter:blur(4px)"
+                title="Signaler">
+                <i class="bi bi-flag"></i>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Score de compatibilité (si pas mon profil) -->
+    {% if not est_mon_profil %}
+    <div style="padding:1rem;text-align:center">
+        <span class="compat-score" style="font-size:1rem;padding:0.5rem 1.5rem">
+            ⭐ Profil compatible
+        </span>
+    </div>
+    {% endif %}
+
+    <!-- Barre de complétion (si mon profil) -->
+    {% if est_mon_profil %}
+    <div style="padding:1rem 1rem 0">
+        <div style="font-size:0.82rem;color:var(--love-muted);margin-bottom:0.3rem">
+            Profil complété à {{ profil.profil_complet }}%
+        </div>
+        <div class="completion-bar">
+            <div class="fill" style="width:{{ profil.profil_complet }}%"></div>
+        </div>
+        {% if profil.profil_complet < 80 %}
+        <a href="{% url 'rencontres:modifier_profil' %}" style="font-size:0.8rem;color:var(--love-primary);text-decoration:none">
+            Compléter mon profil →
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Photos supplémentaires -->
+    {% if photos.count > 1 %}
+    <div style="padding:1rem 0 0">
+        <div class="photos-grid">
+            {% for photo in photos %}
+            <img src="{{ photo.image.url }}" alt="Photo {{ forloop.counter }}"
+                loading="lazy"
+                onclick="this.requestFullscreen ? this.requestFullscreen() : null">
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Biographie -->
+    {% if profil.biographie %}
+    <div class="profile-section">
+        <h3><i class="bi bi-person-lines-fill"></i> À propos</h3>
+        <p style="color:var(--love-text);line-height:1.7;margin:0;white-space:pre-line">{{ profil.biographie }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Ce que je cherche -->
+    {% if profil.ce_que_je_cherche %}
+    <div class="profile-section">
+        <h3><i class="bi bi-search-heart"></i> Ce que je cherche</h3>
+        <p style="color:var(--love-text);line-height:1.7;margin:0">{{ profil.ce_que_je_cherche }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Infos principales -->
+    <div class="profile-section">
+        <h3><i class="bi bi-info-circle"></i> Informations</h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="label">Situation</span>
+                <span class="value">{{ profil.get_situation_matrimoniale_display }}</span>
+            </div>
+            {% if profil.taille_cm %}
+            <div class="info-item">
+                <span class="label">Taille</span>
+                <span class="value">{{ profil.taille_cm }} cm</span>
+            </div>
+            {% endif %}
+            {% if profil.morphologie %}
+            <div class="info-item">
+                <span class="label">Morphologie</span>
+                <span class="value">{{ profil.get_morphologie_display }}</span>
+            </div>
+            {% endif %}
+            <div class="info-item">
+                <span class="label">Enfants</span>
+                <span class="value">
+                    {% if profil.a_des_enfants %}{{ profil.nb_enfants }} enfant{{ profil.nb_enfants|pluralize }}{% else %}Aucun{% endif %}
+                </span>
+            </div>
+            <div class="info-item">
+                <span class="label">Veut des enfants</span>
+                <span class="value">{{ profil.get_veut_des_enfants_display }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formation & Religion -->
+    <div class="profile-section">
+        <h3><i class="bi bi-mortarboard"></i> Profil personnel</h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="label">Études</span>
+                <span class="value">{{ profil.get_niveau_etude_display }}</span>
+            </div>
+            {% if profil.revenus %}
+            <div class="info-item">
+                <span class="label">Revenus</span>
+                <span class="value">{{ profil.get_revenus_display }}</span>
+            </div>
+            {% endif %}
+            {% if profil.religion %}
+            <div class="info-item">
+                <span class="label">Religion</span>
+                <span class="value">{{ profil.get_religion_display }}</span>
+            </div>
+            {% endif %}
+            {% if profil.pratique_religieuse %}
+            <div class="info-item">
+                <span class="label">Pratique</span>
+                <span class="value">{{ profil.get_pratique_religieuse_display }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Intérêts -->
+    {% if profil.interets %}
+    <div class="profile-section">
+        <h3><i class="bi bi-stars"></i> Centres d'intérêt</h3>
+        <div class="card-tags" style="display:flex;flex-wrap:wrap;gap:0.5rem">
+            {% for interet in profil.interets %}
+            <span class="tag">{{ interet }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Langues -->
+    {% if profil.langues %}
+    <div class="profile-section">
+        <h3><i class="bi bi-translate"></i> Langues parlées</h3>
+        <div class="card-tags" style="display:flex;flex-wrap:wrap;gap:0.5rem">
+            {% for langue in profil.langues %}
+            <span class="tag">{{ langue }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Boutons d'action bas de page -->
+    {% if not est_mon_profil %}
+    <div style="position:fixed;bottom:0;left:0;right:0;background:rgba(26,26,46,0.97);padding:1rem;border-top:1px solid var(--love-border);display:flex;gap:1rem;justify-content:center;z-index:100">
+        <a href="{% url 'rencontres:bloquer' profil.pk %}"
+            class="btn-love-outline" style="padding:0.6rem 1.5rem;font-size:0.85rem">
+            <i class="bi bi-slash-circle"></i> Bloquer
+        </a>
+        {% if est_match %}
+        <a href="{% url 'rencontres:inbox' %}" class="btn-love" style="flex:1;justify-content:center">
+            <i class="bi bi-chat-heart-fill"></i> Envoyer un message
+        </a>
+        {% else %}
+        <button onclick="sendLikeFromDetail({{ profil.pk }})"
+            class="btn-love" style="flex:1;justify-content:center">
+            <i class="bi bi-heart-fill"></i>
+            {% if a_like %}Déjà liké ✓{% else %}J'aime{% endif %}
+        </button>
+        {% endif %}
+    </div>
+    {% else %}
+    <div style="position:fixed;bottom:0;left:0;right:0;background:rgba(26,26,46,0.97);padding:1rem;border-top:1px solid var(--love-border);display:flex;gap:1rem;justify-content:center;z-index:100">
+        <a href="{% url 'rencontres:gerer_photos' %}" class="btn-love-outline">
+            <i class="bi bi-camera"></i> Photos
+        </a>
+        <a href="{% url 'rencontres:modifier_profil' %}" class="btn-love" style="flex:1;justify-content:center">
+            <i class="bi bi-pencil"></i> Modifier
+        </a>
+        <a href="{% url 'rencontres:parametres' %}" class="btn-love-outline">
+            <i class="bi bi-gear"></i>
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function sendLikeFromDetail(profilId) {
+    const btn = event.currentTarget;
+    btn.disabled = true;
+
+    try {
+        const resp = await fetch(`/rencontres/ajax/like/${profilId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.cookie.match(/csrftoken=([^;]+)/)?.[1] || '',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ type: 'like' }),
+        });
+        const data = await resp.json();
+
+        if (data.est_match) {
+            showMatchPopup(data.profil_info, data.match_id);
+        } else if (data.limite_atteinte) {
+            showPremiumModal('likes');
+        } else if (data.success) {
+            btn.innerHTML = '<i class="bi bi-heart-fill"></i> Liké ✓';
+            btn.style.opacity = '0.7';
+        }
+    } catch (e) {
+        btn.disabled = false;
+    }
+}
+</script>
+<script src="{% static 'rencontres/js/discovery.js' %}"></script>
+{% endblock %}

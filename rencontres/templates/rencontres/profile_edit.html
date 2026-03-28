@@ -1,0 +1,264 @@
+{% extends 'rencontres/base_rencontre.html' %}
+{% load static %}
+
+{% block title %}{{ titre }} — E-Shelle Love{% endblock %}
+
+{% block content %}
+<div style="max-width:640px;margin:0 auto;padding:1.5rem 1rem 6rem">
+
+    <div style="margin-bottom:1.5rem">
+        <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:0.25rem">{{ titre }}</h2>
+        {% if est_creation %}
+        <p style="color:var(--love-muted)">Complétez votre profil pour rencontrer des personnes compatibles.</p>
+        {% endif %}
+    </div>
+
+    {% if est_creation %}
+    <!-- Barre de progression étapes -->
+    <div class="steps-progress" style="margin-bottom:1.5rem">
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+    </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="love-form" id="profil-form">
+        {% csrf_token %}
+
+        <!-- Identité -->
+        <div class="form-section">
+            <h4>👤 Identité</h4>
+            <div class="mb-3">
+                <label class="form-label">Prénom affiché *</label>
+                {{ form.prenom_affiche }}
+                {% if form.prenom_affiche.errors %}<div class="text-danger small">{{ form.prenom_affiche.errors }}</div>{% endif %}
+            </div>
+            <div class="row g-3">
+                <div class="col-6">
+                    <label class="form-label">Date de naissance *</label>
+                    {{ form.date_naissance }}
+                    {% if form.date_naissance.errors %}<div class="text-danger small">{{ form.date_naissance.errors }}</div>{% endif %}
+                </div>
+                <div class="col-6">
+                    <label class="form-label">Genre *</label>
+                    {{ form.genre }}
+                </div>
+            </div>
+            <div class="mt-3">
+                <label class="form-label">Orientation</label>
+                {{ form.orientation }}
+            </div>
+        </div>
+
+        <!-- Localisation -->
+        <div class="form-section">
+            <h4>📍 Localisation</h4>
+            <div class="row g-3">
+                <div class="col-6">
+                    <label class="form-label">Pays *</label>
+                    {{ form.pays }}
+                </div>
+                <div class="col-6">
+                    <label class="form-label">Ville *</label>
+                    {{ form.ville }}
+                </div>
+            </div>
+            <div class="row g-3 mt-1">
+                <div class="col-6">
+                    <label class="form-label">Nationalité *</label>
+                    {{ form.nationalite }}
+                </div>
+                <div class="col-6">
+                    <label class="form-label">Origine ethnique</label>
+                    {{ form.origine_ethnique }}
+                </div>
+            </div>
+            <div class="form-check mt-2">
+                {{ form.est_diaspora }}
+                <label class="form-check-label" for="{{ form.est_diaspora.id_for_label }}">
+                    Je suis de la diaspora
+                </label>
+            </div>
+            <div id="pays-residence-field" class="mt-2" {% if not form.instance.est_diaspora %}style="display:none"{% endif %}>
+                <label class="form-label">Pays de résidence</label>
+                {{ form.pays_residence }}
+            </div>
+        </div>
+
+        <!-- Situation personnelle -->
+        <div class="form-section">
+            <h4>💑 Situation personnelle</h4>
+            <div class="mb-3">
+                <label class="form-label">Situation matrimoniale *</label>
+                {{ form.situation_matrimoniale }}
+            </div>
+            <div class="row g-3">
+                <div class="col-6">
+                    <label class="form-label">Vous avez des enfants ?</label>
+                    <div class="form-check">
+                        {{ form.a_des_enfants }}
+                        <label class="form-check-label" for="{{ form.a_des_enfants.id_for_label }}">Oui</label>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="form-label">Nombre</label>
+                    {{ form.nb_enfants }}
+                </div>
+            </div>
+            <div class="mt-3">
+                <label class="form-label">Voulez-vous des enfants ? *</label>
+                {{ form.veut_des_enfants }}
+            </div>
+        </div>
+
+        <!-- Formation & Religion -->
+        <div class="form-section">
+            <h4>🎓 Formation & Religion</h4>
+            <div class="row g-3">
+                <div class="col-6">
+                    <label class="form-label">Niveau d'études *</label>
+                    {{ form.niveau_etude }}
+                </div>
+                <div class="col-6">
+                    <label class="form-label">Profession</label>
+                    {{ form.profession }}
+                </div>
+            </div>
+            <div class="row g-3 mt-1">
+                <div class="col-6">
+                    <label class="form-label">Religion</label>
+                    {{ form.religion }}
+                </div>
+                <div class="col-6">
+                    <label class="form-label">Pratique</label>
+                    {{ form.pratique_religieuse }}
+                </div>
+            </div>
+        </div>
+
+        <!-- À propos -->
+        <div class="form-section">
+            <h4>✍️ À propos de moi</h4>
+            <div class="mb-3">
+                <label class="form-label">Biographie (max 1000 car.)</label>
+                {{ form.biographie }}
+                <div class="small" style="color:var(--love-muted);text-align:right" id="bio-counter">0/1000</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Ce que je cherche (max 500 car.)</label>
+                {{ form.ce_que_je_cherche }}
+            </div>
+        </div>
+
+        <!-- Langues -->
+        <div class="form-section">
+            <h4>🗣️ Langues parlées</h4>
+            <div class="interests-grid">
+                {% for value, label in form.langues.field.choices %}
+                <label class="interest-chip {% if value in form.initial.langues %}selected{% endif %}">
+                    <input type="checkbox" name="langues" value="{{ value }}"
+                        {% if value in form.initial.langues %}checked{% endif %}
+                        style="display:none"
+                        onchange="this.closest('.interest-chip').classList.toggle('selected', this.checked)">
+                    {{ label }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Intérêts -->
+        <div class="form-section">
+            <h4>⭐ Centres d'intérêt</h4>
+            <div class="interests-grid">
+                {% for value, label in form.interets.field.choices %}
+                <label class="interest-chip {% if value in form.initial.interets %}selected{% endif %}">
+                    <input type="checkbox" name="interets" value="{{ value }}"
+                        {% if value in form.initial.interets %}checked{% endif %}
+                        style="display:none"
+                        onchange="this.closest('.interest-chip').classList.toggle('selected', this.checked)">
+                    {{ label }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Critères recherche -->
+        <div class="form-section">
+            <h4>🔍 Qui je recherche</h4>
+            <div class="row g-3">
+                <div class="col-4">
+                    <label class="form-label">Âge min</label>
+                    {{ form.recherche_age_min }}
+                </div>
+                <div class="col-4">
+                    <label class="form-label">Âge max</label>
+                    {{ form.recherche_age_max }}
+                </div>
+                <div class="col-4">
+                    <label class="form-label">Genre</label>
+                    {{ form.recherche_genre }}
+                </div>
+            </div>
+            <div class="mt-3">
+                <label class="form-label">Distance maximale (km)</label>
+                {{ form.recherche_distance_km }}
+            </div>
+        </div>
+
+        <!-- Confidentialité -->
+        <div class="form-section">
+            <h4>🔒 Confidentialité</h4>
+            <div class="form-check mb-2">
+                {{ form.afficher_en_ligne }}
+                <label class="form-check-label" for="{{ form.afficher_en_ligne.id_for_label }}">
+                    Afficher mon statut en ligne
+                </label>
+            </div>
+            <div class="form-check mb-3">
+                {{ form.afficher_distance }}
+                <label class="form-check-label" for="{{ form.afficher_distance.id_for_label }}">
+                    Afficher la distance approximative
+                </label>
+            </div>
+            <div>
+                <label class="form-label">Qui peut m'écrire</label>
+                {{ form.qui_peut_ecrire }}
+            </div>
+        </div>
+
+        <!-- Bouton submit -->
+        <div style="position:fixed;bottom:0;left:0;right:0;background:rgba(26,26,46,0.97);padding:1rem;border-top:1px solid var(--love-border);z-index:100">
+            <div style="max-width:640px;margin:0 auto;display:flex;gap:1rem">
+                {% if not est_creation %}
+                <a href="javascript:history.back()" class="btn-love-outline" style="flex:1;justify-content:center">
+                    Annuler
+                </a>
+                {% endif %}
+                <button type="submit" class="btn-love" style="flex:2;justify-content:center">
+                    {% if est_creation %}Créer mon profil ❤️{% else %}Sauvegarder{% endif %}
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Afficher/cacher le champ pays résidence
+document.getElementById('{{ form.est_diaspora.id_for_label }}')?.addEventListener('change', function() {
+    document.getElementById('pays-residence-field').style.display = this.checked ? 'block' : 'none';
+});
+
+// Compteur biographie
+const bioField = document.getElementById('{{ form.biographie.id_for_label }}');
+const bioCounter = document.getElementById('bio-counter');
+if (bioField && bioCounter) {
+    bioField.addEventListener('input', () => {
+        bioCounter.textContent = `${bioField.value.length}/1000`;
+    });
+    bioCounter.textContent = `${bioField.value.length}/1000`;
+}
+</script>
+{% endblock %}

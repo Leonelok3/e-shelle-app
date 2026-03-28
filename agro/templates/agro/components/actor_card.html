@@ -1,0 +1,48 @@
+{% load static %}
+<div class="agro-actor-card text-center">
+  <a href="{{ acteur.get_absolute_url }}" class="text-decoration-none">
+    <!-- Logo / Avatar -->
+    <div class="agro-actor-logo-wrap">
+      {% if acteur.logo %}
+        <img src="{{ acteur.logo.url }}" alt="{{ acteur.nom_entreprise }}"
+             class="agro-actor-logo" loading="lazy">
+      {% else %}
+        <div class="agro-actor-logo-placeholder">
+          {{ acteur.nom_entreprise|slice:":2"|upper }}
+        </div>
+      {% endif %}
+      {% if acteur.est_verifie %}
+        <span class="agro-actor-verified" title="Acteur vérifié">
+          <i class="bi bi-patch-check-fill"></i>
+        </span>
+      {% endif %}
+    </div>
+
+    <!-- Nom -->
+    <div class="agro-actor-nom mt-2">{{ acteur.nom_entreprise|truncatechars:25 }}</div>
+
+    <!-- Type -->
+    <div class="agro-actor-type text-muted small">{{ acteur.get_type_acteur_display }}</div>
+
+    <!-- Pays -->
+    <div class="agro-actor-pays small">
+      <i class="bi bi-geo-alt me-1"></i>{{ acteur.ville }}, {{ acteur.pays }}
+    </div>
+
+    <!-- Note -->
+    {% if acteur.note_moyenne > 0 %}
+    <div class="agro-actor-note small mt-1">
+      <span class="text-warning">★</span>
+      {{ acteur.note_moyenne|floatformat:1 }}/5
+      <span class="text-muted">({{ acteur.nb_avis }})</span>
+    </div>
+    {% endif %}
+
+    <!-- Plan badge -->
+    {% if acteur.plan_premium != 'free' %}
+    <div class="mt-1">
+      <span class="badge bg-warning text-dark small">{{ acteur.badge_plan }} {{ acteur.plan_premium|capfirst }}</span>
+    </div>
+    {% endif %}
+  </a>
+</div>

@@ -1,0 +1,40 @@
+{% extends 'agro/base_agro.html' %}
+
+{% block content %}
+<div class="container-xl py-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 fw-bold mb-0">Mes Avis</h1>
+    <a href="{% url 'agro:dashboard' %}" class="btn btn-agro-outline btn-sm">
+      <i class="bi bi-arrow-left me-1"></i>Tableau de bord
+    </a>
+  </div>
+
+  {% if avis_recus %}
+  <div class="row g-3">
+    {% for avis in avis_recus %}
+    <div class="col-md-6">
+      <div class="card agro-card">
+        <div class="card-body">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="fw-semibold small">{{ avis.evaluateur.nom_entreprise }}</div>
+            <div class="small text-muted">{{ avis.date_avis|date:"d/m/Y" }}</div>
+          </div>
+          <div class="d-flex gap-3 mb-2 small">
+            <span>Qualité : {% for i in "12345" %}{% if forloop.counter <= avis.note_qualite %}⭐{% else %}☆{% endif %}{% endfor %}</span>
+          </div>
+          {% if avis.commentaire %}
+          <p class="small mb-0 text-muted fst-italic">"{{ avis.commentaire }}"</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center py-5">
+    <div class="fs-1 mb-3">⭐</div>
+    <p class="text-muted">Aucun avis reçu pour l'instant.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'rencontres/base_rencontre.html' %}
+{% load static %}
+
+{% block title %}Découvrir — E-Shelle Love{% endblock %}
+
+{% block extra_css %}
+<style>
+.likes-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    color: var(--love-muted);
+    margin-bottom: 0.5rem;
+}
+.likes-info.limite {
+    color: var(--love-primary);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Données JSON cachées pour JS -->
+<script id="profils-data" type="application/json">{{ profils_json|safe }}</script>
+
+<div class="discovery-container">
+
+    <!-- Compteur likes -->
+    <div class="likes-info" id="likes-info">
+        <i class="bi bi-heart"></i>
+        <span>
+            <span id="likes-counter">{{ likes_restants|default:"∞" }}</span>
+            likes restants aujourd'hui
+        </span>
+        {% if not profil.est_premium %}
+        <a href="{% url 'rencontres:premium' %}" style="color:var(--love-gold);text-decoration:none;font-size:0.75rem">
+            ⭐ Illimité →
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- Stack de cartes -->
+    <div class="cards-stack" id="cards-container">
+        <!-- Les cartes sont générées par JS -->
+        <noscript>
+            <div style="padding:2rem;text-align:center;color:var(--love-muted)">
+                Activez JavaScript pour utiliser la découverte de profils.
+            </div>
+        </noscript>
+    </div>
+
+    <!-- Boutons d'action -->
+    <div class="action-buttons">
+        <button class="btn-action btn-pass" id="btn-pass" title="Passer" aria-label="Passer ce profil">
+            <i class="bi bi-x-lg"></i>
+        </button>
+        <button class="btn-action btn-super-like" id="btn-super-like" title="Super Like" aria-label="Super Like">
+            <i class="bi bi-star-fill"></i>
+        </button>
+        <button class="btn-action btn-like" id="btn-like" title="J'aime" aria-label="Liker ce profil">
+            <i class="bi bi-heart-fill"></i>
+        </button>
+    </div>
+
+    <!-- Légende (desktop) -->
+    <div class="d-none d-md-flex" style="gap:2rem;justify-content:center;color:var(--love-muted);font-size:0.8rem">
+        <span><kbd>←</kbd> Passer</span>
+        <span><kbd>↑</kbd> Super Like</span>
+        <span><kbd>→</kbd> J'aime</span>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'rencontres/js/discovery.js' %}"></script>
+<script>
+// Keyboard shortcuts (desktop)
+document.addEventListener('keydown', (e) => {
+    if (!window.discovery) return;
+    const profil = window.discovery.getCurrentProfil();
+    if (!profil) return;
+
+    if (e.key === 'ArrowRight' || e.key === 'l') {
+        window.discovery.handleLike(profil.id);
+    } else if (e.key === 'ArrowLeft' || e.key === 'n') {
+        window.discovery.handlePass(profil.id);
+    } else if (e.key === 'ArrowUp' || e.key === 's') {
+        window.discovery.handleSuperLike(profil.id);
+    }
+});
+</script>
+{% endblock %}

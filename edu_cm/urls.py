@@ -48,6 +48,12 @@ urlpatterns = [
     # Annonces Cam (marketplace généraliste)
     path("annonces/", include("annonces_cam.urls", namespace="annonces")),
 
+    # ── E-Shelle Love — Rencontres ────────────────────────────────
+    path("rencontres/", include("rencontres.urls", namespace="rencontres")),
+
+    # ── E-Shelle Agro — Marketplace Agroalimentaire Africaine ────────
+    path("agro/", include("agro.urls", namespace="agro")),
+
     # Page d'accueil
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
 ]

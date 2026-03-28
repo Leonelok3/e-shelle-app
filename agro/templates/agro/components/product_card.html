@@ -1,0 +1,117 @@
+{% load static %}
+<div class="agro-product-card h-100">
+  <!-- Image -->
+  <a href="{{ produit.get_absolute_url }}" class="agro-product-img-wrap">
+    {% if produit.image_principale %}
+      <img src="{{ produit.image_principale.url }}"
+           alt="{{ produit.nom }}" class="agro-product-img" loading="lazy">
+    {% elif produit.photos.all.0 %}
+      <img src="{{ produit.photos.all.0.image.url }}"
+           alt="{{ produit.nom }}" class="agro-product-img" loading="lazy">
+    {% else %}
+      <div class="agro-product-img-placeholder">
+        <span class="agro-product-emoji">{{ produit.categorie.icone|default:"🌿" }}</span>
+      </div>
+    {% endif %}
+
+    <!-- Badges overlay -->
+    <div class="agro-product-badges">
+      {% if produit.est_bio %}
+        <span class="agro-badge bio">🌿 Bio</span>
+      {% endif %}
+      {% if produit.est_equitable %}
+        <span class="agro-badge equitable">🤝</span>
+      {% endif %}
+      {% if produit.est_mis_en_avant %}
+        <span class="agro-badge vedette">⭐ Vedette</span>
+      {% endif %}
+    </div>
+
+    <!-- Stock indicator -->
+    <div class="agro-product-stock {% if produit.disponibilite == 'en_stock' %}stock-ok{% elif produit.disponibilite == 'sur_commande' %}stock-cmd{% else %}stock-autre{% endif %}">
+      {% if produit.disponibilite == 'en_stock' %}
+        <i class="bi bi-check-circle-fill"></i> En stock
+      {% elif produit.disponibilite == 'sur_commande' %}
+        <i class="bi bi-clock"></i> Sur commande
+      {% elif produit.disponibilite == 'saisonnier' %}
+        <i class="bi bi-calendar2"></i> Saisonnier
+      {% else %}
+        <i class="bi bi-hourglass-split"></i> Pré-commande
+      {% endif %}
+    </div>
+  </a>
+
+  <!-- Corps -->
+  <div class="agro-product-body">
+    <!-- Catégorie -->
+    <div class="agro-product-categorie">
+      {{ produit.categorie.icone }} {{ produit.categorie.nom }}
+    </div>
+
+    <!-- Nom -->
+    <h6 class="agro-product-nom">
+      <a href="{{ produit.get_absolute_url }}">{{ produit.nom }}</a>
+    </h6>
+
+    <!-- Vendeur -->
+    <div class="agro-product-vendeur">
+      <a href="{{ produit.acteur.get_absolute_url }}" class="text-decoration-none">
+        {{ produit.acteur.nom_entreprise|truncatechars:25 }}
+        {% if produit.acteur.est_verifie %}
+          <i class="bi bi-patch-check-fill text-success ms-1" title="Vendeur vérifié"></i>
+        {% endif %}
+      </a>
+    </div>
+
+    <!-- Localisation -->
+    <div class="agro-product-location text-muted small">
+      <i class="bi bi-geo-alt me-1"></i>
+      {{ produit.acteur.ville }}, {{ produit.acteur.pays }}
+    </div>
+
+    <!-- MOQ -->
+    <div class="agro-product-moq small text-muted mt-1">
+      <i class="bi bi-box me-1"></i>
+      Min : {{ produit.quantite_min_commande }} {{ produit.unite_mesure }}
+    </div>
+
+    <!-- Prix -->
+    <div class="agro-product-prix mt-2">
+      <span class="agro-prix-montant">
+        {{ produit.prix_unitaire|floatformat:0 }} {{ produit.devise }}
+      </span>
+      <span class="agro-prix-unite">/ {{ produit.unite_mesure }}</span>
+      {% if produit.prix_negociable %}
+        <span class="agro-prix-nego ms-1" title="Prix négociable">
+          <i class="bi bi-chat-dots"></i> Négociable
+        </span>
+      {% endif %}
+    </div>
+
+    <!-- Export info -->
+    {% if produit.peut_exporter and produit.incoterms_disponibles %}
+    <div class="agro-product-incoterms small text-info mt-1">
+      <i class="bi bi-ship me-1"></i>
+      {% for inc in produit.incoterms_disponibles|slice:":3" %}
+        <span class="badge bg-info-subtle text-info-emphasis me-1">{{ inc }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Note -->
+    {% if produit.note_moyenne > 0 %}
+    <div class="agro-product-note small mt-1">
+      <span class="text-warning">★</span>
+      {{ produit.note_moyenne|floatformat:1 }}
+    </div>
+    {% endif %}
+
+    <!-- CTA -->
+    <div class="mt-2">
+      <a href="{% url 'agro:demander_devis' produit_slug=produit.slug %}"
+         class="btn btn-agro btn-sm w-100">
+        <i class="bi bi-envelope me-1"></i>Demander un devis
+      </a>
+    </div>
+  </div>
+</div>

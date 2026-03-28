@@ -1,0 +1,49 @@
+{% extends 'agro/base_agro.html' %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 700px;">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'agro:detail_devis' reference=devis.reference %}" class="btn btn-agro-outline btn-sm">
+      <i class="bi bi-arrow-left me-1"></i>Retour
+    </a>
+    <h1 class="h4 fw-bold mb-0">Répondre à la demande</h1>
+  </div>
+
+  <!-- Récap demande -->
+  <div class="card agro-card mb-4">
+    <div class="card-header agro-card-header">Demande de {{ devis.acheteur.nom_entreprise }}</div>
+    <div class="card-body small">
+      <dl class="row mb-0">
+        {% if devis.produit %}<dt class="col-4 text-muted">Produit</dt><dd class="col-8">{{ devis.produit.nom }}</dd>{% endif %}
+        <dt class="col-4 text-muted">Quantité</dt><dd class="col-8">{{ devis.quantite }} {{ devis.unite_mesure }}</dd>
+        <dt class="col-4 text-muted">Destination</dt><dd class="col-8">{{ devis.destination }}</dd>
+        <dt class="col-4 text-muted">Message</dt><dd class="col-8">{{ devis.message }}</dd>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Formulaire réponse -->
+  <div class="card agro-card">
+    <div class="card-header agro-card-header">Votre offre de prix</div>
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="mb-3">
+          <label class="form-label fw-semibold small">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}<div class="text-danger small mt-1">{{ field.errors.0 }}</div>{% endif %}
+          {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+        </div>
+        {% endfor %}
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-agro">
+            <i class="bi bi-send me-1"></i>Envoyer mon devis
+          </button>
+          <a href="{% url 'agro:detail_devis' reference=devis.reference %}" class="btn btn-agro-outline">Annuler</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

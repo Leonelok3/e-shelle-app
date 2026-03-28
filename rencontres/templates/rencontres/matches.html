@@ -1,0 +1,73 @@
+{% extends 'rencontres/base_rencontre.html' %}
+{% load static %}
+
+{% block title %}Mes Matchs — E-Shelle Love{% endblock %}
+
+{% block content %}
+<div style="max-width:600px;margin:0 auto;padding-bottom:5rem">
+    <div style="padding:1.25rem 1rem;font-size:1.2rem;font-weight:700">
+        Mes Matchs <span style="color:var(--love-muted);font-weight:400;font-size:0.9rem">({{ matchs|length }})</span>
+    </div>
+
+    {% if matchs %}
+    <ul class="conversation-list">
+        {% for item in matchs %}
+        {% with autre=item.autre_profil %}
+        <li>
+            <a href="{% if item.match.conversation %}{% url 'rencontres:conversation' item.match.conversation.id %}{% else %}{% url 'rencontres:detail_profil' autre.pk %}{% endif %}"
+                class="conversation-item">
+                <!-- Avatar -->
+                {% if autre.photo_principale %}
+                <img src="{{ autre.photo_principale.url }}" alt="{{ autre.prenom_affiche }}" class="conv-avatar">
+                {% else %}
+                <div class="conv-avatar-placeholder">{{ autre.prenom_affiche|first }}</div>
+                {% endif %}
+
+                <!-- Info -->
+                <div class="conv-info">
+                    <div class="conv-name">
+                        {{ autre.prenom_affiche }}, {{ autre.age }} ans
+                        {% if autre.badge_verifie %}<span class="badge-verifie" style="font-size:0.65rem">✓</span>{% endif %}
+                    </div>
+                    <div class="conv-preview">
+                        {% if item.dernier_message %}
+                            {% if item.dernier_message.expediteur == profil %}Vous: {% endif %}
+                            {{ item.dernier_message.contenu|truncatechars:50 }}
+                        {% else %}
+                            Match du {{ item.match.date_match|date:"d/m/Y" }} · Dites bonjour !
+                        {% endif %}
+                    </div>
+                    <div style="font-size:0.75rem;color:var(--love-muted);margin-top:0.2rem">
+                        📍 {{ autre.ville }}
+                        · ⭐ {{ item.match.score_compatibilite|floatformat:0 }}% compatible
+                    </div>
+                </div>
+
+                <!-- Meta -->
+                <div class="conv-meta">
+                    {% if item.dernier_message %}
+                    <div>{{ item.dernier_message.date_envoi|date:"H:i" }}</div>
+                    {% else %}
+                    <div>{{ item.match.date_match|date:"d/m" }}</div>
+                    {% endif %}
+                    {% if item.nb_non_lus %}
+                    <div class="unread-dot" style="margin:0.3rem auto 0"></div>
+                    {% endif %}
+                </div>
+            </a>
+        </li>
+        {% endwith %}
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div style="text-align:center;padding:4rem 1.5rem;color:var(--love-muted)">
+        <div style="font-size:4rem;margin-bottom:1rem">💔</div>
+        <h3 style="color:var(--love-text)">Pas encore de match</h3>
+        <p>Continuez à explorer des profils pour obtenir vos premiers matchs !</p>
+        <a href="{% url 'rencontres:decouverte' %}" class="btn-love" style="margin-top:1rem">
+            Découvrir des profils
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

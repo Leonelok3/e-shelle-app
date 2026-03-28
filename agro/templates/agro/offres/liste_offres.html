@@ -1,0 +1,55 @@
+{% extends 'agro/base_agro.html' %}
+
+{% block content %}
+<div class="container-xl py-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h1 class="h3 fw-bold mb-1">Offres Commerciales</h1>
+      <p class="text-muted mb-0">{{ page_obj.paginator.count }} offre{{ page_obj.paginator.count|pluralize }} active{{ page_obj.paginator.count|pluralize }}</p>
+    </div>
+    {% if user.is_authenticated %}
+    {% if user.profil_agro %}
+    <a href="{% url 'agro:creer_offre' %}" class="btn btn-agro">
+      <i class="bi bi-plus-circle me-1"></i>Publier une offre
+    </a>
+    {% endif %}
+    {% endif %}
+  </div>
+
+  <div class="row g-3">
+    {% for offre in page_obj %}
+    <div class="col-12 col-md-6">
+      <a href="{% url 'agro:detail_offre' pk=offre.pk %}" class="agro-ao-card d-block text-decoration-none">
+        <div class="d-flex align-items-start gap-3">
+          <div class="agro-ao-icon {% if offre.est_urgente %}bg-danger{% else %}bg-agro-primary{% endif %}">
+            {% if offre.type_offre == 'vente' %}🟢{% elif offre.type_offre == 'achat' %}🔵{% else %}🟡{% endif %}
+          </div>
+          <div class="flex-grow-1">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <h6 class="fw-semibold mb-0">{{ offre.titre }}</h6>
+              {% if offre.est_urgente %}
+              <span class="badge bg-danger small">URGENT</span>
+              {% endif %}
+            </div>
+            <div class="text-muted small mt-1">
+              {{ offre.acteur.nom_entreprise }} — {{ offre.acteur.pays }}
+            </div>
+            <div class="d-flex gap-3 small text-muted mt-1">
+              <span><i class="bi bi-box me-1"></i>{{ offre.quantite }} {{ offre.unite_mesure }}</span>
+              {% if offre.prix_propose %}
+              <span class="text-success fw-semibold">{{ offre.prix_propose }} {{ offre.devise }}</span>
+              {% endif %}
+              <span class="ms-auto">{{ offre.date_publication|date:"d/m/Y" }}</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+      <p class="text-muted">Aucune offre disponible pour l'instant.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
