@@ -26,6 +26,7 @@
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
   color: var(--ann-text);
+  padding-top: 4rem; /* compense la navbar fixe */
 }
 
 /* ── BREADCRUMB ───────────────────────────────────────────────── */

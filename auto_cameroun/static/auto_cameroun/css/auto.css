@@ -38,6 +38,7 @@
   background: var(--auto-bg) !important;
   color: var(--auto-text) !important;
   min-height: 100vh;
+  padding-top: 4rem; /* compense la navbar fixe */
 }
 .auto-page *,
 .auto-page h1,
