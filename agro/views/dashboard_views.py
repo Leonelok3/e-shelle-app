@@ -184,7 +184,7 @@ def souscrire(request, plan):
 
     messages.info(request, f"Souscription au plan {PLANS[plan]['nom']} — finalisez votre paiement.")
     # Rediriger vers la page de paiement billing/ ou payments/
-    return redirect('billing:index')
+    return redirect('billing:pricing')
 
 
 @login_required

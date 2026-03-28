@@ -207,8 +207,7 @@ def inscrire(request, slug):
     formation = get_object_or_404(Formation, slug=slug, is_published=True)
 
     if formation.prix > 0:
-        # Rediriger vers le paiement
-        return redirect("boutique:checkout_formation", formation_id=formation.pk)
+        return redirect("payments:payer_formation", formation_id=formation.pk)
 
     # Formation gratuite — inscription directe
     inscription, created = Inscription.objects.get_or_create(

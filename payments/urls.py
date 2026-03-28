@@ -9,4 +9,5 @@ urlpatterns = [
     path("confirmation/<int:tx_id>/",    views.confirmation,  name="confirmation"),
     path("historique/",                  views.historique,    name="historique"),
     path("webhook/",                     views.webhook,       name="webhook"),
+    path("formation/<int:formation_id>/", views.payer_formation, name="payer_formation"),
 ]
