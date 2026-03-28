@@ -16,7 +16,22 @@
 {% block ann_extra_css %}{% endblock %}
 {% endblock %}
 
+{% block content %}
+<div class="ann-page">
+  <!-- ── BREADCRUMB ── -->
+  <nav aria-label="breadcrumb" class="ann-breadcrumb">
+    <div class="container">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Accueil</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'annonces:liste_annonces' %}">Annonces Cam</a></li>
+        {% block breadcrumb_items %}{% endblock %}
+      </ol>
+    </div>
+  </nav>
 
+  {% block ann_content %}{% endblock %}
+</div>
+{% endblock %}
 
 {% block extra_js %}
 <!-- Bootstrap 5 JS -->
