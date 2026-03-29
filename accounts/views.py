@@ -73,10 +73,10 @@ def _envoyer_code_verification(user, code):
             recipient_list=[user.email],
             fail_silently=False,
         )
-        with open('/tmp/email_debug.log', 'a') as f:
+        with open('/var/www/eshelle/email_debug.log', 'a') as f:
             f.write(f"OK: {user.email} | BACKEND={settings.EMAIL_BACKEND} | USER={settings.EMAIL_HOST_USER}\n")
     except Exception as e:
-        with open('/tmp/email_debug.log', 'a') as f:
+        with open('/var/www/eshelle/email_debug.log', 'a') as f:
             f.write(f"ERROR: {user.email} | {e}\n{traceback.format_exc()}\n")
 
 
