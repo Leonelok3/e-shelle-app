@@ -106,7 +106,7 @@ def register(request):
         elif CustomUser.objects.filter(email=email).exists():
             messages.error(request, "Cet email est déjà utilisé.")
         else:
-            # Créer le compte en INACTIF jusqu'à vérification
+            # Créer le compte ACTIF directement
             user = CustomUser.objects.create_user(
                 username=username,
                 email=email,
@@ -114,16 +114,12 @@ def register(request):
                 first_name=first_name,
                 last_name=last_name,
                 role=role if role in dict(Role.choices) else Role.STUDENT,
-                is_active=False,  # ← bloqué jusqu'à vérification
+                is_active=True,
             )
             UserProfile.objects.get_or_create(user=user)
-
-            # Générer et envoyer le code
-            verif = EmailVerification.generer(user)
-            _envoyer_code_verification(user, verif.code)
-
-            request.session["verif_user_id"] = user.pk
-            return redirect("accounts:verify_email")
+            login(request, user)
+            messages.success(request, f"Bienvenue {user.first_name or user.username} ! Votre compte a été créé.")
+            return redirect("dashboard:index")
 
     plan = request.GET.get("plan", "free")
     return render(request, "accounts/register.html", {"plan": plan, "roles": Role.choices})
