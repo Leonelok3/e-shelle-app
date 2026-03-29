@@ -63,6 +63,7 @@ def _envoyer_code_verification(user, code):
       </p>
     </div>
     """
+    import traceback
     try:
         send_mail(
             subject=sujet,
@@ -72,9 +73,11 @@ def _envoyer_code_verification(user, code):
             recipient_list=[user.email],
             fail_silently=False,
         )
+        with open('/tmp/email_debug.log', 'a') as f:
+            f.write(f"OK: {user.email} | BACKEND={settings.EMAIL_BACKEND} | USER={settings.EMAIL_HOST_USER}\n")
     except Exception as e:
-        # En cas d'erreur SMTP, on continue (l'utilisateur peut redemander)
-        print(f"[EMAIL ERROR] Impossible d'envoyer le code à {user.email}: {e}")
+        with open('/tmp/email_debug.log', 'a') as f:
+            f.write(f"ERROR: {user.email} | {e}\n{traceback.format_exc()}\n")
 
 
 def register(request):
