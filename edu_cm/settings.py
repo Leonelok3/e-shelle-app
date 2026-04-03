@@ -67,6 +67,9 @@ INSTALLED_APPS = [
 
     # ── E-Shelle Agro — Marketplace Agroalimentaire Africaine ───────
     "agro.apps.AgroConfig",
+
+    # ── EduCam Pro — Plateforme E-Learning ───────────────────────
+    "edu_platform.apps.EduPlatformConfig",
 ]
 
 SITE_ID = 1
@@ -81,6 +84,9 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+
+    # ── EduCam Pro : verrouillage appareil (/edu/ uniquement) ────
+    "edu_platform.middleware.device_lock_middleware.DeviceLockMiddleware",
 ]
 
 ROOT_URLCONF = "edu_cm.urls"
@@ -225,6 +231,27 @@ AGRO_SETTINGS = {
     'LANGUES_SUPPORTEES':       ['fr', 'en', 'pt', 'es', 'ar'],
     'WHATSAPP_SUPPORT':         '+237680625082',
 }
+
+# ── EduCam Pro ────────────────────────────────────────────────────
+EDU_PLATFORM = {
+    'SITE_NAME': 'EduCam Pro',
+    'CURRENCY': 'XAF',
+    'ORANGE_MONEY_API_KEY':      os.getenv('ORANGE_MONEY_API_KEY', ''),
+    'ORANGE_MONEY_API_SECRET':   os.getenv('ORANGE_MONEY_API_SECRET', ''),
+    'ORANGE_MONEY_MERCHANT_KEY': os.getenv('ORANGE_MONEY_MERCHANT_KEY', ''),
+    'MTN_MOMO_SUBSCRIPTION_KEY': os.getenv('MTN_MOMO_SUBSCRIPTION_KEY', ''),
+    'MTN_MOMO_API_USER':         os.getenv('MTN_MOMO_API_USER', ''),
+    'MTN_MOMO_API_KEY':          os.getenv('MTN_MOMO_API_KEY', ''),
+    'MTN_MOMO_ENVIRONMENT':      os.getenv('MTN_MOMO_ENVIRONMENT', 'sandbox'),
+    'WEBHOOK_HMAC_SECRET':       os.getenv('EDU_WEBHOOK_HMAC_SECRET', ''),
+    'MAX_DEVICES_PER_CODE': 1,
+    'SMS_PROVIDER': os.getenv('SMS_PROVIDER', 'twilio'),
+    'SEND_CODE_BY_EMAIL': True,
+    'SEND_CODE_BY_SMS': True,
+}
+
+# URL de base pour les webhooks Mobile Money
+SITE_URL = os.getenv('SITE_URL', 'https://e-shelle.com')
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [

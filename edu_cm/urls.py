@@ -54,6 +54,9 @@ urlpatterns = [
     # ── E-Shelle Agro — Marketplace Agroalimentaire Africaine ────────
     path("agro/", include("agro.urls", namespace="agro")),
 
+    # ── EduCam Pro — Plateforme E-Learning ───────────────────────────
+    path("edu/", include("edu_platform.urls", namespace="edu")),
+
     # Page d'accueil
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
 ]
