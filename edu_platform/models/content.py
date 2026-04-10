@@ -1,37 +1,67 @@
 """
-Modèles de contenu : matières, documents d'examen, leçons vidéo.
+Modèles de contenu : matières, documents d'examen, leçons vidéo, ressources audio.
+Programme camerounais — sections francophone, technique et anglophone.
 """
 from django.db import models
 from django.utils.text import slugify
 
 
 class Subject(models.Model):
-    """Matière / Cours pour un niveau d'examen donné."""
-    LEVEL_CHOICES = [
-        ('bepc', 'BEPC'),
-        ('probatoire', 'Probatoire'),
-        ('bac', 'Baccalauréat'),
-        ('licence', 'Licence'),
-        ('master', 'Master'),
+    """Matière / Cours pour un niveau et une section donnés."""
+
+    SECTION_CHOICES = [
+        ('francophone', 'Section Francophone'),
+        ('technique',   'Section Technique'),
+        ('anglophone',  'Section Anglophone'),
     ]
+
+    # Niveaux par section
+    LEVEL_CHOICES = [
+        # — Section Francophone —
+        ('3eme',        '3ème'),
+        ('2nde',        '2nde'),
+        ('1ere',        '1ère'),
+        ('tle',         'Terminale'),
+        # — Section Technique —
+        ('4eme_tech',   '4ème (Technique)'),
+        ('3eme_tech',   '3ème (Technique)'),
+        ('2nde_tech',   '2nde (Technique)'),
+        ('1ere_tech',   '1ère (Technique)'),
+        ('tle_tech',    'Terminale (Technique)'),
+        # — Section Anglophone —
+        ('form5',       'Form 5'),
+        ('lower_sixth', 'Lower Sixth'),
+        ('upper_sixth', 'Upper Sixth'),
+    ]
+
     SUBJECT_TYPES = [
-        ('math', 'Mathématiques'),
-        ('french', 'Français'),
-        ('physics', 'Physique-Chimie'),
-        ('biology', 'SVT'),
-        ('history', 'Histoire-Géo'),
-        ('english', 'Anglais'),
-        ('philosophy', 'Philosophie'),
-        ('economics', 'Économie'),
-        ('computer', 'Informatique'),
-        ('other', 'Autre'),
+        ('math',        'Mathématiques'),
+        ('french',      'Français / Literature'),
+        ('physics',     'Physique-Chimie'),
+        ('biology',     'SVT / Biology'),
+        ('history',     'Histoire-Géo'),
+        ('english',     'Anglais / English'),
+        ('philosophy',  'Philosophie'),
+        ('economics',   'Économie / Commerce'),
+        ('computer',    'Informatique / ICT'),
+        ('technical',   'Sciences Techniques'),
+        ('arts',        'Arts'),
+        ('sport',       'EPS / Sport'),
+        ('other',       'Autre'),
     ]
 
     title = models.CharField(max_length=200, verbose_name='Titre')
     slug = models.SlugField(max_length=220, unique=True, blank=True)
-    subject_type = models.CharField(max_length=30, choices=SUBJECT_TYPES, verbose_name='Type')
-    level = models.CharField(max_length=20, choices=LEVEL_CHOICES, verbose_name='Niveau')
-    year = models.IntegerField(null=True, blank=True, verbose_name='Année d\'examen')
+    section = models.CharField(
+        max_length=20,
+        choices=SECTION_CHOICES,
+        default='francophone',
+        verbose_name='Section',
+        db_index=True,
+    )
+    subject_type = models.CharField(max_length=30, choices=SUBJECT_TYPES, verbose_name='Matière')
+    level = models.CharField(max_length=20, choices=LEVEL_CHOICES, verbose_name='Niveau', db_index=True)
+    year = models.IntegerField(null=True, blank=True, verbose_name='Année (ex: 2024)')
     description = models.TextField(blank=True, verbose_name='Description')
     thumbnail = models.ImageField(
         upload_to='edu_platform/subjects/',
@@ -52,19 +82,18 @@ class Subject(models.Model):
     class Meta:
         verbose_name = 'Matière'
         verbose_name_plural = 'Matières'
-        ordering = ['level', 'order', 'title']
+        ordering = ['section', 'level', 'order', 'title']
 
     def __str__(self):
-        year_str = f" ({self.year})" if self.year else ""
-        return f"{self.get_subject_type_display()} — {self.get_level_display()}{year_str}"
+        year_str = f" {self.year}" if self.year else ""
+        return f"[{self.get_section_display()}] {self.get_level_display()} — {self.get_subject_type_display()}{year_str}"
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            base = f"{self.get_subject_type_display()}-{self.get_level_display()}"
+            base = slugify(f"{self.section}-{self.level}-{self.get_subject_type_display()}")
             if self.year:
                 base += f"-{self.year}"
-            self.slug = slugify(base)
-            # Unicité du slug
+            self.slug = base
             original = self.slug
             counter = 1
             while Subject.objects.filter(slug=self.slug).exclude(pk=self.pk).exists():
@@ -80,14 +109,19 @@ class Subject(models.Model):
     def video_count(self):
         return self.videos.count()
 
+    @property
+    def audio_count(self):
+        return self.audios.count()
+
 
 class ExamDocument(models.Model):
-    """Sujet d'examen ou correction (PDF protégé)."""
+    """Sujet d'examen, correction ou cours (fichier PDF)."""
     DOC_TYPE = [
-        ('subject', 'Sujet d\'examen'),
-        ('correction', 'Correction officielle'),
-        ('correction_proposed', 'Correction proposée'),
-        ('course_notes', 'Cours / Résumé'),
+        ('subject',              'Sujet d\'examen'),
+        ('correction',           'Correction officielle'),
+        ('correction_proposed',  'Correction proposée'),
+        ('course_notes',         'Cours / Résumé'),
+        ('exercise',             'Exercices types'),
     ]
 
     subject = models.ForeignKey(
@@ -108,12 +142,20 @@ class ExamDocument(models.Model):
     file_size_kb = models.IntegerField(default=0, verbose_name='Taille (Ko)')
 
     class Meta:
-        verbose_name = 'Document d\'examen'
-        verbose_name_plural = 'Documents d\'examen'
+        verbose_name = 'Document'
+        verbose_name_plural = 'Documents'
         ordering = ['subject', 'doc_type', '-uploaded_at']
 
     def __str__(self):
         return f"{self.title} [{self.get_doc_type_display()}]"
+
+    def save(self, *args, **kwargs):
+        if self.file and not self.file_size_kb:
+            try:
+                self.file_size_kb = self.file.size // 1024
+            except Exception:
+                pass
+        super().save(*args, **kwargs)
 
 
 class VideoLesson(models.Model):
@@ -154,3 +196,45 @@ class VideoLesson(models.Model):
     def increment_views(self):
         self.view_count += 1
         self.save(update_fields=['view_count'])
+
+
+class AudioResource(models.Model):
+    """Ressource audio liée à une matière (cours oral, correction audio)."""
+    AUDIO_TYPE = [
+        ('course',      'Cours oral'),
+        ('correction',  'Correction audio'),
+        ('exercise',    'Exercice corrigé'),
+        ('interview',   'Interview / Témoignage'),
+        ('other',       'Autre'),
+    ]
+
+    subject = models.ForeignKey(
+        Subject,
+        on_delete=models.CASCADE,
+        related_name='audios',
+        verbose_name='Matière'
+    )
+    audio_type = models.CharField(max_length=20, choices=AUDIO_TYPE, default='course', verbose_name='Type')
+    title = models.CharField(max_length=200, verbose_name='Titre')
+    description = models.TextField(blank=True, verbose_name='Description')
+    audio_file = models.FileField(
+        upload_to='edu_platform/audio/',
+        verbose_name='Fichier audio (MP3/M4A/OGG)'
+    )
+    duration_minutes = models.IntegerField(default=0, verbose_name='Durée (minutes)')
+    is_preview = models.BooleanField(default=False, verbose_name='Extrait gratuit')
+    order = models.IntegerField(default=0, verbose_name='Ordre')
+    created_at = models.DateTimeField(auto_now_add=True)
+    play_count = models.IntegerField(default=0, verbose_name='Nombre d\'écoutes')
+
+    class Meta:
+        verbose_name = 'Ressource audio'
+        verbose_name_plural = 'Ressources audio'
+        ordering = ['subject', 'order']
+
+    def __str__(self):
+        return f"{self.title} [{self.get_audio_type_display()}] ({self.duration_minutes} min)"
+
+    def increment_plays(self):
+        self.play_count += 1
+        self.save(update_fields=['play_count'])

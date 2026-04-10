@@ -1,6 +1,6 @@
 from .subscription import EduProfile, SubscriptionPlan, AccessCode
 from .device import DeviceBinding
-from .content import Subject, ExamDocument, VideoLesson
+from .content import Subject, ExamDocument, VideoLesson, AudioResource
 from .payment import PaymentTransaction
 
 __all__ = [
@@ -11,5 +11,6 @@ __all__ = [
     'Subject',
     'ExamDocument',
     'VideoLesson',
+    'AudioResource',
     'PaymentTransaction',
 ]
