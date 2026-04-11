@@ -1,77 +1,83 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends "adgen/base_adgen.html" %}
 
 {% block title %}AdGen — {{ campaign.nom_produit }}{% endblock %}
 
 {% block extra_head %}
 <style>
-  :root { --adgen-primary: #6C3FE8; --adgen-accent: #F5A623; }
-  .nav-tabs .nav-link { border-radius: .75rem .75rem 0 0; font-weight: 600; color: #6b7280; }
-  .nav-tabs .nav-link.active { color: var(--adgen-primary); border-color: rgba(108,63,232,.3) rgba(108,63,232,.3) white; background: white; }
+  .tab-btn {
+    padding: .625rem 1.25rem;
+    border-radius: .75rem;
+    font-weight: 600;
+    font-size: .875rem;
+    color: #6b7280;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { background: #f3f4f6; color: #111; }
+  .tab-btn.active {
+    background: var(--adgen-primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(108,63,232,.35);
+  }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
   .content-block {
-    background: #f8f7ff;
+    background: #fafafa;
     border-left: 4px solid var(--adgen-primary);
-    border-radius: 0 .75rem .75rem 0;
-    padding: 1.25rem 1.5rem;
-    font-size: .95rem;
-    line-height: 1.7;
+    border-radius: 0 1rem 1rem 0;
+    padding: 1.25rem 1.5rem 1.25rem 1.25rem;
+    font-size: .9rem;
+    line-height: 1.75;
     white-space: pre-wrap;
+    color: #1f2937;
     position: relative;
   }
   .copy-btn {
     position: absolute; top: .75rem; right: .75rem;
     background: var(--adgen-primary); color: white;
-    border: none; border-radius: .5rem;
-    padding: .25rem .75rem; font-size: .75rem; font-weight: 600;
+    border: none; border-radius: .625rem;
+    padding: .3rem .875rem; font-size: .72rem; font-weight: 700;
     cursor: pointer; transition: opacity .15s;
+    letter-spacing: .01em;
   }
   .copy-btn:hover { opacity: .85; }
-  .tag-badge {
-    display: inline-block;
-    background: #ede9fe; color: var(--adgen-primary);
-    border-radius: 999px; padding: .2rem .75rem;
-    font-size: .8rem; font-weight: 600; margin: .2rem;
-  }
-  .title-item {
-    background: white;
-    border: 1px solid rgba(108,63,232,.2);
-    border-radius: .75rem;
-    padding: 1rem 1.25rem;
-    font-weight: 600;
-    font-size: 1.05rem;
-    position: relative;
-  }
-  .benefit-item {
-    display: flex; align-items: flex-start; gap: .75rem;
-    padding: .5rem 0;
-  }
-  .benefit-icon { color: #10b981; font-size: 1.1rem; flex-shrink: 0; }
+  .copy-btn.copied { background: #10b981; }
 </style>
 {% endblock %}
 
-{% block content %}
-<div class="container py-5">
+{% block adgen_content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
 
   <!-- Header -->
-  <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-4">
+  <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
     <div>
-      <a href="{% url 'adgen:dashboard' %}" class="text-muted text-decoration-none small">← Retour au dashboard</a>
-      <h2 class="fw-bold mt-1 mb-0">{{ campaign.nom_produit }}</h2>
-      <div class="d-flex gap-2 mt-2 flex-wrap">
-        <span class="badge rounded-pill px-3" style="background:#f3f0ff;color:var(--adgen-primary)">{{ campaign.pays_label }}</span>
-        <span class="badge rounded-pill px-3" style="background:#f3f0ff;color:var(--adgen-primary)">{{ campaign.prix }}</span>
+      <a href="{% url 'adgen:dashboard' %}" class="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition mb-3">
+        ← Dashboard
+      </a>
+      <h1 class="text-2xl sm:text-3xl font-black text-gray-900">{{ campaign.nom_produit }}</h1>
+      <div class="flex flex-wrap gap-2 mt-2.5">
+        <span class="text-xs font-semibold px-3 py-1 rounded-full" style="background:#f5f3ff;color:var(--adgen-primary)">{{ campaign.pays_label }}</span>
+        <span class="text-xs font-semibold px-3 py-1 rounded-full" style="background:#f5f3ff;color:var(--adgen-primary)">{{ campaign.prix }}</span>
         {% for m in campaign.modules_selected %}
-        <span class="badge rounded-pill px-3" style="background:#f3f0ff;color:var(--adgen-primary)">{{ m }}</span>
+        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-gray-100 text-gray-600">{{ m }}</span>
         {% endfor %}
       </div>
     </div>
-    <div class="d-flex gap-2">
+    <div class="flex gap-2 flex-shrink-0">
       {% if campaign.status == 'done' %}
-      <a href="{% url 'adgen:export' pk=campaign.pk %}" class="btn btn-outline-secondary fw-semibold" style="border-radius:.75rem">
+      <a href="{% url 'adgen:export' pk=campaign.pk %}"
+         class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 transition">
         ↓ Export JSON
       </a>
-      {% elif campaign.status == 'pending' or campaign.status == 'failed' %}
-      <a href="{% url 'adgen:generate' pk=campaign.pk %}" class="btn fw-bold px-4" style="background:var(--adgen-primary);color:white;border-radius:.75rem">
+      {% endif %}
+      {% if campaign.status == 'pending' or campaign.status == 'failed' %}
+      <a href="{% url 'adgen:generate' pk=campaign.pk %}"
+         class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white shadow-sm hover:opacity-90 transition"
+         style="background:linear-gradient(135deg,#6C3FE8,#9b6dff)">
         ✨ {% if campaign.status == 'failed' %}Relancer{% else %}Générer{% endif %}
       </a>
       {% endif %}
@@ -79,152 +85,185 @@
   </div>
 
   {% if not content %}
-  <!-- Pas encore de contenu -->
-  <div class="text-center py-5">
+  <!-- Pas de contenu -->
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 sm:p-16 text-center">
     {% if campaign.status == 'processing' %}
-    <div class="spinner-border mb-3" style="color:var(--adgen-primary);width:3rem;height:3rem"></div>
-    <h4 class="fw-bold">Génération en cours...</h4>
-    <p class="text-muted">Rechargez la page dans quelques secondes.</p>
+    <div class="relative w-20 h-20 mx-auto mb-6">
+      <div class="w-20 h-20 rounded-full border-4 border-purple-100 border-t-purple-600 animate-spin"></div>
+      <div class="absolute inset-0 flex items-center justify-center text-3xl">✨</div>
+    </div>
+    <h3 class="text-xl font-bold text-gray-800 mb-2">Génération en cours...</h3>
+    <p class="text-gray-400">La page se rafraîchira automatiquement.</p>
     <script>setTimeout(() => location.reload(), 5000);</script>
     {% elif campaign.status == 'failed' %}
-    <div style="font-size:3rem">❌</div>
-    <h4 class="fw-bold mt-3">La génération a échoué</h4>
-    <p class="text-muted">Vérifiez votre clé API et réessayez.</p>
-    <a href="{% url 'adgen:generate' pk=campaign.pk %}" class="btn btn-danger mt-2">Relancer</a>
+    <div class="text-5xl mb-4">❌</div>
+    <h3 class="text-xl font-bold text-gray-800 mb-2">La génération a échoué</h3>
+    <p class="text-gray-400 mb-6">Vérifiez votre clé API Anthropic et réessayez.</p>
+    <a href="{% url 'adgen:generate' pk=campaign.pk %}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-white" style="background:#ef4444">Relancer</a>
     {% else %}
-    <div style="font-size:3rem">⏳</div>
-    <h4 class="fw-bold mt-3">Contenu non encore généré</h4>
-    <a href="{% url 'adgen:generate' pk=campaign.pk %}" class="btn mt-2 fw-bold px-4" style="background:var(--adgen-primary);color:white;border-radius:.75rem">
+    <div class="text-5xl mb-4">⏳</div>
+    <h3 class="text-xl font-bold text-gray-800 mb-2">Contenu non généré</h3>
+    <a href="{% url 'adgen:generate' pk=campaign.pk %}"
+       class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white mt-4"
+       style="background:linear-gradient(135deg,#6C3FE8,#9b6dff)">
       ✨ Générer maintenant
     </a>
     {% endif %}
   </div>
 
   {% else %}
-  <!-- Onglets de résultats -->
-  <ul class="nav nav-tabs mb-4 border-bottom" id="contentTabs">
-    {% if content.titles %}
-    <li class="nav-item">
-      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-titres">🎯 Titres</button>
-    </li>
-    {% endif %}
-    {% if content.description_generated %}
-    <li class="nav-item">
-      <button class="nav-link {% if not content.titles %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#tab-description">📝 Description</button>
-    </li>
-    {% endif %}
-    {% if content.facebook_post or content.instagram_post or content.whatsapp_message %}
-    <li class="nav-item">
-      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-social">📱 Social</button>
-    </li>
-    {% endif %}
-    {% if content.tiktok_script %}
-    <li class="nav-item">
-      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-tiktok">🎬 TikTok</button>
-    </li>
-    {% endif %}
-    {% if content.chatbot_reply %}
-    <li class="nav-item">
-      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-chatbot">🤖 Chatbot</button>
-    </li>
-    {% endif %}
-  </ul>
+  <!-- Tabs -->
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
 
-  <div class="tab-content">
+    <!-- Tab nav -->
+    <div class="border-b border-gray-100 px-4 py-3 overflow-x-auto">
+      <div class="flex gap-1.5 min-w-max">
+        {% if content.titles %}
+        <button class="tab-btn active" onclick="showTab('titres', this)">🎯 Titres</button>
+        {% endif %}
+        {% if content.description_generated %}
+        <button class="tab-btn" onclick="showTab('description', this)">📝 Description</button>
+        {% endif %}
+        {% if content.facebook_post or content.instagram_post or content.whatsapp_message %}
+        <button class="tab-btn" onclick="showTab('social', this)">📱 Réseaux</button>
+        {% endif %}
+        {% if content.tiktok_script %}
+        <button class="tab-btn" onclick="showTab('tiktok', this)">🎬 TikTok</button>
+        {% endif %}
+        {% if content.chatbot_reply %}
+        <button class="tab-btn" onclick="showTab('chatbot', this)">🤖 Chatbot</button>
+        {% endif %}
+      </div>
+    </div>
 
-    <!-- Titres -->
-    {% if content.titles %}
-    <div class="tab-pane fade show active" id="tab-titres">
-      <h5 class="fw-bold mb-3">Titres accrocheurs</h5>
-      <div class="d-flex flex-column gap-3">
-        {% for title in content.titles %}
-        <div class="title-item">
-          <span>{{ forloop.counter }}. {{ title }}</span>
-          <button class="copy-btn" onclick="copyText('{{ title|escapejs }}', this)">Copier</button>
+    <!-- Tab content -->
+    <div class="p-6 sm:p-8">
+
+      <!-- Titres -->
+      {% if content.titles %}
+      <div class="tab-pane active" id="tab-titres">
+        <h3 class="font-bold text-gray-800 mb-4 text-lg">3 titres accrocheurs</h3>
+        <div class="space-y-3">
+          {% for title in content.titles %}
+          <div class="relative flex items-center gap-4 bg-gradient-to-r from-purple-50 to-white border border-purple-100 rounded-xl px-5 py-4">
+            <span class="text-2xl font-black text-purple-200">{{ forloop.counter }}</span>
+            <span class="font-semibold text-gray-800 flex-1 text-sm sm:text-base">{{ title }}</span>
+            <button class="copy-btn" onclick="copyText('{{ title|escapejs }}', this)" style="position:static;margin-left:.5rem">Copier</button>
+          </div>
+          {% endfor %}
         </div>
-        {% endfor %}
+        <button onclick="copyAll()" class="mt-4 text-sm font-semibold px-4 py-2 rounded-lg border border-purple-200 text-purple-700 hover:bg-purple-50 transition">
+          Tout copier
+        </button>
+        <textarea id="allTitles" class="sr-only">{% for t in content.titles %}{{ t }}{% if not forloop.last %}&#10;{% endif %}{% endfor %}</textarea>
       </div>
-    </div>
-    {% endif %}
+      {% endif %}
 
-    <!-- Description -->
-    {% if content.description_generated %}
-    <div class="tab-pane fade {% if not content.titles %}show active{% endif %}" id="tab-description">
-      <h5 class="fw-bold mb-3">Description de vente</h5>
-      <div class="content-block mb-4">
-        {{ content.description_generated }}
-        <button class="copy-btn" onclick="copyText(`{{ content.description_generated|escapejs }}`, this)">Copier</button>
-      </div>
-      {% if content.benefits %}
-      <h5 class="fw-bold mb-3">Bénéfices clients</h5>
-      <div class="card border-0 shadow-sm p-3" style="border-radius:1rem">
-        {% for benefit in content.benefits %}
-        <div class="benefit-item">
-          <span class="benefit-icon">✅</span>
-          <span>{{ benefit }}</span>
+      <!-- Description -->
+      {% if content.description_generated %}
+      <div class="tab-pane" id="tab-description">
+        <h3 class="font-bold text-gray-800 mb-4 text-lg">Texte de vente</h3>
+        <div class="content-block mb-6">
+          {{ content.description_generated }}
+          <button class="copy-btn" onclick="copyText(`{{ content.description_generated|escapejs }}`, this)">Copier</button>
         </div>
-        {% endfor %}
+        {% if content.benefits %}
+        <h3 class="font-bold text-gray-800 mb-3 text-lg">5 bénéfices clients</h3>
+        <div class="bg-green-50 rounded-xl border border-green-100 p-4 space-y-2.5">
+          {% for b in content.benefits %}
+          <div class="flex items-start gap-3">
+            <span class="text-green-500 font-bold flex-shrink-0 mt-0.5">✓</span>
+            <span class="text-sm text-gray-700">{{ b }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
       </div>
       {% endif %}
-    </div>
-    {% endif %}
 
-    <!-- Social -->
-    {% if content.facebook_post or content.instagram_post or content.whatsapp_message %}
-    <div class="tab-pane fade" id="tab-social">
-      {% if content.facebook_post %}
-      <h5 class="fw-bold mb-2">📘 Facebook</h5>
-      <div class="content-block mb-4">{{ content.facebook_post }}<button class="copy-btn" onclick="copyText(`{{ content.facebook_post|escapejs }}`, this)">Copier</button></div>
-      {% endif %}
-      {% if content.instagram_post %}
-      <h5 class="fw-bold mb-2">📸 Instagram</h5>
-      <div class="content-block mb-4">{{ content.instagram_post }}<button class="copy-btn" onclick="copyText(`{{ content.instagram_post|escapejs }}`, this)">Copier</button></div>
-      {% endif %}
-      {% if content.whatsapp_message %}
-      <h5 class="fw-bold mb-2">💬 WhatsApp</h5>
-      <div class="content-block mb-4">{{ content.whatsapp_message }}<button class="copy-btn" onclick="copyText(`{{ content.whatsapp_message|escapejs }}`, this)">Copier</button></div>
-      {% endif %}
-      {% if content.hashtags %}
-      <h5 class="fw-bold mb-2">Hashtags</h5>
-      <div class="mb-4">
-        {% for tag in content.hashtags %}
-        <span class="tag-badge">{{ tag }}</span>
-        {% endfor %}
+      <!-- Social -->
+      {% if content.facebook_post or content.instagram_post or content.whatsapp_message %}
+      <div class="tab-pane" id="tab-social">
+        {% if content.facebook_post %}
+        <div class="mb-6">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold" style="background:#1877f2">f</div>
+            <h3 class="font-bold text-gray-800">Post Facebook</h3>
+          </div>
+          <div class="content-block">{{ content.facebook_post }}<button class="copy-btn" onclick="copyText(`{{ content.facebook_post|escapejs }}`, this)">Copier</button></div>
+        </div>
+        {% endif %}
+        {% if content.instagram_post %}
+        <div class="mb-6">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold" style="background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)">📸</div>
+            <h3 class="font-bold text-gray-800">Légende Instagram</h3>
+          </div>
+          <div class="content-block">{{ content.instagram_post }}<button class="copy-btn" onclick="copyText(`{{ content.instagram_post|escapejs }}`, this)">Copier</button></div>
+        </div>
+        {% endif %}
+        {% if content.whatsapp_message %}
+        <div class="mb-6">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold" style="background:#25d366">💬</div>
+            <h3 class="font-bold text-gray-800">Message WhatsApp</h3>
+          </div>
+          <div class="content-block">{{ content.whatsapp_message }}<button class="copy-btn" onclick="copyText(`{{ content.whatsapp_message|escapejs }}`, this)">Copier</button></div>
+        </div>
+        {% endif %}
+        {% if content.hashtags %}
+        <div>
+          <h3 class="font-bold text-gray-800 mb-3">Hashtags</h3>
+          <div class="flex flex-wrap gap-2">
+            {% for tag in content.hashtags %}
+            <span onclick="copyText('{{ tag|escapejs }}', null)" class="text-sm px-3 py-1.5 rounded-full font-semibold cursor-pointer hover:opacity-80 transition" style="background:#f5f3ff;color:var(--adgen-primary)">{{ tag }}</span>
+            {% endfor %}
+          </div>
+          <p class="text-xs text-gray-400 mt-2">Cliquez sur un hashtag pour le copier</p>
+        </div>
+        {% endif %}
       </div>
       {% endif %}
-    </div>
-    {% endif %}
 
-    <!-- TikTok -->
-    {% if content.tiktok_script %}
-    <div class="tab-pane fade" id="tab-tiktok">
-      <h5 class="fw-bold mb-3">🎬 Script TikTok (20 secondes)</h5>
-      <div class="content-block mb-3">
-        {{ content.tiktok_script }}
-        <button class="copy-btn" onclick="copyText(`{{ content.tiktok_script|escapejs }}`, this)">Copier</button>
+      <!-- TikTok -->
+      {% if content.tiktok_script %}
+      <div class="tab-pane" id="tab-tiktok">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold bg-black">▶</div>
+          <h3 class="font-bold text-gray-800 text-lg">Script TikTok 20 secondes</h3>
+        </div>
+        <div class="content-block mb-4">
+          {{ content.tiktok_script }}
+          <button class="copy-btn" onclick="copyText(`{{ content.tiktok_script|escapejs }}`, this)">Copier</button>
+        </div>
+        <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-blue-700">
+          <strong>💡 Conseil :</strong> Les 3 premières secondes sont décisives — commencez par une question ou une affirmation choc pour accrocher l'audience.
+        </div>
       </div>
-      <div class="alert alert-info border-0 rounded-3 small">
-        <strong>Conseil :</strong> Commencez fort les 3 premières secondes — c'est le hook qui accroche !
-      </div>
-    </div>
-    {% endif %}
+      {% endif %}
 
-    <!-- Chatbot -->
-    {% if content.chatbot_reply %}
-    <div class="tab-pane fade" id="tab-chatbot">
-      <h5 class="fw-bold mb-3">🤖 Réponse vendeur (Chatbot)</h5>
-      <div class="content-block">
-        {{ content.chatbot_reply }}
-        <button class="copy-btn" onclick="copyText(`{{ content.chatbot_reply|escapejs }}`, this)">Copier</button>
+      <!-- Chatbot -->
+      {% if content.chatbot_reply %}
+      <div class="tab-pane" id="tab-chatbot">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold" style="background:var(--adgen-primary)">🤖</div>
+          <h3 class="font-bold text-gray-800 text-lg">Réponse vendeur automatique</h3>
+        </div>
+        <div class="content-block mb-4">
+          {{ content.chatbot_reply }}
+          <button class="copy-btn" onclick="copyText(`{{ content.chatbot_reply|escapejs }}`, this)">Copier</button>
+        </div>
+        <div class="bg-purple-50 border border-purple-100 rounded-xl p-4 text-sm text-purple-700">
+          <strong>💡 Utilisation :</strong> Collez ce texte comme réponse automatique à "C'est quoi ce produit ?" sur WhatsApp Business ou Facebook Messenger.
+        </div>
       </div>
-      <p class="text-muted small mt-3">Utilisez ce texte comme réponse automatique à "C'est quoi ce produit ?" sur WhatsApp Business ou Facebook Messenger.</p>
-    </div>
-    {% endif %}
+      {% endif %}
 
+    </div>
   </div>
 
-  <!-- Footer info -->
-  <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top text-muted small">
+  <!-- Footer meta -->
+  <div class="flex justify-between items-center mt-4 text-xs text-gray-400">
     <span>Généré le {{ content.generated_at|date:"d/m/Y à H:i" }}</span>
     <span>{{ content.tokens_used }} tokens utilisés</span>
   </div>
@@ -232,26 +271,50 @@
 
 </div>
 
-<!-- Toast copie -->
-<div id="copyToast" class="position-fixed bottom-0 end-0 m-4 p-3 rounded-3 text-white fw-semibold shadow"
-     style="background:var(--adgen-primary);z-index:9999;display:none">
-  ✓ Copié !
+<!-- Toast -->
+<div id="copyToast"
+     class="fixed bottom-5 left-1/2 -translate-x-1/2 px-5 py-3 rounded-2xl text-white text-sm font-bold shadow-xl z-50 transition-all duration-200 opacity-0 pointer-events-none"
+     style="background:linear-gradient(135deg,#6C3FE8,#9b6dff)">
+  ✓ Copié dans le presse-papier
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
+  function showTab(id, btn) {
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    const pane = document.getElementById('tab-' + id);
+    if (pane) pane.classList.add('active');
+    if (btn) btn.classList.add('active');
+  }
+
   function copyText(text, btn) {
     navigator.clipboard.writeText(text).then(() => {
+      if (btn) {
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copié';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1800);
+      }
       const toast = document.getElementById('copyToast');
-      toast.style.display = 'block';
-      const orig = btn.textContent;
-      btn.textContent = '✓ Copié';
-      setTimeout(() => {
-        toast.style.display = 'none';
-        btn.textContent = orig;
-      }, 1800);
+      toast.classList.remove('opacity-0');
+      toast.classList.add('opacity-100');
+      setTimeout(() => { toast.classList.add('opacity-0'); toast.classList.remove('opacity-100'); }, 2000);
     });
   }
+
+  function copyAll() {
+    const el = document.getElementById('allTitles');
+    if (el) copyText(el.value, null);
+  }
+
+  // Activer le premier onglet si aucun n'est actif
+  document.addEventListener('DOMContentLoaded', () => {
+    const firstBtn = document.querySelector('.tab-btn');
+    if (firstBtn && !document.querySelector('.tab-btn.active')) {
+      firstBtn.click();
+    }
+  });
 </script>
 {% endblock %}

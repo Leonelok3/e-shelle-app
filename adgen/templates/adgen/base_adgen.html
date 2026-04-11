@@ -1,0 +1,159 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}AdGen — Générateur de publicités IA{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Générez vos publicités en 20 secondes grâce à l'IA — titres, posts sociaux, scripts TikTok, messages WhatsApp.{% endblock %}"/>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            adgen: {
+              primary: '#6C3FE8',
+              light:   '#f5f3ff',
+              accent:  '#F5A623',
+              dark:    '#3b0764',
+            }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+  <!-- CSRF -->
+  <meta name="csrf-token" content="{{ csrf_token }}"/>
+
+  <style>
+    :root {
+      --adgen-primary: #6C3FE8;
+      --adgen-light:   #f5f3ff;
+      --adgen-accent:  #F5A623;
+    }
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    [x-cloak] { display: none !important; }
+
+    /* Gradient hero */
+    .adgen-hero-bg {
+      background: linear-gradient(135deg, #3b0764 0%, #6C3FE8 55%, #F5A623 100%);
+    }
+
+    /* Glassmorphism card */
+    .glass-card {
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 1.25rem;
+    }
+
+    /* Copy button flash */
+    @keyframes flash { 0%,100%{opacity:1} 50%{opacity:.5} }
+    .flash { animation: flash .3s ease; }
+  </style>
+
+  {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-gray-50 text-gray-900 antialiased min-h-screen">
+
+  <!-- Django messages toast -->
+  {% if messages %}
+  <div class="fixed top-4 right-4 z-50 space-y-2 max-w-sm" id="toastContainer">
+    {% for m in messages %}
+    <div class="flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-sm font-semibold
+      {% if m.tags == 'success' %}bg-green-600 text-white
+      {% elif m.tags == 'error' %}bg-red-600 text-white
+      {% elif m.tags == 'warning' %}bg-yellow-500 text-white
+      {% else %}bg-adgen-primary text-white{% endif %}"
+      id="toast-{{ forloop.counter }}">
+      <span class="flex-1">{{ m }}</span>
+      <button onclick="this.parentElement.remove()" class="opacity-70 hover:opacity-100 text-lg leading-none ml-2">&times;</button>
+    </div>
+    {% endfor %}
+  </div>
+  <script>
+    document.querySelectorAll('[id^="toast-"]').forEach(t => setTimeout(() => t.remove(), 5000));
+  </script>
+  {% endif %}
+
+  <!-- Navbar -->
+  <nav class="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-4">
+
+      <!-- Logo -->
+      <a href="{% url 'adgen:dashboard' %}" class="flex items-center gap-2.5 flex-shrink-0">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-sm"
+             style="background:linear-gradient(135deg,#6C3FE8,#9b6dff)">✨</div>
+        <div class="leading-none">
+          <span class="font-black text-gray-900 text-lg">Ad</span><span class="font-black text-lg" style="color:var(--adgen-primary)">Gen</span>
+          <div class="text-xs text-gray-400 font-medium -mt-0.5">Publicités IA</div>
+        </div>
+      </a>
+
+      <!-- Nav links -->
+      <div class="hidden md:flex items-center gap-1 ml-4">
+        <a href="{% url 'adgen:dashboard' %}" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition">
+          Tableau de bord
+        </a>
+        <a href="{% url 'adgen:list' %}" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition">
+          Mes campagnes
+        </a>
+      </div>
+
+      <!-- Right -->
+      <div class="ml-auto flex items-center gap-3">
+        <a href="{% url 'adgen:create' %}"
+           class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold text-white shadow-sm transition hover:opacity-90"
+           style="background:linear-gradient(135deg,#6C3FE8,#9b6dff)">
+          <span>✨</span> Nouvelle campagne
+        </a>
+        {% if user.is_authenticated %}
+        <div class="relative" x-data="{open:false}" xmlns:x="http://www.w3.org/1999/xhtml">
+          <button onclick="this.nextElementSibling.classList.toggle('hidden')"
+                  class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold shadow"
+                  style="background:linear-gradient(135deg,#6C3FE8,#9b6dff)">
+            {{ user.get_full_name|default:user.username|first|upper }}
+          </button>
+          <div class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-50">
+            <div class="px-4 py-2 text-xs text-gray-400 font-medium border-b border-gray-50">
+              {{ user.get_full_name|default:user.username }}
+            </div>
+            <a href="{% url 'adgen:dashboard' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Dashboard</a>
+            <a href="{% url 'adgen:list' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Mes campagnes</a>
+            <div class="border-t border-gray-100 my-1"></div>
+            <a href="/" class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-50">← E-Shelle</a>
+            <a href="{% url 'accounts:logout' %}" class="block px-4 py-2 text-sm text-red-500 hover:bg-red-50">Déconnexion</a>
+          </div>
+        </div>
+        {% else %}
+        <a href="{% url 'accounts:login' %}" class="text-sm font-medium text-gray-600 hover:text-gray-900">Connexion</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  {% block adgen_content %}{% endblock %}
+
+  <!-- Footer -->
+  <footer class="border-t border-gray-100 bg-white mt-20 py-6 text-center text-sm text-gray-400">
+    <p>
+      <span class="font-bold" style="color:var(--adgen-primary)">AdGen</span>
+      &mdash; une app <a href="/" class="hover:underline" style="color:var(--adgen-primary)">E-Shelle</a>
+      &bull; Powered by Claude AI &bull; Made in Cameroun 🇨🇲
+    </p>
+  </footer>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
