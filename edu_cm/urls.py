@@ -3,6 +3,19 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
+from django.shortcuts import render
+
+
+def home_view(request):
+    ctx = {}
+    try:
+        from gaz.models import DepotGaz
+        ctx["gaz_depots_vedette"] = DepotGaz.objects.filter(
+            is_active=True, abonnement_actif=True, is_featured=True
+        ).select_related("ville", "quartier")[:3]
+    except Exception:
+        ctx["gaz_depots_vedette"] = []
+    return render(request, "home.html", ctx)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -70,7 +83,7 @@ urlpatterns = [
     path("gaz/", include("gaz.urls", namespace="gaz")),
 
     # Page d'accueil
-    path("", TemplateView.as_view(template_name="home.html"), name="home"),
+    path("", home_view, name="home"),
 ]
 
 if settings.DEBUG:

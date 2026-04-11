@@ -197,6 +197,15 @@
         <p>Générez vos publicités en 20 secondes grâce à l'IA — titres, posts Facebook/Instagram, scripts TikTok, messages WhatsApp.</p>
         <a href="/pub/" class="btn btn-sm" style="border:1px solid rgba(108,63,232,.4);color:#6C3FE8">Essayer →</a>
       </div>
+      <!-- E-Shelle Gaz -->
+      <div class="module-card aos-hidden" style="animation-delay:.85s;border-color:rgba(255,107,0,.3);background:linear-gradient(135deg,rgba(255,107,0,.05),rgba(255,200,0,.03))">
+        <div class="module-icon" style="animation:flicker 2.5s ease-in-out infinite">🔥</div>
+        <div style="position:absolute;top:1.25rem;right:1.25rem"><span class="badge" style="background:rgba(255,107,0,.15);color:#FF6B00;border:1px solid rgba(255,107,0,.35)">Nouveau</span></div>
+        <h3 style="color:#FF8C35">E-Shelle Gaz</h3>
+        <p>Trouvez un dépôt de gaz près de chez vous à Yaoundé, Douala et dans toutes les grandes villes. Livraison à domicile, contact direct WhatsApp.</p>
+        <a href="/gaz/" class="btn btn-sm" style="border:1px solid rgba(255,107,0,.45);color:#FF6B00;background:rgba(255,107,0,.08)">Commander du gaz →</a>
+      </div>
+
       <div class="module-card aos-hidden" style="animation-delay:.6s">
         <div class="module-icon">📱</div>
         <div style="position:absolute;top:1.25rem;right:1.25rem"><span class="badge badge-orange">Sur devis</span></div>
@@ -206,6 +215,73 @@
       </div>
     </div>
   </div>
+</section>
+
+<!-- SECTION — SPOTLIGHT GAZ -->
+<section class="section" style="background:linear-gradient(135deg,rgba(255,107,0,.04),rgba(255,200,0,.02),rgba(6,11,18,0))">
+  <div class="container">
+    <div class="glass-card aos-hidden" style="border:1px solid rgba(255,107,0,.25);padding:0;position:relative;overflow:hidden;border-radius:var(--radius-xl)">
+      <!-- Top accent bar -->
+      <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#FF6B00,#FFD700,#FF6B00);background-size:200% 100%;animation:shimmer 2.5s linear infinite"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:0" class="gaz-spotlight-grid">
+
+        <!-- Texte -->
+        <div style="padding:3rem">
+          <div style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,107,0,.12);border:1px solid rgba(255,107,0,.25);border-radius:99px;padding:.35rem .9rem;font-size:.78rem;font-weight:700;color:#FF8C35;margin-bottom:1.5rem">
+            <span style="animation:flicker 2s ease-in-out infinite">🔥</span> Nouveau — Livraison de gaz
+          </div>
+          <h3 style="font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:#FF8C35;margin-bottom:.75rem;line-height:1.25">E-Shelle Gaz</h3>
+          <p style="color:var(--text-secondary);font-size:.93rem;margin-bottom:1.5rem;line-height:1.7">
+            Trouvez le dépôt de gaz le plus proche, comparez les prix et contactez directement par WhatsApp ou appel. Livraison à domicile dans toutes les grandes villes du Cameroun. Paiement à la livraison.
+          </p>
+          <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.75rem">
+            <span style="background:rgba(255,107,0,.1);color:#FF8C35;padding:.3rem .75rem;border-radius:99px;font-size:.78rem;font-weight:600">🏙️ 8 villes</span>
+            <span style="background:rgba(255,107,0,.1);color:#FF8C35;padding:.3rem .75rem;border-radius:99px;font-size:.78rem;font-weight:600">📱 Contact WhatsApp</span>
+            <span style="background:rgba(255,107,0,.1);color:#FF8C35;padding:.3rem .75rem;border-radius:99px;font-size:.78rem;font-weight:600">⚡ Livraison express</span>
+            <span style="background:rgba(255,107,0,.1);color:#FF8C35;padding:.3rem .75rem;border-radius:99px;font-size:.78rem;font-weight:600">💰 Paiement cash</span>
+          </div>
+          <a href="/gaz/" style="display:inline-flex;align-items:center;gap:.6rem;background:linear-gradient(135deg,#FF6B00,#FFD700);color:#fff;padding:.8rem 2rem;border-radius:99px;font-weight:800;font-size:.93rem;text-decoration:none;box-shadow:0 8px 30px rgba(255,107,0,.35);transition:all .3s ease">
+            🔥 Trouver du gaz près de moi
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <!-- Visual -->
+        <div style="padding:2.5rem;display:flex;flex-direction:column;gap:1rem;background:rgba(255,107,0,.04);border-left:1px solid rgba(255,107,0,.12)">
+          <div style="font-size:.72rem;font-weight:700;color:#FF8C35;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.25rem">Dépôts disponibles près de vous</div>
+          {% for depot in gaz_depots_vedette %}
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,107,0,.15);border-radius:var(--radius-lg);padding:1rem;display:flex;align-items:center;gap:1rem">
+            <div style="width:42px;height:42px;border-radius:var(--radius-md);background:linear-gradient(135deg,#FF6B00,#FFD700);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">🔥</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:700;font-size:.85rem;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ depot.nom }}</div>
+              <div style="font-size:.75rem;color:var(--text-muted)">{{ depot.ville.nom }}{% if depot.quartier %} · {{ depot.quartier.nom }}{% endif %}</div>
+            </div>
+            <div style="font-size:.75rem;font-weight:700;color:#FF6B00;white-space:nowrap">⚡ {{ depot.delai_livraison }}</div>
+          </div>
+          {% empty %}
+          {% for i in "123" %}
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,107,0,.15);border-radius:var(--radius-lg);padding:1rem;display:flex;align-items:center;gap:1rem">
+            <div style="width:42px;height:42px;border-radius:var(--radius-md);background:linear-gradient(135deg,#FF6B00,#FFD700);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">🔥</div>
+            <div style="flex:1">
+              <div style="font-weight:700;font-size:.85rem;color:var(--text-primary)">Dépôt Gaz Express</div>
+              <div style="font-size:.75rem;color:var(--text-muted)">Yaoundé · Centre-Ville</div>
+            </div>
+            <div style="font-size:.75rem;font-weight:700;color:#FF6B00">⚡ 30-45 min</div>
+          </div>
+          {% endfor %}
+          {% endfor %}
+          <a href="/gaz/depots/" style="display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.75rem;border:1px solid rgba(255,107,0,.25);border-radius:var(--radius-md);font-size:.82rem;font-weight:700;color:#FF8C35;text-decoration:none;background:rgba(255,107,0,.06);transition:.2s">
+            Voir tous les dépôts →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    @keyframes flicker { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.85;transform:scale(1.05)} }
+    @media(max-width:768px){.gaz-spotlight-grid{grid-template-columns:1fr!important}}
+  </style>
 </section>
 
 <!-- SECTION — SPOTLIGHT AGRO + RENCONTRES -->
