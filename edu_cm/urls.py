@@ -57,6 +57,15 @@ urlpatterns = [
     # ── EduCam Pro — Plateforme E-Learning ───────────────────────────
     path("edu/", include("edu_platform.urls", namespace="edu")),
 
+    # ── E-Shelle Resto — Découverte de restaurants au Cameroun ───────
+    path("resto/", include("resto.urls", namespace="resto")),
+
+    # ── Njangi Digital — Tontine & Fond commun numérique ─────────────
+    path("njangi/", include("njangi.urls", namespace="njangi")),
+
+    # ── AdGen — Générateur de publicités IA ──────────────────────────
+    path("pub/", include("adgen.urls", namespace="adgen")),
+
     # Page d'accueil
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
 ]

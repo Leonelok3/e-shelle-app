@@ -1,0 +1,148 @@
+{% extends "resto/base.html" %}
+{% load static %}
+
+{% block title %}Panel Admin — E-Shelle Resto{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-6">
+
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Panel Administrateur</h1>
+      <p class="text-sm text-gray-500">Gestion des restaurants E-Shelle Resto</p>
+    </div>
+    <a href="{% url 'admin:index' %}"
+       class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition">
+      Admin Django →
+    </a>
+  </div>
+
+  <!-- ── Stat cards ── -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+      <p class="text-xs font-semibold text-gray-400 uppercase mb-1">Total restaurants</p>
+      <p class="text-3xl font-bold text-gray-900">{{ stats.total_restaurants }}</p>
+    </div>
+    <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+      <p class="text-xs font-semibold text-gray-400 uppercase mb-1">En attente</p>
+      <p class="text-3xl font-bold text-amber-600">{{ stats.pending_approval }}</p>
+    </div>
+    <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+      <p class="text-xs font-semibold text-gray-400 uppercase mb-1">Abonnements actifs</p>
+      <p class="text-3xl font-bold text-green-600">{{ stats.active_subscriptions }}</p>
+    </div>
+    <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+      <p class="text-xs font-semibold text-gray-400 uppercase mb-1">Contacts auj.</p>
+      <p class="text-3xl font-bold text-blue-600">{{ stats.contacts_today }}</p>
+    </div>
+  </div>
+
+  <!-- ── Restaurant list with bulk actions ── -->
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="px-5 py-4 border-b border-gray-100">
+      <h2 class="font-semibold text-gray-900">Liste des restaurants</h2>
+    </div>
+
+    <form method="post" action="{% url 'resto:admin_dashboard' %}">
+      {% csrf_token %}
+
+      <!-- Bulk action bar -->
+      <div class="flex items-center gap-3 px-5 py-3 bg-gray-50 border-b border-gray-100">
+        <select name="action" class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-resto-primary">
+          <option value="">Action en masse…</option>
+          <option value="approve">✅ Approuver</option>
+          <option value="feature">⭐ Mettre en avant</option>
+          <option value="deactivate">❌ Désactiver</option>
+        </select>
+        <button type="submit"
+                class="px-4 py-1.5 text-sm font-semibold bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition">
+          Appliquer
+        </button>
+      </div>
+
+      <!-- Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="border-b border-gray-100">
+            <tr class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              <th class="px-5 py-3 w-8"><input type="checkbox" id="select-all" class="rounded" /></th>
+              <th class="px-5 py-3">Restaurant</th>
+              <th class="px-3 py-3">Ville</th>
+              <th class="px-3 py-3">Statut</th>
+              <th class="px-3 py-3">Approuvé</th>
+              <th class="px-3 py-3">Plan</th>
+              <th class="px-3 py-3">Vues</th>
+              <th class="px-3 py-3">Créé le</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-50">
+            {% for resto in restaurants %}
+            <tr class="hover:bg-gray-50">
+              <td class="px-5 py-3">
+                <input type="checkbox" name="restaurant_ids" value="{{ resto.pk }}" class="rounded" />
+              </td>
+              <td class="px-5 py-3">
+                <div class="flex items-center gap-2">
+                  {% if resto.logo %}
+                  <img src="{{ resto.logo.url }}" alt="{{ resto.name }}" loading="lazy"
+                       class="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
+                  {% else %}
+                  <div class="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center text-sm flex-shrink-0">🍽️</div>
+                  {% endif %}
+                  <div>
+                    <a href="{% url 'resto:restaurant_detail' resto.slug %}" target="_blank"
+                       class="font-semibold text-gray-900 hover:text-resto-primary transition">
+                      {{ resto.name }}
+                    </a>
+                    <p class="text-xs text-gray-400">{{ resto.owner.email }}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-3 py-3 text-gray-600">{{ resto.city.name }}</td>
+              <td class="px-3 py-3">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
+                             {% if resto.status == 'open' %}bg-green-100 text-green-800
+                             {% elif resto.status == 'opening_soon' %}bg-amber-100 text-amber-800
+                             {% else %}bg-red-100 text-red-800{% endif %}">
+                  {{ resto.get_status_display }}
+                </span>
+              </td>
+              <td class="px-3 py-3">
+                {% if resto.is_approved %}
+                <span class="text-green-600 font-medium">✅</span>
+                {% else %}
+                <span class="text-amber-500 font-medium">⏳ En attente</span>
+                {% endif %}
+              </td>
+              <td class="px-3 py-3 text-gray-500">
+                {% if resto.subscription %}
+                {{ resto.subscription.get_plan_display }}
+                {% if resto.subscription.is_expired %}
+                <span class="text-red-500 text-xs">(expiré)</span>
+                {% endif %}
+                {% else %}—{% endif %}
+              </td>
+              <td class="px-3 py-3 text-gray-600">{{ resto.views_count }}</td>
+              <td class="px-3 py-3 text-gray-400 text-xs">{{ resto.created_at|date:"d/m/Y" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="8" class="px-5 py-12 text-center text-gray-400">Aucun restaurant enregistré.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// Select all checkbox
+document.getElementById('select-all').addEventListener('change', function () {
+  document.querySelectorAll('input[name="restaurant_ids"]').forEach(cb => {
+    cb.checked = this.checked;
+  });
+});
+</script>
+{% endblock %}

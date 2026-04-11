@@ -1,0 +1,94 @@
+{% extends "resto/dashboard/base_dashboard.html" %}
+{% load static %}
+
+{% block title %}Notifications — {{ restaurant.name }}{% endblock %}
+{% block dash_nav_notifications %}bg-orange-50 text-resto-primary font-semibold{% endblock %}
+
+{% block dashboard_content %}
+<div class="space-y-6">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-xl font-bold text-gray-900">Notifications</h1>
+      <p class="text-sm text-gray-500">
+        {% if unread_count %}
+          <span class="text-resto-primary font-medium">{{ unread_count }} non lu{{ unread_count|pluralize }}</span> — marqué{{ unread_count|pluralize }} comme lu{{ unread_count|pluralize }} automatiquement.
+        {% else %}
+          Toutes vos notifications.
+        {% endif %}
+      </p>
+    </div>
+  </div>
+
+  <!-- Notifications list -->
+  {% if notifications %}
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="divide-y divide-gray-50">
+      {% for notif in notifications %}
+      <div class="flex items-start gap-4 px-5 py-4
+                  {% if not notif.is_read %}bg-orange-50/40{% endif %}">
+
+        <!-- Icon -->
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5
+          {% if notif.type == 'contact_whatsapp' %}bg-green-100
+          {% elif notif.type == 'contact_call' %}bg-blue-100
+          {% elif notif.type == 'new_review' %}bg-amber-100
+          {% elif notif.type == 'subscription' %}bg-purple-100
+          {% else %}bg-gray-100{% endif %}">
+          {% if notif.type == 'contact_whatsapp' %}
+          <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a9.172 9.172 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+          </svg>
+          {% elif notif.type == 'contact_call' %}
+          <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+          </svg>
+          {% elif notif.type == 'new_review' %}
+          <svg class="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+          </svg>
+          {% elif notif.type == 'subscription' %}
+          <svg class="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+          </svg>
+          {% else %}
+          <svg class="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          {% endif %}
+        </div>
+
+        <!-- Content -->
+        <div class="flex-1 min-w-0">
+          <div class="flex items-start justify-between gap-2">
+            <p class="text-sm font-medium text-gray-900">{{ notif.get_type_display }}</p>
+            <span class="text-xs text-gray-400 flex-shrink-0 whitespace-nowrap">{{ notif.created_at|date:"d/m H:i" }}</span>
+          </div>
+          <p class="text-sm text-gray-600 mt-0.5 leading-relaxed">{{ notif.message }}</p>
+        </div>
+
+        <!-- Unread dot -->
+        {% if not notif.is_read %}
+        <div class="w-2 h-2 rounded-full bg-resto-primary flex-shrink-0 mt-2"></div>
+        {% endif %}
+
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% else %}
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
+    <div class="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
+      <svg class="w-8 h-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+      </svg>
+    </div>
+    <p class="text-gray-500 font-medium">Aucune notification pour l'instant</p>
+    <p class="text-sm text-gray-400 mt-1">Vous serez alerté à chaque contact client ou nouvel avis.</p>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

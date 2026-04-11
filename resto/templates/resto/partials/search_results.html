@@ -1,0 +1,53 @@
+{% load static %}
+{% if q|length >= 2 %}
+  {% if restaurants or dishes %}
+  <div class="py-2">
+    {% if restaurants %}
+    <div class="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Restaurants</div>
+    {% for r in restaurants %}
+    <a href="{% url 'resto:restaurant_detail' r.slug %}"
+       class="flex items-center gap-3 px-3 py-2.5 hover:bg-gray-50 transition">
+      <div class="w-9 h-9 rounded-lg bg-orange-100 flex items-center justify-center flex-shrink-0">
+        {% if r.logo %}
+        <img src="{{ r.logo.url }}" alt="{{ r.name }}" class="w-9 h-9 rounded-lg object-cover" />
+        {% else %}
+        <span class="text-lg">🍽️</span>
+        {% endif %}
+      </div>
+      <div class="min-w-0">
+        <p class="text-sm font-semibold text-gray-900 truncate">{{ r.name }}</p>
+        <p class="text-xs text-gray-500">{{ r.city.name }}</p>
+      </div>
+    </a>
+    {% endfor %}
+    {% endif %}
+
+    {% if dishes %}
+    <div class="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wider border-t border-gray-50 mt-1 pt-2">Plats</div>
+    {% for dish in dishes %}
+    <a href="{% url 'resto:restaurant_detail' dish.restaurant.slug %}"
+       class="flex items-center gap-3 px-3 py-2.5 hover:bg-gray-50 transition">
+      <div class="w-9 h-9 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
+        <span class="text-lg">🍛</span>
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-semibold text-gray-900 truncate">{{ dish.name }}</p>
+        <p class="text-xs text-gray-500">{{ dish.restaurant.name }} — {{ dish.formatted_price }}</p>
+      </div>
+    </a>
+    {% endfor %}
+    {% endif %}
+
+    <div class="px-3 py-2 border-t border-gray-100 mt-1">
+      <a href="{% url 'resto:restaurant_list' %}?q={{ q }}"
+         class="text-sm text-resto-primary font-semibold hover:underline">
+        Voir tous les résultats pour « {{ q }} » →
+      </a>
+    </div>
+  </div>
+  {% else %}
+  <div class="px-4 py-6 text-center">
+    <p class="text-sm text-gray-500">Aucun résultat pour « {{ q }} »</p>
+  </div>
+  {% endif %}
+{% endif %}

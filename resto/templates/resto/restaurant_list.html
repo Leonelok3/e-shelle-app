@@ -1,0 +1,158 @@
+{% extends "resto/base.html" %}
+{% load static resto_tags %}
+
+{% block title %}Restaurants au Cameroun — E-Shelle Resto{% endblock %}
+{% block nav_restaurants %}text-resto-primary{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-6">
+
+  <!-- Page header -->
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">Restaurants</h1>
+    <p class="text-sm text-gray-500 mt-1">
+      Découvrez les meilleurs établissements de votre ville
+    </p>
+  </div>
+
+  <!-- ── Sticky Filter Bar ─────────────────────────────────────────────────── -->
+  <div class="sticky top-14 z-30 bg-white border border-gray-200 rounded-2xl shadow-sm p-4 mb-6"
+       x-data="{ showFilters: false }">
+
+    <!-- Search + toggle -->
+    <div class="flex gap-3 items-center">
+      <div class="flex-1 relative">
+        <input type="text"
+               name="q"
+               value="{{ q }}"
+               placeholder="Rechercher un restaurant..."
+               class="w-full pl-9 pr-4 py-2.5 text-sm bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-resto-primary focus:bg-white transition"
+               hx-get="{% url 'resto:restaurant_list' %}"
+               hx-trigger="keyup changed delay:400ms"
+               hx-target="#restaurant-grid"
+               hx-include="[name='city'],[name='category'],[name='status']"
+               hx-indicator="#htmx-indicator" />
+        <svg class="absolute left-3 top-3 w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </div>
+      <button @click="showFilters = !showFilters"
+              class="flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+        </svg>
+        Filtres
+        {% if active_city or active_category or active_status %}
+        <span class="w-2 h-2 rounded-full bg-resto-primary"></span>
+        {% endif %}
+      </button>
+    </div>
+
+    <!-- Expandable filters -->
+    <div x-show="showFilters" x-transition class="mt-4 space-y-4">
+      <!-- City -->
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Ville</p>
+        <div class="flex flex-wrap gap-2">
+          <a href="{% url 'resto:restaurant_list' %}{% if q %}?q={{ q }}{% endif %}"
+             class="px-3 py-1.5 text-xs rounded-full font-medium transition
+                    {% if not active_city %}bg-gray-900 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
+            Toutes
+          </a>
+          {% for city in cities %}
+          <a href="?city={{ city.slug }}{% if q %}&q={{ q }}{% endif %}{% if active_category %}&category={{ active_category }}{% endif %}{% if active_status %}&status={{ active_status }}{% endif %}"
+             class="px-3 py-1.5 text-xs rounded-full font-medium transition
+                    {% if active_city == city.slug %}bg-gray-900 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}"
+             hx-get="{% url 'resto:restaurant_list' %}"
+             hx-vals='{"city": "{{ city.slug }}"}'
+             hx-target="#restaurant-grid"
+             hx-indicator="#htmx-indicator">
+            {{ city.name }}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Categories -->
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Catégorie</p>
+        <div class="flex flex-wrap gap-2">
+          <a href="?{% if active_city %}city={{ active_city }}&{% endif %}{% if q %}q={{ q }}&{% endif %}{% if active_status %}status={{ active_status }}{% endif %}"
+             class="px-3 py-1.5 text-xs rounded-full font-medium transition
+                    {% if not active_category %}bg-gray-900 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
+            Tout
+          </a>
+          {% for cat in food_categories %}
+          <a href="?{% if active_city %}city={{ active_city }}&{% endif %}category={{ cat.slug }}{% if q %}&q={{ q }}{% endif %}{% if active_status %}&status={{ active_status }}{% endif %}"
+             hx-get="{% url 'resto:restaurant_list' %}"
+             hx-vals='{"category": "{{ cat.slug }}"}'
+             hx-target="#restaurant-grid"
+             hx-include="[name='q'],[name='city']"
+             hx-indicator="#htmx-indicator"
+             class="px-3 py-1.5 text-xs rounded-full font-medium transition
+                    {% if active_category == cat.slug %}bg-gray-900 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
+            {{ cat.icon }} {{ cat.name }}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div>
+        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Statut</p>
+        <div class="flex gap-2">
+          {% for val, label in statuses %}
+          <a href="?{% if active_city %}city={{ active_city }}&{% endif %}{% if active_category %}category={{ active_category }}&{% endif %}{% if q %}q={{ q }}&{% endif %}status={{ val }}"
+             hx-get="{% url 'resto:restaurant_list' %}"
+             hx-vals='{"status": "{{ val }}"}'
+             hx-target="#restaurant-grid"
+             hx-indicator="#htmx-indicator"
+             class="px-3 py-1.5 text-xs rounded-full font-medium transition
+                    {% if active_status == val %}bg-gray-900 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
+            {{ label }}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Category pills (always visible) -->
+    <div class="flex gap-2 overflow-x-auto scrollbar-hide mt-4 -mb-1 pb-1">
+      {% for cat in food_categories %}
+      <button class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full font-medium transition
+                     {% if active_category == cat.slug %}bg-resto-primary text-white{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}"
+              hx-get="{% url 'resto:restaurant_list' %}"
+              hx-vals='{"category": "{{ cat.slug }}"}'
+              hx-target="#restaurant-grid"
+              hx-include="[name='q'],[name='city']"
+              hx-indicator="#htmx-indicator">
+        {{ cat.icon }} {{ cat.name }}
+      </button>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- ── Restaurant Grid ────────────────────────────────────────────────────── -->
+  <div id="restaurant-grid">
+    {% include "resto/partials/restaurant_grid.html" %}
+  </div>
+
+</div>
+
+<!-- Hidden inputs for HTMX include -->
+<input type="hidden" name="city" value="{{ active_city }}" />
+<input type="hidden" name="category" value="{{ active_category }}" />
+<input type="hidden" name="status" value="{{ active_status }}" />
+
+{% endblock %}
+
+{% block extra_head %}
+<script>
+  const STATUSES = [
+    ["", "Tous"],
+    ["open", "Ouvert"],
+    ["closed", "Fermé"],
+    ["opening_soon", "Bientôt ouvert"],
+  ];
+</script>
+{% endblock %}

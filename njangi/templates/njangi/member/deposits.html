@@ -1,0 +1,77 @@
+{% extends "njangi/member/dashboard.html" %}
+{% block page_title %}Mes dépôts{% endblock %}
+
+{% block dashboard_content %}
+<div class="flex items-center justify-between mb-6">
+  <h2 class="text-xl font-bold text-gray-700">Mes dépôts au fond commun</h2>
+  <a href="{% url 'njangi:deposit_create' %}" class="px-4 py-2 rounded-xl text-white text-sm font-semibold" style="background:var(--njangi-primary)">
+    + Nouveau dépôt
+  </a>
+</div>
+
+{% if deposits %}
+<div class="space-y-4">
+  {% for dep in deposits %}
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-2">
+          <p class="font-bold text-gray-800">{{ dep.membership.group.name }}</p>
+          <span class="px-2 py-0.5 rounded-full text-xs font-semibold
+            {% if dep.status == 'active' %}bg-green-100 text-green-700
+            {% elif dep.status == 'withdrawn' %}bg-gray-100 text-gray-500
+            {% else %}bg-yellow-100 text-yellow-700{% endif %}">
+            {{ dep.get_status_display }}
+          </span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+          <div>
+            <p class="text-xs text-gray-400">Montant déposé</p>
+            <p class="font-semibold text-gray-700">{{ dep.amount|floatformat:0 }} FCFA</p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400">Taux / mois</p>
+            <p class="font-semibold text-gray-700">{{ dep.interest_rate }}%</p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400">Intérêts accumulés</p>
+            <p class="font-semibold text-yellow-600">{{ dep.current_interest|floatformat:0 }} FCFA</p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400">Échéance</p>
+            <p class="font-semibold text-gray-700">{{ dep.maturity_date|date:"d/m/Y" }}</p>
+          </div>
+        </div>
+        {% if dep.status == 'active' %}
+        <p class="text-xs text-gray-400 mt-2">
+          Total attendu : <strong>{{ dep.expected_interest|add:dep.amount|floatformat:0 }} FCFA</strong>
+          ({{ dep.amount|floatformat:0 }} + {{ dep.expected_interest|floatformat:0 }} FCFA intérêts)
+        </p>
+        {% elif dep.status == 'withdrawn' %}
+        <p class="text-xs text-green-600 mt-2">
+          ✓ Retiré le {{ dep.withdrawn_at|date:"d/m/Y" }} — Total reçu : <strong>{{ dep.withdrawn_amount|floatformat:0 }} FCFA</strong>
+        </p>
+        {% endif %}
+      </div>
+      {% if dep.status == 'active' %}
+      <form method="post" action="{% url 'njangi:deposit_withdraw' pk=dep.pk %}" onsubmit="return confirm('Confirmer le retrait ?')">
+        {% csrf_token %}
+        <button class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-red-200 text-red-600 hover:bg-red-50 flex-shrink-0">
+          Retirer
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-16 text-gray-400 bg-white rounded-2xl shadow-sm border border-gray-100">
+  <p class="text-5xl mb-3">🏦</p>
+  <p class="mb-4">Aucun dépôt. Déposez dans le fond commun pour générer des intérêts.</p>
+  <a href="{% url 'njangi:deposit_create' %}" class="inline-block px-6 py-2 rounded-xl text-white font-semibold text-sm" style="background:var(--njangi-primary)">
+    Faire un dépôt
+  </a>
+</div>
+{% endif %}
+{% endblock %}

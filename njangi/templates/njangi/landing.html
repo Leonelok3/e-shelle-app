@@ -1,0 +1,129 @@
+{% extends "njangi/base_njangi.html" %}
+{% load static %}
+
+{% block title %}Njangi Digital — Tontine numérique au Cameroun{% endblock %}
+
+{% block njangi_content %}
+
+<!-- Hero -->
+<section class="relative overflow-hidden" style="background: linear-gradient(135deg, #0D3B6E 0%, #1B6CA8 60%, #F5A623 100%);">
+  <div class="max-w-6xl mx-auto px-4 py-20 md:py-28 text-center text-white">
+    <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-1 rounded-full text-sm mb-6">
+      <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+      Disponible au Cameroun &amp; diaspora
+    </div>
+    <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
+      Votre <span style="color:#F5A623">Njangi</span><br>dans votre poche
+    </h1>
+    <p class="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-10">
+      Gérez votre tontine en ligne — cotisations, mains, prêts, fond commun et notifications SMS.
+      100 % sécurisé, 0 papier.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      {% if user.is_authenticated %}
+        <a href="{% url 'njangi:member_dashboard' %}" class="px-8 py-3 rounded-xl font-bold text-lg bg-white text-blue-900 hover:bg-blue-50 transition shadow-lg">
+          Mon espace →
+        </a>
+        <a href="{% url 'njangi:create_group' %}" class="px-8 py-3 rounded-xl font-bold text-lg border-2 border-white text-white hover:bg-white/10 transition">
+          Créer un groupe
+        </a>
+      {% else %}
+        <a href="{% url 'accounts:register' %}" class="px-8 py-3 rounded-xl font-bold text-lg bg-white text-blue-900 hover:bg-blue-50 transition shadow-lg">
+          Commencer gratuitement →
+        </a>
+        <a href="{% url 'accounts:login' %}" class="px-8 py-3 rounded-xl font-bold text-lg border-2 border-white text-white hover:bg-white/10 transition">
+          Se connecter
+        </a>
+      {% endif %}
+    </div>
+  </div>
+  <!-- Vague décorative -->
+  <svg class="absolute bottom-0 w-full" viewBox="0 0 1440 60" preserveAspectRatio="none">
+    <path d="M0,60 C480,0 960,0 1440,60 L1440,60 L0,60 Z" fill="#f9fafb"/>
+  </svg>
+</section>
+
+<!-- Fonctionnalités -->
+<section class="max-w-6xl mx-auto px-4 py-16">
+  <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Tout ce dont votre groupe a besoin</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for feat in features %}
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+      <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4" style="background: #EBF4FB;">
+        {{ feat.icon }}
+      </div>
+      <h3 class="font-bold text-gray-800 mb-2">{{ feat.title }}</h3>
+      <p class="text-gray-500 text-sm">{{ feat.desc }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Mes groupes (si connecté) -->
+{% if memberships %}
+<section class="max-w-6xl mx-auto px-4 pb-16">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Mes groupes</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    {% for ms in memberships %}
+    <a href="{% url 'njangi:bureau_dashboard' slug=ms.group.slug %}" class="block bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md hover:border-blue-200 transition">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-lg" style="background:var(--njangi-primary)">
+          {{ ms.group.name|first|upper }}
+        </div>
+        <div>
+          <p class="font-semibold text-gray-800">{{ ms.group.name }}</p>
+          <p class="text-xs text-gray-400">{{ ms.get_role_display }}</p>
+        </div>
+      </div>
+      <div class="flex justify-between text-sm text-gray-500">
+        <span>{{ ms.group.member_count }} membres</span>
+        <span class="font-semibold" style="color:var(--njangi-primary)">{{ ms.group.formatted_contribution }}</span>
+      </div>
+    </a>
+    {% endfor %}
+    <a href="{% url 'njangi:create_group' %}" class="flex items-center justify-center border-2 border-dashed border-blue-200 rounded-2xl p-5 text-blue-600 hover:border-blue-400 hover:bg-blue-50 transition font-semibold">
+      + Nouveau groupe
+    </a>
+  </div>
+</section>
+{% endif %}
+
+<!-- CTA rejoindre -->
+<section class="bg-white border-t border-gray-100 py-14">
+  <div class="max-w-2xl mx-auto px-4 text-center">
+    <h2 class="text-2xl font-bold text-gray-800 mb-3">Vous avez un code d'invitation ?</h2>
+    <p class="text-gray-500 mb-6">Entrez le code partagé par votre président pour rejoindre le groupe.</p>
+    <a href="{% url 'njangi:join' %}" class="inline-block px-8 py-3 rounded-xl font-bold text-white transition shadow" style="background:var(--njangi-primary)">
+      Rejoindre un groupe →
+    </a>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Injecter les features depuis le contexte Django via JSON
+const features = [
+  {icon:"💰", title:"Cotisations automatisées", desc:"Chaque membre est notifié avant chaque séance. Les paiements Mobile Money sont confirmés instantanément."},
+  {icon:"🏆", title:"Gestion des mains", desc:"Ordre de rotation configurable. La main est versée automatiquement au bénéficiaire à la clôture de chaque séance."},
+  {icon:"🏦", title:"Fond commun", desc:"Séparez la tontine du fond de solidarité. Suivez le solde, les dépôts et les intérêts en temps réel."},
+  {icon:"📋", title:"Prêts du groupe", desc:"Demandez un prêt, obtenez l'approbation du bureau, et remboursez par tranche directement depuis l'app."},
+  {icon:"📊", title:"Tableau de bord bureau", desc:"Le président et le trésorier ont une vue complète : séances, cotisations, fond, prêts, retards."},
+  {icon:"🔔", title:"Notifications SMS", desc:"Rappels automatiques avant chaque séance, alertes de retard et confirmations de paiement par SMS."},
+];
+
+// Injecter dynamiquement les cartes features (contournement du template Django)
+document.addEventListener("DOMContentLoaded", () => {
+  const grid = document.querySelector("[data-features-grid]");
+  if (!grid) return;
+  grid.innerHTML = features.map(f => `
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+      <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4" style="background:#EBF4FB">${f.icon}</div>
+      <h3 class="font-bold text-gray-800 mb-2">${f.title}</h3>
+      <p class="text-gray-500 text-sm">${f.desc}</p>
+    </div>
+  `).join("");
+});
+</script>
+{% endblock %}

@@ -70,7 +70,20 @@ INSTALLED_APPS = [
 
     # ── EduCam Pro — Plateforme E-Learning ───────────────────────
     "edu_platform.apps.EduPlatformConfig",
+
+    # ── E-Shelle Resto — Découverte de restaurants au Cameroun ───
+    "resto.apps.RestoConfig",
+
+    # ── Njangi Digital — Tontine & Fond commun numérique ──────────
+    "njangi.apps.NjangiConfig",
+
+    # ── AdGen — Générateur de publicités IA ───────────────────────
+    "adgen.apps.AdgenConfig",
 ]
+
+# AdGen
+ADGEN_MAX_CAMPAIGNS_FREE = 5
+ADGEN_MAX_TOKENS_FREE    = 50000
 
 SITE_ID = 1
 
@@ -82,11 +95,11 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "edu_platform.middleware.device_lock_middleware.DeviceLockMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 
     # ── EduCam Pro : verrouillage appareil (/edu/ uniquement) ────
+    "edu_platform.middleware.device_lock_middleware.DeviceLockMiddleware",
 ]
 
 ROOT_URLCONF = "edu_cm.urls"
@@ -102,6 +115,10 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.template.context_processors.media",
                 "django.contrib.messages.context_processors.messages",
+                # ── E-Shelle Resto ────────────────────────────────────
+                "resto.context_processors.resto_globals",
+                # ── Abonnements globaux (injecte user_subs dans tous les templates)
+                "accounts.context_processors.subscription_context",
             ],
         },
     },
@@ -262,18 +279,5 @@ REST_FRAMEWORK = {
     ],
 }
 
-# ── EduCam Pro ──────────────────────────────────────────
-import os as _os
-EDU_PLATFORM = {
-    'SITE_NAME': 'EduCam Pro',
-    'ORANGE_MONEY_API_KEY': _os.getenv('ORANGE_MONEY_API_KEY', ''),
-    'ORANGE_MONEY_SECRET': _os.getenv('ORANGE_MONEY_SECRET', ''),
-    'MTN_MOMO_SUBSCRIPTION_KEY': _os.getenv('MTN_MOMO_SUBSCRIPTION_KEY', ''),
-    'MTN_MOMO_API_USER': _os.getenv('MTN_MOMO_API_USER', ''),
-    'MTN_MOMO_API_KEY': _os.getenv('MTN_MOMO_API_KEY', ''),
-    'MTN_MOMO_ENVIRONMENT': _os.getenv('MTN_MOMO_ENVIRONMENT', 'sandbox'),
-    'WEBHOOK_HMAC_SECRET': _os.getenv('EDU_WEBHOOK_HMAC_SECRET', 'changeme'),
-    'MAX_DEVICES_PER_CODE': 1,
-    'ACCESS_TOKEN_EXPIRY_MINUTES': 15,
-}
-SITE_URL = _os.getenv('SITE_URL', 'https://e-shelle.com')
+# ── E-Shelle Resto ────────────────────────────────────────────────
+RESTO_FREE_TRIAL_DAYS = 30

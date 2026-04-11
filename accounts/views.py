@@ -7,7 +7,10 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
 from .forms import LoginForm
-from .models import Role, CustomUser, UserProfile, EmailVerification
+from .models import (
+    Role, CustomUser, UserProfile, EmailVerification,
+    AppPlan, AppSubscription, PaymentHistory, AppKey, APP_ICONS, APP_COLORS,
+)
 
 
 class AppLoginView(LoginView):
@@ -218,3 +221,164 @@ def profil(request):
         return redirect("accounts:profil")
 
     return render(request, "accounts/profil.html", {"profile": profile})
+
+
+# ─────────────────────────────────────────────────────────────────
+#  MON COMPTE — Dashboard unifié
+# ─────────────────────────────────────────────────────────────────
+
+@login_required
+def mon_compte(request):
+    """
+    Dashboard unifié : profil, tous les abonnements actifs,
+    historique des paiements, et liens vers chaque application.
+    """
+    user    = request.user
+    profile, _ = UserProfile.objects.get_or_create(user=user)
+
+    # Tous les abonnements (actifs + expirés)
+    all_subs = (
+        AppSubscription.objects
+        .filter(user=user)
+        .select_related("plan")
+        .order_by("-started_at")
+    )
+
+    # Abonnements actifs par app_key
+    active_subs = {}
+    for sub in all_subs:
+        key = sub.plan.app_key
+        if key not in active_subs and sub.is_active:
+            active_subs[key] = sub
+
+    # Historique paiements (10 derniers)
+    payments = PaymentHistory.objects.filter(user=user).select_related("subscription__plan")[:10]
+
+    # Apps disponibles avec leur état
+    apps_info = []
+    for key, label in AppKey.choices:
+        sub = active_subs.get(key)
+        apps_info.append({
+            "key":    key,
+            "label":  label,
+            "icon":   APP_ICONS.get(key, "📦"),
+            "color":  APP_COLORS.get(key, "#6B7280"),
+            "sub":    sub,
+            "active": sub is not None,
+        })
+
+    # Stats rapides
+    stats = {
+        "total_subs":  len(active_subs),
+        "paid_subs":   sum(1 for s in active_subs.values() if s.plan.price_xaf > 0),
+        "total_spent": payments.filter(status="success").values_list("amount_xaf", flat=True),
+    }
+    stats["total_spent"] = sum(stats["total_spent"])
+
+    # Édition profil (POST)
+    if request.method == "POST" and "save_profile" in request.POST:
+        user.first_name = request.POST.get("first_name", user.first_name).strip()
+        user.last_name  = request.POST.get("last_name",  user.last_name).strip()
+        user.email      = request.POST.get("email",      user.email).strip()
+        user.save(update_fields=["first_name", "last_name", "email"])
+
+        profile.bio       = request.POST.get("bio",       profile.bio)
+        profile.telephone = request.POST.get("telephone", profile.telephone)
+        profile.ville     = request.POST.get("ville",     profile.ville)
+        profile.pays      = request.POST.get("pays",      profile.pays)
+        if "avatar" in request.FILES:
+            profile.avatar = request.FILES["avatar"]
+        profile.save()
+
+        messages.success(request, "Profil mis à jour.")
+        return redirect("accounts:mon_compte")
+
+    context = {
+        "profile":     profile,
+        "active_subs": active_subs,
+        "all_subs":    all_subs[:20],
+        "payments":    payments,
+        "apps_info":   apps_info,
+        "stats":       stats,
+    }
+    return render(request, "accounts/mon_compte.html", context)
+
+
+# ─────────────────────────────────────────────────────────────────
+#  UPGRADE — Page des plans pour une application
+# ─────────────────────────────────────────────────────────────────
+
+@login_required
+def upgrade(request):
+    """
+    Affiche les plans disponibles pour une app donnée (?app=adgen).
+    Si aucun app_key fourni, affiche toutes les apps.
+    """
+    app_key = request.GET.get("app", "").strip()
+
+    # Filtrer les plans
+    plans_qs = AppPlan.objects.filter(is_active=True).order_by("app_key", "order")
+    if app_key and app_key in dict(AppKey.choices):
+        plans_qs = plans_qs.filter(app_key=app_key)
+        app_label = dict(AppKey.choices).get(app_key, app_key)
+        app_icon  = APP_ICONS.get(app_key, "📦")
+        app_color = APP_COLORS.get(app_key, "#6B7280")
+    else:
+        app_key   = None
+        app_label = "Toutes les applications"
+        app_icon  = "🚀"
+        app_color = "#6C3FE8"
+
+    # Plan actuel de l'utilisateur pour cette app
+    current_sub = None
+    if app_key and request.user.is_authenticated:
+        current_sub = AppSubscription.get_active_for_user(request.user, app_key)
+
+    # Grouper les plans par app si vue globale
+    plans_by_app = {}
+    for plan in plans_qs:
+        k = plan.app_key
+        if k not in plans_by_app:
+            plans_by_app[k] = {
+                "label": plan.get_app_key_display(),
+                "icon":  plan.app_icon,
+                "color": plan.app_color,
+                "plans": [],
+            }
+        plans_by_app[k]["plans"].append(plan)
+
+    context = {
+        "app_key":     app_key,
+        "app_label":   app_label,
+        "app_icon":    app_icon,
+        "app_color":   app_color,
+        "plans":       list(plans_qs),
+        "plans_by_app": plans_by_app,
+        "current_sub": current_sub,
+    }
+    return render(request, "accounts/upgrade.html", context)
+
+
+# ─────────────────────────────────────────────────────────────────
+#  ANNULATION D'ABONNEMENT
+# ─────────────────────────────────────────────────────────────────
+
+@login_required
+def cancel_subscription(request, pk):
+    """Annule un abonnement appartenant à l'utilisateur connecté."""
+    sub = get_object_or_404(AppSubscription, pk=pk, user=request.user)
+
+    if request.method == "POST":
+        if sub.is_active:
+            sub.status = "cancelled"
+            sub.auto_renew = False
+            sub.save(update_fields=["status", "auto_renew"])
+            messages.success(
+                request,
+                f"Votre abonnement {sub.plan.name} a été annulé. "
+                f"Vous conservez l'accès jusqu'au {sub.expires_at.strftime('%d/%m/%Y') if sub.expires_at else 'terme'}."
+            )
+        else:
+            messages.warning(request, "Cet abonnement n'est pas actif.")
+
+    return redirect("accounts:mon_compte")

@@ -1,0 +1,82 @@
+{% extends "adgen/base_adgen.html" %}
+
+{% block title %}AdGen — Mes campagnes{% endblock %}
+
+{% block adgen_content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <a href="{% url 'adgen:dashboard' %}" class="text-sm text-gray-400 hover:text-gray-600 transition mb-2 inline-block">← Dashboard</a>
+      <h1 class="text-2xl font-black text-gray-900">Mes campagnes</h1>
+    </div>
+    <a href="{% url 'adgen:create' %}"
+       class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white shadow-sm hover:opacity-90 transition"
+       style="background:linear-gradient(135deg,#6C3FE8,#9b6dff)">
+      ✨ Nouvelle
+    </a>
+  </div>
+
+  {% if campaigns %}
+  <div class="space-y-3">
+    {% for c in campaigns %}
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-5 hover:shadow-md hover:border-purple-100 transition">
+      <div class="flex items-start gap-4 justify-between">
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-2 flex-wrap">
+            <h3 class="font-bold text-gray-800">{{ c.nom_produit }}</h3>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full
+              {% if c.status == 'done' %}bg-green-100 text-green-700
+              {% elif c.status == 'failed' %}bg-red-100 text-red-600
+              {% elif c.status == 'processing' %}bg-blue-100 text-blue-700
+              {% else %}bg-yellow-100 text-yellow-700{% endif %}">
+              {{ c.get_status_display }}
+            </span>
+          </div>
+          <p class="text-sm text-gray-400 mt-1">{{ c.pays_label }} · {{ c.prix }} · {{ c.created_at|date:"d/m/Y" }}</p>
+          <div class="flex flex-wrap gap-1 mt-2">
+            {% for m in c.modules_selected %}
+            <span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background:#f5f3ff;color:var(--adgen-primary)">{{ m }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="flex-shrink-0">
+          {% if c.status == 'done' %}
+          <a href="{% url 'adgen:detail' pk=c.pk %}" class="text-sm font-bold px-4 py-2 rounded-xl text-white" style="background:var(--adgen-primary)">Voir →</a>
+          {% elif c.status == 'failed' or c.status == 'pending' %}
+          <a href="{% url 'adgen:generate' pk=c.pk %}" class="text-sm font-bold px-4 py-2 rounded-xl text-white bg-yellow-500">Générer</a>
+          {% else %}
+          <span class="inline-block w-5 h-5 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if is_paginated %}
+  <div class="flex justify-center gap-2 mt-8">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 rounded-xl border text-sm font-semibold hover:bg-gray-50">← Préc.</a>
+    {% endif %}
+    <span class="px-4 py-2 rounded-xl text-sm font-semibold text-white" style="background:var(--adgen-primary)">
+      {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+    </span>
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 rounded-xl border text-sm font-semibold hover:bg-gray-50">Suiv. →</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div class="text-center py-20">
+    <div class="text-6xl mb-4">📭</div>
+    <h3 class="text-xl font-bold text-gray-700 mb-2">Aucune campagne</h3>
+    <a href="{% url 'adgen:create' %}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white mt-4" style="background:linear-gradient(135deg,#6C3FE8,#9b6dff)">
+      ✨ Créer une campagne
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

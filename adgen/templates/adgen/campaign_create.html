@@ -1,0 +1,252 @@
+{% extends "adgen/base_adgen.html" %}
+
+{% block title %}AdGen — Nouvelle campagne{% endblock %}
+
+{% block extra_head %}
+<style>
+  .module-card {
+    border: 2px solid #e5e7eb;
+    border-radius: 1rem;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all .2s ease;
+    background: white;
+    user-select: none;
+  }
+  .module-card:hover {
+    border-color: var(--adgen-primary);
+    background: #f5f3ff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(108,63,232,.15);
+  }
+  .module-card.selected {
+    border-color: var(--adgen-primary);
+    background: #ede9fe;
+    box-shadow: 0 0 0 3px rgba(108,63,232,.15);
+  }
+  .module-card input[type=checkbox] { display: none; }
+  .check-icon {
+    width: 20px; height: 20px;
+    border: 2px solid #d1d5db;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all .2s;
+  }
+  .module-card.selected .check-icon {
+    background: var(--adgen-primary);
+    border-color: var(--adgen-primary);
+    color: white;
+  }
+  .form-field {
+    width: 100%;
+    border: 1.5px solid #e5e7eb;
+    border-radius: .875rem;
+    padding: .75rem 1rem;
+    font-size: .9rem;
+    color: #111;
+    background: white;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .form-field:focus {
+    border-color: var(--adgen-primary);
+    box-shadow: 0 0 0 3px rgba(108,63,232,.12);
+  }
+  .form-field::placeholder { color: #9ca3af; }
+  .spinner-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(15,7,35,.75);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    text-align: center;
+  }
+  .spinner-overlay.active { display: flex; }
+</style>
+{% endblock %}
+
+{% block adgen_content %}
+
+<!-- Spinner -->
+<div class="spinner-overlay" id="spinnerOverlay">
+  <div class="relative mb-6">
+    <div class="w-20 h-20 rounded-full border-4 border-white/20 border-t-white animate-spin mx-auto"></div>
+    <div class="absolute inset-0 flex items-center justify-center text-3xl">✨</div>
+  </div>
+  <h3 class="text-2xl font-black mb-2">Génération en cours...</h3>
+  <p class="text-white/60 text-sm max-w-xs">Claude analyse votre produit et crée votre contenu publicitaire professionnel</p>
+  <div class="flex gap-1.5 mt-6">
+    <div class="w-2 h-2 rounded-full bg-white/60 animate-bounce" style="animation-delay:0s"></div>
+    <div class="w-2 h-2 rounded-full bg-white/60 animate-bounce" style="animation-delay:.15s"></div>
+    <div class="w-2 h-2 rounded-full bg-white/60 animate-bounce" style="animation-delay:.3s"></div>
+  </div>
+</div>
+
+<!-- Progress bar top -->
+<div class="adgen-hero-bg h-1.5"></div>
+
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+
+  <!-- Header -->
+  <div class="mb-8">
+    <a href="{% url 'adgen:dashboard' %}" class="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition mb-4">
+      ← Retour au dashboard
+    </a>
+    <h1 class="text-2xl sm:text-3xl font-black text-gray-900">✨ Nouvelle campagne</h1>
+    <p class="text-gray-400 mt-1.5">Renseignez votre produit, choisissez les modules, et l'IA génère votre contenu.</p>
+  </div>
+
+  <form method="post" id="campaignForm" novalidate>
+    {% csrf_token %}
+
+    <!-- Étape 1 -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8 mb-5">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-8 h-8 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
+             style="background:linear-gradient(135deg,#6C3FE8,#9b6dff)">1</div>
+        <h2 class="font-bold text-gray-800 text-lg">Votre produit</h2>
+      </div>
+
+      <div class="space-y-5">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nom du produit *</label>
+          <input type="text" name="nom_produit" class="form-field"
+                 placeholder="Ex: Huile de palme rouge naturelle bio"
+                 value="{{ form.nom_produit.value|default:'' }}">
+          {% if form.nom_produit.errors %}
+          <p class="text-red-500 text-xs mt-1.5">{{ form.nom_produit.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">Description du produit *</label>
+          <textarea name="description" rows="4" class="form-field resize-none"
+                    placeholder="Décrivez votre produit : composition, avantages, comment ça marche, pourquoi l'acheter...">{{ form.description.value|default:'' }}</textarea>
+          <p class="text-xs text-gray-400 mt-1.5">Plus c'est détaillé, plus le contenu sera précis et vendeur.</p>
+          {% if form.description.errors %}
+          <p class="text-red-500 text-xs mt-1">{{ form.description.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Prix de vente *</label>
+            <input type="text" name="prix" class="form-field"
+                   placeholder="Ex: 2 500 FCFA"
+                   value="{{ form.prix.value|default:'' }}">
+            {% if form.prix.errors %}
+            <p class="text-red-500 text-xs mt-1">{{ form.prix.errors.0 }}</p>
+            {% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Pays cible</label>
+            <select name="pays" class="form-field">
+              {% for val, label in form.fields.pays.choices %}
+              <option value="{{ val }}" {% if form.pays.value == val %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Audience cible *</label>
+            <input type="text" name="cible" class="form-field"
+                   placeholder="Ex: Femmes 25-45 ans"
+                   value="{{ form.cible.value|default:'' }}">
+            {% if form.cible.errors %}
+            <p class="text-red-500 text-xs mt-1">{{ form.cible.errors.0 }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Étape 2 -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8 mb-6">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-8 h-8 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
+             style="background:linear-gradient(135deg,#6C3FE8,#9b6dff)">2</div>
+        <h2 class="font-bold text-gray-800 text-lg">Choisissez vos modules</h2>
+      </div>
+      <p class="text-sm text-gray-400 mb-5 ml-11">Sélectionnez le(s) type(s) de contenu à générer</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="modulesGrid">
+        {% for mod in modules %}
+        <label class="module-card {% if not mod.is_premium %}selected{% endif %}" onclick="toggleModule(this)">
+          <input type="checkbox" name="modules" value="{{ mod.slug }}" {% if not mod.is_premium %}checked{% endif %}>
+          <div class="flex items-start gap-3">
+            <span class="text-2xl flex-shrink-0">{{ mod.icon }}</span>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-1.5">
+                <span class="font-semibold text-sm text-gray-800">{{ mod.name }}</span>
+                {% if mod.is_premium %}
+                <span class="text-xs font-bold px-1.5 py-0.5 rounded-full leading-none" style="background:var(--adgen-accent);color:#111">PRO</span>
+                {% endif %}
+              </div>
+              <p class="text-xs text-gray-400 mt-0.5 leading-relaxed">{{ mod.description }}</p>
+            </div>
+            <div class="check-icon">
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+          </div>
+        </label>
+        {% endfor %}
+      </div>
+
+      <p class="text-red-500 text-xs mt-3 hidden" id="modulesError">Sélectionnez au moins un module.</p>
+    </div>
+
+    <!-- Submit -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-gray-50 rounded-2xl p-5 border border-gray-100">
+      <div class="text-sm text-gray-400 text-center sm:text-left">
+        <span class="font-semibold text-gray-600">~15 secondes</span> de génération · Propulsé par Claude AI
+      </div>
+      <button type="submit" id="submitBtn"
+              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-bold text-base text-white shadow-lg hover:opacity-90 hover:scale-[1.02] active:scale-100 transition-all"
+              style="background:linear-gradient(135deg,#6C3FE8,#9b6dff)">
+        <span>✨</span>
+        <span>Générer le contenu</span>
+      </button>
+    </div>
+  </form>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Init état visuel des modules
+  document.querySelectorAll('.module-card').forEach(card => {
+    const cb = card.querySelector('input[type=checkbox]');
+    if (cb && cb.checked) card.classList.add('selected');
+  });
+
+  function toggleModule(label) {
+    const cb = label.querySelector('input[type=checkbox]');
+    if (!cb) return;
+    setTimeout(() => {
+      label.classList.toggle('selected', cb.checked);
+    }, 0);
+  }
+
+  // Validation + spinner
+  document.getElementById('campaignForm').addEventListener('submit', function(e) {
+    const checked = document.querySelectorAll('input[name="modules"]:checked');
+    const errEl = document.getElementById('modulesError');
+
+    if (!checked.length) {
+      e.preventDefault();
+      errEl.classList.remove('hidden');
+      errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    errEl.classList.add('hidden');
+    document.getElementById('spinnerOverlay').classList.add('active');
+    document.getElementById('submitBtn').disabled = true;
+  });
+</script>
+{% endblock %}

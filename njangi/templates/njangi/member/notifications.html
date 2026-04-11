@@ -1,0 +1,43 @@
+{% extends "njangi/member/dashboard.html" %}
+{% block page_title %}Notifications{% endblock %}
+
+{% block dashboard_content %}
+<h2 class="text-xl font-bold text-gray-700 mb-6">Notifications</h2>
+
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 divide-y divide-gray-50">
+  {% for notif in notifications %}
+  <div class="px-5 py-4 flex gap-4 {% if not notif.is_read %}bg-blue-50/40{% endif %}">
+    <div class="w-10 h-10 rounded-full flex items-center justify-center text-lg flex-shrink-0 bg-gray-100">
+      {% if notif.type == 'hand_received' %}🏆
+      {% elif notif.type == 'loan_approved' %}✅
+      {% elif notif.type == 'loan_rejected' %}❌
+      {% elif notif.type == 'loan_disbursed' %}💸
+      {% elif notif.type == 'contribution_due' %}💳
+      {% elif notif.type == 'contribution_late' %}⚠️
+      {% elif notif.type == 'repayment_due' %}📅
+      {% elif notif.type == 'deposit_matured' %}🏦
+      {% elif notif.type == 'session_planned' %}📅
+      {% elif notif.type == 'session_reminder' %}🔔
+      {% else %}📢{% endif %}
+    </div>
+    <div class="flex-1 min-w-0">
+      <div class="flex items-start justify-between gap-2">
+        <p class="font-semibold text-gray-800 text-sm">{{ notif.title }}</p>
+        {% if not notif.is_read %}
+        <span class="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0 mt-1.5"></span>
+        {% endif %}
+      </div>
+      <p class="text-sm text-gray-500 mt-0.5">{{ notif.body }}</p>
+      <p class="text-xs text-gray-300 mt-1">
+        {{ notif.membership.group.name }} · {{ notif.created_at|date:"d M Y à H:i" }}
+      </p>
+    </div>
+  </div>
+  {% empty %}
+  <div class="text-center py-16 text-gray-400">
+    <p class="text-5xl mb-3">🔔</p>
+    <p>Aucune notification pour le moment.</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

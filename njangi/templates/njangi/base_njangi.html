@@ -1,0 +1,171 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Njangi Digital — Tontine numérique au Cameroun{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Gérez votre tontine en ligne — cotisations, mains, prêts, fond commun. 100 % numérique, 0 papier.{% endblock %}"/>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            njangi: {
+              primary: '#1B6CA8',
+              accent:  '#F5A623',
+              dark:    '#0D3B6E',
+              light:   '#EBF4FB',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+  <!-- HTMX -->
+  <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+  <!-- Alpine.js -->
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <!-- CSRF pour HTMX -->
+  <meta name="csrf-token" content="{{ csrf_token }}"/>
+
+  <style>
+    :root {
+      --njangi-primary: #1B6CA8;
+      --njangi-accent:  #F5A623;
+      --njangi-dark:    #0D3B6E;
+      --njangi-light:   #EBF4FB;
+    }
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    [x-cloak] { display: none !important; }
+  </style>
+
+  {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-gray-50 text-gray-900 antialiased"
+      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+
+  <!-- Django Messages -->
+  {% if messages %}
+  <div id="django-messages" class="fixed top-4 right-4 z-50 space-y-2 max-w-sm">
+    {% for m in messages %}
+    <div class="flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-sm font-medium
+      {% if m.tags == 'success' %}bg-green-600 text-white
+      {% elif m.tags == 'error' %}bg-red-600 text-white
+      {% elif m.tags == 'warning' %}bg-yellow-500 text-white
+      {% else %}bg-gray-800 text-white{% endif %}"
+      x-data x-init="setTimeout(() => $el.remove(), 4000)">
+      <span>{{ m }}</span>
+      <button onclick="this.parentElement.remove()" class="ml-auto opacity-70 hover:opacity-100 text-lg leading-none">&times;</button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Navbar -->
+  <header class="sticky top-0 z-40 bg-white shadow-sm border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 h-14 flex items-center gap-4">
+      <!-- Logo -->
+      <a href="{% url 'njangi:landing' %}" class="flex items-center gap-2 flex-shrink-0">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm" style="background:var(--njangi-primary)">N</div>
+        <span class="font-bold text-gray-900 hidden sm:block">Njangi <span style="color:var(--njangi-primary)">Digital</span></span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-1 ml-4">
+        <a href="{% url 'njangi:landing' %}" class="px-3 py-1.5 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition font-medium">Accueil</a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'njangi:member_dashboard' %}" class="px-3 py-1.5 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition font-medium">Mon espace</a>
+        <a href="{% url 'njangi:create_group' %}" class="px-3 py-1.5 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition font-medium">Créer</a>
+        <a href="{% url 'njangi:join' %}" class="px-3 py-1.5 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition font-medium">Rejoindre</a>
+        {% endif %}
+      </nav>
+
+      <div class="ml-auto flex items-center gap-2">
+        {% if user.is_authenticated %}
+        <!-- Notifications -->
+        <a href="{% url 'njangi:member_notifications' %}" class="relative p-2 rounded-lg hover:bg-gray-100 transition text-gray-600">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+          </svg>
+        </a>
+        <!-- User menu -->
+        <div class="relative" x-data="{open:false}">
+          <button @click="open=!open" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition text-sm font-medium text-gray-700">
+            <div class="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold" style="background:var(--njangi-primary)">
+              {{ user.get_full_name|default:user.username|first|upper }}
+            </div>
+            <span class="hidden sm:block truncate max-w-[100px]">{{ user.get_full_name|default:user.username }}</span>
+          </button>
+          <div x-show="open" x-cloak @click.outside="open=false"
+               class="absolute right-0 mt-1 w-44 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-50">
+            <a href="{% url 'njangi:member_dashboard' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Mon espace</a>
+            <a href="{% url 'njangi:create_group' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Créer un groupe</a>
+            <div class="border-t border-gray-100 my-1"></div>
+            <a href="/" class="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-50">← Accueil E-Shelle</a>
+            <a href="{% url 'accounts:logout' %}" class="block px-4 py-2 text-sm text-red-500 hover:bg-red-50">Déconnexion</a>
+          </div>
+        </div>
+        {% else %}
+        <a href="{% url 'accounts:login' %}" class="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition">Connexion</a>
+        <a href="{% url 'accounts:register' %}" class="px-4 py-1.5 rounded-lg text-sm font-bold text-white transition" style="background:var(--njangi-primary)">S'inscrire</a>
+        {% endif %}
+      </div>
+
+      <!-- Mobile menu -->
+      <div class="md:hidden ml-2" x-data="{open:false}">
+        <button @click="open=!open" class="p-2 rounded-lg hover:bg-gray-100">
+          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+        <div x-show="open" x-cloak @click.outside="open=false"
+             class="absolute top-14 left-0 right-0 bg-white border-b border-gray-100 shadow-lg py-3 px-4 space-y-1 z-40">
+          <a href="{% url 'njangi:landing' %}" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Accueil</a>
+          {% if user.is_authenticated %}
+          <a href="{% url 'njangi:member_dashboard' %}" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Mon espace</a>
+          <a href="{% url 'njangi:create_group' %}" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Créer un groupe</a>
+          <a href="{% url 'njangi:join' %}" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Rejoindre</a>
+          {% else %}
+          <a href="{% url 'accounts:login' %}" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Connexion</a>
+          <a href="{% url 'accounts:register' %}" class="block px-3 py-2 rounded-lg text-sm font-semibold hover:bg-gray-50" style="color:var(--njangi-primary)">S'inscrire</a>
+          {% endif %}
+          <div class="border-t border-gray-100 pt-2">
+            <a href="/" class="block px-3 py-2 rounded-lg text-xs text-gray-400 hover:bg-gray-50">← Retour E-Shelle</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenu principal -->
+  <main>
+    {% block njangi_content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-gray-100 bg-white mt-16 py-8 text-center text-sm text-gray-400">
+    <div class="max-w-6xl mx-auto px-4">
+      <p>
+        <span class="font-bold" style="color:var(--njangi-primary)">Njangi Digital</span>
+        &mdash; une app <a href="/" class="hover:underline" style="color:var(--njangi-primary)">E-Shelle</a>
+        &bull; Made in Cameroun 🇨🇲
+      </p>
+    </div>
+  </footer>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

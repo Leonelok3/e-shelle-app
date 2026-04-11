@@ -1,0 +1,95 @@
+{% extends "njangi/member/dashboard.html" %}
+{% block page_title %}Mes prêts{% endblock %}
+
+{% block dashboard_content %}
+<div class="flex items-center justify-between mb-6">
+  <h2 class="text-xl font-bold text-gray-700">Mes prêts</h2>
+  <a href="{% url 'njangi:loan_request' %}" class="px-4 py-2 rounded-xl text-white text-sm font-semibold" style="background:var(--njangi-primary)">
+    + Demander un prêt
+  </a>
+</div>
+
+{% if loans %}
+<div class="space-y-4">
+  {% for loan in loans %}
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+          <p class="font-bold text-gray-800">{{ loan.membership.group.name }}</p>
+          <span class="px-2 py-0.5 rounded-full text-xs font-semibold
+            {% if loan.status == 'active' %}bg-blue-100 text-blue-700
+            {% elif loan.status == 'completed' %}bg-green-100 text-green-700
+            {% elif loan.status == 'pending' %}bg-yellow-100 text-yellow-700
+            {% elif loan.status == 'approved' %}bg-purple-100 text-purple-700
+            {% elif loan.status == 'rejected' %}bg-red-100 text-red-600
+            {% else %}bg-gray-100 text-gray-500{% endif %}">
+            {{ loan.get_status_display }}
+          </span>
+          {% if loan.is_overdue %}<span class="text-xs font-semibold text-red-500">⚠ En retard</span>{% endif %}
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3 text-sm">
+          <div>
+            <p class="text-xs text-gray-400">Montant</p>
+            <p class="font-semibold text-gray-700">{{ loan.amount_approved|default:loan.amount_requested|floatformat:0 }} FCFA</p>
+          </div>
+          {% if loan.status in 'active,completed' %}
+          <div>
+            <p class="text-xs text-gray-400">Total dû</p>
+            <p class="font-semibold text-gray-700">{{ loan.total_due|floatformat:0 }} FCFA</p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400">Remboursé</p>
+            <p class="font-semibold text-green-600">{{ loan.total_repaid|floatformat:0 }} FCFA</p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400">Reste dû</p>
+            <p class="font-semibold text-red-500">{{ loan.balance_remaining|floatformat:0 }} FCFA</p>
+          </div>
+          {% else %}
+          <div>
+            <p class="text-xs text-gray-400">Durée</p>
+            <p class="font-semibold text-gray-700">{{ loan.duration_months }} mois</p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400">Taux</p>
+            <p class="font-semibold text-gray-700">{{ loan.interest_rate }}%/mois</p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400">Demande</p>
+            <p class="font-semibold text-gray-500">{{ loan.requested_at|date:"d/m/Y" }}</p>
+          </div>
+          {% endif %}
+        </div>
+
+        {% if loan.status == 'active' %}
+        <div class="mt-3">
+          <div class="flex items-center gap-2">
+            <div class="flex-1 bg-gray-100 rounded-full h-2">
+              <div class="h-2 rounded-full bg-blue-500" style="width:{{ loan.repayment_progress_pct }}%"></div>
+            </div>
+            <span class="text-xs font-bold text-gray-600">{{ loan.repayment_progress_pct }}%</span>
+          </div>
+          <p class="text-xs text-gray-400 mt-1">Échéance : {{ loan.due_date|date:"d/m/Y" }}</p>
+        </div>
+        {% endif %}
+
+        {% if loan.status == 'rejected' and loan.rejection_reason %}
+        <p class="text-xs text-red-400 mt-2">Motif : {{ loan.rejection_reason }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-16 text-gray-400 bg-white rounded-2xl shadow-sm border border-gray-100">
+  <p class="text-5xl mb-3">📋</p>
+  <p class="mb-4">Aucun prêt en cours.</p>
+  <a href="{% url 'njangi:loan_request' %}" class="inline-block px-6 py-2 rounded-xl text-white font-semibold text-sm" style="background:var(--njangi-primary)">
+    Demander un prêt
+  </a>
+</div>
+{% endif %}
+{% endblock %}
