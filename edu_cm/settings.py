@@ -82,11 +82,11 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "edu_platform.middleware.device_lock_middleware.DeviceLockMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 
     # ── EduCam Pro : verrouillage appareil (/edu/ uniquement) ────
-    "edu_platform.middleware.device_lock_middleware.DeviceLockMiddleware",
 ]
 
 ROOT_URLCONF = "edu_cm.urls"
@@ -261,3 +261,19 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ],
 }
+
+# ── EduCam Pro ──────────────────────────────────────────
+import os as _os
+EDU_PLATFORM = {
+    'SITE_NAME': 'EduCam Pro',
+    'ORANGE_MONEY_API_KEY': _os.getenv('ORANGE_MONEY_API_KEY', ''),
+    'ORANGE_MONEY_SECRET': _os.getenv('ORANGE_MONEY_SECRET', ''),
+    'MTN_MOMO_SUBSCRIPTION_KEY': _os.getenv('MTN_MOMO_SUBSCRIPTION_KEY', ''),
+    'MTN_MOMO_API_USER': _os.getenv('MTN_MOMO_API_USER', ''),
+    'MTN_MOMO_API_KEY': _os.getenv('MTN_MOMO_API_KEY', ''),
+    'MTN_MOMO_ENVIRONMENT': _os.getenv('MTN_MOMO_ENVIRONMENT', 'sandbox'),
+    'WEBHOOK_HMAC_SECRET': _os.getenv('EDU_WEBHOOK_HMAC_SECRET', 'changeme'),
+    'MAX_DEVICES_PER_CODE': 1,
+    'ACCESS_TOKEN_EXPIRY_MINUTES': 15,
+}
+SITE_URL = _os.getenv('SITE_URL', 'https://e-shelle.com')
