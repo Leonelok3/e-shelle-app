@@ -3,6 +3,7 @@ gaz/management/commands/seed_gaz.py
 Initialise les donnees de base : villes, quartiers, marques, depots exemples.
 Usage : python manage.py seed_gaz
 """
+from datetime import date, timedelta
 from django.core.management.base import BaseCommand
 from gaz.models import VilleGaz, QuartierGaz, MarqueGaz, DepotGaz
 
@@ -229,7 +230,13 @@ class Command(BaseCommand):
                     livraison_nuit=data.get("livraison_nuit", False),
                     is_featured=data.get("is_featured", False),
                     is_verified=data.get("is_verified", False),
+                    # Abonnement demo actif 30 jours
                     is_active=True,
+                    abonnement_actif=True,
+                    plan_actif="pro",
+                    abonnement_expire_le=date.today() + timedelta(days=30),
+                    montant_paye=5000,
+                    notes_admin="Depot demo cree par seed_gaz",
                 )
                 # Marques
                 for marque_nom in data.get("marques", []):

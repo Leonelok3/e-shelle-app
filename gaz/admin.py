@@ -52,17 +52,18 @@ class AvisDepotInline(admin.TabularInline):
 @admin.register(DepotGaz)
 class DepotGazAdmin(admin.ModelAdmin):
     list_display = (
-        "photo_preview", "nom", "ville", "quartier",
-        "telephone_link", "statut_badge", "note_badge",
-        "is_featured", "is_verified", "created_at",
+        "photo_preview", "nom", "ville",
+        "telephone_link", "abonnement_badge", "statut_badge",
+        "note_badge", "is_featured", "created_at",
     )
-    list_filter   = ("ville", "is_active", "is_verified", "is_featured", "livraison_rapide", "livraison_nuit")
-    search_fields = ("nom", "telephone", "whatsapp", "adresse", "zone_livraison")
-    list_editable = ("is_featured", "is_verified")
+    list_filter   = ("ville", "is_active", "abonnement_actif", "plan_actif",
+                     "is_verified", "is_featured", "livraison_rapide", "livraison_nuit")
+    search_fields = ("nom", "telephone", "whatsapp", "adresse", "zone_livraison", "ref_paiement")
+    list_editable = ("is_featured",)
     list_display_links = ("nom",)
     filter_horizontal = ("marques",)
     date_hierarchy = "created_at"
-    ordering = ("-is_featured", "-created_at")
+    ordering = ("-abonnement_actif", "-is_featured", "-created_at")
     inlines = [AvisDepotInline]
 
     fieldsets = (
@@ -83,7 +84,18 @@ class DepotGazAdmin(admin.ModelAdmin):
             "fields": ("livraison_rapide", "delai_livraison", "horaires",
                        "livraison_nuit", "paiement_info"),
         }),
-        ("VISIBILITE", {
+        ("SOUSCRIPTION MENSUELLE", {
+            "fields": (
+                "plan_actif", "abonnement_actif", "abonnement_expire_le",
+                "montant_paye", "ref_paiement", "notes_admin",
+            ),
+            "description": (
+                "Activez l'abonnement apres reception du paiement (Orange Money / MTN). "
+                "Le depot devient automatiquement visible. "
+                "Basic 2000 FCFA | Pro 5000 FCFA | Premium 10000 FCFA / mois."
+            ),
+        }),
+        ("VISIBILITE & MISE EN AVANT", {
             "fields": ("is_active", "is_verified", "is_featured"),
         }),
         ("STATISTIQUES (lecture seule)", {
@@ -92,7 +104,50 @@ class DepotGazAdmin(admin.ModelAdmin):
         }),
     )
     readonly_fields = ("note_moyenne", "nb_avis", "created_at", "updated_at")
+
+    actions = ["activer_abonnement_1mois", "activer_abonnement_3mois", "suspendre_abonnement"]
+
+    @admin.action(description="Activer abonnement 1 mois (a partir d'aujourd'hui)")
+    def activer_abonnement_1mois(self, request, queryset):
+        from datetime import date, timedelta
+        expire = date.today() + timedelta(days=30)
+        updated = queryset.update(abonnement_actif=True, is_active=True,
+                                   abonnement_expire_le=expire)
+        self.message_user(request, f"{updated} depot(s) active(s) jusqu'au {expire}.")
+
+    @admin.action(description="Activer abonnement 3 mois (a partir d'aujourd'hui)")
+    def activer_abonnement_3mois(self, request, queryset):
+        from datetime import date, timedelta
+        expire = date.today() + timedelta(days=90)
+        updated = queryset.update(abonnement_actif=True, is_active=True,
+                                   abonnement_expire_le=expire)
+        self.message_user(request, f"{updated} depot(s) active(s) jusqu'au {expire}.")
+
+    @admin.action(description="Suspendre l'abonnement (masquer le depot)")
+    def suspendre_abonnement(self, request, queryset):
+        updated = queryset.update(abonnement_actif=False, is_active=False)
+        self.message_user(request, f"{updated} depot(s) suspendu(s).")
     prepopulated_fields = {"slug": ("nom",)}
+
+    @admin.display(description="Abonnement")
+    def abonnement_badge(self, obj):
+        if not obj.abonnement_actif:
+            return format_html(
+                '<span style="background:#f3f4f6;color:#6b7280;padding:2px 8px;border-radius:12px;font-size:.75rem;font-weight:700">Inactif</span>'
+            )
+        jr = obj.jours_restants
+        if jr <= 5:
+            color, bg = "#854d0e", "#fef9c3"
+        elif jr <= 15:
+            color, bg = "#9a3412", "#fff7ed"
+        else:
+            color, bg = "#15803d", "#dcfce7"
+        plan = obj.get_plan_actif_display() or "Actif"
+        return format_html(
+            '<span style="background:{};color:{};padding:2px 8px;border-radius:12px;font-size:.75rem;font-weight:700">'
+            '{} &mdash; {}j</span>',
+            bg, color, plan, jr
+        )
 
     @admin.display(description="Photo")
     def photo_preview(self, obj):

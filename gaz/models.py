@@ -4,6 +4,7 @@ Livraison de gaz domestique au Cameroun.
 Le client trouve un depot, contacte par WhatsApp/appel, paie a la livraison.
 """
 import urllib.parse
+from datetime import date
 from django.db import models
 from django.utils.text import slugify
 from django.conf import settings
@@ -115,8 +116,28 @@ class DepotGaz(models.Model):
     paiement_info    = models.CharField(max_length=200,
                             default="Paiement a la livraison (especes)")
 
+    # ── Souscription mensuelle depot ─────────────────────────────
+    PLAN_CHOICES = [
+        ("basic",   "Basic — 2 000 FCFA/mois"),
+        ("pro",     "Pro — 5 000 FCFA/mois"),
+        ("premium", "Premium — 10 000 FCFA/mois"),
+    ]
+    plan_actif          = models.CharField(max_length=10, choices=PLAN_CHOICES,
+                            null=True, blank=True, verbose_name="Plan souscrit")
+    abonnement_actif    = models.BooleanField(default=False,
+                            help_text="Le depot a paye son abonnement — visible sur la plateforme")
+    abonnement_expire_le = models.DateField(null=True, blank=True,
+                            help_text="Date d'expiration de l'abonnement")
+    montant_paye        = models.PositiveIntegerField(null=True, blank=True,
+                            help_text="Montant recu en FCFA")
+    ref_paiement        = models.CharField(max_length=100, blank=True,
+                            help_text="Reference Orange Money / MTN / etc.")
+    notes_admin         = models.TextField(blank=True,
+                            help_text="Notes internes (paiements, historique...)")
+
     # Statut
-    is_active    = models.BooleanField(default=True)
+    is_active    = models.BooleanField(default=False,
+                    help_text="Activer apres confirmation du paiement")
     is_verified  = models.BooleanField(default=False)
     is_featured  = models.BooleanField(default=False)
     note_moyenne = models.FloatField(default=0.0)
@@ -143,7 +164,27 @@ class DepotGaz(models.Model):
             self.slug = slug[:200]
         if not self.whatsapp_msg:
             self.whatsapp_msg = "Bonjour, je souhaite commander du gaz. Livraison a domicile svp."
+        # Synchronisation abonnement → visibilite
+        if self.abonnement_actif and self.abonnement_expire_le:
+            if self.abonnement_expire_le < date.today():
+                self.abonnement_actif = False
+                self.is_active = False
         super().save(*args, **kwargs)
+
+    @property
+    def abonnement_expire(self):
+        """True si l'abonnement est expire."""
+        if self.abonnement_expire_le:
+            return self.abonnement_expire_le < date.today()
+        return True
+
+    @property
+    def jours_restants(self):
+        """Nombre de jours restants sur l'abonnement."""
+        if self.abonnement_expire_le:
+            delta = (self.abonnement_expire_le - date.today()).days
+            return max(0, delta)
+        return 0
 
     def __str__(self):
         return f"{self.nom} — {self.ville}"
