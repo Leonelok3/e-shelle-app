@@ -7,7 +7,7 @@ from .acteur import ActeurAgro
 class CategorieAgro(models.Model):
     """Arborescence catégories agroalimentaires (2 niveaux max)."""
     nom         = models.CharField(max_length=100)
-    slug        = models.SlugField(unique=True)
+    slug        = models.SlugField(max_length=120, unique=True)
     parent      = models.ForeignKey(
         'self', null=True, blank=True,
         on_delete=models.SET_NULL,
