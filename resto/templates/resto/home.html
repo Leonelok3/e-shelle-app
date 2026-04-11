@@ -1,0 +1,538 @@
+{% extends "resto/base.html" %}
+{% load static resto_tags %}
+
+{% block title %}E-Shelle Resto — Trouvez le bon plat, au bon endroit, maintenant{% endblock %}
+{% block nav_home %}text-resto-primary{% endblock %}
+
+{% block content %}
+
+<!-- ── Hero Slideshow ────────────────────────────────────────────────────────── -->
+{% if hero_banners %}
+<section class="relative overflow-hidden bg-gray-900"
+         x-data="heroSlider({{ hero_banners|length }}, [{% for b in hero_banners %}{{ b.duration }}{% if not forloop.last %},{% endif %}{% endfor %}])"
+         x-init="init()"
+         @keydown.arrow-left.window="prev()"
+         @keydown.arrow-right.window="next()">
+
+  <!-- ── Slides ── -->
+  {% for banner in hero_banners %}
+  <div class="hero-slide absolute inset-0 transition-opacity duration-700"
+       :class="current === {{ forloop.index0 }} ? 'opacity-100 z-10' : 'opacity-0 z-0'"
+       x-ref="slide{{ forloop.index0 }}">
+
+    {% if banner.media_type == "video" and banner.video %}
+    <!-- Video slide -->
+    <video class="w-full h-full object-cover absolute inset-0"
+           autoplay muted loop playsinline
+           {% if banner.video_poster %}poster="{{ banner.video_poster.url }}"{% endif %}
+           x-ref="video{{ forloop.index0 }}"
+           :x-effect="current === {{ forloop.index0 }} ? $refs.video{{ forloop.index0 }}.play() : $refs.video{{ forloop.index0 }}.pause()">
+      <source src="{{ banner.video.url }}" type="video/mp4" />
+    </video>
+    {% elif banner.image %}
+    <!-- Image slide -->
+    <img src="{{ banner.image.url }}"
+         alt="{{ banner.title|default:'Bannière E-Shelle Resto' }}"
+         loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+         class="w-full h-full object-cover absolute inset-0" />
+    {% else %}
+    <!-- Fallback gradient -->
+    <div class="w-full h-full absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"></div>
+    {% endif %}
+
+    <!-- Dark overlay -->
+    <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-black/20 z-10"></div>
+
+    <!-- Badge haut-gauche (géré par Django, indépendant de l'image) -->
+    {% if banner.tag %}
+    <div class="absolute top-4 left-4 z-30">
+      <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider shadow-lg {{ banner.tag_color }} text-white">
+        {% if banner.tag == "nouveau" %}✦{% elif banner.tag == "premium" %}★{% elif banner.tag == "promo" %}%{% elif banner.tag == "vedette" %}⭐{% elif banner.tag == "exclusif" %}◆{% endif %}
+        {{ banner.tag_label }}
+      </span>
+    </div>
+    {% endif %}
+
+    <!-- Slide content — centré verticalement -->
+    <div class="relative z-20 h-full flex flex-col items-center justify-center text-white text-center px-6 pb-20 pt-10">
+
+      {% if banner.title %}
+      <h2 class="text-3xl md:text-5xl font-extrabold leading-tight mb-3 drop-shadow-lg max-w-2xl">
+        {{ banner.title }}
+      </h2>
+      {% else %}
+      <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-3 drop-shadow-lg">
+        Trouvez le bon plat,<br/>au bon endroit, <span class="text-resto-primary">maintenant.</span>
+      </h1>
+      {% endif %}
+
+      {% if banner.subtitle %}
+      <p class="text-white/90 text-base md:text-xl mb-6 max-w-xl drop-shadow">{{ banner.subtitle }}</p>
+      {% else %}
+      <p class="text-white/80 text-base md:text-lg mb-6 max-w-xl">
+        Explorez les menus des meilleurs restaurants camerounais. Commandez directement via WhatsApp.
+      </p>
+      {% endif %}
+
+      {% if banner.cta_label and banner.resolved_cta_url %}
+      <a href="{{ banner.resolved_cta_url }}"
+         class="inline-flex items-center gap-2 px-7 py-3 bg-resto-primary hover:bg-orange-600 text-white font-bold rounded-xl transition shadow-xl text-base">
+        {{ banner.cta_label }}
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </a>
+      {% endif %}
+
+    </div>
+  </div>
+  {% endfor %}
+
+  <!-- ── Barre de hauteur fixe (le slideshow a une hauteur) ── -->
+  <div class="relative z-0 h-[420px] md:h-[520px] lg:h-[580px]"></div>
+
+  <!-- ── Barre de recherche flottante (bas du hero) ── -->
+  <div class="absolute bottom-0 left-0 right-0 z-30 px-4 pb-5">
+    <div class="max-w-xl mx-auto" x-data="{ open: false }">
+      <div class="relative">
+        <input type="text"
+               placeholder="Chercher ndolé, grillades, poisson braisé..."
+               class="w-full pl-11 pr-4 py-3.5 text-gray-900 rounded-2xl text-sm focus:outline-none focus:ring-4 focus:ring-resto-primary/40 shadow-2xl"
+               @focus="open = true"
+               hx-get="{% url 'resto:search' %}"
+               hx-trigger="keyup changed delay:300ms"
+               hx-target="#hero-search-results"
+               name="q" />
+        <svg class="absolute left-3.5 top-3.5 w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <div id="hero-search-results"
+             class="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 text-gray-900 max-h-80 overflow-y-auto"
+             x-show="open" @click.away="open = false"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Flèche gauche ── -->
+  <button @click="prev()"
+          class="absolute left-3 top-1/2 -translate-y-1/2 z-30 w-11 h-11 flex items-center justify-center bg-black/30 hover:bg-black/60 backdrop-blur-sm text-white rounded-full transition border border-white/20"
+          aria-label="Slide précédent">
+    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+    </svg>
+  </button>
+
+  <!-- ── Flèche droite ── -->
+  <button @click="next()"
+          class="absolute right-3 top-1/2 -translate-y-1/2 z-30 w-11 h-11 flex items-center justify-center bg-black/30 hover:bg-black/60 backdrop-blur-sm text-white rounded-full transition border border-white/20"
+          aria-label="Slide suivant">
+    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+    </svg>
+  </button>
+
+  <!-- ── Dots indicateurs ── -->
+  <div class="absolute bottom-16 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2">
+    {% for banner in hero_banners %}
+    <button @click="goTo({{ forloop.index0 }}); pauseAuto()"
+            class="transition-all duration-300 rounded-full"
+            :class="current === {{ forloop.index0 }}
+              ? 'w-6 h-2.5 bg-white'
+              : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/70'"
+            aria-label="Slide {{ forloop.index }}">
+    </button>
+    {% endfor %}
+  </div>
+
+  <!-- ── Barre de progression ── -->
+  <div class="absolute top-0 left-0 right-0 z-30 h-0.5 bg-white/10">
+    <div class="h-full bg-resto-primary transition-none"
+         :style="`width: ${progress}%; transition: width ${currentDuration}ms linear`"
+         x-ref="progressBar"></div>
+  </div>
+
+  <!-- ── City pills ── -->
+  <div class="absolute top-4 left-0 right-0 z-30 px-4 hidden md:flex justify-center gap-2">
+    {% for city in cities %}
+    <a href="{% url 'resto:restaurant_list' %}?city={{ city.slug }}"
+       class="px-3 py-1 bg-white/10 hover:bg-white/20 text-white text-xs font-medium rounded-full transition backdrop-blur-sm border border-white/20">
+      {{ city.name }}
+    </a>
+    {% endfor %}
+  </div>
+
+</section>
+
+{% else %}
+<!-- ── Hero statique (quand aucune bannière n'est configurée) ── -->
+<section class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white pt-10 pb-20 px-4 relative overflow-hidden">
+  <div class="max-w-2xl mx-auto text-center relative z-10">
+    <p class="text-resto-secondary text-sm font-semibold tracking-widest uppercase mb-3">🍽️ Cameroun • Yaoundé • Douala</p>
+    <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-4">
+      Trouvez le bon plat,<br/>au bon endroit, <span class="text-resto-primary">maintenant.</span>
+    </h1>
+    <p class="text-gray-300 text-base md:text-lg mb-8">
+      Explorez les menus des meilleurs restaurants camerounais. Commandez directement via WhatsApp.
+    </p>
+    <div class="relative max-w-lg mx-auto" x-data="{ open: false }">
+      <input type="text"
+             placeholder="Chercher ndolé, grillades, pizza..."
+             class="w-full pl-12 pr-4 py-4 text-gray-900 rounded-2xl text-base focus:outline-none focus:ring-4 focus:ring-resto-primary/40 shadow-xl"
+             @focus="open = true"
+             hx-get="{% url 'resto:search' %}"
+             hx-trigger="keyup changed delay:300ms"
+             hx-target="#hero-search-results"
+             name="q" />
+      <svg class="absolute left-4 top-4 w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+      <div id="hero-search-results"
+           class="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 text-gray-900"
+           x-show="open" @click.away="open = false"></div>
+    </div>
+    <div class="flex flex-wrap justify-center gap-2 mt-6">
+      {% for city in cities %}
+      <a href="{% url 'resto:restaurant_list' %}?city={{ city.slug }}"
+         class="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white text-sm rounded-full transition backdrop-blur-sm border border-white/20">
+        {{ city.name }}
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ── Category Pills ────────────────────────────────────────────────────────── -->
+{% if food_categories %}
+<section class="bg-white border-b border-gray-100 py-4">
+  <div class="max-w-6xl mx-auto" x-data="slider('cats')">
+    <div class="relative flex items-center">
+      <!-- Arrow left -->
+      <button @click="scrollLeft('cats')"
+              x-show="canScrollLeft"
+              class="absolute left-0 z-10 w-8 h-8 flex items-center justify-center bg-white shadow-md rounded-full border border-gray-200 hover:bg-gray-50 transition -ml-1 flex-shrink-0">
+        <svg class="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
+
+      <div id="slider-cats"
+           class="flex gap-3 overflow-x-auto scrollbar-hide pb-1 px-4 scroll-smooth"
+           @scroll="checkScroll('cats')">
+        <a href="{% url 'resto:restaurant_list' %}"
+           class="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full bg-gray-900 text-white text-sm font-medium whitespace-nowrap">
+          Tous
+        </a>
+        {% for cat in food_categories %}
+        <a href="{% url 'resto:restaurant_list' %}?category={{ cat.slug }}"
+           class="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 hover:bg-resto-primary hover:text-white text-gray-700 text-sm font-medium whitespace-nowrap transition">
+          <span>{{ cat.icon }}</span>
+          <span>{{ cat.name }}</span>
+        </a>
+        {% endfor %}
+      </div>
+
+      <!-- Arrow right -->
+      <button @click="scrollRight('cats')"
+              x-show="canScrollRight"
+              class="absolute right-0 z-10 w-8 h-8 flex items-center justify-center bg-white shadow-md rounded-full border border-gray-200 hover:bg-gray-50 transition -mr-1 flex-shrink-0">
+        <svg class="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ── Ouverts maintenant ─────────────────────────────────────────────────────── -->
+{% if open_now %}
+<section class="py-8">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+          <span class="inline-block w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></span>
+          Ouverts maintenant
+        </h2>
+        <p class="text-sm text-gray-500 mt-0.5">Restaurants actuellement ouverts</p>
+      </div>
+      <a href="{% url 'resto:restaurant_list' %}?status=open" class="text-sm font-semibold text-resto-primary hover:underline whitespace-nowrap">Voir tout →</a>
+    </div>
+  </div>
+
+  <!-- Slider pleine largeur -->
+  <div class="relative" x-data="slider('open-now')">
+    <!-- Arrow left -->
+    <button @click="scrollLeft('open-now')"
+            x-show="canScrollLeft"
+            class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-white shadow-lg rounded-full border border-gray-200 hover:bg-gray-50 transition">
+      <svg class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+    </button>
+
+    <div id="slider-open-now"
+         class="flex gap-4 overflow-x-auto scrollbar-hide pb-2 px-4 scroll-smooth"
+         @scroll="checkScroll('open-now')">
+      {% for resto in open_now %}
+      <div class="flex-shrink-0 w-64">
+        {% include "resto/partials/restaurant_card.html" with restaurant=resto %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Arrow right -->
+    <button @click="scrollRight('open-now')"
+            x-show="canScrollRight"
+            class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-white shadow-lg rounded-full border border-gray-200 hover:bg-gray-50 transition">
+      <svg class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
+</section>
+{% endif %}
+
+<!-- ── Restaurants en vedette ─────────────────────────────────────────────────── -->
+{% if featured_restaurants %}
+<section class="py-8 bg-orange-50">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <h2 class="text-xl font-bold text-gray-900">⭐ Restaurants en vedette</h2>
+        <p class="text-sm text-gray-500 mt-0.5">Nos établissements partenaires recommandés</p>
+      </div>
+      <a href="{% url 'resto:restaurant_list' %}" class="text-sm font-semibold text-resto-primary hover:underline whitespace-nowrap">Voir tout →</a>
+    </div>
+  </div>
+
+  <div class="relative" x-data="slider('vedette')">
+    <!-- Arrow left -->
+    <button @click="scrollLeft('vedette')"
+            x-show="canScrollLeft"
+            class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-white shadow-lg rounded-full border border-gray-200 hover:bg-gray-50 transition">
+      <svg class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+    </button>
+
+    <div id="slider-vedette"
+         class="flex gap-4 overflow-x-auto scrollbar-hide pb-2 px-4 scroll-smooth"
+         @scroll="checkScroll('vedette')">
+      {% for resto in featured_restaurants %}
+      <div class="flex-shrink-0 w-64">
+        {% include "resto/partials/restaurant_card.html" with restaurant=resto %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Arrow right -->
+    <button @click="scrollRight('vedette')"
+            x-show="canScrollRight"
+            class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-white shadow-lg rounded-full border border-gray-200 hover:bg-gray-50 transition">
+      <svg class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
+</section>
+{% endif %}
+
+<!-- ── Plats populaires ───────────────────────────────────────────────────────── -->
+{% if popular_dishes %}
+<section class="py-8">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <h2 class="text-xl font-bold text-gray-900">🔥 Plats populaires</h2>
+        <p class="text-sm text-gray-500 mt-0.5">Les incontournables de la cuisine camerounaise</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="relative" x-data="slider('popular')">
+    <!-- Arrow left -->
+    <button @click="scrollLeft('popular')"
+            x-show="canScrollLeft"
+            class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-white shadow-lg rounded-full border border-gray-200 hover:bg-gray-50 transition">
+      <svg class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+    </button>
+
+    <div id="slider-popular"
+         class="flex gap-3 overflow-x-auto scrollbar-hide pb-2 px-4 scroll-smooth"
+         @scroll="checkScroll('popular')">
+      {% for dish in popular_dishes %}
+      <div class="flex-shrink-0 w-44 md:w-52">
+        {% include "resto/partials/dish_card.html" with dish=dish %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Arrow right -->
+    <button @click="scrollRight('popular')"
+            x-show="canScrollRight"
+            class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-white shadow-lg rounded-full border border-gray-200 hover:bg-gray-50 transition">
+      <svg class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
+</section>
+{% endif %}
+
+<!-- ── Repas à moins de 1 500 FCFA ────────────────────────────────────────────── -->
+{% if affordable_dishes %}
+<section class="py-8 bg-green-50">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <h2 class="text-xl font-bold text-gray-900">💚 Moins de 1 500 FCFA</h2>
+        <p class="text-sm text-gray-500 mt-0.5">Des repas savoureux et accessibles</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="relative" x-data="slider('affordable')">
+    <!-- Arrow left -->
+    <button @click="scrollLeft('affordable')"
+            x-show="canScrollLeft"
+            class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-white shadow-lg rounded-full border border-gray-200 hover:bg-gray-50 transition">
+      <svg class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+    </button>
+
+    <div id="slider-affordable"
+         class="flex gap-3 overflow-x-auto scrollbar-hide pb-2 px-4 scroll-smooth"
+         @scroll="checkScroll('affordable')">
+      {% for dish in affordable_dishes %}
+      <div class="flex-shrink-0 w-44 md:w-52">
+        {% include "resto/partials/dish_card.html" with dish=dish %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Arrow right -->
+    <button @click="scrollRight('affordable')"
+            x-show="canScrollRight"
+            class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-white shadow-lg rounded-full border border-gray-200 hover:bg-gray-50 transition">
+      <svg class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
+</section>
+{% endif %}
+
+<!-- ── CTA Inscription restaurant ─────────────────────────────────────────────── -->
+<section class="py-12 px-4 bg-gradient-to-r from-resto-primary to-orange-500 text-white">
+  <div class="max-w-2xl mx-auto text-center">
+    <h2 class="text-2xl md:text-3xl font-bold mb-3">Vous êtes restaurateur ?</h2>
+    <p class="text-white/90 mb-6">
+      Inscrivez votre restaurant gratuitement et commencez à recevoir des commandes WhatsApp dès aujourd'hui.
+      Essai gratuit 30 jours.
+    </p>
+    <a href="{% url 'resto:register' %}"
+       class="inline-flex items-center gap-2 bg-white text-resto-primary font-bold px-8 py-3 rounded-xl hover:bg-orange-50 transition shadow-lg">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+      Inscrire mon restaurant
+    </a>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+/**
+ * Hero Slideshow Alpine.js component.
+ * @param {number} total   - nombre total de slides
+ * @param {number[]} durations - durée (s) de chaque slide
+ */
+function heroSlider(total, durations) {
+  return {
+    total,
+    durations,
+    current: 0,
+    progress: 0,
+    currentDuration: (durations[0] || 5) * 1000,
+    _timer: null,
+    _paused: false,
+
+    init() {
+      if (this.total > 1) this.startAuto();
+    },
+
+    get currentDurationSec() {
+      return (this.durations[this.current] || 5);
+    },
+
+    startAuto() {
+      this._paused = false;
+      this.currentDuration = this.currentDurationSec * 1000;
+      // Reset barre de progression
+      this.progress = 0;
+      this.$nextTick(() => {
+        setTimeout(() => { this.progress = 100; }, 50);
+      });
+      clearTimeout(this._timer);
+      this._timer = setTimeout(() => {
+        if (!this._paused) this.next();
+      }, this.currentDuration);
+    },
+
+    pauseAuto() {
+      this._paused = true;
+      clearTimeout(this._timer);
+      // Reprend après 8s d'inactivité
+      clearTimeout(this._resumeTimer);
+      this._resumeTimer = setTimeout(() => this.startAuto(), 8000);
+    },
+
+    goTo(idx) {
+      this.current = (idx + this.total) % this.total;
+      this.startAuto();
+    },
+
+    next() { this.goTo(this.current + 1); },
+    prev() { this.goTo(this.current - 1); },
+  };
+}
+
+/**
+ * Composant Alpine.js : slider horizontal avec flèches gauche/droite.
+ */
+function slider(key) {
+  return {
+    canScrollLeft: false,
+    canScrollRight: true,
+
+    init() {
+      this.$nextTick(() => this.checkScroll(key));
+    },
+
+    getEl(k) { return document.getElementById('slider-' + k); },
+
+    scrollLeft(k) {
+      const el = this.getEl(k);
+      if (el) el.scrollBy({ left: -(el.clientWidth * 0.75), behavior: 'smooth' });
+    },
+
+    scrollRight(k) {
+      const el = this.getEl(k);
+      if (el) el.scrollBy({ left: el.clientWidth * 0.75, behavior: 'smooth' });
+    },
+
+    checkScroll(k) {
+      const el = this.getEl(k);
+      if (!el) return;
+      this.canScrollLeft  = el.scrollLeft > 4;
+      this.canScrollRight = el.scrollLeft + el.clientWidth < el.scrollWidth - 4;
+    },
+  };
+}
+</script>
+{% endblock %}

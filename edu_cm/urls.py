@@ -57,6 +57,9 @@ urlpatterns = [
     # ── EduCam Pro — Plateforme E-Learning ───────────────────────────
     path("edu/", include("edu_platform.urls", namespace="edu")),
 
+    # ── E-Shelle Resto — Découverte de restaurants au Cameroun ───────
+    path("resto/", include("resto.urls", namespace="resto")),
+
     # Page d'accueil
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
 ]

@@ -1,0 +1,198 @@
+{% extends "resto/dashboard/base_dashboard.html" %}
+{% load static resto_tags %}
+
+{% block title %}Mon menu — {{ restaurant.name }}{% endblock %}
+{% block dash_nav_menu %}bg-orange-50 text-resto-primary font-semibold{% endblock %}
+{% block mob_menu %}text-resto-primary{% endblock %}
+
+{% block dashboard_content %}
+<div class="space-y-6" x-data="menuManager()">
+
+  <div class="flex items-center justify-between flex-wrap gap-3">
+    <div>
+      <h1 class="text-xl font-bold text-gray-900">Mon menu</h1>
+      <p class="text-sm text-gray-500">Gérez vos catégories et plats.</p>
+    </div>
+    <div class="flex gap-2">
+      <button @click="showAddCategory = !showAddCategory"
+              class="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+        Catégorie
+      </button>
+      <button @click="showAddDish = true"
+              class="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-white bg-resto-primary rounded-xl hover:bg-orange-700 transition">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+        Ajouter un plat
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Add category form ── -->
+  <div x-show="showAddCategory" x-transition class="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
+    <h3 class="text-sm font-semibold text-gray-700 mb-3">Nouvelle catégorie</h3>
+    <form method="post" class="flex gap-3">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="add_category" />
+      <input type="text" name="name" required placeholder="Ex : Plats principaux"
+             class="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-resto-primary" />
+      <input type="number" name="order" value="0" min="0" placeholder="Ordre"
+             class="w-20 px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-resto-primary" />
+      <button type="submit"
+              class="px-4 py-2 bg-gray-900 text-white text-sm font-semibold rounded-xl hover:bg-gray-700 transition">
+        Créer
+      </button>
+    </form>
+  </div>
+
+  <!-- ── Add dish modal ── -->
+  <div x-show="showAddDish" x-transition
+       class="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/40 backdrop-blur-sm px-4"
+       @click.self="showAddDish = false">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-bold text-gray-900">Nouveau plat</h3>
+        <button @click="showAddDish = false" class="text-gray-400 hover:text-gray-600">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form method="post" enctype="multipart/form-data" class="space-y-4">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="add_dish" />
+        {% for field in dish_form %}
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}<p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>{% endif %}
+        </div>
+        {% endfor %}
+        <button type="submit"
+                class="w-full py-3 bg-resto-primary text-white font-bold rounded-xl hover:bg-orange-700 transition">
+          Ajouter le plat
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── Menu categories ── -->
+  {% for cat in menu_categories %}
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <!-- Category header -->
+    <div class="flex items-center justify-between px-5 py-3 bg-gray-50 border-b border-gray-100">
+      <h2 class="font-semibold text-gray-900 text-sm">{{ cat.name }}</h2>
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-gray-400">{{ cat.dishes.count }} plat(s)</span>
+        <form method="post" onsubmit="return confirm('Supprimer cette catégorie ?')">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="delete_category" />
+          <input type="hidden" name="category_id" value="{{ cat.pk }}" />
+          <button type="submit" class="text-gray-400 hover:text-red-500 transition">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Dishes -->
+    {% if cat.dishes.all %}
+    <div class="divide-y divide-gray-50">
+      {% for dish in cat.dishes.all %}
+      <div class="flex items-center gap-3 px-5 py-3">
+        <!-- Dish image -->
+        <div class="w-12 h-12 rounded-lg bg-gray-100 flex-shrink-0 overflow-hidden">
+          {% if dish.image %}
+          <img src="{{ dish.image.url }}" alt="{{ dish.name }}" loading="lazy" class="w-full h-full object-cover" />
+          {% else %}
+          <div class="w-full h-full flex items-center justify-center text-lg">🍛</div>
+          {% endif %}
+        </div>
+        <!-- Info -->
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-semibold text-gray-900 truncate">{{ dish.name }}</p>
+          <p class="text-xs text-resto-primary font-medium">{{ dish.formatted_price }}</p>
+        </div>
+        <!-- Availability toggle (HTMX) -->
+        <div class="flex-shrink-0" id="avail-{{ dish.pk }}">
+          {% include "resto/partials/availability_toggle.html" with dish=dish %}
+        </div>
+        <!-- Delete -->
+        <form method="post" onsubmit="return confirm('Supprimer ce plat ?')" class="flex-shrink-0">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="delete_dish" />
+          <input type="hidden" name="dish_id" value="{{ dish.pk }}" />
+          <button type="submit" class="text-gray-300 hover:text-red-500 transition">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          </button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="px-5 py-6 text-center text-sm text-gray-400">
+      Aucun plat dans cette catégorie.
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+  <!-- ── Uncategorized dishes ── -->
+  {% if uncategorized %}
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="px-5 py-3 bg-gray-50 border-b border-gray-100">
+      <h2 class="font-semibold text-gray-700 text-sm">Plats sans catégorie</h2>
+    </div>
+    <div class="divide-y divide-gray-50">
+      {% for dish in uncategorized %}
+      <div class="flex items-center gap-3 px-5 py-3">
+        <div class="w-12 h-12 rounded-lg bg-gray-100 flex-shrink-0 overflow-hidden">
+          {% if dish.image %}
+          <img src="{{ dish.image.url }}" alt="{{ dish.name }}" loading="lazy" class="w-full h-full object-cover" />
+          {% else %}
+          <div class="w-full h-full flex items-center justify-center text-lg">🍛</div>
+          {% endif %}
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-semibold text-gray-900 truncate">{{ dish.name }}</p>
+          <p class="text-xs text-resto-primary font-medium">{{ dish.formatted_price }}</p>
+        </div>
+        <div class="flex-shrink-0" id="avail-{{ dish.pk }}">
+          {% include "resto/partials/availability_toggle.html" with dish=dish %}
+        </div>
+        <form method="post" onsubmit="return confirm('Supprimer ce plat ?')" class="flex-shrink-0">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="delete_dish" />
+          <input type="hidden" name="dish_id" value="{{ dish.pk }}" />
+          <button type="submit" class="text-gray-300 hover:text-red-500 transition">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          </button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if not menu_categories and not uncategorized %}
+  <div class="text-center py-16 text-gray-400">
+    <span class="text-5xl block mb-3">📋</span>
+    <p class="font-medium text-gray-600">Votre menu est vide</p>
+    <p class="text-sm mt-1 mb-4">Commencez par créer une catégorie, puis ajoutez vos plats.</p>
+    <button @click="showAddDish = true"
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-resto-primary text-white font-semibold rounded-xl hover:bg-orange-700 transition">
+      Ajouter mon premier plat
+    </button>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function menuManager() {
+  return {
+    showAddDish: {% if request.GET.add_dish %}true{% else %}false{% endif %},
+    showAddCategory: false,
+  };
+}
+</script>
+{% endblock %}

@@ -70,6 +70,9 @@ INSTALLED_APPS = [
 
     # ── EduCam Pro — Plateforme E-Learning ───────────────────────
     "edu_platform.apps.EduPlatformConfig",
+
+    # ── E-Shelle Resto — Découverte de restaurants au Cameroun ───
+    "resto.apps.RestoConfig",
 ]
 
 SITE_ID = 1
@@ -102,6 +105,8 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.template.context_processors.media",
                 "django.contrib.messages.context_processors.messages",
+                # ── E-Shelle Resto ────────────────────────────────────
+                "resto.context_processors.resto_globals",
             ],
         },
     },
@@ -261,3 +266,6 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ],
 }
+
+# ── E-Shelle Resto ────────────────────────────────────────────────
+RESTO_FREE_TRIAL_DAYS = 30

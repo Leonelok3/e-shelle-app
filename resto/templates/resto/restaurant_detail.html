@@ -1,0 +1,413 @@
+{% extends "resto/base.html" %}
+{% load static resto_tags %}
+
+{% block title %}{{ restaurant.name }} — Menu & Contact | E-Shelle Resto{% endblock %}
+
+{% block meta_description %}Découvrez le menu de {{ restaurant.name }} à {{ restaurant.city.name }}{% if restaurant.neighborhood %}, {{ restaurant.neighborhood.name }}{% endif %}. {% if review_count %}Note {{ avg_rating|floatformat:1 }}/5 par {{ review_count }} client{{ review_count|pluralize }}. {% endif %}Commandez directement par WhatsApp.{% endblock %}
+
+{% block og_title %}{{ restaurant.name }} — E-Shelle Resto{% endblock %}
+{% block og_description %}{{ restaurant.name }} à {{ restaurant.city.name }}, Cameroun.{% if review_count %} Noté {{ avg_rating|floatformat:1 }}/5 par {{ review_count }} client{{ review_count|pluralize }}.{% endif %} Commandez par WhatsApp.{% endblock %}
+{% block og_image %}{% if restaurant.cover_image and restaurant.cover_image.name %}{{ restaurant.cover_image.url }}{% endif %}{% endblock %}
+
+{% block extra_head %}
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "{{ restaurant.name|escapejs }}",
+  "description": "{{ restaurant.description|escapejs|truncatechars:200 }}",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "{{ restaurant.address|escapejs }}",
+    "addressLocality": "{{ restaurant.city.name|escapejs }}",
+    "addressCountry": "CM"
+  },
+  "telephone": "{{ restaurant.phone }}",
+  "url": "{{ request.build_absolute_uri }}",
+  {% if restaurant.cover_image and restaurant.cover_image.name %}"image": "{{ request.scheme }}://{{ request.get_host }}{{ restaurant.cover_image.url }}",{% endif %}
+  "openingHours": "Mo-Su {{ restaurant.opening_time|date:'H:i' }}-{{ restaurant.closing_time|date:'H:i' }}",
+  "servesCuisine": [{% for cat in restaurant.categories.all %}"{{ cat.name|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}]
+  {% if avg_rating and review_count %},
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{{ avg_rating|floatformat:1 }}",
+    "reviewCount": "{{ review_count }}",
+    "bestRating": "5",
+    "worstRating": "1"
+  }
+  {% endif %}
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<!-- ── Bannière aperçu (visible uniquement par le propriétaire avant approbation) ── -->
+{% if is_preview %}
+<div class="bg-amber-400 text-amber-900 text-sm font-medium text-center py-2.5 px-4 flex items-center justify-center gap-2">
+  <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+  </svg>
+  Mode aperçu — Votre restaurant est en attente d'approbation. Il sera visible par tous après validation.
+  <a href="{% url 'resto:dashboard_home' %}" class="underline font-semibold ml-1">← Retour au tableau de bord</a>
+</div>
+{% endif %}
+
+<!-- ── Cover Image ───────────────────────────────────────────────────────────── -->
+<div class="relative h-52 md:h-72 bg-gray-200 overflow-hidden">
+  {% if restaurant.cover_image and restaurant.cover_image.name %}
+  <img src="{{ restaurant.cover_image.url }}"
+       alt="Photo de couverture — {{ restaurant.name }}"
+       loading="lazy"
+       class="w-full h-full object-cover" />
+  <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+
+  <!-- Status badge on cover -->
+  <div class="absolute top-4 left-4">
+    {{ restaurant|status_badge }}
+  </div>
+
+  <!-- Views count -->
+  <div class="absolute top-4 right-4 flex items-center gap-1 bg-black/40 backdrop-blur-sm text-white text-xs px-2.5 py-1 rounded-full">
+    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+    {{ restaurant.views_count }}
+  </div>
+
+  {% else %}
+  <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-orange-100 to-yellow-50">
+    <span class="text-8xl opacity-30">🍽️</span>
+  </div>
+  {% endif %}
+</div>
+
+<!-- ── Restaurant Info Card ──────────────────────────────────────────────────── -->
+<div class="max-w-3xl mx-auto px-4 -mt-10 relative z-10 mb-6">
+  <div class="bg-white rounded-2xl shadow-xl p-5 border border-gray-100">
+    <div class="flex gap-4 items-start">
+      <!-- Logo -->
+      <div class="flex-shrink-0 w-18 h-18 rounded-xl overflow-hidden border-2 border-white shadow-md bg-orange-50 flex items-center justify-center" style="width:72px;height:72px">
+        {% if restaurant.logo and restaurant.logo.name %}
+        <img src="{{ restaurant.logo.url }}" alt="Logo {{ restaurant.name }}" loading="lazy" class="w-full h-full object-cover" />
+        {% else %}
+        <span class="text-3xl">🍽️</span>
+        {% endif %}
+      </div>
+
+      <!-- Name + info -->
+      <div class="flex-1 min-w-0">
+        <div class="flex items-start justify-between gap-2 flex-wrap">
+          <h1 class="text-xl font-bold text-gray-900 leading-tight">{{ restaurant.name }}</h1>
+          {% if not restaurant.cover_image %}{{ restaurant|status_badge }}{% endif %}
+        </div>
+
+        <!-- Star rating summary -->
+        {% if avg_rating and review_count %}
+        <div class="flex items-center gap-1.5 mt-1">
+          <div class="flex text-amber-400 text-sm">
+            {% for i in "12345" %}
+            {% if forloop.counter <= avg_rating %}★{% else %}☆{% endif %}
+            {% endfor %}
+          </div>
+          <span class="text-sm font-semibold text-gray-700">{{ avg_rating|floatformat:1 }}</span>
+          <span class="text-xs text-gray-400">({{ review_count }} avis)</span>
+        </div>
+        {% endif %}
+
+        <!-- Categories -->
+        <div class="flex flex-wrap gap-1.5 mt-2">
+          {% for cat in restaurant.categories.all %}
+          <span class="text-xs px-2 py-0.5 bg-orange-50 text-orange-700 rounded-full font-medium">{{ cat.icon }} {{ cat.name }}</span>
+          {% endfor %}
+        </div>
+
+        <!-- Location -->
+        <div class="flex items-center gap-1.5 mt-2 text-xs text-gray-500">
+          <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+          </svg>
+          {{ restaurant.address }}{% if restaurant.neighborhood %} — {{ restaurant.neighborhood.name }}{% endif %}, {{ restaurant.city.name }}
+        </div>
+
+        <!-- Hours -->
+        <div class="flex items-center gap-1.5 mt-1 text-xs text-gray-500">
+          <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          {{ restaurant.opening_time|split_time }} – {{ restaurant.closing_time|split_time }}
+          {% if restaurant.is_open_now %}
+          <span class="text-green-600 font-medium">· Ouvert maintenant</span>
+          {% else %}
+          <span class="text-red-500 font-medium">· Fermé</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    {% if restaurant.description %}
+    <p class="mt-4 text-sm text-gray-600 leading-relaxed border-t border-gray-50 pt-4">{{ restaurant.description }}</p>
+    {% endif %}
+
+    <!-- Actions row -->
+    <div class="flex items-center gap-2 mt-4">
+      <!-- WhatsApp -->
+      <a href="{{ restaurant.whatsapp_url }}"
+         target="_blank" rel="noopener noreferrer"
+         hx-post="{% url 'resto:track_contact' %}"
+         hx-vals='{"restaurant_id": "{{ restaurant.pk }}", "action": "whatsapp"}'
+         hx-trigger="click"
+         hx-swap="none"
+         class="flex-1 flex items-center justify-center gap-2 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-xl transition text-sm shadow-sm shadow-green-200">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        Commander WhatsApp
+      </a>
+
+      <!-- Call -->
+      <a href="{{ restaurant.phone_url }}"
+         hx-post="{% url 'resto:track_contact' %}"
+         hx-vals='{"restaurant_id": "{{ restaurant.pk }}", "action": "call"}'
+         hx-trigger="click"
+         hx-swap="none"
+         class="flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition text-sm shadow-sm shadow-blue-200">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+        </svg>
+        Appeler
+      </a>
+
+      <!-- Favorite -->
+      {% if user.is_authenticated %}
+      <div id="favorite-btn">
+        {% include "resto/partials/favorite_button.html" %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- ── Main Content ───────────────────────────────────────────────────────────── -->
+<div class="max-w-3xl mx-auto px-4 pb-32 md:pb-10">
+
+  <!-- ── Menu Section ── -->
+  <section class="mb-10">
+    <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+      <span class="w-1 h-6 bg-resto-primary rounded-full inline-block"></span>
+      Menu
+    </h2>
+
+    {% for menu_cat in menu_categories %}
+    <div class="mb-8">
+      <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3 flex items-center gap-2">
+        <span class="w-5 h-px bg-gray-200 inline-block"></span>
+        {{ menu_cat.name }}
+        <span class="w-5 h-px bg-gray-200 inline-block flex-1"></span>
+      </h3>
+      <div class="space-y-3">
+        {% for dish in menu_cat.dishes.all %}
+        {% if dish.is_active %}
+        {% include "resto/partials/dish_row.html" with dish=dish restaurant=restaurant %}
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+
+    {% if uncategorized_dishes %}
+    <div class="mb-8">
+      <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3 flex items-center gap-2">
+        <span class="w-5 h-px bg-gray-200 inline-block"></span>
+        Autres plats
+        <span class="w-5 h-px bg-gray-200 inline-block flex-1"></span>
+      </h3>
+      <div class="space-y-3">
+        {% for dish in uncategorized_dishes %}
+        {% include "resto/partials/dish_row.html" with dish=dish restaurant=restaurant %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if not menu_categories and not uncategorized_dishes %}
+    <div class="text-center py-12 text-gray-400 bg-gray-50 rounded-2xl">
+      <span class="text-5xl block mb-3">📋</span>
+      <p class="text-sm font-medium">Le menu sera disponible bientôt.</p>
+    </div>
+    {% endif %}
+  </section>
+
+  <!-- ── Reviews Section ──────────────────────────────────────────────────────── -->
+  <section id="avis" class="mb-10">
+    <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+      <span class="w-1 h-6 bg-amber-400 rounded-full inline-block"></span>
+      Avis clients
+      {% if review_count %}<span class="text-sm font-normal text-gray-400">({{ review_count }})</span>{% endif %}
+    </h2>
+
+    <!-- Rating summary -->
+    {% if review_count %}
+    <div class="bg-amber-50 border border-amber-100 rounded-2xl p-5 mb-6 flex gap-6 items-center flex-wrap">
+      <!-- Big score -->
+      <div class="text-center flex-shrink-0">
+        <p class="text-5xl font-black text-amber-500">{{ avg_rating|floatformat:1 }}</p>
+        <div class="flex justify-center text-amber-400 text-lg mt-1">
+          {% for i in "12345" %}{% if forloop.counter <= avg_rating %}★{% else %}☆{% endif %}{% endfor %}
+        </div>
+        <p class="text-xs text-gray-500 mt-1">{{ review_count }} avis</p>
+      </div>
+      <!-- Bar chart per star -->
+      <div class="flex-1 min-w-0 space-y-1.5">
+        {% for star, count in rating_dist %}
+        <div class="flex items-center gap-2 text-xs">
+          <span class="text-gray-500 w-5 text-right">{{ star }}★</span>
+          <div class="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden">
+            {% if review_count %}
+            <div class="bg-amber-400 h-2 rounded-full transition-all"
+                 style="width:{% widthratio count review_count 100 %}%"></div>
+            {% endif %}
+          </div>
+          <span class="text-gray-400 w-4">{{ count }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Approved reviews list -->
+    {% if reviews %}
+    <div class="space-y-4 mb-6">
+      {% for review in reviews %}
+      <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <!-- Avatar initials -->
+            <div class="w-9 h-9 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
+              <span class="text-sm font-bold text-orange-600">{{ review.author_name|first|upper }}</span>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-900">{{ review.author_name }}</p>
+              <p class="text-xs text-gray-400">{{ review.created_at|date:"d M Y" }}</p>
+            </div>
+          </div>
+          <!-- Stars -->
+          <div class="flex text-amber-400 text-sm flex-shrink-0">
+            {% for i in review.stars_full %}★{% endfor %}{% for i in review.stars_empty %}☆{% endfor %}
+          </div>
+        </div>
+        <p class="mt-3 text-sm text-gray-700 leading-relaxed">{{ review.comment }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    {% elif not review_count %}
+    <div class="text-center py-8 bg-gray-50 rounded-2xl mb-6">
+      <span class="text-4xl block mb-2">💬</span>
+      <p class="text-sm text-gray-500">Soyez le premier à laisser un avis !</p>
+    </div>
+    {% endif %}
+
+    <!-- Review form -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5"
+         x-data="{
+           rating: 0,
+           hovered: 0,
+           setRating(n) { this.rating = n; document.getElementById('rating-value').value = n; },
+           submitted: false,
+         }">
+      <h3 class="text-base font-semibold text-gray-900 mb-4">Laisser un avis</h3>
+
+      {% if messages %}
+      {% for msg in messages %}
+      <div class="mb-4 p-3 rounded-xl text-sm {% if msg.tags == 'success' %}bg-green-50 text-green-700 border border-green-200{% else %}bg-red-50 text-red-700 border border-red-200{% endif %}">
+        {{ msg }}
+      </div>
+      {% endfor %}
+      {% endif %}
+
+      <form method="post" action="{% url 'resto:submit_review' restaurant.slug %}">
+        {% csrf_token %}
+
+        <!-- Star picker -->
+        <div class="mb-5">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Votre note</label>
+          <div class="flex gap-1">
+            {% for i in "12345" %}
+            <button type="button"
+                    @click="setRating({{ forloop.counter }})"
+                    @mouseenter="hovered = {{ forloop.counter }}"
+                    @mouseleave="hovered = 0"
+                    class="text-3xl transition-transform hover:scale-110 focus:outline-none"
+                    :class="(hovered || rating) >= {{ forloop.counter }} ? 'text-amber-400' : 'text-gray-200'">
+              ★
+            </button>
+            {% endfor %}
+          </div>
+          <input type="hidden" id="rating-value" name="rating" :value="rating" />
+          <p x-show="rating === 0" class="text-xs text-red-500 mt-1" style="display:none">
+            Veuillez choisir une note.
+          </p>
+          <p x-show="rating > 0" class="text-xs text-gray-500 mt-1"
+             x-text="['', 'Très mauvais', 'Mauvais', 'Correct', 'Bien', 'Excellent !'][rating]">
+          </p>
+        </div>
+
+        <!-- Author name -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1.5" for="id_author_name">Votre prénom</label>
+          <input type="text" name="author_name" id="id_author_name"
+                 maxlength="100" required
+                 placeholder="Marie, Jean, Fatou…"
+                 class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400 transition" />
+        </div>
+
+        <!-- Comment -->
+        <div class="mb-5">
+          <label class="block text-sm font-medium text-gray-700 mb-1.5" for="id_comment">Votre avis</label>
+          <textarea name="comment" id="id_comment"
+                    rows="3" maxlength="800" required
+                    placeholder="Partagez votre expérience… (qualité, ambiance, rapidité)"
+                    class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400 transition"></textarea>
+          <p class="text-xs text-gray-400 mt-1">Minimum 10 caractères — votre avis sera visible après modération.</p>
+        </div>
+
+        <button type="submit"
+                @click="if(rating === 0) { $event.preventDefault(); document.querySelector('[x-show=\'rating === 0\']').style.display='block'; }"
+                class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl transition text-sm shadow-sm shadow-amber-200">
+          Envoyer mon avis
+        </button>
+      </form>
+    </div>
+  </section>
+
+</div>
+
+<!-- ── Sticky Mobile CTA Bar ─────────────────────────────────────────────────── -->
+<div class="md:hidden fixed bottom-16 left-0 right-0 z-30 px-4 pb-2">
+  <div class="flex gap-3 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200 p-3">
+    <a href="{{ restaurant.whatsapp_url }}"
+       target="_blank" rel="noopener noreferrer"
+       hx-post="{% url 'resto:track_contact' %}"
+       hx-vals='{"restaurant_id": "{{ restaurant.pk }}", "action": "whatsapp"}'
+       hx-trigger="click"
+       hx-swap="none"
+       class="flex-1 flex items-center justify-center gap-2 py-3 bg-green-500 text-white font-semibold rounded-xl text-sm">
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+      WhatsApp
+    </a>
+    <a href="{{ restaurant.phone_url }}"
+       hx-post="{% url 'resto:track_contact' %}"
+       hx-vals='{"restaurant_id": "{{ restaurant.pk }}", "action": "call"}'
+       hx-trigger="click"
+       hx-swap="none"
+       class="flex-1 flex items-center justify-center gap-2 py-3 bg-blue-600 text-white font-semibold rounded-xl text-sm">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+      </svg>
+      Appeler
+    </a>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,175 @@
+{% extends "resto/dashboard/base_dashboard.html" %}
+{% load static %}
+
+{% block title %}Mon profil — {{ restaurant.name }}{% endblock %}
+{% block dash_nav_profile %}bg-orange-50 text-resto-primary font-semibold{% endblock %}
+{% block mob_profile %}text-resto-primary{% endblock %}
+
+{% block dashboard_content %}
+<div class="space-y-6">
+  <div>
+    <h1 class="text-xl font-bold text-gray-900">Mon profil</h1>
+    <p class="text-sm text-gray-500">Modifiez les informations de votre restaurant.</p>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+    <form method="post" enctype="multipart/form-data" novalidate x-data="profileForm()">
+      {% csrf_token %}
+
+      <!-- ── Photos ── -->
+      <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Photos</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+
+        <!-- Cover image -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Photo de couverture</label>
+          <div class="relative">
+            <div class="w-full h-36 rounded-xl overflow-hidden bg-gray-100 border border-gray-200 mb-2">
+              <img :src="coverPreview || '{% if restaurant.cover_image %}{{ restaurant.cover_image.url }}{% endif %}'"
+                   x-show="coverPreview || '{% if restaurant.cover_image %}true{% endif %}'"
+                   alt="Aperçu couverture"
+                   class="w-full h-full object-cover" />
+              <div x-show="!coverPreview && !{{ restaurant.cover_image|yesno:'true,false' }}"
+                   class="w-full h-full flex items-center justify-center text-gray-300 text-sm">
+                Aucune photo
+              </div>
+            </div>
+            <input type="file" name="cover_image" accept="image/*"
+                   @change="previewImage($event, 'cover')"
+                   class="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-orange-50 file:text-resto-primary hover:file:bg-orange-100" />
+            {% if form.cover_image.errors %}<p class="text-red-500 text-xs mt-1">{{ form.cover_image.errors.0 }}</p>{% endif %}
+          </div>
+        </div>
+
+        <!-- Logo -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Logo</label>
+          <div class="relative">
+            <div class="w-24 h-24 rounded-xl overflow-hidden bg-gray-100 border border-gray-200 mb-2">
+              <img :src="logoPreview || '{% if restaurant.logo %}{{ restaurant.logo.url }}{% endif %}'"
+                   x-show="logoPreview || '{% if restaurant.logo %}true{% endif %}'"
+                   alt="Aperçu logo"
+                   class="w-full h-full object-cover" />
+              <div x-show="!logoPreview && !{{ restaurant.logo|yesno:'true,false' }}"
+                   class="w-full h-full flex items-center justify-center text-gray-300 text-sm">
+                Logo
+              </div>
+            </div>
+            <input type="file" name="logo" accept="image/*"
+                   @change="previewImage($event, 'logo')"
+                   class="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-orange-50 file:text-resto-primary hover:file:bg-orange-100" />
+            {% if form.logo.errors %}<p class="text-red-500 text-xs mt-1">{{ form.logo.errors.0 }}</p>{% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- ── General Info ── -->
+      <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4 pt-4 border-t border-gray-100">Informations générales</h2>
+      <div class="space-y-4 mb-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.name.label }}</label>
+          {{ form.name }}
+          {% if form.name.errors %}<p class="text-red-500 text-xs mt-1">{{ form.name.errors.0 }}</p>{% endif %}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.description.label }}</label>
+          {{ form.description }}
+          {% if form.description.errors %}<p class="text-red-500 text-xs mt-1">{{ form.description.errors.0 }}</p>{% endif %}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">{{ form.categories.label }}</label>
+          <div class="flex flex-wrap gap-3">
+            {{ form.categories }}
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Location ── -->
+      <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4 pt-4 border-t border-gray-100">Localisation</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.city.label }}</label>
+          {{ form.city }}
+          {% if form.city.errors %}<p class="text-red-500 text-xs mt-1">{{ form.city.errors.0 }}</p>{% endif %}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.neighborhood.label }}</label>
+          {{ form.neighborhood }}
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.address.label }}</label>
+          {{ form.address }}
+          {% if form.address.errors %}<p class="text-red-500 text-xs mt-1">{{ form.address.errors.0 }}</p>{% endif %}
+        </div>
+      </div>
+
+      <!-- ── Contact ── -->
+      <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4 pt-4 border-t border-gray-100">Contact</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.phone.label }}</label>
+          {{ form.phone }}
+          {% if form.phone.errors %}<p class="text-red-500 text-xs mt-1">{{ form.phone.errors.0 }}</p>{% endif %}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.whatsapp.label }}</label>
+          {{ form.whatsapp }}
+          {% if form.whatsapp.errors %}<p class="text-red-500 text-xs mt-1">{{ form.whatsapp.errors.0 }}</p>{% endif %}
+        </div>
+      </div>
+
+      <!-- ── Horaires + Statut ── -->
+      <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4 pt-4 border-t border-gray-100">Horaires et statut</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.opening_time.label }}</label>
+          {{ form.opening_time }}
+          {% if form.opening_time.errors %}<p class="text-red-500 text-xs mt-1">{{ form.opening_time.errors.0 }}</p>{% endif %}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.closing_time.label }}</label>
+          {{ form.closing_time }}
+          {% if form.closing_time.errors %}<p class="text-red-500 text-xs mt-1">{{ form.closing_time.errors.0 }}</p>{% endif %}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.status.label }}</label>
+          {{ form.status }}
+        </div>
+      </div>
+
+      <!-- Non-field errors -->
+      {% if form.non_field_errors %}
+      <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700">
+        {{ form.non_field_errors }}
+      </div>
+      {% endif %}
+
+      <button type="submit"
+              class="w-full md:w-auto px-8 py-3 bg-resto-primary hover:bg-orange-700 text-white font-bold rounded-xl transition">
+        Enregistrer les modifications
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function profileForm() {
+  return {
+    coverPreview: null,
+    logoPreview: null,
+    previewImage(event, type) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        if (type === 'cover') this.coverPreview = e.target.result;
+        else this.logoPreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+}
+</script>
+{% endblock %}

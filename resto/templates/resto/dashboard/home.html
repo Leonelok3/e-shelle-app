@@ -1,0 +1,174 @@
+{% extends "resto/dashboard/base_dashboard.html" %}
+{% load static resto_tags %}
+
+{% block title %}Tableau de bord — {{ restaurant.name }}{% endblock %}
+{% block dash_nav_home %}bg-orange-50 text-resto-primary font-semibold{% endblock %}
+{% block mob_home %}text-resto-primary{% endblock %}
+
+{% block dashboard_content %}
+<div class="space-y-6">
+
+  <!-- Page title + status toggle -->
+  <div class="flex items-center justify-between flex-wrap gap-3">
+    <div>
+      <h1 class="text-xl font-bold text-gray-900">Tableau de bord</h1>
+      <p class="text-sm text-gray-500">Bonjour, voici un résumé de votre activité.</p>
+    </div>
+    <!-- Quick status toggle -->
+    <div x-data="{ open: false }" class="relative">
+      <button @click="open = !open"
+              class="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 bg-white shadow-sm text-sm font-medium hover:bg-gray-50 transition">
+        <span class="inline-block w-2.5 h-2.5 rounded-full
+                     {% if restaurant.status == 'open' %}bg-green-500
+                     {% elif restaurant.status == 'opening_soon' %}bg-amber-400
+                     {% else %}bg-red-500{% endif %}"></span>
+        {{ restaurant.status_label }}
+        <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div x-show="open" @click.away="open = false"
+           class="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-20 min-w-[160px]">
+        {% for val, label in restaurant.STATUS_CHOICES %}
+        <form method="post" action="{% url 'resto:dashboard_home' %}">
+          {% csrf_token %}
+          <input type="hidden" name="status" value="{{ val }}" />
+          <button type="submit"
+                  class="w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 transition
+                         {% if restaurant.status == val %}text-resto-primary font-semibold{% else %}text-gray-700{% endif %}">
+            {{ label }}
+          </button>
+        </form>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Subscription alert ── -->
+  {% if restaurant.subscription %}
+  {% if restaurant.subscription.is_expired %}
+  <div class="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+    <div>
+      <strong>Abonnement expiré.</strong> Votre restaurant n'est plus visible.
+      Contactez-nous sur WhatsApp pour renouveler.
+    </div>
+  </div>
+  {% elif restaurant.subscription.days_remaining <= 7 %}
+  <div class="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-sm">
+    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <div>Votre abonnement expire dans <strong>{{ restaurant.subscription.days_remaining }} jours</strong>. Renouvelez-le pour continuer à être visible.</div>
+  </div>
+  {% endif %}
+  {% endif %}
+
+  <!-- ── Stat cards ── -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <!-- Total views -->
+    <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-semibold text-gray-400 uppercase">Vues totales</span>
+        <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+          <svg class="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+        </div>
+      </div>
+      <p class="text-2xl font-bold text-gray-900">{{ today_views }}</p>
+      <p class="text-xs text-gray-400 mt-0.5">depuis la création</p>
+    </div>
+
+    <!-- Today contacts -->
+    <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-semibold text-gray-400 uppercase">Contacts auj.</span>
+        <div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center">
+          <svg class="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        </div>
+      </div>
+      <p class="text-2xl font-bold text-gray-900">{{ today_contacts }}</p>
+      <p class="text-xs text-gray-400 mt-0.5">aujourd'hui</p>
+    </div>
+
+    <!-- WhatsApp today -->
+    <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-semibold text-gray-400 uppercase">WhatsApp auj.</span>
+        <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+          <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a9.172 9.172 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+        </div>
+      </div>
+      <p class="text-2xl font-bold text-gray-900">{{ today_whatsapp }}</p>
+      <p class="text-xs text-gray-400 mt-0.5">aujourd'hui</p>
+    </div>
+
+    <!-- Calls today -->
+    <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-semibold text-gray-400 uppercase">Appels auj.</span>
+        <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+          <svg class="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+        </div>
+      </div>
+      <p class="text-2xl font-bold text-gray-900">{{ today_calls }}</p>
+      <p class="text-xs text-gray-400 mt-0.5">aujourd'hui</p>
+    </div>
+  </div>
+
+  <!-- ── Quick links ── -->
+  <div class="grid grid-cols-2 gap-3">
+    <a href="{% url 'resto:dashboard_menu' %}"
+       class="flex items-center gap-3 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:border-resto-primary/30 hover:bg-orange-50 transition">
+      <div class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
+        <svg class="w-5 h-5 text-resto-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-gray-900">Ajouter un plat</p>
+        <p class="text-xs text-gray-500">Mettre à jour mon menu</p>
+      </div>
+    </a>
+    <a href="{% url 'resto:dashboard_profile' %}"
+       class="flex items-center gap-3 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:border-resto-primary/30 hover:bg-orange-50 transition">
+      <div class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
+        <svg class="w-5 h-5 text-resto-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-gray-900">Modifier mon profil</p>
+        <p class="text-xs text-gray-500">Photos, horaires, adresse</p>
+      </div>
+    </a>
+  </div>
+
+  <!-- ── Recent contacts ── -->
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+      <h2 class="font-semibold text-gray-900">Derniers contacts</h2>
+      <a href="{% url 'resto:dashboard_analytics' %}" class="text-xs text-resto-primary font-semibold hover:underline">Voir stats →</a>
+    </div>
+    {% if recent_logs %}
+    <div class="divide-y divide-gray-50">
+      {% for log in recent_logs %}
+      <div class="flex items-center gap-3 px-5 py-3">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0
+                    {% if log.action == 'whatsapp' %}bg-green-50{% else %}bg-blue-50{% endif %}">
+          {% if log.action == 'whatsapp' %}
+          <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a9.172 9.172 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+          {% else %}
+          <svg class="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          {% endif %}
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-gray-900">
+            {{ log.get_action_display }}
+            {% if log.dish %}<span class="text-gray-500">· {{ log.dish.name }}</span>{% endif %}
+          </p>
+          <p class="text-xs text-gray-400">{{ log.created_at|date:"d/m/Y H:i" }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="px-5 py-10 text-center text-gray-400 text-sm">
+      Aucun contact pour l'instant. Partagez votre page !
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "resto/base.html" %}
+{% load static %}
+
+{% block title %}Inscrire mon restaurant — E-Shelle Resto{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-10 px-4">
+  <div class="max-w-xl mx-auto">
+
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-resto-primary/10 mb-4">
+        <span class="text-3xl">🍽️</span>
+      </div>
+      <h1 class="text-2xl font-bold text-gray-900">Inscrivez votre restaurant</h1>
+      <p class="text-gray-500 text-sm mt-2">Essai gratuit 30 jours · Sans engagement · Commandez via WhatsApp</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- ── Informations personnelles ── -->
+        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Vos informations</h2>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.first_name.label }}</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}<p class="text-red-500 text-xs mt-1">{{ form.first_name.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.last_name.label }}</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}<p class="text-red-500 text-xs mt-1">{{ form.last_name.errors.0 }}</p>{% endif %}
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.email.label }}</label>
+          {{ form.email }}
+          {% if form.email.errors %}<p class="text-red-500 text-xs mt-1">{{ form.email.errors.0 }}</p>{% endif %}
+        </div>
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.password.label }}</label>
+          {{ form.password }}
+          {% if form.password.errors %}<p class="text-red-500 text-xs mt-1">{{ form.password.errors.0 }}</p>{% endif %}
+        </div>
+
+        <!-- ── Informations restaurant ── -->
+        <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4 pt-4 border-t border-gray-100">Votre restaurant</h2>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.restaurant_name.label }}</label>
+          {{ form.restaurant_name }}
+          {% if form.restaurant_name.errors %}<p class="text-red-500 text-xs mt-1">{{ form.restaurant_name.errors.0 }}</p>{% endif %}
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.city.label }}</label>
+          {{ form.city }}
+          {% if form.city.errors %}<p class="text-red-500 text-xs mt-1">{{ form.city.errors.0 }}</p>{% endif %}
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.address.label }}</label>
+          {{ form.address }}
+          {% if form.address.errors %}<p class="text-red-500 text-xs mt-1">{{ form.address.errors.0 }}</p>{% endif %}
+        </div>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.phone.label }}</label>
+            {{ form.phone }}
+            {% if form.phone.errors %}<p class="text-red-500 text-xs mt-1">{{ form.phone.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.whatsapp.label }}</label>
+            {{ form.whatsapp }}
+            {% if form.whatsapp.errors %}<p class="text-red-500 text-xs mt-1">{{ form.whatsapp.errors.0 }}</p>{% endif %}
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.opening_time.label }}</label>
+            {{ form.opening_time }}
+            {% if form.opening_time.errors %}<p class="text-red-500 text-xs mt-1">{{ form.opening_time.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.closing_time.label }}</label>
+            {{ form.closing_time }}
+            {% if form.closing_time.errors %}<p class="text-red-500 text-xs mt-1">{{ form.closing_time.errors.0 }}</p>{% endif %}
+          </div>
+        </div>
+
+        <!-- Non-field errors -->
+        {% if form.non_field_errors %}
+        <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700">
+          {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <button type="submit"
+                class="w-full py-3 bg-resto-primary hover:bg-orange-700 text-white font-bold rounded-xl transition text-base">
+          Créer mon restaurant gratuitement
+        </button>
+
+        <p class="text-center text-xs text-gray-400 mt-4">
+          En vous inscrivant, vous acceptez nos conditions d'utilisation. Essai gratuit de 30 jours, sans carte bancaire.
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
