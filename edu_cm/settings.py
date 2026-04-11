@@ -79,6 +79,9 @@ INSTALLED_APPS = [
 
     # ── AdGen — Générateur de publicités IA ───────────────────────
     "adgen.apps.AdgenConfig",
+
+    # ── E-Shelle Gaz — Livraison de gaz domestique ────────────────
+    "gaz.apps.GazConfig",
 ]
 
 # AdGen

@@ -1,0 +1,301 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Depots de gaz {% if ville_active %}&mdash; {{ ville_active.nom }}{% endif %} &mdash; E-Shelle Gaz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #030712; color: #fff; }
+    .depot-card { transition: transform .2s, box-shadow .2s; }
+    .depot-card:hover { transform: translateY(-3px); box-shadow: 0 16px 32px rgba(255,107,0,.15); }
+    @keyframes pulse-ring {
+      0%   { transform: scale(.9); opacity: .7; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+    .live-dot::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse-ring 1.5s ease-out infinite;
+    }
+    .filter-pill { transition: all .15s; }
+    .filter-pill:hover, .filter-pill.active { background: linear-gradient(135deg,#FF6B00,#FFD700); color: #fff; border-color: transparent; }
+    .verified-glow { box-shadow: 0 0 0 1px rgba(34,197,94,.3), 0 4px 20px rgba(34,197,94,.08); }
+    .featured-glow { box-shadow: 0 0 0 1px rgba(255,107,0,.4), 0 4px 20px rgba(255,107,0,.1); }
+  </style>
+</head>
+<body class="antialiased min-h-screen">
+
+<!-- Navbar -->
+<nav class="sticky top-0 z-40 border-b" style="background:rgba(3,7,18,.9);backdrop-filter:blur(20px);border-color:rgba(255,255,255,.06)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-4">
+    <a href="{% url 'gaz:accueil' %}" class="flex items-center gap-2.5 flex-shrink-0">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm"
+           style="background:linear-gradient(135deg,#FF6B00,#FFD700)">G</div>
+      <span class="font-black text-white hidden sm:block">E-Shelle <span style="color:#FF6B00">Gaz</span></span>
+    </a>
+    <div class="ml-auto flex items-center gap-3">
+      {% if user.is_authenticated %}
+      <a href="{% url 'accounts:mon_compte' %}" class="text-sm font-medium text-white/60 hover:text-white transition">Mon Compte</a>
+      {% else %}
+      <a href="{% url 'accounts:login' %}" class="text-sm font-medium text-white/60 hover:text-white transition">Connexion</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<!-- Header page -->
+<div class="px-4 py-10 text-center relative overflow-hidden">
+  <div class="absolute inset-0" style="background:radial-gradient(ellipse 60% 80% at 50% 0%,rgba(255,107,0,.12),transparent)"></div>
+  <div class="relative">
+    <div class="text-4xl mb-3">&#128293;</div>
+    <h1 class="text-2xl sm:text-3xl font-black text-white mb-2">
+      {% if ville_active %}Depots a {{ ville_active.nom }}{% else %}Tous les depots de gaz{% endif %}
+    </h1>
+    <p class="text-white/40 text-sm">
+      <span class="text-orange-400 font-bold">{{ nb_results }}</span>
+      depot{{ nb_results|pluralize }} disponible{{ nb_results|pluralize }}
+    </p>
+  </div>
+</div>
+
+<!-- Filtres + Grille -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
+
+  <!-- Filtres -->
+  <div class="mb-8 space-y-4">
+
+    <!-- Recherche -->
+    <form method="get" class="relative">
+      {% if ville_slug %}<input type="hidden" name="ville" value="{{ ville_slug }}">{% endif %}
+      {% if marque_slug %}<input type="hidden" name="marque" value="{{ marque_slug }}">{% endif %}
+      {% if rapide %}<input type="hidden" name="rapide" value="1">{% endif %}
+      {% if nuit %}<input type="hidden" name="nuit" value="1">{% endif %}
+      {% if taille %}<input type="hidden" name="taille" value="{{ taille }}">{% endif %}
+      <input type="search" name="q" value="{{ q }}"
+             placeholder="Rechercher par nom, quartier, zone de livraison..."
+             class="w-full px-5 py-3.5 rounded-2xl text-sm text-white placeholder-white/30 outline-none focus:ring-2 transition"
+             style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);focus:ring-color:rgba(255,107,0,.5)"/>
+      <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-orange-400 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </button>
+    </form>
+
+    <!-- Pills de filtres -->
+    <div class="flex flex-wrap gap-2">
+      <!-- Villes -->
+      <a href="{% url 'gaz:catalogue' %}"
+         class="filter-pill text-xs font-bold px-3.5 py-1.5 rounded-full border border-white/10 text-white/60 {% if not ville_slug %}active{% endif %}">
+        Toutes villes
+      </a>
+      {% for ville in villes %}
+      <a href="?ville={{ ville.slug }}"
+         class="filter-pill text-xs font-bold px-3.5 py-1.5 rounded-full border border-white/10 text-white/60 {% if ville_slug == ville.slug %}active{% endif %}">
+        {{ ville.nom }}
+      </a>
+      {% endfor %}
+    </div>
+
+    <!-- Sous-filtres -->
+    <div class="flex flex-wrap gap-2 items-center">
+      <!-- Quartiers -->
+      {% if quartiers_list %}
+      <form method="get" class="flex flex-wrap gap-2">
+        <input type="hidden" name="ville" value="{{ ville_slug }}">
+        {% if q %}<input type="hidden" name="q" value="{{ q }}">{% endif %}
+        <select name="quartier" onchange="this.form.submit()"
+                class="text-xs border rounded-xl px-3 py-1.5 outline-none transition"
+                style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:#fff">
+          <option value="">Tous les quartiers</option>
+          {% for qrt in quartiers_list %}
+          <option value="{{ qrt.pk }}" {% if quartier_id == qrt.pk|stringformat:"s" %}selected{% endif %}>
+            {{ qrt.nom }}
+          </option>
+          {% endfor %}
+        </select>
+      </form>
+      {% endif %}
+
+      <!-- Tailles -->
+      <form method="get" class="flex flex-wrap gap-2">
+        {% if ville_slug %}<input type="hidden" name="ville" value="{{ ville_slug }}">{% endif %}
+        {% if q %}<input type="hidden" name="q" value="{{ q }}">{% endif %}
+        <select name="taille" onchange="this.form.submit()"
+                class="text-xs border rounded-xl px-3 py-1.5 outline-none"
+                style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:#fff">
+          <option value="">Toute taille</option>
+          {% for val, lbl in tailles_choices %}
+          <option value="{{ val }}" {% if taille == val %}selected{% endif %}>{{ lbl }}</option>
+          {% endfor %}
+        </select>
+      </form>
+
+      <!-- Toggle rapide -->
+      <a href="?{% if ville_slug %}ville={{ ville_slug }}&{% endif %}{% if not rapide %}rapide=1{% endif %}{% if q %}&q={{ q }}{% endif %}"
+         class="filter-pill text-xs font-bold px-3.5 py-1.5 rounded-full border border-white/10 text-white/60 flex items-center gap-1.5 {% if rapide %}active{% endif %}">
+        <span>&#9889;</span> Livraison express
+      </a>
+
+      <!-- Toggle nuit -->
+      <a href="?{% if ville_slug %}ville={{ ville_slug }}&{% endif %}{% if not nuit %}nuit=1{% endif %}{% if q %}&q={{ q }}{% endif %}"
+         class="filter-pill text-xs font-bold px-3.5 py-1.5 rounded-full border border-white/10 text-white/60 flex items-center gap-1.5 {% if nuit %}active{% endif %}">
+        <span>&#127763;</span> Livraison nuit
+      </a>
+
+      <!-- Marques -->
+      {% for marque in marques %}
+      <a href="?{% if ville_slug %}ville={{ ville_slug }}&{% endif %}marque={{ marque.slug }}"
+         class="filter-pill text-xs font-bold px-3.5 py-1.5 rounded-full border border-white/10 text-white/60 {% if marque_slug == marque.slug %}active{% endif %}">
+        {{ marque.nom }}
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Grille des depots -->
+  {% if depots %}
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+    {% for depot in depots %}
+    <a href="{% url 'gaz:detail' depot.slug %}"
+       class="depot-card group flex flex-col rounded-3xl overflow-hidden border
+              {% if depot.is_featured %}featured-glow border-orange-500/20{% elif depot.is_verified %}verified-glow border-green-500/15{% else %}border-white/5{% endif %}"
+       style="background:rgba(255,255,255,.03);backdrop-filter:blur(10px)">
+
+      <!-- Thumbnail -->
+      <div class="relative h-40 flex items-center justify-center overflow-hidden"
+           style="background:linear-gradient(135deg,rgba(255,107,0,.1),rgba(255,200,0,.06))">
+        {% if depot.photo %}
+        <img src="{{ depot.photo.url }}" alt="{{ depot.nom }}"
+             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+        {% else %}
+        <div class="text-6xl" style="filter:drop-shadow(0 0 20px rgba(255,150,0,.5))">&#128293;</div>
+        {% endif %}
+
+        <!-- Badges top -->
+        <div class="absolute top-3 left-3 flex gap-1.5 flex-wrap">
+          {% if depot.is_featured %}
+          <span class="text-xs font-black px-2 py-1 rounded-full text-white" style="background:linear-gradient(135deg,#FF6B00,#FFD700)">&#11088; Vedette</span>
+          {% endif %}
+          {% if depot.is_verified %}
+          <span class="text-xs font-black px-2 py-1 rounded-full bg-green-500/90 text-white">&#10003; Verifie</span>
+          {% endif %}
+        </div>
+
+        <!-- Badge express -->
+        {% if depot.livraison_rapide %}
+        <div class="absolute top-3 right-3">
+          <span class="text-xs font-black px-2 py-1 rounded-full text-white" style="background:rgba(0,0,0,.6);backdrop-filter:blur(4px)">
+            &#9889; {{ depot.delai_livraison }}
+          </span>
+        </div>
+        {% endif %}
+
+        <!-- Badge nuit -->
+        {% if depot.livraison_nuit %}
+        <div class="absolute bottom-3 right-3">
+          <span class="text-xs font-bold px-2 py-1 rounded-full text-white" style="background:rgba(99,102,241,.8)">&#127763; Nuit</span>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Infos -->
+      <div class="p-4 flex flex-col flex-1">
+        <h3 class="font-black text-white text-sm leading-snug mb-1.5">{{ depot.nom }}</h3>
+
+        <div class="flex items-center gap-1.5 text-xs text-white/40 mb-2">
+          <span>&#128205;</span>
+          <span>{{ depot.quartier.nom|default:depot.ville.nom }}, {{ depot.ville.nom }}</span>
+        </div>
+
+        <!-- Note -->
+        {% if depot.nb_avis > 0 %}
+        <div class="flex items-center gap-1.5 mb-2">
+          <span class="text-orange-400 text-xs">
+            {% for i in "12345" %}{% if forloop.counter <= depot.etoiles %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}
+          </span>
+          <span class="text-xs text-white/30">{{ depot.nb_avis }} avis</span>
+        </div>
+        {% endif %}
+
+        <!-- Tailles disponibles -->
+        {% if depot.tailles %}
+        <div class="flex flex-wrap gap-1 mb-3">
+          {% for t in depot.tailles_display %}
+          <span class="text-xs px-2 py-0.5 rounded-full font-semibold text-orange-300"
+                style="background:rgba(255,107,0,.12);border:1px solid rgba(255,107,0,.2)">
+            {{ t }}
+          </span>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Prix -->
+        {% if depot.prix_6kg or depot.prix_12kg %}
+        <div class="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-white/40 mb-3">
+          {% if depot.prix_6kg %}<span>6kg &mdash; <strong class="text-orange-400">{{ depot.prix_6kg }} FCFA</strong></span>{% endif %}
+          {% if depot.prix_12kg %}<span>12kg &mdash; <strong class="text-orange-400">{{ depot.prix_12kg }} FCFA</strong></span>{% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Marques -->
+        {% if depot.marques.exists %}
+        <div class="flex flex-wrap gap-1 mb-4">
+          {% for m in depot.marques.all %}
+          <span class="text-xs px-2 py-0.5 rounded-full font-semibold text-white/50"
+                style="background:rgba(255,255,255,.06)">{{ m.nom }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- CTA contact -->
+        <div class="flex gap-2 mt-auto">
+          <a href="{{ depot.whatsapp_url }}" target="_blank" rel="noopener noreferrer"
+             onclick="event.stopPropagation()"
+             class="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-black text-white transition hover:opacity-90 active:scale-95"
+             style="background:#25D366">
+            &#128242; WhatsApp
+          </a>
+          <a href="{{ depot.tel_url }}" onclick="event.stopPropagation()"
+             class="flex items-center justify-center px-3.5 py-2.5 rounded-xl text-xs font-black text-white transition hover:opacity-90 active:scale-95"
+             style="background:rgba(59,130,246,.8)">
+            &#128222;
+          </a>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <!-- Aucun resultat -->
+  <div class="text-center py-24">
+    <div class="text-6xl mb-6">&#128269;</div>
+    <h3 class="text-xl font-black text-white mb-3">Aucun depot trouve</h3>
+    <p class="text-white/40 text-sm mb-8 max-w-sm mx-auto">
+      Essayez de modifier vos filtres ou de choisir une autre ville.
+    </p>
+    <a href="{% url 'gaz:catalogue' %}"
+       class="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl font-bold text-white transition hover:opacity-90"
+       style="background:linear-gradient(135deg,#FF6B00,#FFD700)">
+      Voir tous les depots
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+
+<footer class="border-t py-6 px-4 text-center text-sm text-white/20" style="border-color:rgba(255,255,255,.05);background:#030712">
+  <a href="/" class="font-black hover:text-white transition" style="color:#FF6B00">E-Shelle</a>
+  &mdash; Livraison de gaz &mdash; Made in Cameroun &#127464;&#127474;
+</footer>
+
+</body>
+</html>

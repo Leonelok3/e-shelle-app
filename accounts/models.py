@@ -17,6 +17,7 @@ class AppKey(models.TextChoices):
     FORMATIONS = "formations", "Formations"
     BOUTIQUE   = "boutique",   "Boutique"
     AGRO       = "agro",       "E-Shelle Agro"
+    GAZ        = "gaz",        "E-Shelle Gaz"
 
 APP_ICONS = {
     "adgen":      "✨",
@@ -27,6 +28,7 @@ APP_ICONS = {
     "formations": "📚",
     "boutique":   "🛒",
     "agro":       "🌿",
+    "gaz":        "🔥",
 }
 
 APP_COLORS = {
@@ -38,6 +40,7 @@ APP_COLORS = {
     "formations": "#8B5CF6",
     "boutique":   "#10B981",
     "agro":       "#84CC16",
+    "gaz":        "#FF6B00",
 }
 
 

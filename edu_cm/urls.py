@@ -66,6 +66,9 @@ urlpatterns = [
     # ── AdGen — Générateur de publicités IA ──────────────────────────
     path("pub/", include("adgen.urls", namespace="adgen")),
 
+    # ── E-Shelle Gaz — Livraison de gaz domestique ───────────────────
+    path("gaz/", include("gaz.urls", namespace="gaz")),
+
     # Page d'accueil
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
 ]
