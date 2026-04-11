@@ -1,0 +1,678 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mon Compte — E-Shelle</title>
+  <meta name="description" content="Gérez votre compte, vos abonnements et votre profil E-Shelle."/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+          colors: {
+            brand: { primary:'#1B6534', accent:'#F5C518', dark:'#0d3320' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --brand-primary: #1B6534;
+      --brand-accent:  #F5C518;
+      --brand-dark:    #0d3320;
+    }
+    body { font-family: 'Inter', sans-serif; background: #f8fafc; }
+
+    /* Gradient hero */
+    .hero-bg {
+      background: linear-gradient(135deg, #0d3320 0%, #1B6534 60%, #2d9a55 100%);
+    }
+
+    /* Glass card */
+    .glass {
+      background: rgba(255,255,255,.10);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 1.25rem;
+    }
+
+    /* Tab system */
+    .tab-btn { transition: all .15s; }
+    .tab-btn.active { background: var(--brand-primary); color: white; }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* Sub card hover */
+    .sub-card { transition: box-shadow .2s, transform .2s; }
+    .sub-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.08); transform: translateY(-1px); }
+
+    /* Status badge */
+    .badge-active   { background:#dcfce7; color:#15803d; }
+    .badge-trial    { background:#dbeafe; color:#1d4ed8; }
+    .badge-expired  { background:#fee2e2; color:#dc2626; }
+    .badge-cancelled{ background:#f3f4f6; color:#6b7280; }
+    .badge-pending  { background:#fef9c3; color:#854d0e; }
+
+    /* Avatar ring */
+    .avatar-ring {
+      background: linear-gradient(135deg, var(--brand-primary), #2d9a55, var(--brand-accent));
+      padding: 3px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .avatar-inner {
+      background: var(--brand-dark);
+      border-radius: 50%;
+      width: 72px; height: 72px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.75rem; font-weight: 900; color: white;
+    }
+    input.form-field, textarea.form-field, select.form-field {
+      width: 100%;
+      border: 1.5px solid #e5e7eb;
+      border-radius: .75rem;
+      padding: .65rem 1rem;
+      font-size: .9rem;
+      background: white;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    input.form-field:focus, textarea.form-field:focus {
+      border-color: var(--brand-primary);
+      box-shadow: 0 0 0 3px rgba(27,101,52,.12);
+    }
+  </style>
+</head>
+<body class="antialiased min-h-screen">
+
+  <!-- Django messages -->
+  {% if messages %}
+  <div class="fixed top-4 right-4 z-50 space-y-2 max-w-sm">
+    {% for m in messages %}
+    <div class="flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-sm font-semibold
+      {% if m.tags == 'success' %}bg-green-600 text-white
+      {% elif m.tags == 'error' %}bg-red-600 text-white
+      {% elif m.tags == 'warning' %}bg-amber-500 text-white
+      {% else %}bg-gray-800 text-white{% endif %}"
+      id="msg-{{ forloop.counter }}">
+      <span class="flex-1">{{ m }}</span>
+      <button onclick="this.parentElement.remove()" class="opacity-70 hover:opacity-100 text-lg">&times;</button>
+    </div>
+    {% endfor %}
+  </div>
+  <script>document.querySelectorAll('[id^="msg-"]').forEach(t=>setTimeout(()=>t.remove(),5000));</script>
+  {% endif %}
+
+  <!-- Navbar -->
+  <nav class="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-4">
+      <a href="/" class="flex items-center gap-2.5 flex-shrink-0">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white font-black text-base shadow-sm"
+             style="background:linear-gradient(135deg,#1B6534,#2d9a55)">E</div>
+        <div class="leading-none">
+          <span class="font-black text-gray-900 text-lg">E</span><span class="font-black text-lg" style="color:var(--brand-primary)">-Shelle</span>
+          <div class="text-xs text-gray-400 font-medium -mt-0.5">Plateforme SaaS</div>
+        </div>
+      </a>
+      <div class="hidden md:flex items-center gap-1 ml-4">
+        <a href="/" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition">Accueil</a>
+        <a href="{% url 'dashboard:index' %}" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition">Dashboard</a>
+        <a href="{% url 'accounts:upgrade' %}" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition">Nos offres</a>
+      </div>
+      <div class="ml-auto flex items-center gap-3">
+        <span class="hidden sm:block text-sm font-semibold text-gray-600">
+          {{ user.get_full_name|default:user.username }}
+        </span>
+        <a href="{% url 'accounts:logout' %}"
+           class="text-sm font-medium text-red-500 hover:text-red-700 transition px-3 py-2 rounded-lg hover:bg-red-50">
+          Déconnexion
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero-bg text-white px-4 py-10 sm:py-14">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-6">
+        <!-- Avatar -->
+        <div class="flex-shrink-0">
+          {% if profile.avatar %}
+          <div class="avatar-ring">
+            <img src="{{ profile.avatar.url }}" alt="Avatar"
+                 class="w-[72px] h-[72px] rounded-full object-cover block"/>
+          </div>
+          {% else %}
+          <div class="avatar-ring">
+            <div class="avatar-inner">
+              {{ user.first_name|first|upper|default:user.username|first|upper }}{{ user.last_name|first|upper }}
+            </div>
+          </div>
+          {% endif %}
+        </div>
+        <!-- Info -->
+        <div class="flex-1">
+          <h1 class="text-2xl sm:text-3xl font-black mb-1">
+            {{ user.get_full_name|default:user.username }}
+          </h1>
+          <p class="text-white/60 text-sm">{{ user.email }}</p>
+          <div class="flex flex-wrap gap-2 mt-3">
+            <span class="text-xs font-semibold px-3 py-1 rounded-full"
+                  style="background:rgba(255,255,255,.15)">
+              Membre depuis {{ user.date_joined|date:"M Y" }}
+            </span>
+            {% if stats.total_subs > 0 %}
+            <span class="text-xs font-semibold px-3 py-1 rounded-full"
+                  style="background:rgba(245,197,24,.25);color:#F5C518">
+              {{ stats.total_subs }} app{{ stats.total_subs|pluralize }} active{{ stats.total_subs|pluralize }}
+            </span>
+            {% endif %}
+          </div>
+        </div>
+        <!-- Stats glassmorphism -->
+        <div class="grid grid-cols-3 gap-3 sm:gap-4 flex-shrink-0">
+          <div class="glass px-4 py-3 text-center">
+            <div class="text-2xl font-black">{{ stats.total_subs }}</div>
+            <div class="text-white/60 text-xs mt-0.5">Abonnements</div>
+          </div>
+          <div class="glass px-4 py-3 text-center">
+            <div class="text-2xl font-black text-yellow-300">{{ stats.paid_subs }}</div>
+            <div class="text-white/60 text-xs mt-0.5">Payants</div>
+          </div>
+          <div class="glass px-4 py-3 text-center">
+            <div class="text-2xl font-black text-green-300">
+              {% if stats.total_spent > 0 %}{{ stats.total_spent|floatformat:0 }}{% else %}0{% endif %}
+            </div>
+            <div class="text-white/60 text-xs mt-0.5">FCFA dépensés</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+
+    <!-- Tab navigation -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3 mb-6 overflow-x-auto">
+      <div class="flex gap-1.5 min-w-max">
+        <button class="tab-btn active px-4 py-2 rounded-xl text-sm font-semibold text-gray-600" onclick="showTab('apps', this)">
+          🚀 Mes applications
+        </button>
+        <button class="tab-btn px-4 py-2 rounded-xl text-sm font-semibold text-gray-600" onclick="showTab('subscriptions', this)">
+          📋 Abonnements
+        </button>
+        <button class="tab-btn px-4 py-2 rounded-xl text-sm font-semibold text-gray-600" onclick="showTab('payments', this)">
+          💳 Paiements
+        </button>
+        <button class="tab-btn px-4 py-2 rounded-xl text-sm font-semibold text-gray-600" onclick="showTab('profile', this)">
+          👤 Mon profil
+        </button>
+        <button class="tab-btn px-4 py-2 rounded-xl text-sm font-semibold text-gray-600" onclick="showTab('security', this)">
+          🔒 Sécurité
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══ TAB: MES APPLICATIONS ═══════════════════════════════════ -->
+    <div class="tab-pane active" id="tab-apps">
+      <div class="mb-4 flex items-center justify-between">
+        <h2 class="text-lg font-bold text-gray-800">Applications E-Shelle</h2>
+        <a href="{% url 'accounts:upgrade' %}"
+           class="text-sm font-semibold px-4 py-2 rounded-xl text-white shadow-sm transition hover:opacity-90"
+           style="background:linear-gradient(135deg,#1B6534,#2d9a55)">
+          Découvrir les offres
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {% for app in apps_info %}
+        <div class="sub-card bg-white rounded-2xl border shadow-sm p-5
+          {% if app.active %}border-gray-100{% else %}border-dashed border-gray-200{% endif %}">
+          <div class="flex items-start justify-between mb-3">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+                 style="background:{{ app.color }}18">{{ app.icon }}</div>
+            {% if app.active %}
+            <span class="text-xs font-bold px-2 py-1 rounded-full badge-active">Actif</span>
+            {% else %}
+            <span class="text-xs font-bold px-2 py-1 rounded-full badge-cancelled">Non abonné</span>
+            {% endif %}
+          </div>
+          <h3 class="font-bold text-gray-800 text-sm mb-1">{{ app.label }}</h3>
+          {% if app.sub %}
+          <p class="text-xs text-gray-500 mb-1">{{ app.sub.plan.name }}</p>
+          {% if app.sub.days_remaining is not None %}
+          <div class="mt-2 mb-3">
+            <div class="flex justify-between text-xs text-gray-400 mb-1">
+              <span>Expire dans</span>
+              <span class="font-semibold {% if app.sub.is_expiring_soon %}text-amber-600{% else %}text-gray-600{% endif %}">
+                {{ app.sub.days_remaining }}j
+              </span>
+            </div>
+            <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+              {% with pct=app.sub.days_remaining|default:30 %}
+              <div class="h-full rounded-full transition-all"
+                   style="width:{% widthratio app.sub.days_remaining app.sub.plan.duration_days 100 %}%;background:{{ app.color }}"></div>
+              {% endwith %}
+            </div>
+          </div>
+          {% endif %}
+          {% else %}
+          <p class="text-xs text-gray-400 mb-3">Aucun abonnement actif</p>
+          {% endif %}
+          <div class="flex gap-2 mt-auto">
+            <!-- Lien vers l'app -->
+            <a href="/{{ app.key }}/"
+               class="flex-1 text-center text-xs font-bold px-3 py-2 rounded-xl text-white transition hover:opacity-90"
+               style="background:{{ app.color }}">
+              Ouvrir →
+            </a>
+            {% if not app.active %}
+            <a href="{% url 'accounts:upgrade' %}?app={{ app.key }}"
+               class="text-xs font-bold px-3 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 transition">
+              S'abonner
+            </a>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- ═══ TAB: ABONNEMENTS ════════════════════════════════════════ -->
+    <div class="tab-pane" id="tab-subscriptions">
+      <div class="mb-4 flex items-center justify-between">
+        <h2 class="text-lg font-bold text-gray-800">Mes abonnements</h2>
+        <a href="{% url 'accounts:upgrade' %}"
+           class="text-sm font-semibold px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 transition">
+          + Ajouter une app
+        </a>
+      </div>
+
+      {% if all_subs %}
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
+              <th class="px-5 py-3.5 text-left font-semibold">Application / Plan</th>
+              <th class="px-4 py-3.5 text-left font-semibold">Statut</th>
+              <th class="px-4 py-3.5 text-left font-semibold hidden sm:table-cell">Début</th>
+              <th class="px-4 py-3.5 text-left font-semibold hidden sm:table-cell">Expiration</th>
+              <th class="px-4 py-3.5 text-left font-semibold hidden md:table-cell">Prix</th>
+              <th class="px-5 py-3.5"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-50">
+            {% for sub in all_subs %}
+            <tr class="hover:bg-gray-50/60 transition">
+              <td class="px-5 py-3.5">
+                <div class="flex items-center gap-3">
+                  <span class="text-xl">{{ sub.plan.app_icon }}</span>
+                  <div>
+                    <div class="font-semibold text-gray-800">{{ sub.plan.name }}</div>
+                    <div class="text-xs text-gray-400">{{ sub.plan.get_app_key_display }}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-4 py-3.5">
+                <span class="text-xs font-bold px-2.5 py-1 rounded-full badge-{{ sub.status }}">
+                  {{ sub.get_status_display }}
+                </span>
+                {% if sub.is_expiring_soon and sub.is_active %}
+                <div class="text-xs text-amber-600 font-semibold mt-1">
+                  Expire dans {{ sub.days_remaining }}j
+                </div>
+                {% endif %}
+              </td>
+              <td class="px-4 py-3.5 text-xs text-gray-500 hidden sm:table-cell">
+                {{ sub.started_at|date:"d/m/Y" }}
+              </td>
+              <td class="px-4 py-3.5 text-xs hidden sm:table-cell">
+                {% if sub.expires_at %}
+                <span class="{% if sub.is_expiring_soon %}text-amber-600 font-semibold{% else %}text-gray-500{% endif %}">
+                  {{ sub.expires_at|date:"d/m/Y" }}
+                </span>
+                {% else %}
+                <span class="text-green-600 font-semibold">Illimité</span>
+                {% endif %}
+              </td>
+              <td class="px-4 py-3.5 text-xs font-semibold hidden md:table-cell">
+                {{ sub.plan.price_xaf_formatted }}
+              </td>
+              <td class="px-5 py-3.5 text-right">
+                {% if sub.is_active and sub.plan.price_xaf > 0 %}
+                <button onclick="confirmCancel({{ sub.pk }}, '{{ sub.plan.name|escapejs }}')"
+                        class="text-xs text-red-500 hover:text-red-700 font-medium hover:underline">
+                  Annuler
+                </button>
+                {% elif not sub.is_active %}
+                <a href="{% url 'accounts:upgrade' %}?app={{ sub.plan.app_key }}"
+                   class="text-xs font-bold px-3 py-1.5 rounded-lg text-white"
+                   style="background:{{ sub.plan.app_color }}">
+                  Renouveler
+                </a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="bg-white rounded-2xl border border-dashed border-gray-200 p-12 text-center">
+        <div class="text-5xl mb-4">📭</div>
+        <h3 class="text-lg font-bold text-gray-700 mb-2">Aucun abonnement</h3>
+        <p class="text-gray-400 text-sm mb-6">Explorez nos applications et choisissez ce qui vous convient.</p>
+        <a href="{% url 'accounts:upgrade' %}"
+           class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white"
+           style="background:linear-gradient(135deg,#1B6534,#2d9a55)">
+          Découvrir les offres
+        </a>
+      </div>
+      {% endif %}
+
+      <!-- Modal annulation -->
+      <div id="cancelModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6">
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Annuler l'abonnement</h3>
+          <p class="text-gray-500 text-sm mb-6" id="cancelMsg">
+            Êtes-vous sûr(e) de vouloir annuler cet abonnement ?
+            Vous conserverez l'accès jusqu'à la fin de la période payée.
+          </p>
+          <div class="flex gap-3">
+            <button onclick="closeCancelModal()"
+                    class="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50">
+              Annuler
+            </button>
+            <form id="cancelForm" method="post" class="flex-1">
+              {% csrf_token %}
+              <button type="submit"
+                      class="w-full px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-red-500 hover:bg-red-600">
+                Confirmer
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ TAB: PAIEMENTS ══════════════════════════════════════════ -->
+    <div class="tab-pane" id="tab-payments">
+      <h2 class="text-lg font-bold text-gray-800 mb-4">Historique des paiements</h2>
+
+      {% if payments %}
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
+              <th class="px-5 py-3.5 text-left font-semibold">Description</th>
+              <th class="px-4 py-3.5 text-left font-semibold hidden sm:table-cell">Méthode</th>
+              <th class="px-4 py-3.5 text-left font-semibold">Montant</th>
+              <th class="px-4 py-3.5 text-center font-semibold">Statut</th>
+              <th class="px-4 py-3.5 text-right font-semibold hidden sm:table-cell">Date</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-50">
+            {% for p in payments %}
+            <tr class="hover:bg-gray-50/60 transition">
+              <td class="px-5 py-3.5">
+                <div class="font-medium text-gray-800">
+                  {% if p.subscription %}{{ p.subscription.plan.name }}{% else %}{{ p.description|truncatechars:40 }}{% endif %}
+                </div>
+                <div class="text-xs text-gray-400 font-mono">{{ p.reference|truncatechars:24 }}</div>
+              </td>
+              <td class="px-4 py-3.5 text-gray-500 text-xs hidden sm:table-cell">{{ p.get_method_display }}</td>
+              <td class="px-4 py-3.5 font-bold text-gray-800">{{ p.amount_formatted }}</td>
+              <td class="px-4 py-3.5 text-center">
+                <span class="text-xs font-bold px-2.5 py-1 rounded-full
+                  {% if p.status == 'success' %}badge-active
+                  {% elif p.status == 'failed' %}badge-expired
+                  {% elif p.status == 'pending' %}badge-pending
+                  {% else %}badge-cancelled{% endif %}">
+                  {{ p.get_status_display }}
+                </span>
+              </td>
+              <td class="px-4 py-3.5 text-right text-xs text-gray-400 hidden sm:table-cell">
+                {{ p.created_at|date:"d/m/Y H:i" }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="bg-white rounded-2xl border border-dashed border-gray-200 p-12 text-center">
+        <div class="text-5xl mb-4">💳</div>
+        <h3 class="text-lg font-bold text-gray-700 mb-2">Aucun paiement encore</h3>
+        <p class="text-gray-400 text-sm">Vos transactions apparaîtront ici.</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- ═══ TAB: MON PROFIL ═════════════════════════════════════════ -->
+    <div class="tab-pane" id="tab-profile">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Formulaire -->
+        <div class="lg:col-span-2">
+          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+            <h2 class="text-lg font-bold text-gray-800 mb-6">Informations personnelles</h2>
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="hidden" name="save_profile" value="1"/>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-1.5">Prénom</label>
+                  <input type="text" name="first_name" class="form-field"
+                         value="{{ user.first_name }}" placeholder="Votre prénom"/>
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nom</label>
+                  <input type="text" name="last_name" class="form-field"
+                         value="{{ user.last_name }}" placeholder="Votre nom"/>
+                </div>
+              </div>
+              <div class="mb-5">
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email</label>
+                <input type="email" name="email" class="form-field"
+                       value="{{ user.email }}" placeholder="votre@email.com"/>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-1.5">Téléphone</label>
+                  <input type="text" name="telephone" class="form-field"
+                         value="{{ profile.telephone }}" placeholder="+237 6XX XXX XXX"/>
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-1.5">Ville</label>
+                  <input type="text" name="ville" class="form-field"
+                         value="{{ profile.ville }}" placeholder="Douala, Yaoundé…"/>
+                </div>
+              </div>
+              <div class="mb-5">
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Pays</label>
+                <input type="text" name="pays" class="form-field"
+                       value="{{ profile.pays|default:'Cameroun' }}" placeholder="Cameroun"/>
+              </div>
+              <div class="mb-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Bio</label>
+                <textarea name="bio" rows="3" class="form-field resize-none"
+                          placeholder="Parlez de vous…">{{ profile.bio }}</textarea>
+              </div>
+              <div class="mb-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Photo de profil</label>
+                <input type="file" name="avatar" accept="image/*"
+                       class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:text-white cursor-pointer"
+                       style="--tw-file-bg:#1B6534"/>
+              </div>
+              <button type="submit"
+                      class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 rounded-xl font-bold text-white shadow-sm hover:opacity-90 transition"
+                      style="background:linear-gradient(135deg,#1B6534,#2d9a55)">
+                Enregistrer les modifications
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Sidebar infos -->
+        <div class="space-y-4">
+          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+            <h3 class="font-bold text-gray-800 mb-4 text-sm">Informations du compte</h3>
+            <dl class="space-y-3 text-sm">
+              <div class="flex justify-between">
+                <dt class="text-gray-500">Nom d'utilisateur</dt>
+                <dd class="font-semibold text-gray-800 font-mono">{{ user.username }}</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="text-gray-500">Rôle</dt>
+                <dd class="font-semibold text-gray-800">{{ user.get_role_display }}</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="text-gray-500">Inscription</dt>
+                <dd class="font-semibold text-gray-800">{{ user.date_joined|date:"d/m/Y" }}</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="text-gray-500">Dernière connexion</dt>
+                <dd class="font-semibold text-gray-800">{{ user.last_login|date:"d/m/Y H:i"|default:"—" }}</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+            <h3 class="font-bold text-gray-800 mb-3 text-sm">Avatar actuel</h3>
+            {% if profile.avatar %}
+            <img src="{{ profile.avatar.url }}" alt="Avatar"
+                 class="w-20 h-20 rounded-2xl object-cover border border-gray-100"/>
+            {% else %}
+            <div class="w-20 h-20 rounded-2xl flex items-center justify-center text-white text-2xl font-black"
+                 style="background:linear-gradient(135deg,#1B6534,#2d9a55)">
+              {{ user.first_name|first|upper|default:user.username|first|upper }}
+            </div>
+            {% endif %}
+            <p class="text-xs text-gray-400 mt-2">PNG, JPG — max 2 Mo</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ TAB: SÉCURITÉ ═══════════════════════════════════════════ -->
+    <div class="tab-pane" id="tab-security">
+      <div class="max-w-2xl">
+        <h2 class="text-lg font-bold text-gray-800 mb-6">Sécurité du compte</h2>
+
+        <!-- Changer mot de passe -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-4">
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+                 style="background:#dcfce7">🔑</div>
+            <div class="flex-1">
+              <h3 class="font-bold text-gray-800 mb-1">Mot de passe</h3>
+              <p class="text-sm text-gray-500 mb-4">
+                Utilisez un mot de passe fort d'au moins 12 caractères.
+              </p>
+              <a href="{% url 'accounts:password_change' %}"
+                 class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white transition hover:opacity-90"
+                 style="background:linear-gradient(135deg,#1B6534,#2d9a55)">
+                Changer le mot de passe
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zones danger -->
+        <div class="bg-white rounded-2xl border border-red-100 shadow-sm p-6">
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-red-50">⚠️</div>
+            <div class="flex-1">
+              <h3 class="font-bold text-gray-800 mb-1">Zone dangereuse</h3>
+              <p class="text-sm text-gray-500 mb-4">
+                Ces actions sont irréversibles. Procédez avec prudence.
+              </p>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                  <div>
+                    <div class="text-sm font-semibold text-gray-700">Déconnexion partout</div>
+                    <div class="text-xs text-gray-400">Déconnecte tous vos appareils actifs</div>
+                  </div>
+                  <a href="{% url 'accounts:logout' %}"
+                     class="text-sm font-bold px-4 py-2 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 transition">
+                    Déconnecter
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info email -->
+        <div class="mt-4 bg-blue-50 border border-blue-100 rounded-2xl p-4 flex gap-3">
+          <span class="text-xl flex-shrink-0">ℹ️</span>
+          <div class="text-sm text-blue-700">
+            <strong>Email vérifié :</strong> {{ user.email }}<br>
+            Pour changer votre email, modifiez-le dans l'onglet Profil et contactez le support pour re-vérification.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end max-w-7xl -->
+
+  <!-- Footer -->
+  <footer class="border-t border-gray-100 bg-white mt-16 py-6 text-center text-sm text-gray-400">
+    <p>
+      <span class="font-bold" style="color:var(--brand-primary)">E-Shelle</span>
+      &mdash; Plateforme SaaS africaine &bull; Made in Cameroun 🇨🇲
+    </p>
+  </footer>
+
+  <!-- Cancel form (hidden) -->
+  <form id="hiddenCancelForm" method="post" style="display:none"></form>
+
+<script>
+  // ── Tabs ─────────────────────────────────────────────────────
+  function showTab(id, btn) {
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    const pane = document.getElementById('tab-' + id);
+    if (pane) pane.classList.add('active');
+    if (btn) btn.classList.add('active');
+  }
+
+  // Lire le hash URL pour activer le bon onglet
+  document.addEventListener('DOMContentLoaded', () => {
+    const hash = window.location.hash.replace('#', '');
+    const validTabs = ['apps','subscriptions','payments','profile','security'];
+    if (hash && validTabs.includes(hash)) {
+      const btn = document.querySelector(`[onclick="showTab('${hash}', this)"]`);
+      if (btn) showTab(hash, btn);
+    }
+  });
+
+  // ── Cancel subscription modal ────────────────────────────────
+  function confirmCancel(pk, planName) {
+    document.getElementById('cancelMsg').textContent =
+      `Annuler "${planName}" ? Vous conserverez l'accès jusqu'à la fin de la période payée.`;
+    document.getElementById('cancelForm').action =
+      `/accounts/abonnement/${pk}/annuler/`;
+    const modal = document.getElementById('cancelModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  function closeCancelModal() {
+    const modal = document.getElementById('cancelModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+
+  // Fermer modal si clic extérieur
+  document.getElementById('cancelModal').addEventListener('click', function(e) {
+    if (e.target === this) closeCancelModal();
+  });
+</script>
+</body>
+</html>

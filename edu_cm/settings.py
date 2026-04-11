@@ -117,6 +117,8 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 # ── E-Shelle Resto ────────────────────────────────────
                 "resto.context_processors.resto_globals",
+                # ── Abonnements globaux (injecte user_subs dans tous les templates)
+                "accounts.context_processors.subscription_context",
             ],
         },
     },
