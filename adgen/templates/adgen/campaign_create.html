@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}AdGen — Nouvelle campagne{% endblock %}
+
+{% block extra_head %}
+<style>
+  :root { --adgen-primary: #6C3FE8; --adgen-accent: #F5A623; }
+  .module-card {
+    border: 2px solid #e5e7eb;
+    border-radius: .875rem;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all .15s;
+    background: white;
+  }
+  .module-card:hover { border-color: var(--adgen-primary); background: #f5f3ff; }
+  .module-card.selected { border-color: var(--adgen-primary); background: #ede9fe; }
+  .module-card input[type=checkbox] { display: none; }
+  .module-icon { font-size: 1.75rem; }
+  .spinner-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.6);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+  }
+  .spinner-overlay.active { display: flex; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Spinner overlay -->
+<div class="spinner-overlay" id="spinnerOverlay">
+  <div class="spinner-border text-light mb-3" style="width:3.5rem;height:3.5rem"></div>
+  <h5 class="fw-bold">Génération en cours...</h5>
+  <p class="opacity-75 small">Claude analyse votre produit et crée votre contenu</p>
+</div>
+
+<div class="container py-5" style="max-width:860px">
+
+  <!-- Header -->
+  <div class="mb-4">
+    <a href="{% url 'adgen:dashboard' %}" class="text-muted text-decoration-none small">← Retour</a>
+    <h2 class="fw-bold mt-2" style="color:var(--adgen-primary)">✨ Nouvelle campagne</h2>
+    <p class="text-muted">Renseignez votre produit, choisissez les modules, et l'IA génère votre contenu.</p>
+  </div>
+
+  <form method="post" id="campaignForm">
+    {% csrf_token %}
+
+    <!-- Étape 1 : Infos produit -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius:1.25rem">
+      <div class="card-body p-4">
+        <h5 class="fw-bold mb-4">
+          <span class="badge me-2" style="background:var(--adgen-primary);color:white;border-radius:.5rem">1</span>
+          Votre produit
+        </h5>
+
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label fw-semibold">{{ form.nom_produit.label }}</label>
+            {{ form.nom_produit }}
+            {% if form.nom_produit.errors %}
+            <div class="text-danger small mt-1">{{ form.nom_produit.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold">{{ form.description.label }}</label>
+            {{ form.description }}
+            <div class="form-text">Plus c'est détaillé, plus le contenu sera précis et vendeur.</div>
+            {% if form.description.errors %}
+            <div class="text-danger small mt-1">{{ form.description.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">{{ form.prix.label }}</label>
+            {{ form.prix }}
+            {% if form.prix.errors %}
+            <div class="text-danger small mt-1">{{ form.prix.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">{{ form.pays.label }}</label>
+            {{ form.pays }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">{{ form.cible.label }}</label>
+            {{ form.cible }}
+            {% if form.cible.errors %}
+            <div class="text-danger small mt-1">{{ form.cible.errors.0 }}</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Étape 2 : Modules -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius:1.25rem">
+      <div class="card-body p-4">
+        <h5 class="fw-bold mb-1">
+          <span class="badge me-2" style="background:var(--adgen-primary);color:white;border-radius:.5rem">2</span>
+          Choisissez vos modules
+        </h5>
+        <p class="text-muted small mb-4">Sélectionnez le type de contenu à générer (plusieurs choix possibles)</p>
+
+        <div class="row g-3" id="modulesGrid">
+          {% for mod in modules %}
+          <div class="col-sm-6 col-md-4">
+            <label class="module-card d-block" onclick="toggleModule(this)">
+              <input type="checkbox" name="modules" value="{{ mod.slug }}" {% if not mod.is_premium %}checked{% endif %}>
+              <div class="d-flex align-items-start gap-3">
+                <span class="module-icon">{{ mod.icon }}</span>
+                <div>
+                  <div class="fw-semibold">
+                    {{ mod.name }}
+                    {% if mod.is_premium %}
+                    <span class="badge ms-1" style="background:var(--adgen-accent);color:#111;font-size:.6rem">PRO</span>
+                    {% endif %}
+                  </div>
+                  <div class="small text-muted mt-0.5">{{ mod.description }}</div>
+                </div>
+              </div>
+            </label>
+          </div>
+          {% endfor %}
+        </div>
+        <div id="modulesError" class="text-danger small mt-2" style="display:none">Sélectionnez au moins un module.</div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="d-flex justify-content-between align-items-center">
+      <p class="text-muted small mb-0">
+        La génération prend environ 10-20 secondes.
+      </p>
+      <button type="submit" class="btn btn-lg fw-bold px-5" id="submitBtn"
+              style="background:var(--adgen-primary);color:white;border-radius:.875rem">
+        Générer le contenu ✨
+      </button>
+    </div>
+  </form>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Modules pré-sélectionnés
+  document.querySelectorAll('.module-card').forEach(card => {
+    const cb = card.querySelector('input[type=checkbox]');
+    if (cb && cb.checked) card.classList.add('selected');
+  });
+
+  function toggleModule(label) {
+    const cb = label.querySelector('input[type=checkbox]');
+    if (!cb) return;
+    setTimeout(() => {
+      label.classList.toggle('selected', cb.checked);
+    }, 0);
+  }
+
+  // Validation + spinner
+  document.getElementById('campaignForm').addEventListener('submit', function(e) {
+    const checked = document.querySelectorAll('input[name="modules"]:checked');
+    if (!checked.length) {
+      e.preventDefault();
+      document.getElementById('modulesError').style.display = 'block';
+      return;
+    }
+    document.getElementById('modulesError').style.display = 'none';
+    document.getElementById('spinnerOverlay').classList.add('active');
+    document.getElementById('submitBtn').disabled = true;
+  });
+</script>
+{% endblock %}

@@ -76,7 +76,14 @@ INSTALLED_APPS = [
 
     # ── Njangi Digital — Tontine & Fond commun numérique ──────────
     "njangi.apps.NjangiConfig",
+
+    # ── AdGen — Générateur de publicités IA ───────────────────────
+    "adgen.apps.AdgenConfig",
 ]
+
+# AdGen
+ADGEN_MAX_CAMPAIGNS_FREE = 5
+ADGEN_MAX_TOKENS_FREE    = 50000
 
 SITE_ID = 1
 

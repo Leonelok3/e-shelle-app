@@ -63,6 +63,9 @@ urlpatterns = [
     # ── Njangi Digital — Tontine & Fond commun numérique ─────────────
     path("njangi/", include("njangi.urls", namespace="njangi")),
 
+    # ── AdGen — Générateur de publicités IA ──────────────────────────
+    path("pub/", include("adgen.urls", namespace="adgen")),
+
     # Page d'accueil
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
 ]
