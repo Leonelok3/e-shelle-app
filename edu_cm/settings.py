@@ -73,6 +73,9 @@ INSTALLED_APPS = [
 
     # ── E-Shelle Resto — Découverte de restaurants au Cameroun ───
     "resto.apps.RestoConfig",
+
+    # ── Njangi Digital — Tontine & Fond commun numérique ──────────
+    "njangi.apps.NjangiConfig",
 ]
 
 SITE_ID = 1

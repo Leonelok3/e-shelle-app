@@ -1,0 +1,130 @@
+{% extends "njangi/bureau/dashboard.html" %}
+{% block page_title %}Prêts — {{ group.name }}{% endblock %}
+
+{% block dashboard_content %}
+
+<!-- En attente -->
+{% if pending_loans %}
+<div class="bg-white rounded-2xl shadow-sm border border-red-100 overflow-hidden mb-6">
+  <div class="px-5 py-4 border-b border-gray-50 bg-red-50 flex items-center gap-2">
+    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+    <h3 class="font-bold text-red-700">Demandes en attente ({{ pending_loans|length }})</h3>
+  </div>
+  <div class="divide-y divide-gray-50">
+    {% for loan in pending_loans %}
+    <div class="px-5 py-4">
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+        <div>
+          <p class="font-semibold text-gray-800">{{ loan.membership.user.get_full_name|default:loan.membership.user.username }}</p>
+          <p class="text-sm text-gray-500 mt-0.5">
+            {{ loan.amount_requested|floatformat:0 }} FCFA · {{ loan.duration_months }} mois
+          </p>
+          {% if loan.purpose %}<p class="text-xs text-gray-400 mt-1">{{ loan.purpose|truncatechars:80 }}</p>{% endif %}
+          {% if loan.guarantor %}<p class="text-xs text-gray-400">Garant : {{ loan.guarantor.user.get_full_name|default:loan.guarantor.user.username }}</p>{% endif %}
+        </div>
+        <div class="flex gap-2 flex-shrink-0">
+          <form method="post" action="{% url 'njangi:loan_approve' slug=group.slug pk=loan.pk %}">
+            {% csrf_token %}
+            <button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-green-600 text-white hover:bg-green-700">
+              ✓ Approuver
+            </button>
+          </form>
+          <form method="post" action="{% url 'njangi:loan_reject' slug=group.slug pk=loan.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="reason" value="Décision du bureau">
+            <button class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-100 text-red-700 hover:bg-red-200">
+              ✕ Refuser
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<!-- Prêts actifs -->
+{% if active_loans %}
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+  <div class="px-5 py-4 border-b border-gray-50">
+    <h3 class="font-bold text-gray-700">En cours ({{ active_loans|length }})</h3>
+  </div>
+  <div class="divide-y divide-gray-50">
+    {% for loan in active_loans %}
+    <div class="px-5 py-4">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-gray-800">{{ loan.membership.user.get_full_name|default:loan.membership.user.username }}</p>
+          <p class="text-xs text-gray-400 mt-0.5">
+            Accordé : {{ loan.amount_approved|floatformat:0 }} FCFA · Échéance : {{ loan.due_date|date:"d/m/Y" }}
+            {% if loan.is_overdue %}<span class="text-red-500 font-semibold ml-2">⚠ En retard</span>{% endif %}
+          </p>
+          <div class="mt-2 flex items-center gap-2">
+            <div class="flex-1 bg-gray-100 rounded-full h-2">
+              <div class="h-2 rounded-full bg-blue-500" style="width:{{ loan.repayment_progress_pct }}%"></div>
+            </div>
+            <span class="text-xs text-gray-500 font-semibold">{{ loan.repayment_progress_pct }}%</span>
+          </div>
+          <p class="text-xs text-gray-400 mt-1">
+            Remboursé : {{ loan.total_repaid|floatformat:0 }} / {{ loan.total_due|floatformat:0 }} FCFA
+            · Reste : {{ loan.balance_remaining|floatformat:0 }} FCFA
+          </p>
+        </div>
+        {% if loan.status == 'approved' %}
+        <form method="post" action="{% url 'njangi:loan_disburse' slug=group.slug pk=loan.pk %}">
+          {% csrf_token %}
+          <button class="px-3 py-1.5 rounded-lg text-xs font-semibold text-white" style="background:var(--njangi-primary)">
+            💸 Décaisser
+          </button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<!-- Clôturés -->
+{% if closed_loans %}
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+  <div class="px-5 py-4 border-b border-gray-50">
+    <h3 class="font-bold text-gray-500">Historique (20 derniers)</h3>
+  </div>
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="bg-gray-50 text-gray-400 text-xs uppercase">
+        <th class="px-5 py-2 text-left">Membre</th>
+        <th class="px-5 py-2 text-right">Montant</th>
+        <th class="px-5 py-2 text-center">Statut</th>
+        <th class="px-5 py-2 text-right">Date</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-50">
+      {% for loan in closed_loans %}
+      <tr>
+        <td class="px-5 py-2 text-gray-600">{{ loan.membership.user.get_full_name|default:loan.membership.user.username }}</td>
+        <td class="px-5 py-2 text-right font-semibold text-gray-600">{{ loan.amount_approved|floatformat:0 }} FCFA</td>
+        <td class="px-5 py-2 text-center">
+          <span class="px-2 py-0.5 rounded-full text-xs font-semibold
+            {% if loan.status == 'completed' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-600{% endif %}">
+            {{ loan.get_status_display }}
+          </span>
+        </td>
+        <td class="px-5 py-2 text-right text-gray-400 text-xs">{{ loan.requested_at|date:"d/m/Y" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+{% if not pending_loans and not active_loans and not closed_loans %}
+<div class="text-center py-16 text-gray-400">
+  <p class="text-5xl mb-3">📋</p>
+  <p>Aucun prêt pour ce groupe.</p>
+</div>
+{% endif %}
+
+{% endblock %}
