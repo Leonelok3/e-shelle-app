@@ -251,8 +251,12 @@ def mon_compte(request):
         if key not in active_subs and sub.is_active:
             active_subs[key] = sub
 
-    # Historique paiements (10 derniers)
-    payments = PaymentHistory.objects.filter(user=user).select_related("subscription__plan")[:10]
+    # Historique paiements — total dépensé AVANT le slice
+    payments_qs = PaymentHistory.objects.filter(user=user).select_related("subscription__plan")
+    total_spent = sum(
+        payments_qs.filter(status="success").values_list("amount_xaf", flat=True)
+    )
+    payments = payments_qs[:10]
 
     # Apps disponibles avec leur état
     apps_info = []
@@ -271,9 +275,8 @@ def mon_compte(request):
     stats = {
         "total_subs":  len(active_subs),
         "paid_subs":   sum(1 for s in active_subs.values() if s.plan.price_xaf > 0),
-        "total_spent": payments.filter(status="success").values_list("amount_xaf", flat=True),
+        "total_spent": total_spent,
     }
-    stats["total_spent"] = sum(stats["total_spent"])
 
     # Édition profil (POST)
     if request.method == "POST" and "save_profile" in request.POST:
