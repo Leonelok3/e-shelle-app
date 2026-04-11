@@ -9,7 +9,8 @@ from django.utils import timezone
 from .forms import LoginForm
 from .models import (
     Role, CustomUser, UserProfile, EmailVerification,
-    AppPlan, AppSubscription, PaymentHistory, AppKey, APP_ICONS, APP_COLORS,
+    AppPlan, AppSubscription, PaymentHistory, GlobalAccessCode,
+    AppKey, APP_ICONS, APP_COLORS,
 )
 
 
@@ -385,3 +386,34 @@ def cancel_subscription(request, pk):
             messages.warning(request, "Cet abonnement n'est pas actif.")
 
     return redirect("accounts:mon_compte")
+
+
+# ─────────────────────────────────────────────────────────────────
+#  ACTIVATION CODE D'ACCÈS
+# ─────────────────────────────────────────────────────────────────
+
+@login_required
+def activer_code(request):
+    """
+    Page d'activation d'un code d'accès reçu de l'admin E-Shelle.
+    Le client saisit son code → ses abonnements sont créés automatiquement.
+    """
+    activated = None
+
+    if request.method == "POST":
+        raw = request.POST.get("code", "").strip().upper().replace(" ", "-")
+
+        try:
+            code_obj = GlobalAccessCode.objects.get(code=raw)
+        except GlobalAccessCode.DoesNotExist:
+            messages.error(request, "Code invalide. Vérifiez et réessayez.")
+            return render(request, "accounts/activer_code.html", {"code_input": raw})
+
+        ok, msg = code_obj.activate(request.user)
+        if ok:
+            messages.success(request, f"Code activé avec succès ! {msg}")
+            activated = code_obj
+        else:
+            messages.error(request, msg)
+
+    return render(request, "accounts/activer_code.html", {"activated": activated})

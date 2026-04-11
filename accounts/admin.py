@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.utils.html import format_html
 from .models import (
     CustomUser, UserProfile, StudentProfile,
-    AppPlan, AppSubscription, PaymentHistory,
+    AppPlan, AppSubscription, PaymentHistory, GlobalAccessCode,
 )
 
 
@@ -150,3 +150,87 @@ class PaymentHistoryAdmin(admin.ModelAdmin):
     @admin.display(description="Description")
     def description_short(self, obj):
         return obj.description[:60] + "…" if len(obj.description) > 60 else obj.description
+
+
+# ─── Codes d'accès globaux ───────────────────────────────────────
+
+@admin.register(GlobalAccessCode)
+class GlobalAccessCodeAdmin(admin.ModelAdmin):
+    list_display  = (
+        "code_badge", "label", "apps_display_short", "duration_days",
+        "price_badge", "payment_method", "client_name",
+        "status_badge", "created_at",
+    )
+    list_filter   = ("is_used", "is_active", "payment_method", "duration_days")
+    search_fields = ("code", "label", "client_name", "client_phone", "payment_ref")
+    list_display_links = ("code_badge",)
+    date_hierarchy = "created_at"
+    ordering = ("-created_at",)
+    readonly_fields = ("code", "is_used", "activated_by", "activated_at", "expires_at", "created_at")
+
+    fieldsets = (
+        ("CODE GÉNÉRÉ AUTOMATIQUEMENT", {
+            "fields": ("code", "label"),
+            "description": "Le code est généré automatiquement. Envoyez-le au client par WhatsApp."
+        }),
+        ("CE QUE LE CODE DÉBLOQUE", {
+            "fields": ("apps", "duration_days"),
+            "description": (
+                'Exemples d\'apps : ["adgen", "njangi"] ou ["all"] pour toutes les apps. '
+                'App keys : adgen, resto, rencontres, njangi, edu, formations, boutique, agro'
+            )
+        }),
+        ("PAIEMENT REÇU", {
+            "fields": ("price_xaf", "payment_method", "payment_ref", "client_name", "client_phone")
+        }),
+        ("NOTES INTERNES", {
+            "fields": ("notes", "is_active")
+        }),
+        ("UTILISATION (lecture seule)", {
+            "fields": ("is_used", "activated_by", "activated_at", "expires_at", "created_at"),
+            "classes": ("collapse",)
+        }),
+    )
+
+    # ── Actions rapides ──────────────────────────────────────────
+    actions = ["desactiver_codes", "reactiver_codes"]
+
+    @admin.action(description="Désactiver les codes sélectionnés")
+    def desactiver_codes(self, request, queryset):
+        updated = queryset.filter(is_used=False).update(is_active=False)
+        self.message_user(request, f"{updated} code(s) désactivé(s).")
+
+    @admin.action(description="Réactiver les codes sélectionnés")
+    def reactiver_codes(self, request, queryset):
+        updated = queryset.update(is_active=True)
+        self.message_user(request, f"{updated} code(s) réactivé(s).")
+
+    # ── Badges affichage ─────────────────────────────────────────
+    @admin.display(description="Code")
+    def code_badge(self, obj):
+        color = "#6b7280" if obj.is_used else "#1B6534"
+        return format_html(
+            '<code style="background:#f0fdf4;color:{};font-size:.85rem;'
+            'padding:3px 8px;border-radius:6px;font-weight:700">{}</code>',
+            color, obj.code
+        )
+
+    @admin.display(description="Statut")
+    def status_badge(self, obj):
+        if not obj.is_active:
+            return format_html('<span style="background:#f3f4f6;color:#6b7280;padding:2px 8px;border-radius:12px;font-size:.75rem;font-weight:700">Désactivé</span>')
+        if obj.is_used:
+            return format_html('<span style="background:#dbeafe;color:#1d4ed8;padding:2px 8px;border-radius:12px;font-size:.75rem;font-weight:700">Utilisé ✓</span>')
+        return format_html('<span style="background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:12px;font-size:.75rem;font-weight:700">Disponible</span>')
+
+    @admin.display(description="Prix")
+    def price_badge(self, obj):
+        if obj.price_xaf == 0:
+            return format_html('<span style="color:#10b981;font-weight:600">Offert</span>')
+        return format_html('<strong style="color:#1B6534">{}</strong>', obj.price_formatted)
+
+    @admin.display(description="Applications")
+    def apps_display_short(self, obj):
+        if "all" in obj.apps:
+            return format_html('<span style="color:#7c3aed;font-weight:600">Toutes les apps</span>')
+        return ", ".join(obj.apps[:3]) + ("…" if len(obj.apps) > 3 else "")

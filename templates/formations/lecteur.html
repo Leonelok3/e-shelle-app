@@ -1,140 +1,199 @@
-{% extends "base.html" %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ lecon.titre }} &mdash; {{ formation.titre }}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .lecon-item.active { background: #8B5CF620; border-left: 3px solid #8B5CF6; }
+    .prose-content h1,.prose-content h2,.prose-content h3 { font-weight: 800; margin: 1.5rem 0 .75rem; }
+    .prose-content p { margin-bottom: 1rem; line-height: 1.75; }
+    .prose-content ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
+    .prose-content li { margin-bottom: .4rem; }
+    .prose-content strong { font-weight: 700; }
+    .prose-content code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: .875rem; }
+    .prose-content pre { background: #1e1e2e; color: #cdd6f4; padding: 1.25rem; border-radius: .75rem; overflow-x: auto; margin: 1.25rem 0; }
+    iframe.video-embed { width: 100%; aspect-ratio: 16/9; border-radius: .75rem; }
+  </style>
+</head>
+<body class="bg-gray-50 antialiased">
 
-{% block title %}{{ lecon.titre }} — {{ formation.titre }} — E-Shelle{% endblock %}
-{% block nav_formations %}active{% endblock %}
-
-{% block extra_head %}
-<style>
-  .lecteur-layout { display:grid; grid-template-columns:300px 1fr; min-height:calc(100vh - 5rem); }
-  .lecteur-sidebar { background:var(--bg-surface); border-right:1px solid var(--border); overflow-y:auto; position:sticky; top:5rem; height:calc(100vh - 5rem); }
-  .lecon-item { display:flex; align-items:center; gap:.6rem; padding:.65rem 1rem; border-bottom:1px solid rgba(255,255,255,.04); text-decoration:none; transition:background .2s; font-size:.83rem; }
-  .lecon-item:hover { background:rgba(46,125,50,.06); }
-  .lecon-item.active { background:rgba(46,125,50,.12); border-left:3px solid var(--primary-light); }
-  .lecon-item.done .lecon-check { background:var(--primary-light); color:#fff; }
-  .lecon-check { width:20px; height:20px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:.65rem; flex-shrink:0; }
-  .lecon-titre { flex:1; color:var(--text-secondary); line-height:1.4; }
-  .lecon-item.active .lecon-titre { color:var(--text-primary); font-weight:600; }
-  .lecteur-main { padding:2rem; max-width:900px; }
-  .video-container { position:relative; padding-bottom:56.25%; height:0; border-radius:var(--radius-lg); overflow:hidden; background:#000; margin-bottom:2rem; }
-  .video-container iframe, .video-container video { position:absolute; inset:0; width:100%; height:100%; border:none; }
-  @media(max-width:768px) {
-    .lecteur-layout { grid-template-columns:1fr; }
-    .lecteur-sidebar { position:static; height:auto; max-height:280px; }
-  }
-</style>
-{% endblock %}
-
-{% block content %}
-<div style="padding-top:5rem">
-  {# Barre du haut #}
-  <div style="background:var(--bg-surface);border-bottom:1px solid var(--border);padding:.75rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:5rem;z-index:50">
-    <a href="{% url 'formations:detail' slug=formation.slug %}" style="color:var(--text-muted);text-decoration:none;font-size:.85rem;display:flex;align-items:center;gap:.4rem">← {{ formation.titre|truncatechars:40 }}</a>
-    <div style="flex:1;height:6px;background:var(--bg-elevated);border-radius:99px;overflow:hidden;max-width:300px">
-      {% with pct=progression.lecon.chapitre.formation.inscription_set.first.progression_pct|default:0 %}
-      <div style="height:100%;width:{{ pct }}%;background:var(--gradient-cta);border-radius:99px;transition:width .5s"></div>
-      {% endwith %}
-    </div>
-    <div style="font-size:.78rem;color:var(--text-muted)">Leçon {{ lecon.ordre }}</div>
+<!-- Topbar compacte -->
+<nav class="bg-white border-b border-gray-100 h-14 flex items-center px-4 gap-4 sticky top-0 z-40 shadow-sm">
+  <a href="/" class="flex items-center gap-2 flex-shrink-0">
+    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-black text-sm"
+         style="background:linear-gradient(135deg,#1B6534,#2d9a55)">E</div>
+    <span class="font-black text-gray-900 hidden sm:block">E<span style="color:#1B6534">-Shelle</span></span>
+  </a>
+  <span class="text-gray-300">/</span>
+  <a href="{% url 'formations:detail' formation.slug %}"
+     class="text-sm font-semibold text-gray-600 hover:text-purple-700 transition truncate max-w-xs">
+    {{ formation.titre }}
+  </a>
+  <div class="ml-auto flex items-center gap-3">
+    <a href="{% url 'formations:mon_dashboard' %}" class="text-sm font-medium text-gray-500 hover:text-gray-700">Mon espace</a>
   </div>
+</nav>
 
-  <div class="lecteur-layout">
-    {# Sidebar leçons #}
-    <aside class="lecteur-sidebar">
-      <div style="padding:1rem;border-bottom:1px solid var(--border)">
-        <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)">Programme</div>
-      </div>
-      {% for l in lecons_all %}
-      <a href="{% url 'formations:lecteur' formation_slug=formation.slug lecon_id=l.pk %}"
-         class="lecon-item {% if l.pk == lecon.pk %}active{% endif %} {% if l.pk in completees %}done{% endif %}">
-        <div class="lecon-check">{% if l.pk in completees %}✓{% endif %}</div>
-        <span style="font-size:.9rem;flex-shrink:0">{% if l.type_contenu == 'video' %}🎬{% elif l.type_contenu == 'quiz' %}📝{% elif l.type_contenu == 'pdf' %}📄{% else %}📖{% endif %}</span>
-        <span class="lecon-titre">{{ l.titre }}</span>
-        {% if l.duree_minutes %}<span style="font-size:.7rem;color:var(--text-muted);flex-shrink:0">{{ l.duree_minutes }}m</span>{% endif %}
-      </a>
-      {% endfor %}
-    </aside>
+<!-- Layout lecteur -->
+<div class="flex h-[calc(100vh-3.5rem)] overflow-hidden">
 
-    {# Zone principale #}
-    <main class="lecteur-main">
-      {# Contenu vidéo #}
-      {% if lecon.video_url %}
-      <div class="video-container">
-        {% if "youtube.com" in lecon.video_url or "youtu.be" in lecon.video_url %}
-        <iframe src="{{ lecon.video_url }}" allowfullscreen loading="lazy" title="{{ lecon.titre }}"></iframe>
-        {% else %}
-        <video controls><source src="{{ lecon.video_url }}"></video>
-        {% endif %}
+  <!-- Sidebar cours -->
+  <aside class="w-80 bg-white border-r border-gray-100 flex-shrink-0 overflow-y-auto hidden lg:block">
+    <div class="p-4 border-b border-gray-100">
+      <h2 class="font-black text-gray-900 text-sm leading-snug">{{ formation.titre }}</h2>
+      {% if inscription_pct %}
+      <div class="mt-2">
+        <div class="flex justify-between text-xs text-gray-400 mb-1">
+          <span>Progression</span>
+          <span class="font-semibold text-purple-600">{{ inscription_pct }}%</span>
+        </div>
+        <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+          <div class="h-full bg-purple-500 rounded-full" style="width:{{ inscription_pct }}%"></div>
+        </div>
       </div>
       {% endif %}
+    </div>
+    <div class="divide-y divide-gray-50">
+      {% for l in lecons_all %}
+      <a href="{% url 'formations:lecteur' formation.slug l.pk %}"
+         class="lecon-item flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition
+                {% if l.pk == lecon.pk %}active{% endif %}">
+        <div class="mt-0.5 w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-xs
+                    {% if l.pk in completees %}bg-green-500 text-white{% elif l.pk == lecon.pk %}bg-purple-600 text-white{% else %}bg-gray-100 text-gray-400{% endif %}">
+          {% if l.pk in completees %}&#10003;{% elif l.pk == lecon.pk %}&bull;{% else %}{{ forloop.counter }}{% endif %}
+        </div>
+        <div class="min-w-0">
+          <div class="text-xs font-semibold text-gray-700 leading-snug truncate">{{ l.titre }}</div>
+          <div class="text-xs text-gray-400 mt-0.5">{{ l.duree }} min</div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </aside>
 
-      {# Titre + navigation #}
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:1rem">
-        <h1 style="font-family:var(--font-display);font-size:1.4rem;font-weight:700">{{ lecon.titre }}</h1>
-        <div style="display:flex;gap:.75rem">
-          {% if lecon_prev %}
-          <a href="{% url 'formations:lecteur' formation_slug=formation.slug lecon_id=lecon_prev.pk %}" class="btn btn-outline btn-sm">← Précédente</a>
-          {% endif %}
-          {% if lecon_next %}
-          <a href="{% url 'formations:lecteur' formation_slug=formation.slug lecon_id=lecon_next.pk %}" class="btn btn-primary btn-sm">Suivante →</a>
+  <!-- Contenu lecon -->
+  <main class="flex-1 overflow-y-auto">
+    <div class="max-w-3xl mx-auto px-4 sm:px-8 py-8">
+
+      <!-- En-tete lecon -->
+      <div class="mb-6">
+        <div class="flex items-center gap-2 text-xs text-purple-600 font-semibold mb-2">
+          <span>{{ lecon.chapitre.titre }}</span>
+        </div>
+        <h1 class="text-2xl font-black text-gray-900 mb-2">{{ lecon.titre }}</h1>
+        <div class="flex items-center gap-3 text-sm text-gray-400">
+          <span>
+            {% if lecon.type_lecon == 'video' %}Video
+            {% elif lecon.type_lecon == 'quiz' %}Quiz
+            {% elif lecon.type_lecon == 'pdf' %}Document PDF
+            {% elif lecon.type_lecon == 'tp' %}TP Pratique
+            {% else %}Article{% endif %}
+          </span>
+          <span>&bull;</span>
+          <span>{{ lecon.duree }} min</span>
+          {% if progression.completee %}
+          <span class="ml-2 text-green-600 font-semibold">&#10003; Termine</span>
           {% endif %}
         </div>
       </div>
 
-      {# Contenu texte #}
+      <!-- Video si presente -->
+      {% if lecon.video_url %}
+      <div class="mb-8">
+        {% if 'youtube.com' in lecon.video_url or 'youtu.be' in lecon.video_url %}
+        <div class="rounded-2xl overflow-hidden shadow-lg">
+          <iframe class="video-embed" src="{{ lecon.video_url }}" allowfullscreen></iframe>
+        </div>
+        {% else %}
+        <video controls class="w-full rounded-2xl shadow-lg" style="max-height:450px">
+          <source src="{{ lecon.video_url }}">
+        </video>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <!-- Contenu texte -->
       {% if lecon.contenu %}
-      <div class="glass-card" style="margin-bottom:1.5rem;line-height:1.8;color:var(--text-secondary);font-size:.92rem">
+      <div class="prose-content bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8 mb-8 text-gray-700 text-sm leading-relaxed">
         {{ lecon.contenu|safe }}
       </div>
       {% endif %}
 
-      {# PDF attaché #}
+      <!-- PDF -->
       {% if lecon.fichier_pdf %}
-      <div class="glass-card" style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
-        <div style="font-size:2rem">📄</div>
-        <div style="flex:1">
-          <div style="font-weight:600;font-size:.9rem">Ressource PDF</div>
-          <div style="font-size:.8rem;color:var(--text-muted)">Support de cours à télécharger</div>
-        </div>
-        <a href="{{ lecon.fichier_pdf.url }}" download class="btn btn-outline btn-sm">Télécharger</a>
+      <div class="mb-8">
+        <a href="{{ lecon.fichier_pdf.url }}" target="_blank"
+           class="flex items-center gap-3 bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition">
+          <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+            &#128196;
+          </div>
+          <div>
+            <div class="font-bold text-gray-800 text-sm">Document PDF</div>
+            <div class="text-xs text-gray-400 mt-0.5">Cliquez pour telecharger</div>
+          </div>
+          <span class="ml-auto text-purple-600 font-bold text-sm">Telecharger</span>
+        </a>
       </div>
       {% endif %}
 
-      {# Marquer comme terminée #}
-      <div style="border-top:1px solid var(--border);padding-top:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
-        {% if progression.completee %}
-        <div style="display:flex;align-items:center;gap:.5rem;color:var(--primary-light);font-weight:600">
-          ✅ Leçon terminée
-        </div>
-        {% else %}
-        <form method="post">
-          {% csrf_token %}
-          <button type="submit" name="complete" value="1" class="btn btn-primary" id="btn-complete"
-                  onclick="if(this.form.submit.bind){window.EShelle.launchConfetti()}">
-            ✅ Marquer comme terminée
-          </button>
-        </form>
-        {% endif %}
-        <div style="display:flex;gap:.75rem">
-          {% if lecon_prev %}
-          <a href="{% url 'formations:lecteur' formation_slug=formation.slug lecon_id=lecon_prev.pk %}" class="btn btn-outline">← Précédente</a>
-          {% endif %}
-          {% if lecon_next %}
-          <a href="{% url 'formations:lecteur' formation_slug=formation.slug lecon_id=lecon_next.pk %}" class="btn btn-primary">Suivante →</a>
-          {% else %}
-          <a href="{% url 'formations:detail' slug=formation.slug %}" class="btn btn-accent">🏆 Terminer la formation</a>
-          {% endif %}
-        </div>
+      <!-- Marquer comme termine -->
+      {% if not progression.completee %}
+      <form method="post" class="mb-6">
+        {% csrf_token %}
+        <button type="submit" name="complete" value="1"
+                class="w-full py-4 rounded-2xl font-black text-white text-sm transition hover:opacity-90"
+                style="background:linear-gradient(135deg,#22c55e,#16a34a)">
+          &#10003; Marquer comme termine et continuer
+        </button>
+      </form>
+      {% else %}
+      <div class="mb-6 bg-green-50 border border-green-100 rounded-2xl p-4 text-center">
+        <span class="text-green-700 font-bold text-sm">&#10003; Lecon completee !</span>
       </div>
-    </main>
-  </div>
+      {% endif %}
+
+      <!-- Navigation prev / next -->
+      <div class="flex gap-3 mb-10">
+        {% if lecon_prev %}
+        <a href="{% url 'formations:lecteur' formation.slug lecon_prev.pk %}"
+           class="flex-1 flex items-center gap-3 bg-white rounded-2xl border border-gray-100 shadow-sm p-4 hover:shadow-md transition group">
+          <span class="text-gray-400 group-hover:text-purple-600 font-black">&larr;</span>
+          <div class="min-w-0">
+            <div class="text-xs text-gray-400">Precedent</div>
+            <div class="text-sm font-semibold text-gray-700 truncate">{{ lecon_prev.titre }}</div>
+          </div>
+        </a>
+        {% else %}
+        <div class="flex-1"></div>
+        {% endif %}
+
+        {% if lecon_next %}
+        <a href="{% url 'formations:lecteur' formation.slug lecon_next.pk %}"
+           class="flex-1 flex items-center gap-3 bg-white rounded-2xl border border-gray-100 shadow-sm p-4 hover:shadow-md transition group justify-end text-right">
+          <div class="min-w-0">
+            <div class="text-xs text-gray-400">Suivant</div>
+            <div class="text-sm font-semibold text-gray-700 truncate">{{ lecon_next.titre }}</div>
+          </div>
+          <span class="text-gray-400 group-hover:text-purple-600 font-black">&rarr;</span>
+        </a>
+        {% else %}
+        <a href="{% url 'formations:mon_dashboard' %}"
+           class="flex-1 flex items-center justify-center gap-2 bg-purple-600 text-white rounded-2xl p-4 font-bold text-sm hover:bg-purple-700 transition">
+          Terminer le cours &#127881;
+        </a>
+        {% endif %}
+      </div>
+
+    </div>
+  </main>
+
 </div>
 
-{% if progression.completee == False %}
-<script>
-document.getElementById('btn-complete')?.addEventListener('click', function() {
-  setTimeout(() => window.EShelle?.launchConfetti?.(), 200);
-});
-</script>
-{% endif %}
-{% endblock %}
+</body>
+</html>

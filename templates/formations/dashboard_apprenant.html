@@ -1,144 +1,176 @@
-{% extends "base.html" %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mon Espace Formations &mdash; E-Shelle</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>body{font-family:'Inter',sans-serif;}.card{transition:transform .2s,box-shadow .2s;}.card:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(0,0,0,.08);}</style>
+</head>
+<body class="bg-gray-50 antialiased">
 
-{% block title %}Mes Formations — E-Shelle{% endblock %}
-{% block nav_formations %}active{% endblock %}
-
-{% block content %}
-<div style="padding-top:5rem">
-  <section class="section">
-    <div class="container">
-      <div style="margin-bottom:2.5rem">
-        <div class="section-label" style="display:inline-flex">📚 Mon espace</div>
-        <h1 class="section-title" style="margin-top:.75rem">Mes formations</h1>
-      </div>
-
-      <div style="display:grid;grid-template-columns:220px 1fr;gap:2rem;align-items:start">
-        {# Sidebar #}
-        <div>
-          <nav style="display:flex;flex-direction:column;gap:.35rem">
-            <a href="#inscriptions" class="btn btn-outline btn-sm" style="text-align:left">📖 Mes formations</a>
-            <a href="#certificats" class="btn btn-outline btn-sm" style="text-align:left">🏆 Mes certificats</a>
-            <a href="#quiz" class="btn btn-outline btn-sm" style="text-align:left">📝 Mes quiz</a>
-            <hr style="border:none;border-top:1px solid var(--border);margin:.5rem 0">
-            <a href="{% url 'formations:catalogue' %}" class="btn btn-primary btn-sm">+ Nouvelle formation</a>
-          </nav>
-
-          {# Stats rapides #}
-          <div class="glass-card" style="margin-top:1.5rem">
-            <div style="text-align:center;padding:.5rem 0;border-bottom:1px solid var(--border);margin-bottom:.75rem">
-              <div style="font-size:1.6rem;font-weight:800;color:var(--primary-light)">{{ inscriptions.count }}</div>
-              <div style="font-size:.78rem;color:var(--text-muted)">Formations</div>
-            </div>
-            <div style="text-align:center;padding:.5rem 0;border-bottom:1px solid var(--border);margin-bottom:.75rem">
-              <div style="font-size:1.6rem;font-weight:800;color:var(--warning)">{{ certificats.count }}</div>
-              <div style="font-size:.78rem;color:var(--text-muted)">Certificats</div>
-            </div>
-            <div style="text-align:center;padding:.5rem 0">
-              <div style="font-size:1.6rem;font-weight:800;color:var(--accent)">{{ resultats.count }}</div>
-              <div style="font-size:.78rem;color:var(--text-muted)">Quiz réalisés</div>
-            </div>
-          </div>
-        </div>
-
-        {# Contenu principal #}
-        <div>
-          {# Inscriptions en cours #}
-          <div id="inscriptions" style="margin-bottom:3rem">
-            <h2 style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:1.25rem">📖 Formations en cours</h2>
-            {% if inscriptions %}
-            <div class="grid-2">
-              {% for insc in inscriptions %}
-              <div class="glass-card">
-                <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem">
-                  {% if insc.formation.thumbnail %}
-                  <img src="{{ insc.formation.thumbnail.url }}" alt="{{ insc.formation.titre }}" style="width:72px;height:54px;border-radius:var(--radius-sm);object-fit:cover;flex-shrink:0">
-                  {% else %}
-                  <div style="width:72px;height:54px;border-radius:var(--radius-sm);background:var(--bg-surface);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">📚</div>
-                  {% endif %}
-                  <div style="flex:1;min-width:0">
-                    <div style="font-size:.78rem;color:var(--primary-light);margin-bottom:.25rem">{{ insc.formation.categorie.nom }}</div>
-                    <a href="{% url 'formations:detail' slug=insc.formation.slug %}" style="font-weight:600;font-size:.92rem;color:var(--text-primary);text-decoration:none">{{ insc.formation.titre|truncatechars:50 }}</a>
-                  </div>
-                </div>
-                <div style="margin-bottom:.75rem">
-                  <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-muted);margin-bottom:.35rem">
-                    <span>Progression</span><span style="color:{% if insc.progression_pct >= 100 %}var(--primary-light){% else %}var(--text-secondary){% endif %}">{{ insc.progression_pct }}%</span>
-                  </div>
-                  <div style="height:6px;background:var(--bg-elevated);border-radius:99px;overflow:hidden">
-                    <div style="height:100%;width:{{ insc.progression_pct }}%;background:var(--gradient-cta);border-radius:99px"></div>
-                  </div>
-                </div>
-                {% if insc.termine %}
-                <span class="badge badge-green">✅ Terminée</span>
-                {% else %}
-                <a href="{% url 'formations:lecteur' formation_slug=insc.formation.slug lecon_id=1 %}" class="btn btn-primary btn-sm btn-block">Continuer →</a>
-                {% endif %}
-              </div>
-              {% endfor %}
-            </div>
-            {% else %}
-            <div class="glass-card" style="text-align:center;padding:3rem">
-              <div style="font-size:3rem;margin-bottom:1rem">📚</div>
-              <p style="color:var(--text-muted);margin-bottom:1.25rem">Vous n'êtes inscrit à aucune formation pour le moment.</p>
-              <a href="{% url 'formations:catalogue' %}" class="btn btn-primary">Découvrir les formations →</a>
-            </div>
-            {% endif %}
-          </div>
-
-          {# Certificats #}
-          <div id="certificats" style="margin-bottom:3rem">
-            <h2 style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:1.25rem">🏆 Certificats obtenus</h2>
-            {% if certificats %}
-            <div class="grid-2">
-              {% for cert in certificats %}
-              <div class="glass-card" style="text-align:center;padding:1.5rem;background:linear-gradient(135deg,rgba(46,125,50,.08),rgba(245,124,0,.08))">
-                <div style="font-size:3rem;margin-bottom:.75rem">🏆</div>
-                <div style="font-weight:700;margin-bottom:.25rem">{{ cert.formation.titre }}</div>
-                <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">Obtenu le {{ cert.date_obtenu|date:"d M Y" }}</div>
-                {% if cert.fichier_pdf %}
-                <a href="{{ cert.fichier_pdf.url }}" download class="btn btn-outline btn-sm">Télécharger PDF</a>
-                {% endif %}
-              </div>
-              {% endfor %}
-            </div>
-            {% else %}
-            <div class="glass-card" style="text-align:center;padding:2rem;color:var(--text-muted)">
-              Terminez une formation certifiante pour obtenir votre certificat.
-            </div>
-            {% endif %}
-          </div>
-
-          {# Résultats quiz #}
-          <div id="quiz">
-            <h2 style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:1.25rem">📝 Derniers quiz</h2>
-            {% if resultats %}
-            <div style="display:flex;flex-direction:column;gap:.75rem">
-              {% for res in resultats %}
-              <div class="glass-card" style="display:flex;align-items:center;gap:1rem;padding:1rem">
-                <div style="width:44px;height:44px;border-radius:var(--radius-md);background:{% if res.reussi %}rgba(46,125,50,.15){% else %}rgba(244,67,54,.1){% endif %};display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0">
-                  {% if res.reussi %}✅{% else %}❌{% endif %}
-                </div>
-                <div style="flex:1">
-                  <div style="font-weight:600;font-size:.9rem">{{ res.quiz.titre }}</div>
-                  <div style="font-size:.78rem;color:var(--text-muted)">{{ res.created_at|date:"d M Y à H:i" }}</div>
-                </div>
-                <div style="text-align:right">
-                  <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:{% if res.reussi %}var(--primary-light){% else %}var(--error){% endif %}">
-                    {{ res.score }}%
-                  </div>
-                  <div style="font-size:.75rem;color:var(--text-muted)">{{ res.nb_bonnes_reponses }}/{{ res.nb_questions }}</div>
-                </div>
-              </div>
-              {% endfor %}
-            </div>
-            {% else %}
-            <div class="glass-card" style="text-align:center;padding:2rem;color:var(--text-muted)">Aucun quiz réalisé pour le moment.</div>
-            {% endif %}
-          </div>
-        </div>
-      </div>
+<nav class="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-4">
+    <a href="/" class="flex items-center gap-2.5 flex-shrink-0">
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white font-black text-base" style="background:linear-gradient(135deg,#1B6534,#2d9a55)">E</div>
+      <span class="font-black text-gray-900 text-lg">E<span style="color:#1B6534">-Shelle</span></span>
+    </a>
+    <a href="{% url 'formations:catalogue' %}" class="text-sm font-medium text-gray-600 hover:text-purple-700 px-3 py-2 ml-1">Catalogue</a>
+    <div class="ml-auto flex items-center gap-3">
+      <a href="{% url 'accounts:mon_compte' %}" class="text-sm font-medium text-gray-500 hover:text-gray-700">Mon Compte</a>
+      <a href="{% url 'accounts:logout' %}" class="text-sm font-medium text-red-500 hover:text-red-700 px-3 py-2 rounded-lg hover:bg-red-50">Deconnexion</a>
     </div>
-  </section>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="text-white py-10 px-4" style="background:linear-gradient(135deg,#1e0a3c 0%,#4c1d95 60%,#8B5CF6 100%)">
+  <div class="max-w-5xl mx-auto flex items-center gap-5">
+    <div class="w-16 h-16 rounded-2xl bg-white/15 flex items-center justify-center text-3xl flex-shrink-0">
+      {{ user.username|first|upper }}
+    </div>
+    <div>
+      <h1 class="text-2xl font-black">Mon Espace Formations</h1>
+      <p class="text-white/70 text-sm mt-1">
+        {{ inscriptions|length }} formation{{ inscriptions|length|pluralize }} &bull;
+        {{ certificats|length }} certificat{{ certificats|length|pluralize }}
+      </p>
+    </div>
+    <div class="ml-auto">
+      <a href="{% url 'formations:catalogue' %}"
+         class="px-5 py-2.5 rounded-xl font-bold text-sm bg-white/15 hover:bg-white/25 transition text-white">
+        Decouvrir +
+      </a>
+    </div>
+  </div>
 </div>
-{% endblock %}
+
+<div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-10">
+
+  <!-- Formations en cours -->
+  <div>
+    <h2 class="text-lg font-black text-gray-900 mb-4">Mes formations</h2>
+    {% if inscriptions %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {% for insc in inscriptions %}
+      <div class="card bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+        <!-- Thumbnail / icone -->
+        <div class="h-32 bg-gradient-to-br from-purple-100 to-indigo-100 flex items-center justify-center text-4xl">
+          {{ insc.formation.categorie.icone }}
+        </div>
+        <div class="p-4 flex flex-col flex-1">
+          <div class="text-xs text-purple-600 font-semibold mb-1">{{ insc.formation.categorie.nom }}</div>
+          <h3 class="font-bold text-gray-800 text-sm leading-snug mb-2">{{ insc.formation.titre }}</h3>
+          <!-- Barre de progression -->
+          <div class="mb-3">
+            <div class="flex justify-between text-xs text-gray-400 mb-1">
+              <span>Progression</span>
+              <span class="font-semibold {% if insc.progression_pct >= 100 %}text-green-600{% else %}text-purple-600{% endif %}">
+                {{ insc.progression_pct }}%
+              </span>
+            </div>
+            <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div class="h-full rounded-full transition-all"
+                   style="width:{{ insc.progression_pct }}%;background:{% if insc.progression_pct >= 100 %}#22c55e{% else %}#8B5CF6{% endif %}">
+              </div>
+            </div>
+          </div>
+          <div class="mt-auto">
+            {% if insc.termine %}
+            <div class="w-full text-center py-2.5 rounded-xl text-xs font-black bg-green-50 text-green-700">
+              &#127941; Formation terminee !
+            </div>
+            {% else %}
+            <a href="{% url 'formations:catalogue' %}"
+               class="w-full block text-center py-2.5 rounded-xl text-xs font-black text-white transition hover:opacity-90"
+               style="background:linear-gradient(135deg,#8B5CF6,#7C3AED)">
+              Continuer le cours &rarr;
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="bg-white rounded-2xl border border-dashed border-gray-200 p-12 text-center">
+      <div class="text-5xl mb-4">&#128214;</div>
+      <h3 class="text-lg font-bold text-gray-700 mb-2">Aucune formation commencee</h3>
+      <p class="text-gray-400 text-sm mb-6">Explorez notre catalogue pour commencer a apprendre.</p>
+      <a href="{% url 'formations:catalogue' %}"
+         class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white text-sm"
+         style="background:linear-gradient(135deg,#8B5CF6,#7C3AED)">
+        Explorer le catalogue
+      </a>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Certificats -->
+  {% if certificats %}
+  <div>
+    <h2 class="text-lg font-black text-gray-900 mb-4">Mes certificats</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {% for cert in certificats %}
+      <div class="bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-100 rounded-2xl p-5 flex items-start gap-4">
+        <div class="text-3xl flex-shrink-0">&#127941;</div>
+        <div class="flex-1 min-w-0">
+          <div class="font-black text-amber-900 text-sm">{{ cert.formation.titre }}</div>
+          <div class="text-xs text-amber-600 mt-0.5">Obtenu le {{ cert.date_obtenu|date:"d/m/Y" }}</div>
+          <code class="text-xs text-amber-700 bg-amber-100 px-2 py-0.5 rounded-md mt-1 inline-block">{{ cert.code_unique }}</code>
+        </div>
+        {% if cert.pdf %}
+        <a href="{{ cert.pdf.url }}" target="_blank"
+           class="flex-shrink-0 text-xs font-bold text-amber-800 bg-amber-200 hover:bg-amber-300 px-3 py-1.5 rounded-lg transition">
+          PDF
+        </a>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Derniers resultats quiz -->
+  {% if resultats %}
+  <div>
+    <h2 class="text-lg font-black text-gray-900 mb-4">Derniers resultats</h2>
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="bg-gray-50 border-b border-gray-100">
+            <th class="text-left px-5 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider">Quiz</th>
+            <th class="text-center px-5 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider">Score</th>
+            <th class="text-right px-5 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider">Date</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-50">
+          {% for r in resultats %}
+          <tr class="hover:bg-gray-50 transition">
+            <td class="px-5 py-3 font-semibold text-gray-700">{{ r.quiz.titre }}</td>
+            <td class="px-5 py-3 text-center">
+              <span class="text-sm font-black px-3 py-1 rounded-full
+                {% if r.score >= 70 %}bg-green-50 text-green-700{% else %}bg-red-50 text-red-700{% endif %}">
+                {{ r.score|floatformat:0 }}%
+              </span>
+            </td>
+            <td class="px-5 py-3 text-right text-xs text-gray-400">{{ r.created_at|date:"d/m/Y" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+<footer class="border-t border-gray-100 bg-white py-6 text-center text-sm text-gray-400 mt-10">
+  <p><a href="/" class="font-bold hover:underline" style="color:#1B6534">E-Shelle</a> &mdash; Formations professionnelles &bull; Made in Cameroun</p>
+</footer>
+
+</body>
+</html>
