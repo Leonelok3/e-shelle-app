@@ -24,10 +24,10 @@ urlpatterns = [
     path("accounts/", include("accounts.urls")),
     # Social Auth — URLs de base (connections, disconnect, signup)
     path("accounts/social/", include("allauth.socialaccount.urls")),
-    # Social Auth — OAuth2 Google (login + callback)
-    path("accounts/social/google/", include("allauth.socialaccount.providers.google.urls")),
-    # Social Auth — OAuth2 Facebook (login + callback)
-    path("accounts/social/facebook/", include("allauth.socialaccount.providers.facebook.urls")),
+    # Social Auth — OAuth2 Google : google/ est déjà dans le module
+    path("accounts/social/", include("allauth.socialaccount.providers.google.urls")),
+    # Social Auth — OAuth2 Facebook : facebook/ est déjà dans le module
+    path("accounts/social/", include("allauth.socialaccount.providers.facebook.urls")),
 
     # Anciens dashboards (compatibilité)
     path("dash/", include("progress.urls")),
