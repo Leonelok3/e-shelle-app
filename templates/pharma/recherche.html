@@ -1,0 +1,175 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% if q %}{{ q }} — {% endif %}Recherche médicaments · E-Shelle Pharma</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family:'Inter',sans-serif; background:#060B12; color:#fff; }
+    .card-hover { transition:transform .2s, box-shadow .2s; }
+    .card-hover:hover { transform:translateY(-3px); box-shadow:0 16px 32px rgba(16,185,129,.12); }
+    .filter-pill { transition:all .15s; }
+    .filter-pill:hover,.filter-pill.active { background:linear-gradient(135deg,#10B981,#059669); color:#fff; border-color:transparent; }
+    .search-glow:focus { box-shadow:0 0 0 3px rgba(16,185,129,.3); outline:none; }
+  </style>
+</head>
+<body class="antialiased min-h-screen">
+
+<!-- Navbar -->
+<nav class="sticky top-0 z-40 border-b" style="background:rgba(6,11,18,.92);backdrop-filter:blur(20px);border-color:rgba(255,255,255,.06)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-4">
+    <a href="{% url 'pharma:accueil' %}" class="flex items-center gap-2.5 flex-shrink-0">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center font-black text-base"
+           style="background:linear-gradient(135deg,#10B981,#059669)">💊</div>
+      <span class="font-black text-white hidden sm:block">E-Shelle <span style="color:#10B981">Pharma</span></span>
+    </a>
+    <div class="flex items-center gap-3 ml-auto">
+      <a href="{% url 'pharma:catalogue' %}" class="text-sm font-semibold text-white/60 hover:text-white transition hidden sm:block">Pharmacies</a>
+      {% if user.is_authenticated %}
+      <a href="{% url 'accounts:mon_compte' %}" class="text-sm font-medium text-white/60 hover:text-white transition">Mon Compte</a>
+      {% else %}
+      <a href="{% url 'accounts:login' %}" class="text-sm font-medium text-white/60 hover:text-white transition">Connexion</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<!-- Header -->
+<div class="px-4 py-10 text-center relative overflow-hidden">
+  <div class="absolute inset-0" style="background:radial-gradient(ellipse 60% 80% at 50% 0%,rgba(16,185,129,.1),transparent)"></div>
+  <div class="relative">
+    <div class="text-4xl mb-3">💊</div>
+    <h1 class="text-2xl sm:text-3xl font-black text-white mb-2">
+      {% if q %}Résultats pour « {{ q }} »{% else %}Rechercher un médicament{% endif %}
+    </h1>
+    <p class="text-white/40 text-sm">
+      <span style="color:#10B981" class="font-bold">{{ nb_results }}</span>
+      médicament{{ nb_results|pluralize }} trouvé{{ nb_results|pluralize }}
+    </p>
+  </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
+
+  <!-- Filtres -->
+  <div class="mb-8 space-y-4">
+
+    <!-- Barre de recherche -->
+    <form method="get" class="relative">
+      {% if ville_slug %}<input type="hidden" name="ville" value="{{ ville_slug }}">{% endif %}
+      {% if cat_slug %}<input type="hidden" name="cat" value="{{ cat_slug }}">{% endif %}
+      {% if garde_only %}<input type="hidden" name="garde" value="1">{% endif %}
+      {% if livraison %}<input type="hidden" name="livraison" value="1">{% endif %}
+      <input type="search" name="q" value="{{ q }}"
+             placeholder="Nom du médicament (générique ou commercial)..."
+             class="w-full px-5 py-3.5 rounded-2xl text-sm text-white placeholder-white/30 search-glow transition"
+             style="background:rgba(255,255,255,.06);border:1px solid rgba(16,185,129,.15)"/>
+      <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-green-400 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </button>
+    </form>
+
+    <!-- Pills villes -->
+    <div class="flex flex-wrap gap-2">
+      <a href="?{% if q %}q={{ q }}&{% endif %}{% if cat_slug %}cat={{ cat_slug }}&{% endif %}"
+         class="filter-pill text-xs font-bold px-3.5 py-1.5 rounded-full border border-white/10 text-white/60 {% if not ville_slug %}active{% endif %}">
+        Toutes villes
+      </a>
+      {% for ville in villes %}
+      <a href="?{% if q %}q={{ q }}&{% endif %}ville={{ ville.slug }}{% if cat_slug %}&cat={{ cat_slug }}{% endif %}"
+         class="filter-pill text-xs font-bold px-3.5 py-1.5 rounded-full border border-white/10 text-white/60 {% if ville_slug == ville.slug %}active{% endif %}">
+        {{ ville.nom }}
+      </a>
+      {% endfor %}
+    </div>
+
+    <!-- Sous-filtres -->
+    <div class="flex flex-wrap gap-2 items-center">
+      <!-- Catégories -->
+      <form method="get" class="flex gap-2">
+        {% if q %}<input type="hidden" name="q" value="{{ q }}">{% endif %}
+        {% if ville_slug %}<input type="hidden" name="ville" value="{{ ville_slug }}">{% endif %}
+        <select name="cat" onchange="this.form.submit()"
+                class="text-xs border rounded-xl px-3 py-1.5 outline-none"
+                style="background:rgba(255,255,255,.06);border-color:rgba(16,185,129,.15);color:#fff">
+          <option value="">Toutes catégories</option>
+          {% for cat in categories %}
+          <option value="{{ cat.slug }}" {% if cat_slug == cat.slug %}selected{% endif %}>{{ cat.icone }} {{ cat.nom }}</option>
+          {% endfor %}
+        </select>
+      </form>
+
+      <!-- Toggle garde -->
+      <a href="?{% if q %}q={{ q }}&{% endif %}{% if ville_slug %}ville={{ ville_slug }}&{% endif %}{% if cat_slug %}cat={{ cat_slug }}&{% endif %}{% if not garde_only %}garde=1{% endif %}"
+         class="filter-pill text-xs font-bold px-3.5 py-1.5 rounded-full border border-white/10 text-white/60 flex items-center gap-1 {% if garde_only %}active{% endif %}">
+        🌙 Pharmacies de garde
+      </a>
+
+      <!-- Toggle livraison -->
+      <a href="?{% if q %}q={{ q }}&{% endif %}{% if ville_slug %}ville={{ ville_slug }}&{% endif %}{% if cat_slug %}cat={{ cat_slug }}&{% endif %}{% if not livraison %}livraison=1{% endif %}"
+         class="filter-pill text-xs font-bold px-3.5 py-1.5 rounded-full border border-white/10 text-white/60 flex items-center gap-1 {% if livraison %}active{% endif %}">
+        🛵 Avec livraison
+      </a>
+    </div>
+  </div>
+
+  <!-- Grille médicaments -->
+  {% if medicaments %}
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    {% for med in medicaments %}
+    <a href="{% url 'pharma:detail_medicament' med.slug %}{% if ville_slug %}?ville={{ ville_slug }}{% endif %}"
+       class="card-hover flex flex-col rounded-2xl overflow-hidden border p-4"
+       style="background:rgba(255,255,255,.03);{% if med.nb_dispo > 0 %}border-color:rgba(16,185,129,.2){% else %}border-color:rgba(255,255,255,.06){% endif %}">
+      <div class="text-3xl mb-3">{{ med.categorie.icone|default:"💊" }}</div>
+      <div class="font-black text-white text-sm leading-snug mb-2">{{ med.nom }}</div>
+      {% if med.ordonnance %}
+      <span class="text-xs px-2 py-0.5 rounded-full self-start mb-2" style="background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)">Sur ordonnance</span>
+      {% endif %}
+      {% if med.categorie %}
+      <span class="text-xs text-white/40 mb-3">{{ med.categorie.nom }}</span>
+      {% endif %}
+      <div class="mt-auto">
+        {% if med.nb_dispo > 0 %}
+        <div class="flex items-center gap-1.5">
+          <div class="w-2 h-2 rounded-full bg-green-400"></div>
+          <span class="text-xs font-bold" style="color:#10B981">{{ med.nb_dispo }} pharmacie{{ med.nb_dispo|pluralize }}</span>
+        </div>
+        {% else %}
+        <div class="flex items-center gap-1.5">
+          <div class="w-2 h-2 rounded-full bg-red-400"></div>
+          <span class="text-xs text-white/30">Non disponible</span>
+        </div>
+        {% endif %}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <!-- Aucun résultat -->
+  <div class="text-center py-24">
+    <div class="text-6xl mb-6">🔍</div>
+    <h3 class="text-xl font-black text-white mb-3">Aucun médicament trouvé</h3>
+    <p class="text-white/40 text-sm mb-8 max-w-sm mx-auto">Essayez un autre nom ou modifiez vos filtres.</p>
+    <a href="{% url 'pharma:recherche' %}"
+       class="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl font-bold text-white transition hover:opacity-90"
+       style="background:linear-gradient(135deg,#10B981,#059669)">
+      Voir tous les médicaments
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+
+<footer class="border-t py-6 px-4 text-center text-sm text-white/20" style="border-color:rgba(255,255,255,.05);background:#030712">
+  <a href="/" class="font-black hover:text-white transition" style="color:#10B981">E-Shelle</a>
+  &mdash; Pharmacie digitale &mdash; Made in Cameroun 🇨🇲
+</footer>
+</body>
+</html>

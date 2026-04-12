@@ -1,0 +1,251 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>E-Shelle AI — Assistant Intelligent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{% static 'e_shelle_ai/css/chat.css' %}"/>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══════════════════════════════════════════════════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="ai-logo">
+      <div class="ai-logo-icon">✦</div>
+      <div>
+        <div class="ai-logo-title">E-Shelle AI</div>
+        <div class="ai-logo-sub">Agent Intelligent</div>
+      </div>
+    </div>
+    <button class="btn-new-conv" id="btn-new-conv" title="Nouvelle conversation">+</button>
+  </div>
+
+  <!-- Quota bar -->
+  <div class="quota-bar">
+    {% with q=quota %}
+    <div class="quota-info">
+      <span class="quota-plan">{{ q.plan|title }}</span>
+      <span class="quota-count" id="quota-display">{{ q.messages }} msg restants</span>
+    </div>
+    <div class="quota-progress">
+      <div class="quota-fill" style="width:{% if q.msg_limit > 0 %}{{ q.msg_used|default:0 }}{% else %}0{% endif %}%"
+           id="quota-fill"></div>
+    </div>
+    {% endwith %}
+  </div>
+
+  <!-- Liste conversations -->
+  <div class="conv-list" id="conv-list">
+    <div class="conv-list-label">Conversations</div>
+    {% for conv in conversations %}
+    <a href="{% url 'eshelle_ai:conversation' conv.pk %}"
+       class="conv-item {% if active_conv and active_conv.pk == conv.pk %}active{% endif %}"
+       data-id="{{ conv.pk }}">
+      <div class="conv-icon">
+        {% if conv.module_context == 'resto' %}🍽️
+        {% elif conv.module_context == 'boutique' %}🛒
+        {% elif conv.module_context == 'marketing' %}📊
+        {% elif conv.module_context == 'pressing' %}👔
+        {% elif conv.module_context == 'formations' %}📚
+        {% else %}✦{% endif %}
+      </div>
+      <div class="conv-info">
+        <div class="conv-title">{{ conv.title|default:"Sans titre"|truncatechars:30 }}</div>
+        <div class="conv-date">{{ conv.updated_at|date:"d M" }} · {{ conv.message_count }} msg</div>
+      </div>
+      <button class="conv-delete" data-id="{{ conv.pk }}" title="Supprimer">×</button>
+    </a>
+    {% empty %}
+    <div class="conv-empty">Aucune conversation. Commencez à discuter !</div>
+    {% endfor %}
+  </div>
+
+  <!-- Liens bas sidebar -->
+  <div class="sidebar-footer">
+    <a href="/" class="sidebar-link">← Accueil E-Shelle</a>
+    <button class="sidebar-link danger" id="btn-clear-memory">🧠 Effacer ma mémoire</button>
+  </div>
+</aside>
+
+<!-- Overlay mobile -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<!-- ═══ MAIN CHAT ══════════════════════════════════════════════════════════ -->
+<main class="chat-main">
+
+  <!-- Header -->
+  <header class="chat-header">
+    <button class="burger-btn" id="burger-btn" aria-label="Menu">☰</button>
+    <div class="chat-header-title">
+      <div class="status-dot"></div>
+      <span>E-Shelle AI</span>
+      <span class="header-conv-title" id="header-conv-title">
+        {% if active_conv %}{{ active_conv.title|truncatechars:40 }}{% else %}Nouvelle conversation{% endif %}
+      </span>
+    </div>
+    <div class="header-right">
+      <span class="quota-badge" id="quota-badge">
+        {% if quota.messages >= 0 %}{{ quota.messages }} messages{% endif %}
+      </span>
+      {% if user.is_authenticated %}
+      <span class="user-avatar">{{ user.username|slice:":1"|upper }}</span>
+      {% endif %}
+    </div>
+  </header>
+
+  <!-- Zone messages -->
+  <div class="messages-zone" id="messages-zone">
+
+    {% if not messages %}
+    <!-- Écran de bienvenue -->
+    <div class="welcome-screen" id="welcome-screen">
+      <div class="welcome-glow"></div>
+      <div class="welcome-icon">✦</div>
+      <h1 class="welcome-title">Bonjour{% if user.first_name %}, {{ user.first_name }}{% endif %} !</h1>
+      <p class="welcome-sub">Je suis E-Shelle AI, votre assistant pour développer votre business en Afrique.</p>
+
+      <div class="suggestions-grid">
+        <button class="suggestion-btn" data-msg="Génère une photo professionnelle de mon plat préféré le ndolé">
+          <span class="sug-icon">📸</span>
+          <span>Génère une photo de mon plat</span>
+        </button>
+        <button class="suggestion-btn" data-msg="Rédige une description accrocheuse pour mon produit phare sur E-Shelle">
+          <span class="sug-icon">✍️</span>
+          <span>Rédige la description de mon produit</span>
+        </button>
+        <button class="suggestion-btn" data-msg="Comment faire connaître mon business sur WhatsApp, Facebook et Instagram au Cameroun ?">
+          <span class="sug-icon">📱</span>
+          <span>Stratégie marketing WhatsApp & réseaux</span>
+        </button>
+        <button class="suggestion-btn" data-msg="Donne-moi 5 actions concrètes pour vendre plus grâce à l'IA et au digital aujourd'hui">
+          <span class="sug-icon">🚀</span>
+          <span>5 actions pour vendre plus avec l'IA</span>
+        </button>
+        <button class="suggestion-btn" data-msg="Comment créer et publier une formation en ligne sur EduCam Pro ?">
+          <span class="sug-icon">🎓</span>
+          <span>Créer ma formation en ligne</span>
+        </button>
+        <button class="suggestion-btn" data-msg="Crée un plan marketing digital complet pour mon restaurant à Yaoundé avec un budget de 30000 FCFA/mois">
+          <span class="sug-icon">💡</span>
+          <span>Plan marketing pour mon restaurant</span>
+        </button>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Messages existants -->
+    <div class="messages-list" id="messages-list">
+      {% for msg in messages %}
+        {% if msg.role == 'user' %}
+        <div class="message-row user">
+          <div class="message-bubble user">
+            <div class="message-content">{{ msg.content }}</div>
+            <div class="message-time">{{ msg.created_at|date:"H:i" }}</div>
+          </div>
+        </div>
+        {% elif msg.role == 'assistant' %}
+        <div class="message-row assistant">
+          <div class="message-avatar">✦</div>
+          <div class="message-bubble assistant">
+            {% if msg.message_type == 'image' and msg.image_url %}
+            <div class="message-image-container">
+              <img src="{{ msg.image_url }}" alt="Image générée" class="generated-image"/>
+              <a href="{{ msg.image_url }}" download class="img-download-btn">⬇ Télécharger</a>
+            </div>
+            {% else %}
+            <div class="message-content markdown-content" data-raw="{{ msg.content }}">{{ msg.content }}</div>
+            {% endif %}
+            <div class="message-actions">
+              <span class="message-time">{{ msg.created_at|date:"H:i" }}</span>
+              <button class="copy-btn" onclick="copyMessage(this)" title="Copier">⧉</button>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <!-- Indicateur de frappe -->
+    <div class="typing-indicator hidden" id="typing-indicator">
+      <div class="message-row assistant">
+        <div class="message-avatar">✦</div>
+        <div class="message-bubble assistant typing">
+          <span></span><span></span><span></span>
+          <span class="typing-text">E-Shelle AI réfléchit…</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zone d'input -->
+  <div class="input-zone">
+
+    <!-- Modal génération d'image -->
+    <div class="image-modal hidden" id="image-modal">
+      <div class="image-modal-header">
+        <span>📸 Générer une image avec DALL-E 3</span>
+        <button onclick="closeImageModal()">×</button>
+      </div>
+      <div class="image-modal-body">
+        <input type="text" id="img-prompt-input" placeholder="Décrivez votre image (ex: ndolé présenté sur assiette blanche...)" maxlength="400"/>
+        <div class="img-context-row">
+          <label>Style :</label>
+          <select id="img-context-select">
+            <option value="food">🍽️ Plat / Nourriture</option>
+            <option value="product">📦 Produit e-commerce</option>
+            <option value="banner">🎨 Bannière marketing</option>
+            <option value="logo">💠 Logo</option>
+            <option value="social_media">📱 Post réseaux sociaux</option>
+            <option value="portrait">🧑 Portrait professionnel</option>
+            <option value="general">✦ Général</option>
+          </select>
+        </div>
+        <button class="btn-generate-img" id="btn-generate-img" onclick="generateImage()">
+          ✦ Générer l'image
+        </button>
+      </div>
+    </div>
+
+    <div class="input-row">
+      <button class="input-btn img-btn" id="btn-open-image" title="Générer une image IA" onclick="openImageModal()">📸</button>
+      <div class="textarea-wrapper">
+        <textarea
+          id="message-input"
+          placeholder="Posez votre question à E-Shelle AI… (Shift+Entrée pour saut de ligne)"
+          rows="1"
+          maxlength="2000"
+        ></textarea>
+      </div>
+      <button class="input-btn send-btn" id="send-btn" title="Envoyer (Entrée)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9L22 2"/>
+        </svg>
+      </button>
+    </div>
+    <div class="input-hint">Entrée pour envoyer · Shift+Entrée pour saut de ligne · Ctrl+K pour ouvrir depuis n'importe où</div>
+  </div>
+</main>
+
+<!-- Données Django pour JS -->
+<script>
+  const DJANGO_DATA = {
+    activeConvId:   {% if active_conv %}{{ active_conv.pk }}{% else %}null{% endif %},
+    chatApiUrl:     "{% url 'eshelle_ai:api_chat' %}",
+    imageApiUrl:    "{% url 'eshelle_ai:api_image' %}",
+    newConvUrl:     "{% url 'eshelle_ai:conversation_new' %}",
+    deleteConvUrl:  "/ai/conversations/{id}/delete/",
+    convUrl:        "/ai/c/{id}/",
+    memClearUrl:    "{% url 'eshelle_ai:memory_clear' %}",
+    csrfToken:      "{{ csrf_token }}",
+    quotaMessages:  {{ quota.messages|default:0 }},
+    quotaMsgUsed:   {{ quota.msg_used|default:0 }},
+    quotaMsgLimit:  {{ quota.msg_limit|default:30 }},
+  };
+</script>
+<script src="{% static 'e_shelle_ai/js/chat.js' %}"></script>
+
+</body>
+</html>

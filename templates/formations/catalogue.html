@@ -1,183 +1,212 @@
-{% extends "base.html" %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Formations E-Shelle — IA, Marketing, Anglais, Entrepreneuriat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    body{font-family:'Inter',sans-serif;}
+    .card{transition:transform .2s,box-shadow .2s;}
+    .card:hover{transform:translateY(-3px);box-shadow:0 16px 32px rgba(0,0,0,.08);}
+    .cat-pill.active{background:#8B5CF6;color:#fff;border-color:#8B5CF6;}
+  </style>
+</head>
+<body class="bg-gray-50 antialiased">
 
-{% block title %}Formations en ligne — E-Shelle{% endblock %}
-{% block nav_formations %}active{% endblock %}
-
-{% block content %}
-<div style="padding-top:5rem">
-
-  {# Hero formations #}
-  <section style="background:linear-gradient(135deg,#0A0A0A,#0D1F0D);padding:4rem 0;border-bottom:1px solid var(--border)">
-    <div class="container text-center">
-      <div class="section-label aos-hidden" style="display:inline-flex">📚 Catalogue</div>
-      <h1 class="section-title aos-hidden aos-delay-1" style="margin-top:1rem">Formations en ligne</h1>
-      <p class="section-subtitle aos-hidden aos-delay-2">
-        <span data-counter="{{ formations|length }}" data-suffix=" formations">{{ formations|length }} formations</span> disponibles
-        · IA, Tech, Marketing, Comptabilité et plus
-      </p>
-      {# Barre de recherche #}
-      <form method="get" style="max-width:500px;margin:2rem auto 0">
-        <div class="input-group">
-          <span style="display:flex;align-items:center;padding:0 1rem;background:rgba(255,255,255,.04);color:var(--text-muted)">🔍</span>
-          <input type="search" name="q" class="form-control" placeholder="Rechercher une formation…"
-                 value="{{ recherche }}" autocomplete="off">
-          <button type="submit" class="btn btn-primary" style="border-radius:0">Rechercher</button>
-        </div>
-      </form>
-    </div>
-  </section>
-
-  {# ── Onglets Mathématiques ────────────────────────────────── #}
-  <div style="background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.07);padding:.75rem 0;">
-    <div class="container">
-      <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;">
-        <a href="{% url 'math_cm:accueil' %}"
-           style="display:inline-flex;align-items:center;gap:.4rem;padding:.45rem 1rem;border-radius:20px;font-size:.82rem;font-weight:700;text-decoration:none;background:rgba(99,102,241,.2);border:1px solid rgba(99,102,241,.5);color:#a5b4fc;transition:all .2s;"
-           onmouseover="this.style.background='rgba(99,102,241,.35)'" onmouseout="this.style.background='rgba(99,102,241,.2)'">
-          📐 Mathématiques
-        </a>
-        <span style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3);">→</span>
-        {% for classe_nom, classe_label in classes_math %}
-        <a href="{% url 'math_cm:liste_chapitres' classe_nom=classe_nom %}"
-           style="display:inline-flex;align-items:center;gap:.3rem;padding:.4rem .85rem;border-radius:20px;font-size:.8rem;font-weight:600;text-decoration:none;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);color:#c7d2fe;transition:all .2s;"
-           onmouseover="this.style.background='rgba(99,102,241,.22)';this.style.borderColor='rgba(99,102,241,.45)'" onmouseout="this.style.background='rgba(99,102,241,.08)';this.style.borderColor='rgba(99,102,241,.2)'">
-          {{ classe_label }}
-        </a>
-        {% endfor %}
-      </div>
+<!-- Navbar -->
+<nav class="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-4">
+    <a href="/" class="flex items-center gap-2.5 flex-shrink-0">
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white font-black text-base shadow-sm"
+           style="background:linear-gradient(135deg,#1B6534,#2d9a55)">E</div>
+      <span class="font-black text-gray-900 text-lg">E<span style="color:#1B6534">-Shelle</span></span>
+    </a>
+    <div class="ml-auto flex items-center gap-3">
+      {% if user.is_authenticated %}
+      <a href="{% url 'formations:mon_dashboard' %}"
+         class="text-sm font-semibold text-purple-700 hover:text-purple-900 transition">Mon espace →</a>
+      <a href="{% url 'accounts:mon_compte' %}"
+         class="text-sm font-medium text-gray-500 hover:text-gray-700 transition">Compte</a>
+      {% else %}
+      <a href="{% url 'accounts:login' %}" class="text-sm font-medium text-gray-600 hover:text-gray-900">Connexion</a>
+      <a href="{% url 'accounts:register' %}"
+         class="text-sm font-bold px-4 py-2 rounded-xl text-white"
+         style="background:linear-gradient(135deg,#8B5CF6,#7C3AED)">S'inscrire</a>
+      {% endif %}
     </div>
   </div>
+</nav>
 
-  {# ── Onglets Langues ─────────────────────────────────────── #}
-  <div style="background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.07);padding:.75rem 0;">
-    <div class="container">
-      <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;">
-        <span style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-right:.5rem;">Cours de langues →</span>
-        <a href="{% url 'preparation_tests:home' %}"
-           style="display:inline-flex;align-items:center;gap:.4rem;padding:.45rem 1rem;border-radius:20px;font-size:.82rem;font-weight:600;text-decoration:none;background:rgba(46,125,50,.15);border:1px solid rgba(46,125,50,.3);color:#4CAF50;transition:all .2s;"
-           onmouseover="this.style.background='rgba(46,125,50,.3)'" onmouseout="this.style.background='rgba(46,125,50,.15)'">
-          🇫🇷 Français <span style="font-size:.7rem;opacity:.7;">(TEF/TCF/DELF)</span>
-        </a>
-        <a href="{% url 'englishprep:dashboard' %}"
-           style="display:inline-flex;align-items:center;gap:.4rem;padding:.45rem 1rem;border-radius:20px;font-size:.82rem;font-weight:600;text-decoration:none;background:rgba(29,78,216,.15);border:1px solid rgba(29,78,216,.3);color:#93c5fd;transition:all .2s;"
-           onmouseover="this.style.background='rgba(29,78,216,.3)'" onmouseout="this.style.background='rgba(29,78,216,.15)'">
-          🇬🇧 Anglais <span style="font-size:.7rem;opacity:.7;">(IELTS/TOEFL/TOEIC)</span>
-        </a>
-        <a href="{% url 'germanprep:home' %}"
-           style="display:inline-flex;align-items:center;gap:.4rem;padding:.45rem 1rem;border-radius:20px;font-size:.82rem;font-weight:600;text-decoration:none;background:rgba(194,65,12,.15);border:1px solid rgba(194,65,12,.3);color:#fdba74;transition:all .2s;"
-           onmouseover="this.style.background='rgba(194,65,12,.3)'" onmouseout="this.style.background='rgba(194,65,12,.15)'">
-          🇩🇪 Allemand <span style="font-size:.7rem;opacity:.7;">(Goethe/telc/TestDaF)</span>
-        </a>
-        <a href="{% url 'italian_courses:category_list' %}"
-           style="display:inline-flex;align-items:center;gap:.4rem;padding:.45rem 1rem;border-radius:20px;font-size:.82rem;font-weight:600;text-decoration:none;background:rgba(185,28,28,.15);border:1px solid rgba(185,28,28,.3);color:#fca5a5;transition:all .2s;"
-           onmouseover="this.style.background='rgba(185,28,28,.3)'" onmouseout="this.style.background='rgba(185,28,28,.15)'">
-          🇮🇹 Italien <span style="font-size:.7rem;opacity:.7;">(Nulla Osta)</span>
-        </a>
+<!-- Hero -->
+<div class="text-white py-14 px-4" style="background:linear-gradient(135deg,#1e0a3c 0%,#4c1d95 50%,#8B5CF6 100%)">
+  <div class="max-w-4xl mx-auto text-center">
+    <div class="text-5xl mb-4">📚</div>
+    <h1 class="text-3xl sm:text-4xl font-black mb-3">Formations Professionnelles</h1>
+    <p class="text-white/70 text-base max-w-xl mx-auto mb-6">
+      Développez vos compétences avec des formations adaptées au marché africain.
+      <br class="hidden sm:block">IA, Marketing Digital, Anglais, Entrepreneuriat.
+    </p>
+    <!-- Recherche -->
+    <form method="get" class="max-w-lg mx-auto">
+      <div class="flex bg-white/10 backdrop-blur rounded-2xl overflow-hidden border border-white/20">
+        <input type="search" name="q" value="{{ recherche }}"
+               placeholder="Rechercher une formation…"
+               class="flex-1 px-5 py-3.5 bg-transparent text-white placeholder-white/50 text-sm outline-none"/>
+        <button type="submit"
+                class="px-6 py-3.5 text-sm font-bold text-white transition hover:bg-white/10">
+          🔍 Rechercher
+        </button>
       </div>
-    </div>
+    </form>
   </div>
-
-  <section class="section">
-    <div class="container">
-      <div style="display:flex;gap:2rem;align-items:flex-start;flex-wrap:wrap">
-
-        {# Sidebar filtres #}
-        <aside style="min-width:220px;max-width:220px;flex-shrink:0" class="filters-sidebar">
-          <h3 style="font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:1rem">Filtres</h3>
-
-          <form method="get" id="filter-form">
-            {% if recherche %}<input type="hidden" name="q" value="{{ recherche }}">{% endif %}
-
-            <div style="margin-bottom:1.5rem">
-              <h4 style="font-size:.8rem;font-weight:600;color:var(--text-muted);margin-bottom:.75rem">Catégorie</h4>
-              <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--text-secondary);cursor:pointer;margin-bottom:.5rem">
-                <input type="radio" name="categorie" value="" {% if not cat_slug %}checked{% endif %} onchange="this.form.submit()"> Toutes
-              </label>
-              {% for cat in categories %}
-              <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--text-secondary);cursor:pointer;margin-bottom:.5rem">
-                <input type="radio" name="categorie" value="{{ cat.slug }}" {% if cat_slug == cat.slug %}checked{% endif %} onchange="this.form.submit()">
-                {{ cat.icone }} {{ cat.nom }}
-              </label>
-              {% endfor %}
-            </div>
-
-            <div style="margin-bottom:1.5rem">
-              <h4 style="font-size:.8rem;font-weight:600;color:var(--text-muted);margin-bottom:.75rem">Niveau</h4>
-              <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--text-secondary);cursor:pointer;margin-bottom:.5rem">
-                <input type="radio" name="niveau" value="" {% if not niveau %}checked{% endif %} onchange="this.form.submit()"> Tous
-              </label>
-              {% for val, label in niveaux %}
-              <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--text-secondary);cursor:pointer;margin-bottom:.5rem">
-                <input type="radio" name="niveau" value="{{ val }}" {% if niveau == val %}checked{% endif %} onchange="this.form.submit()"> {{ label }}
-              </label>
-              {% endfor %}
-            </div>
-
-            <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--text-secondary);cursor:pointer">
-              <input type="checkbox" name="gratuit" value="1" {% if request.GET.gratuit %}checked{% endif %} onchange="this.form.submit()">
-              Formations gratuites uniquement
-            </label>
-          </form>
-        </aside>
-
-        {# Grille formations #}
-        <div style="flex:1;min-width:0">
-          {% if formations %}
-          <div class="grid-auto">
-            {% for f in formations %}
-            <div class="course-card aos-hidden">
-              <div class="course-thumbnail">
-                {% if f.thumbnail %}
-                  <img src="{{ f.thumbnail.url }}" alt="{{ f.titre }}" loading="lazy">
-                {% else %}
-                  <div style="width:100%;height:100%;background:linear-gradient(135deg,rgba(46,125,50,.3),rgba(245,124,0,.2));display:flex;align-items:center;justify-content:center;font-size:3rem">📚</div>
-                {% endif %}
-                <div class="overlay">
-                  <div class="play-btn">▶</div>
-                </div>
-                <div class="course-meta-top">
-                  <span class="badge badge-green">{{ f.get_niveau_display }}</span>
-                  {% if f.est_gratuite %}<span class="badge badge-orange">Gratuit</span>{% endif %}
-                </div>
-              </div>
-              <div class="course-body">
-                <div class="course-category">{{ f.categorie.icone }} {{ f.categorie.nom }}</div>
-                <h3 class="course-title">
-                  <a href="{% url 'formations:detail' slug=f.slug %}" style="color:inherit">{{ f.titre }}</a>
-                </h3>
-                <div class="course-meta">
-                  <span>📖 {{ f.nb_lecons }} leçons</span>
-                  <span>⏱️ {{ f.duree_totale }}min</span>
-                  <span>🌐 {{ f.get_langue_display }}</span>
-                </div>
-                {% if f.note_moyenne > 0 %}
-                <div class="course-stars">
-                  ★ {{ f.note_moyenne|floatformat:1 }}
-                  <span>({{ f.nb_inscrits }} inscrits)</span>
-                </div>
-                {% endif %}
-              </div>
-              <div class="course-footer">
-                <div class="course-price {% if f.est_gratuite %}free{% endif %}">
-                  {% if f.prix_barre %}<span class="original">{{ f.prix_barre|floatformat:0 }} FCFA</span>{% endif %}
-                  {% if f.est_gratuite %}Gratuit{% else %}{{ f.prix|floatformat:0 }} FCFA{% endif %}
-                </div>
-                <a href="{% url 'formations:detail' slug=f.slug %}" class="btn btn-outline btn-sm">Voir →</a>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-          {% else %}
-          <div style="text-align:center;padding:5rem 2rem">
-            <div style="font-size:4rem;margin-bottom:1rem">🔍</div>
-            <h3 style="font-size:1.25rem;font-weight:700;margin-bottom:.5rem">Aucune formation trouvée</h3>
-            <p style="color:var(--text-secondary)">Essaie d'autres filtres ou <a href="{% url 'formations:catalogue' %}" style="color:var(--primary-light)">réinitialise la recherche</a>.</p>
-          </div>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-  </section>
 </div>
-{% endblock %}
+
+<!-- Catégories pills -->
+<div class="bg-white border-b border-gray-100 sticky top-16 z-30">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex items-center gap-2 py-3 overflow-x-auto scrollbar-hide">
+      <a href="{% url 'formations:catalogue' %}"
+         class="cat-pill flex-shrink-0 text-sm font-semibold px-4 py-2 rounded-full border border-gray-200 text-gray-600 hover:border-purple-400 hover:text-purple-700 transition {% if not cat_slug %}active{% endif %}">
+        Toutes
+      </a>
+      {% for cat in categories %}
+      <a href="?categorie={{ cat.slug }}"
+         class="cat-pill flex-shrink-0 text-sm font-semibold px-4 py-2 rounded-full border border-gray-200 text-gray-600 hover:border-purple-400 hover:text-purple-700 transition {% if cat_slug == cat.slug %}active{% endif %}">
+        {{ cat.icone }} {{ cat.nom }}
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Filtres + grille -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+
+  <!-- Filtres secondaires -->
+  <div class="flex flex-wrap items-center gap-3 mb-6">
+    <form method="get" class="flex flex-wrap gap-2 flex-1">
+      {% if cat_slug %}<input type="hidden" name="categorie" value="{{ cat_slug }}">{% endif %}
+      {% if recherche %}<input type="hidden" name="q" value="{{ recherche }}">{% endif %}
+      <select name="niveau" onchange="this.form.submit()"
+              class="text-sm border border-gray-200 rounded-xl px-3 py-2 bg-white text-gray-600 focus:outline-none focus:border-purple-400">
+        <option value="">Tous niveaux</option>
+        {% for val, lbl in niveaux %}
+        <option value="{{ val }}" {% if niveau == val %}selected{% endif %}>{{ lbl }}</option>
+        {% endfor %}
+      </select>
+      <select name="langue" onchange="this.form.submit()"
+              class="text-sm border border-gray-200 rounded-xl px-3 py-2 bg-white text-gray-600 focus:outline-none focus:border-purple-400">
+        <option value="">Toutes langues</option>
+        {% for val, lbl in langues %}
+        <option value="{{ val }}" {% if langue == val %}selected{% endif %}>{{ lbl }}</option>
+        {% endfor %}
+      </select>
+      <label class="flex items-center gap-2 text-sm text-gray-600 border border-gray-200 rounded-xl px-3 py-2 bg-white cursor-pointer hover:border-purple-400 transition">
+        <input type="checkbox" name="gratuit" value="1" onchange="this.form.submit()"
+               {% if request.GET.gratuit %}checked{% endif %} class="accent-purple-600">
+        Gratuit uniquement
+      </label>
+    </form>
+    <span class="text-sm text-gray-400 font-medium">{{ formations|length }} formation{{ formations|length|pluralize }}</span>
+  </div>
+
+  {% if formations %}
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+    {% for f in formations %}
+    <a href="{% url 'formations:detail' f.slug %}"
+       class="card bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col group">
+      <!-- Thumbnail -->
+      <div class="relative h-44 bg-gradient-to-br from-purple-100 to-indigo-100 flex items-center justify-center overflow-hidden">
+        {% if f.thumbnail %}
+        <img src="{{ f.thumbnail.url }}" alt="{{ f.titre }}"
+             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"/>
+        {% else %}
+        <div class="text-5xl">{{ f.categorie.icone }}</div>
+        {% endif %}
+        {% if f.est_gratuite %}
+        <span class="absolute top-3 left-3 text-xs font-black px-2.5 py-1 rounded-full bg-green-500 text-white">Gratuit</span>
+        {% elif f.is_featured %}
+        <span class="absolute top-3 left-3 text-xs font-black px-2.5 py-1 rounded-full bg-amber-500 text-white">⭐ Vedette</span>
+        {% endif %}
+        <span class="absolute top-3 right-3 text-xs font-semibold px-2.5 py-1 rounded-full bg-black/50 text-white capitalize">{{ f.get_niveau_display }}</span>
+      </div>
+      <!-- Infos -->
+      <div class="p-4 flex flex-col flex-1">
+        <div class="text-xs text-purple-600 font-semibold mb-1">{{ f.categorie.icone }} {{ f.categorie.nom }}</div>
+        <h3 class="font-bold text-gray-900 text-sm leading-snug mb-2 line-clamp-2">{{ f.titre }}</h3>
+        {% if f.description_courte %}
+        <p class="text-xs text-gray-500 mb-3 line-clamp-2 flex-1">{{ f.description_courte }}</p>
+        {% endif %}
+        <div class="flex items-center justify-between mt-auto pt-2 border-t border-gray-50">
+          <div>
+            {% if f.est_gratuite %}
+            <span class="text-sm font-black text-green-600">Gratuit</span>
+            {% else %}
+            <span class="text-sm font-black text-gray-900">{{ f.prix|floatformat:0 }} FCFA</span>
+            {% if f.prix_barre %}
+            <span class="text-xs text-gray-400 line-through ml-1">{{ f.prix_barre|floatformat:0 }}</span>
+            {% endif %}
+            {% endif %}
+          </div>
+          <div class="flex items-center gap-1 text-xs text-gray-400">
+            <span>👥</span>
+            <span>{{ f.nb_inscrits }}</span>
+          </div>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="text-center py-20">
+    <div class="text-6xl mb-4">🔍</div>
+    <h3 class="text-xl font-bold text-gray-700 mb-2">Aucune formation trouvée</h3>
+    <p class="text-gray-400 mb-6">Essayez de modifier vos filtres ou votre recherche.</p>
+    <a href="{% url 'formations:catalogue' %}"
+       class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white text-sm"
+       style="background:linear-gradient(135deg,#8B5CF6,#7C3AED)">
+      Voir toutes les formations
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- CTA section -->
+<div class="bg-gradient-to-br from-purple-900 to-indigo-900 text-white py-14 px-4 text-center mt-10">
+  <div class="max-w-2xl mx-auto">
+    <div class="text-4xl mb-4">🚀</div>
+    <h2 class="text-2xl font-black mb-3">Pas encore abonné ?</h2>
+    <p class="text-white/70 text-sm mb-6">
+      Accédez à toutes nos formations avec un abonnement E-Shelle.
+      Paiement simple via Orange Money ou MTN Money.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      <a href="{% url 'accounts:upgrade' %}?app=formations"
+         class="px-8 py-3.5 rounded-2xl font-black text-sm bg-white text-purple-900 hover:bg-purple-50 transition">
+        Voir les offres →
+      </a>
+      <a href="https://wa.me/237680625082?text=Bonjour, je veux accéder aux formations E-Shelle."
+         target="_blank" rel="noopener noreferrer"
+         class="px-8 py-3.5 rounded-2xl font-bold text-sm text-white transition hover:opacity-90"
+         style="background:#25D366">
+        💬 WhatsApp
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer class="border-t border-gray-100 bg-white py-6 text-center text-sm text-gray-400">
+  <p>
+    <a href="/" class="font-bold hover:underline" style="color:#1B6534">E-Shelle</a>
+    &mdash; Formations professionnelles &bull; Made in Cameroun 🇨🇲
+  </p>
+</footer>
+
+</body>
+</html>

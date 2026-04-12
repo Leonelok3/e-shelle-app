@@ -3,12 +3,27 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
+from django.shortcuts import render
+
+
+def home_view(request):
+    ctx = {}
+    try:
+        from gaz.models import DepotGaz
+        ctx["gaz_depots_vedette"] = DepotGaz.objects.filter(
+            is_active=True, abonnement_actif=True, is_featured=True
+        ).select_related("ville", "quartier")[:3]
+    except Exception:
+        ctx["gaz_depots_vedette"] = []
+    return render(request, "home.html", ctx)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
 
-    # Authentification
+    # Authentification (vues custom E-Shelle)
     path("accounts/", include("accounts.urls")),
+    # Social Auth (OAuth Google / Facebook via allauth)
+    path("accounts/social/", include("allauth.socialaccount.urls")),
 
     # Anciens dashboards (compatibilité)
     path("dash/", include("progress.urls")),
@@ -66,8 +81,20 @@ urlpatterns = [
     # ── AdGen — Générateur de publicités IA ──────────────────────────
     path("pub/", include("adgen.urls", namespace="adgen")),
 
+    # ── E-Shelle Gaz — Livraison de gaz domestique ───────────────────
+    path("gaz/", include("gaz.urls", namespace="gaz")),
+
+    # ── E-Shelle Pharma — Annuaire pharmacies & médicaments ─────────
+    path("pharma/", include("pharma.urls", namespace="pharma")),
+
+    # ── E-Shelle Pressing — Pressing & Blanchisserie ─────────────────
+    path("pressing/", include("pressing.urls", namespace="pressing")),
+
+    # ── E-Shelle AI — Agent Intelligent Central ───────────────────────
+    path("ai/", include("e_shelle_ai.urls", namespace="eshelle_ai")),
+
     # Page d'accueil
-    path("", TemplateView.as_view(template_name="home.html"), name="home"),
+    path("", home_view, name="home"),
 ]
 
 

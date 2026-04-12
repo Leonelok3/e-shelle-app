@@ -9,7 +9,8 @@ from django.utils import timezone
 from .forms import LoginForm
 from .models import (
     Role, CustomUser, UserProfile, EmailVerification,
-    AppPlan, AppSubscription, PaymentHistory, AppKey, APP_ICONS, APP_COLORS,
+    AppPlan, AppSubscription, PaymentHistory, GlobalAccessCode,
+    AppKey, APP_ICONS, APP_COLORS,
 )
 
 
@@ -251,8 +252,12 @@ def mon_compte(request):
         if key not in active_subs and sub.is_active:
             active_subs[key] = sub
 
-    # Historique paiements (10 derniers)
-    payments = PaymentHistory.objects.filter(user=user).select_related("subscription__plan")[:10]
+    # Historique paiements — total dépensé AVANT le slice
+    payments_qs = PaymentHistory.objects.filter(user=user).select_related("subscription__plan")
+    total_spent = sum(
+        payments_qs.filter(status="success").values_list("amount_xaf", flat=True)
+    )
+    payments = payments_qs[:10]
 
     # Apps disponibles avec leur état
     apps_info = []
@@ -271,9 +276,8 @@ def mon_compte(request):
     stats = {
         "total_subs":  len(active_subs),
         "paid_subs":   sum(1 for s in active_subs.values() if s.plan.price_xaf > 0),
-        "total_spent": payments.filter(status="success").values_list("amount_xaf", flat=True),
+        "total_spent": total_spent,
     }
-    stats["total_spent"] = sum(stats["total_spent"])
 
     # Édition profil (POST)
     if request.method == "POST" and "save_profile" in request.POST:
@@ -382,3 +386,34 @@ def cancel_subscription(request, pk):
             messages.warning(request, "Cet abonnement n'est pas actif.")
 
     return redirect("accounts:mon_compte")
+
+
+# ─────────────────────────────────────────────────────────────────
+#  ACTIVATION CODE D'ACCÈS
+# ─────────────────────────────────────────────────────────────────
+
+@login_required
+def activer_code(request):
+    """
+    Page d'activation d'un code d'accès reçu de l'admin E-Shelle.
+    Le client saisit son code → ses abonnements sont créés automatiquement.
+    """
+    activated = None
+
+    if request.method == "POST":
+        raw = request.POST.get("code", "").strip().upper().replace(" ", "-")
+
+        try:
+            code_obj = GlobalAccessCode.objects.get(code=raw)
+        except GlobalAccessCode.DoesNotExist:
+            messages.error(request, "Code invalide. Vérifiez et réessayez.")
+            return render(request, "accounts/activer_code.html", {"code_input": raw})
+
+        ok, msg = code_obj.activate(request.user)
+        if ok:
+            messages.success(request, f"Code activé avec succès ! {msg}")
+            activated = code_obj
+        else:
+            messages.error(request, msg)
+
+    return render(request, "accounts/activer_code.html", {"activated": activated})

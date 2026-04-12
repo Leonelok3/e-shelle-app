@@ -1,0 +1,257 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>E-Shelle Pressing — Pressing & Blanchisserie au Cameroun</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    body{font-family:'Inter',sans-serif;background:#060B12;color:#fff}
+    :root{--indigo:#6366F1;--indigo-d:#4F46E5;--indigo-glow:rgba(99,102,241,.25)}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes pulse-ring{0%{transform:scale(.9);opacity:.7}100%{transform:scale(1.6);opacity:0}}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    .card-hover{transition:transform .2s,box-shadow .2s}
+    .card-hover:hover{transform:translateY(-4px);box-shadow:0 16px 40px var(--indigo-glow)}
+    .shimmer-bar{background:linear-gradient(90deg,#6366F1,#818CF8,#6366F1);background-size:200% 100%;animation:shimmer 2s linear infinite}
+    .fade-up{animation:fadeUp .6s ease both}
+    .live-dot::after{content:'';position:absolute;inset:0;border-radius:50%;background:#6366F1;animation:pulse-ring 1.5s ease-out infinite}
+    .search-glow:focus{box-shadow:0 0 0 3px rgba(99,102,241,.3);outline:none}
+    .filter-pill{transition:all .15s}
+    .filter-pill:hover,.filter-pill.active{background:linear-gradient(135deg,#6366F1,#4F46E5);color:#fff;border-color:transparent}
+  </style>
+</head>
+<body class="antialiased min-h-screen">
+
+<!-- Navbar -->
+<nav class="sticky top-0 z-40 border-b" style="background:rgba(6,11,18,.92);backdrop-filter:blur(20px);border-color:rgba(255,255,255,.06)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-4">
+    <a href="{% url 'pressing:accueil' %}" class="flex items-center gap-2.5 flex-shrink-0">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center font-black text-base"
+           style="background:linear-gradient(135deg,#6366F1,#4F46E5)">👔</div>
+      <span class="font-black text-white hidden sm:block">E-Shelle <span style="color:#818CF8">Pressing</span></span>
+    </a>
+    <div class="flex items-center gap-3 ml-auto">
+      <a href="{% url 'pressing:catalogue' %}" class="text-sm font-semibold text-white/60 hover:text-white transition hidden sm:block">Pressings</a>
+      {% if user.is_authenticated %}
+      <a href="{% url 'pressing:dashboard' %}" class="text-sm font-semibold text-white/60 hover:text-white transition hidden sm:block">Mon Pressing</a>
+      <a href="{% url 'accounts:mon_compte' %}" class="text-sm font-medium text-white/60 hover:text-white transition">Mon Compte</a>
+      {% else %}
+      <a href="{% url 'accounts:login' %}" class="text-sm font-medium text-white/60 hover:text-white transition">Connexion</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="relative overflow-hidden" style="min-height:90vh;display:flex;align-items:center;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(99,102,241,.14),transparent),#060B12">
+  <!-- Orbs -->
+  <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+    <div style="position:absolute;width:650px;height:650px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.1),transparent 70%);top:-150px;right:-100px;animation:float 9s ease-in-out infinite"></div>
+    <div style="position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(79,70,229,.08),transparent 70%);bottom:-80px;left:-80px;animation:float 11s ease-in-out infinite reverse"></div>
+  </div>
+  <!-- Vêtements flottants -->
+  <div class="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+    {% for item in "👔👗👕🧥👔👗👖🧣" %}
+    <div class="absolute text-3xl opacity-8"
+         style="left:{{ forloop.counter0|add:'5' }}0%;top:{{ forloop.counter0|add:'1' }}0%;animation:float {{ forloop.counter|add:'5' }}s ease-in-out infinite;animation-delay:-{{ forloop.counter }}s;opacity:.06">{{ item }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20 relative z-10 w-full">
+    <div class="max-w-3xl mx-auto text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold mb-6 fade-up"
+           style="background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.25);color:#a5b4fc">
+        <span class="relative inline-block w-2 h-2 rounded-full live-dot" style="background:#6366F1"></span>
+        Pressing digital — Cameroun 🇨🇲
+      </div>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 fade-up" style="animation-delay:.1s">
+        Vos vêtements
+        <span style="background:linear-gradient(135deg,#818CF8,#6366F1);-webkit-background-clip:text;-webkit-text-fill-color:transparent">impeccables</span>
+        livrés chez vous
+      </h1>
+      <p class="text-white/50 text-lg mb-10 fade-up" style="animation-delay:.2s">
+        Trouvez le meilleur pressing près de chez vous. Commandez en ligne, collecte à domicile, livraison après traitement.
+      </p>
+
+      <!-- Barre recherche -->
+      <form method="get" action="{% url 'pressing:catalogue' %}"
+            class="relative max-w-xl mx-auto fade-up" style="animation-delay:.3s">
+        <input type="search" name="q" placeholder="Rechercher un pressing, quartier..."
+               class="w-full px-6 py-4 rounded-2xl text-sm text-white placeholder-white/30 search-glow transition"
+               style="background:rgba(255,255,255,.07);border:1px solid rgba(99,102,241,.2)"/>
+        <button type="submit"
+                class="absolute right-2 top-1/2 -translate-y-1/2 px-5 py-2 rounded-xl font-bold text-sm text-white transition hover:opacity-90"
+                style="background:linear-gradient(135deg,#6366F1,#4F46E5)">
+          Chercher
+        </button>
+      </form>
+
+      <!-- Villes rapides -->
+      <div class="flex flex-wrap justify-center gap-2 mt-5 fade-up" style="animation-delay:.4s">
+        {% for ville in villes %}
+        <a href="{% url 'pressing:catalogue' %}?ville={{ ville.slug }}"
+           class="text-xs px-4 py-1.5 rounded-full font-semibold transition hover:opacity-80"
+           style="background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);color:#a5b4fc">
+          {{ ville.nom }}
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-3 gap-4 max-w-lg mx-auto mt-14 fade-up" style="animation-delay:.5s">
+      <div class="text-center p-4 rounded-2xl" style="background:rgba(255,255,255,.04);border:1px solid rgba(99,102,241,.1)">
+        <div class="text-3xl font-black" style="color:#6366F1">{{ stats.nb_pressings }}</div>
+        <div class="text-xs text-white/40 mt-1">Pressings actifs</div>
+      </div>
+      <div class="text-center p-4 rounded-2xl" style="background:rgba(255,255,255,.04);border:1px solid rgba(99,102,241,.1)">
+        <div class="text-3xl font-black" style="color:#6366F1">{{ stats.nb_villes }}</div>
+        <div class="text-xs text-white/40 mt-1">Villes couvertes</div>
+      </div>
+      <div class="text-center p-4 rounded-2xl" style="background:rgba(255,255,255,.04);border:1px solid rgba(99,102,241,.1)">
+        <div class="text-3xl font-black" style="color:#6366F1">{{ stats.nb_commandes }}+</div>
+        <div class="text-xs text-white/40 mt-1">Commandes traitées</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATÉGORIES -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+  <div class="text-center mb-8">
+    <div class="text-xs font-bold uppercase tracking-widest mb-2" style="color:#6366F1">Services disponibles</div>
+    <h2 class="text-2xl font-black text-white">Tous types de vêtements</h2>
+  </div>
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+    {% for cat in categories %}
+    <a href="{% url 'pressing:catalogue' %}?cat={{ cat.slug }}"
+       class="card-hover p-4 rounded-2xl text-center border transition"
+       style="background:rgba(255,255,255,.03);border-color:rgba(99,102,241,.1)">
+      <div class="text-3xl mb-2">{{ cat.icone }}</div>
+      <div class="font-bold text-white text-xs">{{ cat.nom }}</div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- PRESSINGS VEDETTES -->
+{% if vedettes %}
+<section class="max-w-7xl mx-auto px-4 sm:px-6 pb-12">
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <div class="text-xs font-bold uppercase tracking-widest mb-1" style="color:#6366F1">En vedette</div>
+      <h2 class="text-2xl font-black text-white">Pressings recommandés</h2>
+    </div>
+    <a href="{% url 'pressing:catalogue' %}" class="text-sm font-bold" style="color:#818CF8">Voir tous →</a>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    {% for p in vedettes %}
+    <a href="{% url 'pressing:detail' p.slug %}"
+       class="card-hover flex flex-col rounded-3xl overflow-hidden border"
+       style="background:rgba(255,255,255,.03);border-color:rgba(99,102,241,.15)">
+      <div class="h-1 shimmer-bar"></div>
+      <div class="h-36 relative flex items-center justify-center overflow-hidden"
+           style="background:linear-gradient(135deg,rgba(99,102,241,.1),rgba(79,70,229,.06))">
+        {% if p.photo %}
+        <img src="{{ p.photo.url }}" alt="{{ p.nom }}" class="w-full h-full object-cover"/>
+        {% else %}
+        <div class="text-5xl" style="filter:drop-shadow(0 0 20px rgba(99,102,241,.5))">👔</div>
+        {% endif %}
+        {% if p.express %}
+        <div class="absolute top-3 right-3">
+          <span class="text-xs font-black px-2 py-0.5 rounded-full text-white" style="background:rgba(99,102,241,.85)">⚡ Express</span>
+        </div>
+        {% endif %}
+        {% if p.is_verified %}
+        <div class="absolute top-3 left-3">
+          <span class="text-xs font-black px-2 py-0.5 rounded-full bg-green-500/90 text-white">✓ Vérifié</span>
+        </div>
+        {% endif %}
+      </div>
+      <div class="p-4 flex flex-col flex-1">
+        <h3 class="font-black text-white text-sm mb-1">{{ p.nom }}</h3>
+        <div class="text-xs text-white/40 mb-1">📍 {{ p.quartier.nom|default:p.ville.nom }}, {{ p.ville.nom }}</div>
+        <div class="text-xs text-white/30 mb-2">🕐 {{ p.horaires }}</div>
+        <div class="flex flex-wrap gap-1 mb-3">
+          {% if p.collecte_domicile %}<span class="text-xs px-2 py-0.5 rounded-full" style="background:rgba(99,102,241,.1);color:#a5b4fc">🚗 Collecte</span>{% endif %}
+          {% if p.livraison_domicile %}<span class="text-xs px-2 py-0.5 rounded-full" style="background:rgba(99,102,241,.1);color:#a5b4fc">🛵 Livraison</span>{% endif %}
+          <span class="text-xs px-2 py-0.5 rounded-full" style="background:rgba(99,102,241,.1);color:#a5b4fc">⏱ {{ p.delai_traitement }}</span>
+        </div>
+        {% if p.nb_avis > 0 %}
+        <div class="flex items-center gap-1 mb-3">
+          <span style="color:#6366F1" class="text-xs">{% for i in "12345" %}{% if forloop.counter <= p.etoiles %}★{% else %}☆{% endif %}{% endfor %}</span>
+          <span class="text-xs text-white/30">{{ p.nb_avis }} avis</span>
+        </div>
+        {% endif %}
+        <div class="flex gap-2 mt-auto">
+          <a href="{% url 'pressing:commander' p.slug %}" onclick="event.stopPropagation()"
+             class="flex-1 flex items-center justify-center gap-1 py-2.5 rounded-xl text-xs font-black text-white transition hover:opacity-90"
+             style="background:linear-gradient(135deg,#6366F1,#4F46E5)">🧺 Commander</a>
+          <a href="{{ p.whatsapp_url }}" target="_blank" rel="noopener" onclick="event.stopPropagation()"
+             class="flex items-center justify-center px-3 py-2.5 rounded-xl text-xs font-black text-white hover:opacity-90"
+             style="background:#25D366">📱</a>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- COMMENT ÇA MARCHE -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
+  <div class="text-center mb-10">
+    <div class="text-xs font-bold uppercase tracking-widest mb-2" style="color:#6366F1">Simple & rapide</div>
+    <h2 class="text-2xl font-black text-white">Comment ça marche ?</h2>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-4 gap-5">
+    {% for step in "1234" %}
+    <div class="text-center p-6 rounded-2xl border" style="background:rgba(255,255,255,.03);border-color:rgba(99,102,241,.1)">
+      <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl mx-auto mb-4 font-black text-white text-lg"
+           style="background:linear-gradient(135deg,#6366F1,#4F46E5)">
+        {% if forloop.counter == 1 %}🔍{% elif forloop.counter == 2 %}🧺{% elif forloop.counter == 3 %}🚗{% else %}✨{% endif %}
+      </div>
+      <h3 class="font-black text-white text-sm mb-2">
+        {% if forloop.counter == 1 %}Trouvez un pressing{% elif forloop.counter == 2 %}Choisissez vos articles{% elif forloop.counter == 3 %}Collecte à domicile{% else %}Livraison impeccable{% endif %}
+      </h3>
+      <p class="text-white/40 text-xs">
+        {% if forloop.counter == 1 %}Filtrez par ville, quartier, service express ou collecte.
+        {% elif forloop.counter == 2 %}Sélectionnez chemises, pantalons, costumes et passez votre commande.
+        {% elif forloop.counter == 3 %}Le pressing vient chercher vos vêtements chez vous ou vous déposez.
+        {% else %}Vos vêtements traités, repassés, et livrés en 24-48h.{% endif %}
+      </p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- CTA inscription -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
+  <div class="rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden border"
+       style="background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(79,70,229,.05));border-color:rgba(99,102,241,.2)">
+    <div class="absolute top-0 left-0 right-0 h-1 shimmer-bar"></div>
+    <div class="text-4xl mb-4">🏪</div>
+    <h3 class="text-2xl font-black text-white mb-3">Vous avez un pressing ?</h3>
+    <p class="text-white/50 text-sm max-w-md mx-auto mb-6">
+      Inscrivez votre établissement, gérez vos commandes en ligne et augmentez votre clientèle. À partir de 2 000 FCFA/mois.
+    </p>
+    <a href="https://wa.me/237680625082?text={{ 'Bonjour, je veux inscrire mon pressing sur E-Shelle.'|urlencode }}"
+       target="_blank"
+       class="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl font-bold text-white transition hover:opacity-90"
+       style="background:linear-gradient(135deg,#6366F1,#4F46E5);box-shadow:0 8px 30px rgba(99,102,241,.3)">
+      📱 Nous contacter sur WhatsApp
+    </a>
+  </div>
+</section>
+
+<footer class="border-t py-6 px-4 text-center text-sm text-white/20" style="border-color:rgba(255,255,255,.05);background:#030712">
+  <a href="/" class="font-black hover:text-white transition" style="color:#6366F1">E-Shelle</a>
+  &mdash; Pressing digital &mdash; Made in Cameroun 🇨🇲
+</footer>
+</body>
+</html>

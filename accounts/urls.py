@@ -3,7 +3,7 @@ from django.contrib.auth import views as auth_views
 from .views import (
     AppLoginView, AppLogoutView,
     role_redirect, register, profil, verify_email, resend_code,
-    mon_compte, upgrade, cancel_subscription,
+    mon_compte, upgrade, cancel_subscription, activer_code,
 )
 
 app_name = "accounts"
@@ -33,4 +33,5 @@ urlpatterns = [
     path("mon-compte/",      mon_compte,               name="mon_compte"),
     path("upgrade/",         upgrade,                  name="upgrade"),
     path("abonnement/<int:pk>/annuler/", cancel_subscription, name="cancel_subscription"),
+    path("activer/",       activer_code,             name="activer_code"),
 ]

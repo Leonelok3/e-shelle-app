@@ -1,0 +1,458 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>E-Shelle Gaz &mdash; Livraison de gaz a domicile au Cameroun</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']},colors:{flame:{'50':'#fff7ed','100':'#ffedd5','400':'#fb923c','500':'#f97316','600':'#FF6B00','700':'#c2410c','900':'#7c2d12'}}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+
+    /* Flamme animee */
+    @keyframes flicker {
+      0%,100% { transform: scaleY(1) rotate(-1deg); opacity: 1; }
+      25%      { transform: scaleY(1.05) rotate(1deg); opacity: .9; }
+      50%      { transform: scaleY(.96) rotate(-2deg); opacity: 1; }
+      75%      { transform: scaleY(1.03) rotate(1.5deg); opacity: .95; }
+    }
+    @keyframes glow {
+      0%,100% { box-shadow: 0 0 30px 8px rgba(255,107,0,.35); }
+      50%      { box-shadow: 0 0 60px 20px rgba(255,200,0,.4); }
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-8px); }
+    }
+    @keyframes pulse-ring {
+      0%   { transform: scale(.9); opacity: .7; }
+      100% { transform: scale(1.4); opacity: 0; }
+    }
+    @keyframes slide-up {
+      from { opacity:0; transform:translateY(30px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .flame-emoji {
+      display: inline-block;
+      animation: flicker 1.8s ease-in-out infinite;
+      filter: drop-shadow(0 0 12px rgba(255,150,0,.8));
+    }
+    .hero-glow { animation: glow 3s ease-in-out infinite; }
+    .float-card { animation: float 4s ease-in-out infinite; }
+    .pulse-dot::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse-ring 1.5s ease-out infinite;
+    }
+    .animate-up { animation: slide-up .6s ease-out both; }
+    .delay-1 { animation-delay: .1s; }
+    .delay-2 { animation-delay: .2s; }
+    .delay-3 { animation-delay: .3s; }
+
+    .depot-card { transition: transform .2s, box-shadow .2s; }
+    .depot-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(255,107,0,.15); }
+
+    .ville-btn { transition: all .2s; }
+    .ville-btn:hover { background: linear-gradient(135deg,#FF6B00,#FFD700); color:#fff; transform:scale(1.03); }
+
+    /* Particules de feu */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, #FFD700, #FF6B00, transparent);
+      animation: rise linear infinite;
+      pointer-events: none;
+    }
+    @keyframes rise {
+      0%   { transform: translateY(0) scale(1); opacity: .8; }
+      100% { transform: translateY(-120px) scale(0); opacity: 0; }
+    }
+  </style>
+</head>
+<body class="bg-gray-950 text-white antialiased">
+
+<!-- ═══ NAVBAR ══════════════════════════════════════════════════════════════ -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-gray-950/80 backdrop-blur-xl border-b border-white/5">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-4">
+    <a href="/" class="flex items-center gap-2.5 flex-shrink-0">
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center font-black text-base shadow-lg"
+           style="background:linear-gradient(135deg,#FF6B00,#FFD700)">
+        <span style="text-shadow:0 1px 3px rgba(0,0,0,.4)">G</span>
+      </div>
+      <span class="font-black text-white text-lg hidden sm:block">
+        E<span style="color:#FF6B00">-Shelle</span> <span class="text-orange-400">Gaz</span>
+      </span>
+    </a>
+    <div class="hidden md:flex items-center gap-1 ml-4">
+      <a href="{% url 'gaz:catalogue' %}" class="text-sm font-medium text-white/70 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
+        Trouver un depot
+      </a>
+      <a href="#comment-ca-marche" class="text-sm font-medium text-white/70 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition">
+        Comment ca marche
+      </a>
+    </div>
+    <div class="ml-auto flex items-center gap-3">
+      {% if user.is_authenticated %}
+      <a href="{% url 'accounts:mon_compte' %}"
+         class="text-sm font-semibold px-4 py-2 rounded-xl border border-white/10 text-white/80 hover:bg-white/5 transition">
+        Mon Compte
+      </a>
+      {% else %}
+      <a href="{% url 'accounts:login' %}" class="text-sm font-medium text-white/70 hover:text-white transition">Connexion</a>
+      <a href="{% url 'accounts:register' %}"
+         class="text-sm font-bold px-4 py-2 rounded-xl text-white shadow-lg transition hover:opacity-90"
+         style="background:linear-gradient(135deg,#FF6B00,#FFD700)">
+        S'inscrire
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═════════════════════════════════════════════════════════════════ -->
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+
+  <!-- Background gradient -->
+  <div class="absolute inset-0" style="background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,107,0,.18) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 80% 60%,rgba(255,200,0,.1) 0%,transparent 60%),#030712"></div>
+
+  <!-- Particules de feu (CSS) -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none" id="particles"></div>
+
+  <!-- Grid lines decoration -->
+  <div class="absolute inset-0 opacity-5" style="background-image:linear-gradient(rgba(255,255,255,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.1) 1px,transparent 1px);background-size:60px 60px"></div>
+
+  <div class="relative max-w-5xl mx-auto px-4 sm:px-6 text-center">
+
+    <!-- Badge -->
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8 animate-up"
+         style="background:rgba(255,107,0,.15);border:1px solid rgba(255,107,0,.3)">
+      <span class="relative flex h-2 w-2">
+        <span class="pulse-dot relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
+      </span>
+      <span class="text-sm font-semibold text-orange-300">
+        {{ nb_total }} depot{{ nb_total|pluralize }} actif{{ nb_total|pluralize }} &bull; {{ nb_villes }} ville{{ nb_villes|pluralize }}
+      </span>
+    </div>
+
+    <!-- Titre -->
+    <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight animate-up delay-1">
+      <span class="flame-emoji text-5xl sm:text-7xl block mb-2">&#128293;</span>
+      Du gaz chez vous<br>
+      <span class="bg-clip-text text-transparent" style="background-image:linear-gradient(135deg,#FF6B00,#FFD700,#FF6B00)">
+        en 30 minutes
+      </span>
+    </h1>
+
+    <p class="text-lg sm:text-xl text-white/60 mb-10 max-w-xl mx-auto animate-up delay-2">
+      Trouvez le depot de gaz le plus proche de chez vous.
+      Appelez ou envoyez un WhatsApp &mdash; ils livrent, vous payez a la reception.
+    </p>
+
+    <!-- CTA principal -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-center animate-up delay-3">
+      <a href="{% url 'gaz:catalogue' %}"
+         class="hero-glow group relative inline-flex items-center gap-3 px-8 py-4 rounded-2xl font-black text-white text-base shadow-2xl transition hover:scale-105"
+         style="background:linear-gradient(135deg,#FF6B00,#FFD700)">
+        <span class="text-xl">&#128293;</span>
+        Trouver un depot pres de moi
+        <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
+      </a>
+      <a href="#villes"
+         class="inline-flex items-center gap-3 px-8 py-4 rounded-2xl font-bold text-white/80 text-base border border-white/10 hover:bg-white/5 transition">
+        <span>&#127759;</span>
+        Choisir ma ville
+      </a>
+    </div>
+
+    <!-- Stats rapides -->
+    <div class="grid grid-cols-3 gap-4 mt-16 max-w-lg mx-auto animate-up">
+      <div class="bg-white/5 backdrop-blur rounded-2xl p-4 border border-white/5">
+        <div class="text-2xl font-black text-orange-400">{{ nb_total }}+</div>
+        <div class="text-xs text-white/50 mt-0.5">Depots actifs</div>
+      </div>
+      <div class="bg-white/5 backdrop-blur rounded-2xl p-4 border border-white/5">
+        <div class="text-2xl font-black text-yellow-400">30 min</div>
+        <div class="text-xs text-white/50 mt-0.5">Livraison express</div>
+      </div>
+      <div class="bg-white/5 backdrop-blur rounded-2xl p-4 border border-white/5">
+        <div class="text-2xl font-black text-green-400">0 FCFA</div>
+        <div class="text-xs text-white/50 mt-0.5">Commission</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-40">
+    <div class="text-white/60 text-xs font-semibold">Decouvrir</div>
+    <svg class="w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ═══ COMMENT CA MARCHE ════════════════════════════════════════════════════ -->
+<section id="comment-ca-marche" class="py-20 px-4 relative">
+  <div class="absolute inset-0" style="background:linear-gradient(180deg,#030712,#0d0d0d,#030712)"></div>
+  <div class="relative max-w-5xl mx-auto">
+    <div class="text-center mb-14">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold text-orange-400 mb-4"
+           style="background:rgba(255,107,0,.1);border:1px solid rgba(255,107,0,.2)">
+        Simple comme bonjour
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-black">Comment ca marche ?</h2>
+      <p class="text-white/50 mt-3">4 etapes, moins de 5 minutes</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {% for step in steps %}
+      {% endfor %}
+      <!-- Step 1 -->
+      <div class="float-card relative bg-white/3 backdrop-blur rounded-3xl p-6 border border-white/5 text-center" style="animation-delay:0s">
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4"
+             style="background:linear-gradient(135deg,rgba(255,107,0,.2),rgba(255,200,0,.2));border:1px solid rgba(255,107,0,.3)">
+          &#128270;
+        </div>
+        <div class="text-xs font-black text-orange-400 mb-2">ETAPE 1</div>
+        <h3 class="font-black text-white mb-2">Trouvez un depot</h3>
+        <p class="text-sm text-white/50 leading-relaxed">Choisissez votre ville et votre quartier. Parcourez les depots disponibles.</p>
+      </div>
+      <!-- Step 2 -->
+      <div class="float-card relative bg-white/3 backdrop-blur rounded-3xl p-6 border border-white/5 text-center" style="animation-delay:.5s">
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4"
+             style="background:linear-gradient(135deg,rgba(37,211,102,.2),rgba(37,211,102,.1));border:1px solid rgba(37,211,102,.3)">
+          &#128242;
+        </div>
+        <div class="text-xs font-black text-green-400 mb-2">ETAPE 2</div>
+        <h3 class="font-black text-white mb-2">Contactez par WhatsApp</h3>
+        <p class="text-sm text-white/50 leading-relaxed">Un seul clic sur le bouton vert. Le depot repond en quelques minutes.</p>
+      </div>
+      <!-- Step 3 -->
+      <div class="float-card relative bg-white/3 backdrop-blur rounded-3xl p-6 border border-white/5 text-center" style="animation-delay:1s">
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4"
+             style="background:linear-gradient(135deg,rgba(59,130,246,.2),rgba(59,130,246,.1));border:1px solid rgba(59,130,246,.3)">
+          &#128668;
+        </div>
+        <div class="text-xs font-black text-blue-400 mb-2">ETAPE 3</div>
+        <h3 class="font-black text-white mb-2">Le depot livre</h3>
+        <p class="text-sm text-white/50 leading-relaxed">Le livreur arrive chez vous en 30 a 60 minutes avec votre bouteille de gaz.</p>
+      </div>
+      <!-- Step 4 -->
+      <div class="float-card relative bg-white/3 backdrop-blur rounded-3xl p-6 border border-white/5 text-center" style="animation-delay:1.5s">
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4"
+             style="background:linear-gradient(135deg,rgba(250,204,21,.2),rgba(250,204,21,.1));border:1px solid rgba(250,204,21,.3)">
+          &#128181;
+        </div>
+        <div class="text-xs font-black text-yellow-400 mb-2">ETAPE 4</div>
+        <h3 class="font-black text-white mb-2">Payez a la livraison</h3>
+        <p class="text-sm text-white/50 leading-relaxed">Vous payez en especes directement au livreur. Aucun paiement en ligne requis.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ VILLES ════════════════════════════════════════════════════════════════ -->
+<section id="villes" class="py-20 px-4">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-12">
+      <div class="text-4xl mb-3">&#127759;</div>
+      <h2 class="text-3xl font-black text-white">Choisissez votre ville</h2>
+      <p class="text-white/40 mt-2 text-sm">Depots disponibles dans toutes les grandes villes du Cameroun</p>
+    </div>
+    <div class="flex flex-wrap justify-center gap-3">
+      {% for ville in villes %}
+      <a href="{% url 'gaz:catalogue' %}?ville={{ ville.slug }}"
+         class="ville-btn flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-sm border border-white/10 text-white/80"
+         style="background:rgba(255,255,255,.04)">
+        <span class="text-orange-400 font-black">{{ ville.depots.count }}</span>
+        <span>{{ ville.nom }}</span>
+        <span class="text-white/30 text-xs ml-1">{{ ville.region }}</span>
+      </a>
+      {% empty %}
+      <p class="text-white/30 text-sm">Aucune ville disponible pour le moment.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DEPOTS VEDETTES ══════════════════════════════════════════════════════ -->
+{% if featured %}
+<section class="py-16 px-4 relative">
+  <div class="absolute inset-0 opacity-30" style="background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(255,107,0,.08),transparent)"></div>
+  <div class="relative max-w-6xl mx-auto">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h2 class="text-2xl font-black text-white">&#11088; Depots mis en avant</h2>
+        <p class="text-white/40 text-sm mt-1">Selectionnes pour leur qualite de service</p>
+      </div>
+      <a href="{% url 'gaz:catalogue' %}"
+         class="text-sm font-bold px-4 py-2 rounded-xl text-orange-400 border border-orange-400/30 hover:bg-orange-400/10 transition">
+        Voir tout &rarr;
+      </a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {% for depot in featured %}
+      <a href="{% url 'gaz:detail' depot.slug %}"
+         class="depot-card group bg-white/3 backdrop-blur rounded-3xl border border-white/5 overflow-hidden flex flex-col">
+        <!-- Header carte -->
+        <div class="relative h-36 flex items-center justify-center overflow-hidden"
+             style="background:linear-gradient(135deg,rgba(255,107,0,.15),rgba(255,200,0,.1))">
+          {% if depot.photo %}
+          <img src="{{ depot.photo.url }}" alt="{{ depot.nom }}"
+               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+          {% else %}
+          <div class="text-6xl" style="filter:drop-shadow(0 0 20px rgba(255,150,0,.6))">&#128293;</div>
+          {% endif %}
+          <!-- Badges -->
+          <div class="absolute top-3 left-3 flex gap-1.5">
+            {% if depot.is_verified %}
+            <span class="text-xs font-black px-2.5 py-1 rounded-full bg-green-500/90 text-white backdrop-blur">&#10003; Verifie</span>
+            {% endif %}
+            {% if depot.livraison_rapide %}
+            <span class="text-xs font-black px-2.5 py-1 rounded-full text-white backdrop-blur"
+                  style="background:rgba(255,107,0,.9)">&#9889; Express</span>
+            {% endif %}
+          </div>
+        </div>
+        <!-- Infos -->
+        <div class="p-5 flex flex-col flex-1">
+          <h3 class="font-black text-white text-base mb-1 leading-snug">{{ depot.nom }}</h3>
+          <div class="flex items-center gap-2 text-xs text-white/50 mb-3">
+            <span>&#128205;</span>
+            <span>{{ depot.quartier.nom|default:depot.ville.nom }}, {{ depot.ville.nom }}</span>
+          </div>
+          {% if depot.nb_avis > 0 %}
+          <div class="flex items-center gap-1.5 mb-3">
+            <span class="text-orange-400 text-sm">{% for i in "12345" %}{% if forloop.counter <= depot.etoiles %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</span>
+            <span class="text-xs text-white/40">({{ depot.nb_avis }})</span>
+          </div>
+          {% endif %}
+          <!-- Tailles -->
+          {% if depot.tailles %}
+          <div class="flex flex-wrap gap-1.5 mb-4">
+            {% for t in depot.tailles_display %}
+            <span class="text-xs px-2 py-0.5 rounded-full font-semibold text-orange-300"
+                  style="background:rgba(255,107,0,.15);border:1px solid rgba(255,107,0,.2)">
+              {{ t }}
+            </span>
+            {% endfor %}
+          </div>
+          {% endif %}
+          <!-- Prix si renseignes -->
+          {% if depot.prix_6kg %}
+          <div class="text-xs text-white/40 mb-3">6 kg &mdash; <strong class="text-orange-400">{{ depot.prix_6kg }} FCFA</strong></div>
+          {% endif %}
+          <!-- CTA -->
+          <div class="flex gap-2 mt-auto">
+            <a href="{{ depot.whatsapp_url }}" target="_blank" rel="noopener noreferrer"
+               onclick="event.stopPropagation()"
+               class="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-black text-white transition hover:opacity-90"
+               style="background:#25D366">
+              &#128242; WhatsApp
+            </a>
+            <a href="{{ depot.tel_url }}" onclick="event.stopPropagation()"
+               class="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-black text-white transition hover:opacity-90"
+               style="background:rgba(59,130,246,.8)">
+              &#128222;
+            </a>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ═══ AVANTAGES ════════════════════════════════════════════════════════════ -->
+<section class="py-20 px-4" style="background:linear-gradient(180deg,transparent,rgba(255,107,0,.04),transparent)">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-14">
+      <h2 class="text-3xl font-black text-white">Pourquoi E-Shelle Gaz ?</h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <div class="text-center p-6">
+        <div class="text-4xl mb-4">&#9889;</div>
+        <h3 class="font-black text-white mb-2">Ultra rapide</h3>
+        <p class="text-sm text-white/40 leading-relaxed">Livraison en 30 a 60 minutes. Certains depots livrent meme la nuit.</p>
+      </div>
+      <div class="text-center p-6">
+        <div class="text-4xl mb-4">&#128181;</div>
+        <h3 class="font-black text-white mb-2">Paiement simple</h3>
+        <p class="text-sm text-white/40 leading-relaxed">Vous payez en especes a la livraison. Aucune carte ni paiement en ligne.</p>
+      </div>
+      <div class="text-center p-6">
+        <div class="text-4xl mb-4">&#128202;</div>
+        <h3 class="font-black text-white mb-2">Prix transparents</h3>
+        <p class="text-sm text-white/40 leading-relaxed">Les prix sont affiches clairement. Comparez et choisissez le meilleur tarif.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA FINAL ════════════════════════════════════════════════════════════ -->
+<section class="py-20 px-4">
+  <div class="max-w-2xl mx-auto text-center">
+    <div class="relative inline-block mb-8">
+      <div class="flame-emoji text-7xl">&#128293;</div>
+      <div class="absolute inset-0 rounded-full opacity-30 animate-ping"
+           style="background:radial-gradient(circle,#FF6B00,transparent);width:80px;height:80px;margin:auto"></div>
+    </div>
+    <h2 class="text-3xl sm:text-4xl font-black text-white mb-4">
+      Plus de panne de gaz au mauvais moment
+    </h2>
+    <p class="text-white/50 text-base mb-8 max-w-md mx-auto">
+      Des centaines de depots a votre service. Toujours une bouteille disponible.
+    </p>
+    <a href="{% url 'gaz:catalogue' %}"
+       class="hero-glow inline-flex items-center gap-3 px-10 py-4 rounded-2xl font-black text-white text-base shadow-2xl transition hover:scale-105"
+       style="background:linear-gradient(135deg,#FF6B00,#FFD700)">
+      <span>&#128293;</span>
+      Trouver mon depot maintenant
+      <span>&rarr;</span>
+    </a>
+  </div>
+</section>
+
+<footer class="border-t py-8 px-4 text-center" style="border-color:rgba(255,255,255,.05);background:#030712">
+  <div class="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-white/30">
+    <a href="/" class="font-black hover:text-white transition" style="color:#FF6B00">E-Shelle</a>
+    <span>&bull;</span>
+    <span>Livraison de gaz au Cameroun</span>
+    <span>&bull;</span>
+    <span>Made in Cameroun &#127464;&#127474;</span>
+  </div>
+</footer>
+
+<script>
+// Particules de feu
+function createParticles() {
+  const container = document.getElementById('particles');
+  if (!container) return;
+  function spawn() {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 8 + 4;
+    p.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random() * 100}%;
+      bottom:${Math.random() * 30}%;
+      animation-duration:${Math.random() * 2 + 1.5}s;
+      animation-delay:${Math.random() * 2}s;
+      opacity:${Math.random() * 0.6 + 0.2};
+    `;
+    container.appendChild(p);
+    setTimeout(() => p.remove(), 4000);
+  }
+  setInterval(spawn, 300);
+}
+createParticles();
+</script>
+
+</body>
+</html>

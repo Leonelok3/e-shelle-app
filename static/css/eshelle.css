@@ -12,10 +12,10 @@
   --accent-light:   #FFB74D;
   --accent-dark:    #E65100;
 
-  --bg-dark:        #16214f;
-  --bg-card:        #473838;
-  --bg-surface:     #0c0353;
-  --bg-elevated:    #222222;
+  --bg-dark:        #060B12;
+  --bg-card:        #0D1626;
+  --bg-surface:     #091320;
+  --bg-elevated:    #111D30;
 
   --text-primary:   #FAFAFA;
   --text-secondary: #9E9E9E;
@@ -25,7 +25,7 @@
   --border-light:   rgba(255,255,255,0.12);
   --border-green:   rgba(46,125,50,0.3);
 
-  --gradient-hero:  linear-gradient(135deg,#0A0A0A 0%,#0D1F0D 50%,#0A0A0A 100%);
+  --gradient-hero:  linear-gradient(135deg,#060B12 0%,#0A1A2E 40%,#06120A 100%);
   --gradient-cta:   linear-gradient(135deg,#2E7D32,#F57C00);
   --gradient-green: linear-gradient(135deg,#2E7D32,#4CAF50);
   --gradient-card:  linear-gradient(135deg,rgba(46,125,50,.08),rgba(245,124,0,.04));
@@ -687,14 +687,20 @@ select.form-control { cursor: pointer; }
   pointer-events: none;
 }
 .hero-glow-1 {
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(46,125,50,0.15) 0%, transparent 70%);
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(46,125,50,0.18) 0%, transparent 70%);
   top: -200px; right: -100px;
+  animation: glow-pulse 6s ease-in-out infinite alternate;
 }
 .hero-glow-2 {
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(245,124,0,0.1) 0%, transparent 70%);
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(255,107,0,0.12) 0%, transparent 70%);
   bottom: -100px; left: -50px;
+  animation: glow-pulse 8s ease-in-out infinite alternate-reverse;
+}
+@keyframes glow-pulse {
+  0%   { opacity: .6; transform: scale(.95); }
+  100% { opacity: 1;  transform: scale(1.08); }
 }
 
 .hero-content {

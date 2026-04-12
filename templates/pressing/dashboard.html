@@ -1,0 +1,191 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — {{ pressing.nom }} · E-Shelle Pressing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    body{font-family:'Inter',sans-serif;background:#060B12;color:#fff}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    .shimmer-bar{background:linear-gradient(90deg,#6366F1,#818CF8,#6366F1);background-size:200% 100%;animation:shimmer 2s linear infinite}
+    .tab-btn.active{background:linear-gradient(135deg,#6366F1,#4F46E5);color:#fff;border-color:transparent}
+  </style>
+</head>
+<body class="antialiased min-h-screen">
+
+<!-- Navbar -->
+<nav class="sticky top-0 z-40 border-b" style="background:rgba(6,11,18,.92);backdrop-filter:blur(20px);border-color:rgba(255,255,255,.06)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-4">
+    <a href="{% url 'pressing:accueil' %}" class="flex items-center gap-2.5 flex-shrink-0">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center font-black text-base" style="background:linear-gradient(135deg,#6366F1,#4F46E5)">👔</div>
+      <span class="font-black text-white hidden sm:block">E-Shelle <span style="color:#818CF8">Pressing</span></span>
+    </a>
+    <span class="text-white/30 text-sm hidden sm:block">/ Dashboard</span>
+    <div class="ml-auto flex items-center gap-3">
+      <a href="{% url 'pressing:detail' pressing.slug %}" class="text-sm text-white/60 hover:text-white transition">Voir ma page →</a>
+    </div>
+  </div>
+</nav>
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="h-1 shimmer-bar rounded-full mb-6"></div>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-black text-white">{{ pressing.nom }}</h1>
+        <p class="text-white/40 text-sm mt-1">{{ pressing.ville.nom }} · {{ pressing.adresse|default:pressing.quartier.nom|default:"" }}</p>
+      </div>
+      <div class="flex items-center gap-3">
+        {% if pressing.abonnement_actif %}
+        <span class="text-xs font-black px-3 py-1.5 rounded-full text-white" style="background:linear-gradient(135deg,#6366F1,#4F46E5)">
+          ✦ {{ pressing.get_plan_actif_display }} · actif jusqu'au {{ pressing.abonnement_expire_le|date:"d/m/Y" }}
+        </span>
+        {% else %}
+        <span class="text-xs font-black px-3 py-1.5 rounded-full text-white" style="background:rgba(239,68,68,.2);color:#FCA5A5;border:1px solid rgba(239,68,68,.3)">
+          ⚠ Abonnement inactif
+        </span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
+    <div class="p-5 rounded-2xl border" style="background:rgba(255,255,255,.03);border-color:rgba(99,102,241,.15)">
+      <div class="text-2xl font-black text-white mb-1">{{ stats.total }}</div>
+      <div class="text-xs text-white/40">Total commandes</div>
+    </div>
+    <div class="p-5 rounded-2xl border" style="background:rgba(255,255,255,.03);border-color:rgba(251,191,36,.15)">
+      <div class="text-2xl font-black text-white mb-1">{{ stats.en_attente }}</div>
+      <div class="text-xs text-white/40">En attente</div>
+    </div>
+    <div class="p-5 rounded-2xl border" style="background:rgba(255,255,255,.03);border-color:rgba(59,130,246,.15)">
+      <div class="text-2xl font-black text-white mb-1">{{ stats.en_cours }}</div>
+      <div class="text-xs text-white/40">En cours</div>
+    </div>
+    <div class="p-5 rounded-2xl border" style="background:rgba(255,255,255,.03);border-color:rgba(99,102,241,.15)">
+      <div class="text-2xl font-black text-white mb-1">{{ stats.ca|floatformat:0 }} F</div>
+      <div class="text-xs text-white/40">CA estimé</div>
+    </div>
+  </div>
+
+  <!-- Commandes -->
+  <div class="mb-4 flex items-center justify-between">
+    <h2 class="font-black text-white text-base">Commandes reçues</h2>
+    <span class="text-xs text-white/30">{{ commandes|length }} commande{{ commandes|length|pluralize }}</span>
+  </div>
+
+  {% if commandes %}
+  <div class="space-y-4">
+    {% for cmd in commandes %}
+    <div class="p-5 rounded-2xl border" style="background:rgba(255,255,255,.03);border-color:rgba(99,102,241,.12)">
+      <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+
+        <!-- Infos client -->
+        <div class="flex-1">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-black text-white flex-shrink-0"
+                 style="background:linear-gradient(135deg,#6366F1,#4F46E5)">
+              {{ cmd.nom_client|default:cmd.tel_client|slice:":1"|upper }}
+            </div>
+            <div>
+              <div class="font-black text-white text-sm">{{ cmd.nom_client|default:"Client anonyme" }}</div>
+              <div class="text-xs text-white/40">📞 {{ cmd.tel_client }} · {{ cmd.created_at|date:"d/m/Y à H:i" }}</div>
+            </div>
+          </div>
+
+          <!-- Articles -->
+          <div class="flex flex-wrap gap-1.5 mb-3">
+            {% for art in cmd.articles %}
+            <span class="text-xs px-2.5 py-1 rounded-full font-bold" style="background:rgba(99,102,241,.1);color:#a5b4fc;border:1px solid rgba(99,102,241,.15)">
+              {{ art.icone }} {{ art.nom }} ×{{ art.qte }}
+            </span>
+            {% endfor %}
+          </div>
+
+          <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-white/40">
+            <span>🚗 {{ cmd.get_mode_display }}</span>
+            {% if cmd.date_collecte %}<span>📅 {{ cmd.date_collecte|date:"d/m/Y" }}</span>{% endif %}
+            {% if cmd.adresse_collecte %}<span>📍 {{ cmd.adresse_collecte|truncatechars:40 }}</span>{% endif %}
+            {% if cmd.notes %}<span>📝 {{ cmd.notes|truncatechars:40 }}</span>{% endif %}
+          </div>
+        </div>
+
+        <!-- Droite : total + statut + actions -->
+        <div class="flex flex-col gap-3 sm:items-end flex-shrink-0">
+          <div class="text-lg font-black" style="color:#6366F1">{{ cmd.montant_total|floatformat:0 }} FCFA</div>
+
+          <!-- Statut badge -->
+          {% if cmd.statut == 'attente' %}
+          <span class="text-xs font-black px-2.5 py-1 rounded-full" style="background:rgba(251,191,36,.15);color:#FCD34D;border:1px solid rgba(251,191,36,.2)">⏳ En attente</span>
+          {% elif cmd.statut == 'confirme' %}
+          <span class="text-xs font-black px-2.5 py-1 rounded-full" style="background:rgba(99,102,241,.15);color:#a5b4fc;border:1px solid rgba(99,102,241,.2)">✓ Confirmée</span>
+          {% elif cmd.statut == 'en_cours' %}
+          <span class="text-xs font-black px-2.5 py-1 rounded-full" style="background:rgba(59,130,246,.15);color:#93C5FD;border:1px solid rgba(59,130,246,.2)">⚡ En cours</span>
+          {% elif cmd.statut == 'pret' %}
+          <span class="text-xs font-black px-2.5 py-1 rounded-full" style="background:rgba(16,185,129,.15);color:#6EE7B7;border:1px solid rgba(16,185,129,.2)">✅ Prêt</span>
+          {% elif cmd.statut == 'livre' %}
+          <span class="text-xs font-black px-2.5 py-1 rounded-full" style="background:rgba(16,185,129,.25);color:#34D399">🎉 Livré</span>
+          {% elif cmd.statut == 'annule' %}
+          <span class="text-xs font-black px-2.5 py-1 rounded-full" style="background:rgba(239,68,68,.15);color:#FCA5A5;border:1px solid rgba(239,68,68,.2)">✕ Annulé</span>
+          {% endif %}
+
+          <!-- Actions rapides -->
+          <div class="flex gap-2">
+            <a href="{{ cmd.whatsapp_recap_url }}" target="_blank" rel="noopener"
+               class="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold text-white hover:opacity-90"
+               style="background:#25D366">📱 WhatsApp</a>
+
+            <!-- Changer statut -->
+            <div class="relative group">
+              <button class="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold border hover:opacity-80"
+                      style="border-color:rgba(99,102,241,.3);color:#a5b4fc;background:rgba(99,102,241,.08)">
+                Statut ▾
+              </button>
+              <div class="absolute right-0 top-8 hidden group-hover:block z-10 rounded-xl border overflow-hidden shadow-xl"
+                   style="background:#0D1626;border-color:rgba(99,102,241,.2);min-width:150px">
+                {% for val, label in statut_choices %}
+                {% if val != cmd.statut %}
+                <form method="post" action="{% url 'pressing:update_statut' cmd.pk %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="statut" value="{{ val }}">
+                  <button type="submit" class="w-full text-left px-4 py-2.5 text-xs text-white/70 hover:text-white hover:bg-indigo-600/20 transition">
+                    {{ label }}
+                  </button>
+                </form>
+                {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="text-center py-24 rounded-3xl border" style="background:rgba(255,255,255,.02);border-color:rgba(99,102,241,.1)">
+    <div class="text-5xl mb-4">📭</div>
+    <h3 class="font-black text-white text-lg mb-2">Aucune commande pour l'instant</h3>
+    <p class="text-white/40 text-sm mb-6">Partagez votre page pour recevoir vos premières commandes.</p>
+    <a href="{% url 'pressing:detail' pressing.slug %}"
+       class="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl font-bold text-white hover:opacity-90"
+       style="background:linear-gradient(135deg,#6366F1,#4F46E5)">Voir ma page publique →</a>
+  </div>
+  {% endif %}
+
+</div>
+
+<footer class="border-t py-6 px-4 text-center text-sm text-white/20" style="border-color:rgba(255,255,255,.05);background:#030712">
+  <a href="/" class="font-black hover:text-white transition" style="color:#6366F1">E-Shelle</a> &mdash; Pressing digital &mdash; Made in Cameroun 🇨🇲
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,315 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ pharmacie.nom }} — {{ pharmacie.ville.nom }} · E-Shelle Pharma</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family:'Inter',sans-serif; background:#060B12; color:#fff; }
+    .card-hover { transition:transform .2s, box-shadow .2s; }
+    .card-hover:hover { transform:translateY(-3px); box-shadow:0 16px 32px rgba(16,185,129,.12); }
+    @keyframes glow-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.5)} 50%{box-shadow:0 0 0 14px rgba(16,185,129,0)} }
+    .wa-btn-main { animation:glow-pulse 2.5s ease-in-out infinite; }
+    .star { cursor:pointer; font-size:1.5rem; color:#374151; transition:color .15s; }
+    .star.active,.star:hover { color:#10B981; }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    .shimmer-bar { background:linear-gradient(90deg,#10B981,#34d399,#10B981); background-size:200% 100%; animation:shimmer 2s linear infinite; }
+    .filter-pill { transition:all .15s; }
+    .filter-pill:hover,.filter-pill.active { background:linear-gradient(135deg,#10B981,#059669); color:#fff; border-color:transparent; }
+  </style>
+</head>
+<body class="antialiased min-h-screen">
+
+<!-- Navbar -->
+<nav class="sticky top-0 z-40 border-b" style="background:rgba(6,11,18,.92);backdrop-filter:blur(20px);border-color:rgba(255,255,255,.06)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-4">
+    <a href="{% url 'pharma:accueil' %}" class="flex items-center gap-2.5 flex-shrink-0">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center font-black text-base"
+           style="background:linear-gradient(135deg,#10B981,#059669)">💊</div>
+      <span class="font-black text-white hidden sm:block">E-Shelle <span style="color:#10B981">Pharma</span></span>
+    </a>
+    <nav class="flex items-center gap-2 ml-4 text-xs text-white/30">
+      <a href="{% url 'pharma:catalogue' %}" class="hover:text-white transition">Pharmacies</a>
+      <span>/</span>
+      <span class="text-white/60 truncate max-w-32">{{ pharmacie.nom }}</span>
+    </nav>
+    <div class="ml-auto flex items-center gap-3">
+      {% if user.is_authenticated %}
+      <a href="{% url 'accounts:mon_compte' %}" class="text-sm font-medium text-white/60 hover:text-white transition">Mon Compte</a>
+      {% else %}
+      <a href="{% url 'accounts:login' %}" class="text-sm font-medium text-white/60 hover:text-white transition">Connexion</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<div class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+
+  <!-- Hero pharmacie -->
+  <div class="rounded-3xl overflow-hidden border mb-8 relative"
+       style="background:rgba(255,255,255,.03);border-color:rgba(16,185,129,.2)">
+    <div class="h-1.5 shimmer-bar"></div>
+
+    <!-- Photo banner -->
+    <div class="h-48 sm:h-56 relative flex items-center justify-center"
+         style="background:linear-gradient(135deg,rgba(16,185,129,.12),rgba(5,150,105,.08))">
+      {% if pharmacie.photo %}
+      <img src="{{ pharmacie.photo.url }}" alt="{{ pharmacie.nom }}" class="w-full h-full object-cover absolute inset-0"/>
+      <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(6,11,18,.8),transparent)"></div>
+      {% else %}
+      <div class="text-6xl" style="filter:drop-shadow(0 0 30px rgba(16,185,129,.5))">💊</div>
+      {% endif %}
+
+      <!-- Badges -->
+      <div class="absolute top-4 left-4 flex flex-wrap gap-2">
+        {% if pharmacie.is_featured %}
+        <span class="text-xs font-black px-3 py-1 rounded-full text-white"
+              style="background:linear-gradient(135deg,#10B981,#059669);box-shadow:0 4px 15px rgba(16,185,129,.4)">⭐ Vedette</span>
+        {% endif %}
+        {% if pharmacie.is_verified %}
+        <span class="text-xs font-black px-3 py-1 rounded-full bg-green-500/90 text-white">✓ Vérifié</span>
+        {% endif %}
+        {% if pharmacie.garde %}
+        <span class="text-xs font-black px-3 py-1 rounded-full text-white" style="background:rgba(124,58,237,.85)">🌙 Pharmacie de garde{% if pharmacie.garde_info %} · {{ pharmacie.garde_info }}{% endif %}</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Info principale -->
+    <div class="p-6 sm:p-8">
+      <div class="flex flex-col sm:flex-row sm:items-start gap-4">
+        <div class="flex-1">
+          <h1 class="text-2xl sm:text-3xl font-black text-white mb-2">{{ pharmacie.nom }}</h1>
+          <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-white/50 mb-3">
+            <span>📍 {{ pharmacie.adresse|default:pharmacie.quartier.nom|default:pharmacie.ville.nom }}, {{ pharmacie.ville.nom }}</span>
+            <span>🕐 {{ pharmacie.horaires }}</span>
+          </div>
+          {% if pharmacie.description %}
+          <p class="text-white/50 text-sm leading-relaxed mb-4">{{ pharmacie.description }}</p>
+          {% endif %}
+
+          <!-- Tags -->
+          <div class="flex flex-wrap gap-2">
+            {% if pharmacie.livraison %}
+            <span class="text-xs font-bold px-3 py-1 rounded-full" style="background:rgba(16,185,129,.12);color:#34d399;border:1px solid rgba(16,185,129,.25)">
+              🛵 Livraison{% if pharmacie.delai_livraison %} · {{ pharmacie.delai_livraison }}{% endif %}
+            </span>
+            {% endif %}
+            {% if pharmacie.nb_medicaments_dispo %}
+            <span class="text-xs font-bold px-3 py-1 rounded-full" style="background:rgba(16,185,129,.08);color:#6ee7b7;border:1px solid rgba(16,185,129,.15)">
+              💊 {{ pharmacie.nb_medicaments_dispo }} médicament{{ pharmacie.nb_medicaments_dispo|pluralize }} dispo
+            </span>
+            {% endif %}
+            {% if pharmacie.nb_avis > 0 %}
+            <span class="text-xs font-bold px-3 py-1 rounded-full" style="background:rgba(16,185,129,.08);color:#6ee7b7;border:1px solid rgba(16,185,129,.15)">
+              {% for i in "12345" %}{% if forloop.counter <= pharmacie.etoiles %}★{% else %}☆{% endif %}{% endfor %}
+              {{ pharmacie.nb_avis }} avis
+            </span>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- CTA contact -->
+        <div class="flex flex-col gap-3 sm:w-52 flex-shrink-0">
+          <a href="{{ pharmacie.whatsapp_url }}" target="_blank" rel="noopener"
+             class="wa-btn-main w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl font-black text-white text-sm"
+             style="background:#25D366">
+            📱 Commander sur WhatsApp
+          </a>
+          <a href="{{ pharmacie.tel_url }}"
+             class="w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-white text-sm border transition hover:opacity-80"
+             style="border-color:rgba(16,185,129,.3);color:#34d399;background:rgba(16,185,129,.08)">
+            📞 {{ pharmacie.telephone }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recherche dans cette pharmacie -->
+  <form method="get" class="mb-6">
+    {% if cat_slug %}<input type="hidden" name="cat" value="{{ cat_slug }}">{% endif %}
+    <div class="relative">
+      <input type="search" name="q_med" placeholder="Chercher un médicament dans cette pharmacie..."
+             class="w-full px-5 py-3 rounded-2xl text-sm text-white placeholder-white/30 outline-none transition"
+             style="background:rgba(255,255,255,.06);border:1px solid rgba(16,185,129,.15)"/>
+      <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-green-400 transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </button>
+    </div>
+  </form>
+
+  <!-- Filtre catégories -->
+  {% if categories_dispo %}
+  <div class="flex flex-wrap gap-2 mb-6">
+    <a href="{% url 'pharma:detail_pharmacie' pharmacie.slug %}"
+       class="filter-pill text-xs font-bold px-3 py-1.5 rounded-full border border-white/10 text-white/60 {% if not cat_slug %}active{% endif %}">
+      Tous
+    </a>
+    {% for cat in categories_dispo %}
+    <a href="?cat={{ cat.slug }}"
+       class="filter-pill text-xs font-bold px-3 py-1.5 rounded-full border border-white/10 text-white/60 {% if cat_slug == cat.slug %}active{% endif %}">
+      {{ cat.icone }} {{ cat.nom }}
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Liste médicaments -->
+  {% if stocks %}
+  <h2 class="font-black text-white text-lg mb-4">
+    Médicaments disponibles
+    <span class="text-sm font-normal text-white/30 ml-2">({{ stocks.count }})</span>
+  </h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-12">
+    {% for stock in stocks %}
+    <div class="flex items-center gap-3 p-4 rounded-2xl border transition hover:border-green-500/30"
+         style="background:rgba(255,255,255,.03);border-color:rgba(16,185,129,.1)">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+           style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.15)">
+        {{ stock.medicament.categorie.icone|default:"💊" }}
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="font-bold text-white text-sm truncate">{{ stock.medicament.nom }}</div>
+        {% if stock.medicament.categorie %}
+        <div class="text-xs text-white/30">{{ stock.medicament.categorie.nom }}</div>
+        {% endif %}
+        {% if stock.medicament.ordonnance %}
+        <span class="text-xs" style="color:#f87171">Sur ordonnance</span>
+        {% endif %}
+      </div>
+      <div class="flex items-center gap-2 flex-shrink-0">
+        {% if stock.prix %}
+        <span class="text-sm font-black" style="color:#10B981">{{ stock.prix }} FCFA</span>
+        {% else %}
+        <span class="text-xs text-white/30">N/C</span>
+        {% endif %}
+        <a href="{{ pharmacie.whatsapp_url }}" target="_blank" rel="noopener"
+           class="w-8 h-8 rounded-lg flex items-center justify-center text-sm transition hover:opacity-80 flex-shrink-0"
+           style="background:#25D366"
+           title="Commander via WhatsApp">📱</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center py-12 mb-12">
+    <div class="text-4xl mb-3">📋</div>
+    <p class="text-white/40 text-sm">Aucun médicament référencé pour cette pharmacie.</p>
+    <p class="text-white/25 text-xs mt-1">Contactez-les directement pour vérifier votre médicament.</p>
+  </div>
+  {% endif %}
+
+  <!-- AVIS -->
+  <div class="mb-12">
+    <h2 class="font-black text-white text-lg mb-6">
+      Avis clients
+      {% if pharmacie.nb_avis > 0 %}
+      <span class="text-sm font-normal text-white/30 ml-2">{{ pharmacie.nb_avis }} avis · {% for i in "12345" %}{% if forloop.counter <= pharmacie.etoiles %}★{% else %}☆{% endif %}{% endfor %}</span>
+      {% endif %}
+    </h2>
+
+    <!-- Formulaire avis -->
+    {% if user.is_authenticated %}
+    <div class="p-5 rounded-2xl border mb-6" style="background:rgba(16,185,129,.04);border-color:rgba(16,185,129,.15)">
+      <h3 class="font-bold text-white text-sm mb-4">{% if user_avis %}Modifier votre avis{% else %}Laisser un avis{% endif %}</h3>
+      {% if avis_error %}<p class="text-red-400 text-xs mb-3">{{ avis_error }}</p>{% endif %}
+      <form method="post">
+        {% csrf_token %}
+        <div class="flex gap-1 mb-4" id="star-container">
+          {% for i in "12345" %}
+          <span class="star {% if user_avis and forloop.counter <= user_avis.note %}active{% endif %}"
+                data-val="{{ forloop.counter }}" onclick="setNote({{ forloop.counter }})">★</span>
+          {% endfor %}
+        </div>
+        <input type="hidden" name="note" id="note-input" value="{{ user_avis.note|default:'' }}">
+        <textarea name="commentaire" rows="3" placeholder="Votre expérience avec cette pharmacie..."
+                  class="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/30 outline-none resize-none transition mb-3"
+                  style="background:rgba(255,255,255,.06);border:1px solid rgba(16,185,129,.15)">{{ user_avis.commentaire|default:'' }}</textarea>
+        <button type="submit"
+                class="px-6 py-2.5 rounded-xl font-bold text-sm text-white transition hover:opacity-90"
+                style="background:linear-gradient(135deg,#10B981,#059669)">
+          {% if user_avis %}Mettre à jour{% else %}Publier l'avis{% endif %}
+        </button>
+      </form>
+    </div>
+    {% else %}
+    <div class="p-4 rounded-2xl border text-center mb-6" style="border-color:rgba(16,185,129,.1);background:rgba(16,185,129,.04)">
+      <p class="text-white/40 text-sm">
+        <a href="{% url 'accounts:login' %}" class="font-bold underline" style="color:#10B981">Connectez-vous</a>
+        pour laisser un avis.
+      </p>
+    </div>
+    {% endif %}
+
+    <!-- Liste avis -->
+    {% for avis in avis_list %}
+    <div class="p-4 rounded-2xl border mb-3" style="background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.06)">
+      <div class="flex items-start justify-between gap-3 mb-2">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-white"
+               style="background:linear-gradient(135deg,#10B981,#059669)">
+            {{ avis.auteur.username|slice:":2"|upper }}
+          </div>
+          <div>
+            <div class="font-bold text-white text-xs">{{ avis.auteur.username }}</div>
+            <div class="text-xs text-white/30">{{ avis.created_at|date:"d M Y" }}</div>
+          </div>
+        </div>
+        <span style="color:#10B981" class="text-sm flex-shrink-0">
+          {% for i in "12345" %}{% if forloop.counter <= avis.note %}★{% else %}☆{% endif %}{% endfor %}
+        </span>
+      </div>
+      {% if avis.commentaire %}
+      <p class="text-white/60 text-sm">{{ avis.commentaire }}</p>
+      {% endif %}
+    </div>
+    {% empty %}
+    <p class="text-white/30 text-sm text-center py-8">Aucun avis pour l'instant. Soyez le premier !</p>
+    {% endfor %}
+  </div>
+
+  <!-- Pharmacies similaires -->
+  {% if similaires %}
+  <div>
+    <h3 class="font-black text-white text-base mb-4">Autres pharmacies à {{ pharmacie.ville.nom }}</h3>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      {% for p in similaires %}
+      <a href="{% url 'pharma:detail_pharmacie' p.slug %}"
+         class="card-hover p-4 rounded-2xl border text-center"
+         style="background:rgba(255,255,255,.03);border-color:rgba(16,185,129,.1)">
+        <div class="text-2xl mb-2">💊</div>
+        <div class="font-bold text-white text-xs leading-snug mb-1">{{ p.nom }}</div>
+        <div class="text-xs text-white/30">{{ p.quartier.nom|default:p.ville.nom }}</div>
+        {% if p.garde %}
+        <span class="text-xs mt-1 inline-block" style="color:#a78bfa">🌙 Garde</span>
+        {% endif %}
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+<footer class="border-t py-6 px-4 text-center text-sm text-white/20" style="border-color:rgba(255,255,255,.05);background:#030712">
+  <a href="/" class="font-black hover:text-white transition" style="color:#10B981">E-Shelle</a>
+  &mdash; Pharmacie digitale &mdash; Made in Cameroun 🇨🇲
+</footer>
+
+<script>
+function setNote(val) {
+  document.getElementById('note-input').value = val;
+  document.querySelectorAll('.star').forEach(s => {
+    s.classList.toggle('active', parseInt(s.dataset.val) <= val);
+  });
+}
+</script>
+</body>
+</html>

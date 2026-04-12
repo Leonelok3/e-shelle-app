@@ -79,7 +79,34 @@ INSTALLED_APPS = [
 
     # ── AdGen — Générateur de publicités IA ───────────────────────
     "adgen.apps.AdgenConfig",
+
+    # ── E-Shelle Gaz — Livraison de gaz domestique ────────────────
+    "gaz.apps.GazConfig",
+
+    # ── E-Shelle Pharma — Annuaire pharmacies & médicaments ───────
+    "pharma.apps.PharmaConfig",
+
+    # ── E-Shelle Pressing — Pressing & Blanchisserie ──────────────
+    "pressing.apps.PressingConfig",
+
+    # ── E-Shelle AI — Agent Intelligent Central ────────────────────
+    "e_shelle_ai.apps.EshelleAiConfig",
+
+    # ── Social Auth (Google, Facebook) ─────────────────────────────
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.facebook",
 ]
+
+# ── E-Shelle AI — Configuration ─────────────────────────────────────
+OPENAI_CHAT_MODEL         = "gpt-4o"
+OPENAI_IMAGE_MODEL        = "dall-e-3"
+OPENAI_IMAGE_SIZE         = "1024x1024"
+OPENAI_IMAGE_QUALITY      = "hd"
+AI_MAX_CONTEXT_MESSAGES   = 20   # Nb messages gardés dans le contexte GPT
+AI_MEMORY_SUMMARY_THRESHOLD = 40 # Résumé auto après N messages
 
 # AdGen
 ADGEN_MAX_CAMPAIGNS_FREE = 5
@@ -100,6 +127,9 @@ MIDDLEWARE = [
 
     # ── EduCam Pro : verrouillage appareil (/edu/ uniquement) ────
     "edu_platform.middleware.device_lock_middleware.DeviceLockMiddleware",
+
+    # ── Allauth (social login) ────────────────────────────────────
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "edu_cm.urls"
@@ -119,6 +149,8 @@ TEMPLATES = [
                 "resto.context_processors.resto_globals",
                 # ── Abonnements globaux (injecte user_subs dans tous les templates)
                 "accounts.context_processors.subscription_context",
+                # ── Allauth (social login) ────────────────────────────
+                "allauth.account.context_processors.account",
             ],
         },
     },
@@ -183,8 +215,43 @@ LOGIN_URL = "accounts:login"
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "accounts:login"
 
-# Auth redirects étendus
-LOGIN_REDIRECT_URL = "/dashboard/"
+# ── Backends d'authentification ───────────────────────────────────────
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+# ── django-allauth configuration ──────────────────────────────────────
+ACCOUNT_ADAPTER          = "accounts.adapters.AccountAdapter"
+SOCIALACCOUNT_ADAPTER    = "accounts.adapters.SocialAccountAdapter"
+
+# Connexion par email ou username
+ACCOUNT_LOGIN_METHODS    = {"username", "email"}
+ACCOUNT_EMAIL_REQUIRED   = True
+ACCOUNT_EMAIL_VERIFICATION = "none"       # pas de vérif email via allauth (on gère)
+ACCOUNT_USERNAME_REQUIRED  = False        # généré auto si absent
+
+# Social signup automatique — pas de page intermédiaire
+SOCIALACCOUNT_AUTO_SIGNUP       = True
+SOCIALACCOUNT_LOGIN_ON_GET      = True    # démarre OAuth sur clic direct
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True  # fusionne si email connu
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": ["profile", "email"],
+        "AUTH_PARAMS": {"access_type": "online"},
+        "OAUTH_PKCE_ENABLED": True,
+        "FETCH_USERINFO": True,
+    },
+    "facebook": {
+        "METHOD": "oauth2",
+        "SCOPE": ["email", "public_profile"],
+        "FIELDS": ["id", "email", "name", "first_name", "last_name", "picture"],
+        "EXCHANGE_TOKEN": True,
+        "VERSION": "v18.0",
+    },
+}
 
 # Anthropic / Claude AI
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")

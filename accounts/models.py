@@ -17,6 +17,7 @@ class AppKey(models.TextChoices):
     FORMATIONS = "formations", "Formations"
     BOUTIQUE   = "boutique",   "Boutique"
     AGRO       = "agro",       "E-Shelle Agro"
+    GAZ        = "gaz",        "E-Shelle Gaz"
 
 APP_ICONS = {
     "adgen":      "✨",
@@ -27,6 +28,7 @@ APP_ICONS = {
     "formations": "📚",
     "boutique":   "🛒",
     "agro":       "🌿",
+    "gaz":        "🔥",
 }
 
 APP_COLORS = {
@@ -38,6 +40,7 @@ APP_COLORS = {
     "formations": "#8B5CF6",
     "boutique":   "#10B981",
     "agro":       "#84CC16",
+    "gaz":        "#FF6B00",
 }
 
 
@@ -315,6 +318,160 @@ class PaymentHistory(models.Model):
         if self.amount_xaf == 0:
             return "Gratuit"
         return f"{self.amount_xaf:,} FCFA".replace(",", " ")
+
+
+# ─── Codes d'accès globaux (créés par l'admin, activés par le client) ───────
+
+import secrets as _secrets
+import string as _string
+
+
+def _generate_code():
+    """Génère un code unique format XXXX-XXXX-XXXX (ex: A3F2-9KL1-BT7W)."""
+    chars = _string.ascii_uppercase + _string.digits
+    parts = ["".join(_secrets.choice(chars) for _ in range(4)) for _ in range(3)]
+    return "-".join(parts)
+
+
+class GlobalAccessCode(models.Model):
+    """
+    Code d'accès créé par l'administrateur E-Shelle.
+    Le client paie par Orange Money/MTN → l'admin crée un code → l'envoie au client.
+    Le client l'active sur /accounts/activer/ → ses abonnements sont créés automatiquement.
+    """
+
+    PAYMENT_METHOD_CHOICES = [
+        ("orange_money", "Orange Money"),
+        ("mtn_momo",     "MTN MoMo"),
+        ("wave",         "Wave"),
+        ("cash",         "Espèces"),
+        ("offert",       "Offert / Test"),
+    ]
+
+    # Le code lui-même
+    code          = models.CharField(max_length=20, unique=True, default=_generate_code)
+    label         = models.CharField(max_length=150, help_text="Ex: Pack AdGen Pro 30j — Jean Dupont")
+
+    # Ce que donne le code
+    apps          = models.JSONField(
+        default=list,
+        help_text="Liste des app_key accessibles. Ex: [\"adgen\", \"njangi\"] ou [\"all\"] pour tout."
+    )
+    duration_days = models.PositiveIntegerField(default=30, help_text="Durée d'accès en jours")
+    price_xaf     = models.PositiveIntegerField(default=0, help_text="Montant reçu en FCFA")
+
+    # Paiement reçu
+    payment_method  = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES, default="orange_money")
+    payment_ref     = models.CharField(max_length=200, blank=True, default="", help_text="Référence paiement MoMo/Wave")
+    client_name     = models.CharField(max_length=150, blank=True, default="", help_text="Nom du client pour référence")
+    client_phone    = models.CharField(max_length=25, blank=True, default="", help_text="Téléphone du client")
+    notes           = models.TextField(blank=True, default="", help_text="Notes internes (non visibles du client)")
+
+    # Statut
+    is_active     = models.BooleanField(default=True, help_text="Désactiver pour invalider le code")
+    is_used       = models.BooleanField(default=False)
+    activated_by  = models.ForeignKey(
+        "accounts.CustomUser", on_delete=models.SET_NULL,
+        null=True, blank=True, related_name="activated_codes"
+    )
+    activated_at  = models.DateTimeField(null=True, blank=True)
+    expires_at    = models.DateTimeField(null=True, blank=True, help_text="Calculé automatiquement à l'activation")
+
+    created_at    = models.DateTimeField(auto_now_add=True)
+    created_by    = models.ForeignKey(
+        "accounts.CustomUser", on_delete=models.SET_NULL,
+        null=True, blank=True, related_name="created_codes"
+    )
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Code d'accès"
+        verbose_name_plural = "Codes d'accès"
+
+    def __str__(self):
+        status = "Utilisé" if self.is_used else "Disponible"
+        return f"{self.code} — {self.label} [{status}]"
+
+    @property
+    def price_formatted(self):
+        if self.price_xaf == 0:
+            return "Gratuit / Offert"
+        return f"{self.price_xaf:,} FCFA".replace(",", " ")
+
+    @property
+    def apps_display(self):
+        if "all" in self.apps:
+            return "Toutes les applications"
+        labels = {k: v for k, v in AppKey.choices}
+        return ", ".join(labels.get(a, a) for a in self.apps)
+
+    def activate(self, user):
+        """
+        Active le code pour un utilisateur :
+        - Crée les AppSubscription pour chaque app
+        - Marque le code comme utilisé
+        Retourne (True, message) ou (False, erreur).
+        """
+        from django.utils import timezone
+        from datetime import timedelta
+
+        if not self.is_active:
+            return False, "Ce code a été désactivé."
+        if self.is_used:
+            return False, "Ce code a déjà été utilisé."
+
+        # Déterminer les apps à activer
+        all_keys = [k for k, _ in AppKey.choices]
+        apps_to_activate = all_keys if "all" in self.apps else self.apps
+
+        expires = timezone.now() + timedelta(days=self.duration_days)
+        subs_created = []
+
+        for app_key in apps_to_activate:
+            # Chercher le plan pro/starter de cette app (le premier non-free actif)
+            plan = (
+                AppPlan.objects
+                .filter(app_key=app_key, is_active=True, is_free=False)
+                .order_by("order")
+                .first()
+            )
+            if not plan:
+                # Fallback : plan gratuit
+                plan = AppPlan.objects.filter(app_key=app_key, is_active=True).order_by("order").first()
+            if not plan:
+                continue
+
+            sub = AppSubscription.objects.create(
+                user=user,
+                plan=plan,
+                status="active",
+                expires_at=expires,
+                payment_ref=f"CODE:{self.code}",
+                notes=f"Activé via code {self.code}",
+            )
+            subs_created.append(sub)
+
+        # Marquer le code
+        self.is_used = True
+        self.activated_by = user
+        self.activated_at = timezone.now()
+        self.expires_at = expires
+        self.save(update_fields=["is_used", "activated_by", "activated_at", "expires_at"])
+
+        # Enregistrer dans l'historique paiements
+        if self.price_xaf > 0:
+            import uuid
+            PaymentHistory.objects.create(
+                user=user,
+                amount_xaf=self.price_xaf,
+                method=self.payment_method,
+                reference=f"CODE-{self.code}-{uuid.uuid4().hex[:8]}",
+                status="success",
+                description=f"Activation code {self.code} — {self.label}",
+            )
+
+        nb = len(subs_created)
+        return True, f"{nb} application{'s' if nb > 1 else ''} activée{'s' if nb > 1 else ''} pendant {self.duration_days} jours."
 
 
 # ─── Vérification d'email par code 6 chiffres ────────────────────

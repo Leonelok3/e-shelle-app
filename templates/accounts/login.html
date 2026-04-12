@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load socialaccount %}
 
 {% block title %}Connexion — E-Shelle{% endblock %}
 {% block body_class %}auth-page{% endblock %}
@@ -9,7 +10,7 @@
 {% block content %}
 <div class="auth-layout">
 
-  {# Visuel gauche avec particules #}
+  {# ── Visuel gauche ─────────────────────────────────────────── #}
   <div class="auth-visual">
     <canvas id="particles-canvas" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
     <div style="position:relative;z-index:2;text-align:center">
@@ -23,43 +24,83 @@
         E-<span style="color:var(--accent-light)">Shelle</span>
       </a>
       <h2 style="font-family:var(--font-display);font-size:1.5rem;font-weight:700;margin-bottom:.75rem">Bienvenue 👋</h2>
-      <p style="color:var(--text-secondary);max-width:300px;line-height:1.7;margin:0 auto">Accède à tes formations, ta boutique et tous tes outils depuis un seul endroit.</p>
-      <div style="margin-top:2.5rem;display:flex;flex-direction:column;gap:.85rem;text-align:left;max-width:280px;margin-left:auto;margin-right:auto">
-        <div style="display:flex;align-items:center;gap:.6rem;color:var(--text-secondary);font-size:.88rem"><span style="color:var(--primary-light);font-weight:700">✓</span> 500+ formations disponibles</div>
-        <div style="display:flex;align-items:center;gap:.6rem;color:var(--text-secondary);font-size:.88rem"><span style="color:var(--primary-light);font-weight:700">✓</span> Boutique digitale intégrée</div>
-        <div style="display:flex;align-items:center;gap:.6rem;color:var(--text-secondary);font-size:.88rem"><span style="color:var(--primary-light);font-weight:700">✓</span> Génération IA (Claude)</div>
+      <p style="color:var(--text-secondary);max-width:300px;line-height:1.7;margin:0 auto 2.5rem">
+        Un seul compte pour accéder à tous les services E-Shelle — restaurants, pressing, gaz, formations, IA...
+      </p>
+      <div style="display:flex;flex-direction:column;gap:.85rem;text-align:left;max-width:280px;margin:0 auto">
+        <div style="display:flex;align-items:center;gap:.6rem;color:var(--text-secondary);font-size:.88rem"><span style="color:var(--primary-light);font-weight:700">✓</span> Plateforme 100% camerounaise 🇨🇲</div>
+        <div style="display:flex;align-items:center;gap:.6rem;color:var(--text-secondary);font-size:.88rem"><span style="color:var(--primary-light);font-weight:700">✓</span> 15+ modules intégrés</div>
+        <div style="display:flex;align-items:center;gap:.6rem;color:var(--text-secondary);font-size:.88rem"><span style="color:var(--primary-light);font-weight:700">✓</span> Agent IA GPT-4o inclus</div>
         <div style="display:flex;align-items:center;gap:.6rem;color:var(--text-secondary);font-size:.88rem"><span style="color:var(--primary-light);font-weight:700">✓</span> Support WhatsApp 24h/7j</div>
       </div>
     </div>
   </div>
 
-  {# Formulaire de connexion #}
+  {# ── Formulaire ────────────────────────────────────────────── #}
   <div class="auth-form-side">
     <div style="max-width:420px;width:100%">
-      <a href="/" style="color:var(--text-secondary);font-size:.85rem;display:inline-flex;align-items:center;gap:.35rem;margin-bottom:2.5rem;text-decoration:none">
+
+      <a href="/" style="color:var(--text-secondary);font-size:.85rem;display:inline-flex;align-items:center;gap:.35rem;margin-bottom:2rem;text-decoration:none">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
         Retour à l'accueil
       </a>
 
-      <h1 style="font-family:var(--font-display);font-size:2rem;font-weight:800;margin-bottom:.5rem">Se connecter</h1>
+      <h1 style="font-family:var(--font-display);font-size:2rem;font-weight:800;margin-bottom:.4rem">Se connecter</h1>
       <p style="color:var(--text-secondary);margin-bottom:2rem">
         Pas encore de compte ?
         <a href="{% url 'accounts:register' %}" style="color:var(--primary-light);font-weight:600">S'inscrire gratuitement →</a>
       </p>
 
+      {# ── Boutons social ─────────────────────────────────────── #}
+      <div class="social-btns">
+
+        {# Google #}
+        <a href="{% provider_login_url 'google' process='login' next='/' %}" class="social-btn social-btn--google">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          <span>Continuer avec Google</span>
+        </a>
+
+        {# Facebook #}
+        <a href="{% provider_login_url 'facebook' process='login' next='/' %}" class="social-btn social-btn--facebook">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+          <span>Continuer avec Facebook</span>
+        </a>
+
+      </div>
+
+      {# ── Séparateur ─────────────────────────────────────────── #}
+      <div class="auth-divider">
+        <span>ou se connecter avec un mot de passe</span>
+      </div>
+
+      {# ── Messages d'erreur ──────────────────────────────────── #}
       {% if form.errors %}
-      <div style="background:rgba(244,67,54,.1);border:1px solid rgba(244,67,54,.3);border-radius:var(--radius-md);padding:1rem;margin-bottom:1.5rem;color:#EF9A9A;font-size:.88rem">
+      <div class="auth-alert auth-alert--error">
         ❌ Identifiants incorrects. Vérifiez votre nom d'utilisateur et mot de passe.
       </div>
       {% endif %}
 
+      {% for message in messages %}
+      <div class="auth-alert {% if message.tags == 'success' %}auth-alert--success{% else %}auth-alert--error{% endif %}">
+        {{ message }}
+      </div>
+      {% endfor %}
+
+      {# ── Formulaire classique ───────────────────────────────── #}
       <form method="post" novalidate>
         {% csrf_token %}
 
         <div class="form-group">
-          <label class="form-label" for="id_username">Nom d'utilisateur</label>
+          <label class="form-label" for="id_username">Nom d'utilisateur ou email</label>
           <input type="text" name="username" id="id_username" class="form-control"
-                 placeholder="votre_nom" autocomplete="username" required autofocus
+                 placeholder="votre_nom ou email@..." autocomplete="username" required autofocus
                  value="{{ form.username.value|default:'' }}">
         </div>
 
@@ -68,8 +109,13 @@
             <span>Mot de passe</span>
             <a href="#" style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted);font-size:.78rem">Mot de passe oublié ?</a>
           </label>
-          <input type="password" name="password" id="id_password" class="form-control"
-                 placeholder="••••••••" autocomplete="current-password" required>
+          <div class="input-password-wrap">
+            <input type="password" name="password" id="id_password" class="form-control"
+                   placeholder="••••••••" autocomplete="current-password" required>
+            <button type="button" class="toggle-password" onclick="togglePwd()" title="Afficher/masquer">
+              <svg id="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
         </div>
 
         <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:.75rem">
@@ -78,9 +124,10 @@
         </button>
       </form>
 
-      <p style="text-align:center;margin-top:2.5rem;font-size:.78rem;color:var(--text-muted);border-top:1px solid var(--border);padding-top:1.5rem">
+      <p style="text-align:center;margin-top:2rem;font-size:.78rem;color:var(--text-muted);border-top:1px solid var(--border);padding-top:1.25rem">
         🔒 Connexion sécurisée · Made in Cameroon 🇨🇲
       </p>
+
     </div>
   </div>
 </div>
@@ -89,10 +136,148 @@
 {% block extra_scripts %}
 <style>
   body.auth-page { background: var(--bg-dark); }
-  .auth-layout { min-height: 100vh; }
+  .auth-layout { min-height: 100vh; display: flex; }
+
+  /* ── Boutons sociaux ────────────────────────────── */
+  .social-btns {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    margin-bottom: 1.5rem;
+  }
+  .social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .75rem;
+    padding: .85rem 1.25rem;
+    border-radius: var(--radius-md, 10px);
+    font-size: .95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform .15s, box-shadow .15s, background .15s;
+    cursor: pointer;
+    border: 1px solid transparent;
+    letter-spacing: .01em;
+  }
+  .social-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0,0,0,.35);
+  }
+  .social-btn:active { transform: translateY(0); }
+
+  /* Google */
+  .social-btn--google {
+    background: #fff;
+    color: #3c4043;
+    border-color: rgba(0,0,0,.12);
+  }
+  .social-btn--google:hover { background: #f8f8f8; }
+
+  /* Facebook */
+  .social-btn--facebook {
+    background: #1877f2;
+    color: #fff;
+  }
+  .social-btn--facebook:hover { background: #166fe5; }
+
+  /* ── Séparateur ─────────────────────────────────── */
+  .auth-divider {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin: 1.5rem 0;
+    color: var(--text-muted, #666);
+    font-size: .8rem;
+  }
+  .auth-divider::before,
+  .auth-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border, rgba(255,255,255,.1));
+  }
+
+  /* ── Alertes ─────────────────────────────────────── */
+  .auth-alert {
+    border-radius: var(--radius-md, 10px);
+    padding: .85rem 1rem;
+    margin-bottom: 1.25rem;
+    font-size: .88rem;
+  }
+  .auth-alert--error   { background:rgba(244,67,54,.1);  border:1px solid rgba(244,67,54,.3);  color:#EF9A9A; }
+  .auth-alert--success { background:rgba(76,175,80,.1);  border:1px solid rgba(76,175,80,.3);  color:#A5D6A7; }
+
+  /* ── Input mot de passe avec toggle ─────────────── */
+  .input-password-wrap { position: relative; }
+  .input-password-wrap .form-control { padding-right: 2.75rem; }
+  .toggle-password {
+    position: absolute;
+    right: .85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+  .toggle-password:hover { color: var(--text-primary); }
+
   @media (max-width: 768px) {
     .auth-visual { display: none; }
-    .auth-form-side { padding: 2rem 1.5rem; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .auth-form-side { padding: 2rem 1.5rem; display: flex; align-items: center; justify-content: center; min-height: 100vh; width: 100%; }
   }
 </style>
+
+<script>
+function togglePwd() {
+  const input = document.getElementById("id_password");
+  input.type = input.type === "password" ? "text" : "password";
+}
+
+// Particules légères
+(function() {
+  const canvas = document.getElementById("particles-canvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  let W, H, particles;
+
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  function makeParticle() {
+    return {
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.5 + .5,
+      dx: (Math.random() - .5) * .4,
+      dy: (Math.random() - .5) * .4,
+      a: Math.random() * .5 + .2,
+    };
+  }
+  particles = Array.from({ length: 60 }, makeParticle);
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(76,175,80,${p.a})`;
+      ctx.fill();
+      p.x += p.dx; p.y += p.dy;
+      if (p.x < 0 || p.x > W) p.dx *= -1;
+      if (p.y < 0 || p.y > H) p.dy *= -1;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
 {% endblock %}
