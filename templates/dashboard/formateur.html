@@ -18,7 +18,7 @@
       <a href="/admin/formations/formation/add/" class="sidebar-link"><span class="icon">➕</span> Créer une formation</a>
       <a href="/admin/formations/" class="sidebar-link"><span class="icon">📚</span> Mes formations</a>
       <a href="{% url 'accounts:profil' %}" class="sidebar-link"><span class="icon">👤</span> Mon profil</a>
-      <a href="{% url 'accounts:logout' %}" class="sidebar-link" style="color:#EF9A9A"><span class="icon">↩️</span> Déconnexion</a>
+      <form method="post" action="{% url 'accounts:logout' %}" style="margin:0">{% csrf_token %}<button type="submit" class="sidebar-link" style="color:#EF9A9A;background:none;border:none;cursor:pointer;width:100%;text-align:left;padding:0"><span class="icon">↩️</span> Déconnexion</button></form>
     </div>
   </nav>
 
