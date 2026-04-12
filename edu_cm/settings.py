@@ -356,7 +356,7 @@ LOGGING = {
         'console': {'class': 'logging.StreamHandler'},
         'file': {
             'class': 'logging.FileHandler',
-            'filename': str(BASE_DIR / 'django_errors.log'),
+            'filename': '/tmp/django_errors.log',
         },
     },
     'loggers': {
