@@ -22,6 +22,8 @@ urlpatterns = [
 
     # Authentification (vues custom E-Shelle)
     path("accounts/", include("accounts.urls")),
+    # Allauth account URLs (account_inactive, etc.)
+    path("accounts/", include("allauth.account.urls")),
     # Social Auth — URLs de base (connections, disconnect, signup)
     path("accounts/social/", include("allauth.socialaccount.urls")),
     # Social Auth — OAuth2 Google : google/ est déjà dans le module
