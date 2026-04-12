@@ -163,9 +163,54 @@ class EduProfileAdmin(admin.ModelAdmin):
 
 @admin.register(SubscriptionPlan)
 class SubscriptionPlanAdmin(admin.ModelAdmin):
-    list_display = ['name', 'plan_type', 'price_xaf', 'duration_days', 'is_active']
-    list_filter = ['plan_type', 'is_active']
-    list_editable = ['is_active']
+    list_display  = ['plan_display', 'type_display', 'prix_display', 'duree_display', 'badge_label', 'is_active']
+    list_filter   = ['plan_type', 'is_active']
+    list_editable = ['is_active', 'badge_label']
+    ordering      = ['price_xaf']
+
+    fieldsets = (
+        ('🎓 Identité du forfait', {
+            'fields': ('name', 'plan_type', 'badge_label', 'is_active'),
+            'description': 'badge_label : texte affiché sur la carte (ex: "Populaire", "Meilleure offre")'
+        }),
+        ('💰 Tarification', {
+            'fields': ('price_xaf', 'duration_days'),
+            'description': 'Prix en FCFA · Trimestriel = 90 jours · Annuel = 365 jours'
+        }),
+        ('✨ Fonctionnalités incluses', {
+            'fields': ('features',),
+            'description': 'Liste JSON : ["Accès illimité aux sujets","Corrections détaillées","Téléchargement PDF","Vidéos exclusives"]'
+        }),
+    )
+
+    def plan_display(self, obj):
+        icons = {'quarterly': '📅', 'annual': '🗓️'}
+        return format_html('<strong>{} {}</strong>', icons.get(obj.plan_type, '📋'), obj.name)
+    plan_display.short_description = 'Forfait'
+    plan_display.admin_order_field = 'name'
+
+    def type_display(self, obj):
+        colors = {'quarterly': '#3B82F6', 'annual': '#8B5CF6'}
+        return format_html(
+            '<span style="color:{};font-weight:600">{}</span>',
+            colors.get(obj.plan_type, '#666'), obj.get_plan_type_display()
+        )
+    type_display.short_description = 'Type'
+
+    def prix_display(self, obj):
+        return format_html('<strong>{:,} FCFA</strong>', int(obj.price_xaf)).replace(',', ' ')
+    prix_display.short_description = 'Prix'
+    prix_display.admin_order_field = 'price_xaf'
+
+    def duree_display(self, obj):
+        if obj.duration_days >= 360:
+            return '12 mois'
+        if obj.duration_days >= 180:
+            return '6 mois'
+        if obj.duration_days >= 85:
+            return '3 mois'
+        return f'{obj.duration_days} jours'
+    duree_display.short_description = 'Durée'
 
 
 @admin.register(AccessCode)

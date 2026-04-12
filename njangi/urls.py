@@ -37,6 +37,9 @@ urlpatterns = [
     path("bureau/<slug:slug>/prets/<int:pk>/decaisser/", views.LoanDisburseView.as_view(),     name="loan_disburse"),
     path("bureau/<slug:slug>/fond/",                    views.FundView.as_view(),               name="fund"),
 
+    # ── Premium ───────────────────────────────────────────────────────────────
+    path("premium/", views.PremiumView.as_view(), name="premium"),
+
     # ── HTMX partials ─────────────────────────────────────────────────────────
     path("htmx/cotisation/<int:pk>/payer/",   views.HtmxContributionPayView.as_view(),  name="htmx_contribution_pay"),
     path("htmx/remboursement/<int:pk>/",      views.HtmxRepaymentView.as_view(),        name="htmx_repayment"),

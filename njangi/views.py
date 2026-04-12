@@ -449,3 +449,18 @@ class HtmxMarkNotificationsRead(LoginRequiredMixin, View):
             membership__in=memberships, is_read=False
         ).update(is_read=True, read_at=timezone.now())
         return HttpResponse("")
+
+
+class PremiumView(TemplateView):
+    """Page des plans premium Njangi — chargée depuis l'admin PlanPremiumApp."""
+    template_name = "njangi/premium.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        try:
+            from payments.models import PlanPremiumApp
+            plans = list(PlanPremiumApp.objects.filter(module='njangi', actif=True).order_by('ordre', 'prix'))
+        except Exception:
+            plans = []
+        ctx['plans'] = plans
+        return ctx

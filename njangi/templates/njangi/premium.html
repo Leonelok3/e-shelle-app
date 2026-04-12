@@ -1,0 +1,83 @@
+{% extends "njangi/base_njangi.html" %}
+{% load static %}
+
+{% block title %}Plans Premium — Njangi Digital{% endblock %}
+
+{% block content %}
+<div style="max-width:900px;margin:3rem auto;padding:0 1rem">
+
+  <!-- En-tête -->
+  <div style="text-align:center;margin-bottom:3rem">
+    <div style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(27,108,168,.1);border:1px solid rgba(27,108,168,.25);border-radius:99px;padding:.4rem 1rem;font-size:.8rem;font-weight:700;color:#1B6CA8;margin-bottom:1.25rem">
+      💰 Njangi Digital Premium
+    </div>
+    <h1 style="font-size:2rem;font-weight:900;color:var(--text-primary);margin-bottom:.75rem">
+      Gérez votre tontine<br>sans limites
+    </h1>
+    <p style="color:var(--text-secondary);font-size:.95rem;max-width:500px;margin:0 auto">
+      Passez en Premium pour débloquer des groupes illimités, les prêts avancés et les rapports financiers automatiques.
+    </p>
+  </div>
+
+  {% if plans %}
+  <!-- Grille des plans depuis l'admin -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;margin-bottom:2.5rem">
+    {% for plan in plans %}
+    <div style="background:var(--bg-card);border:2px solid {% if plan.populaire %}{{ plan.couleur }}{% else %}var(--border){% endif %};border-radius:var(--radius-xl);padding:1.75rem;position:relative;transition:transform .2s,box-shadow .2s"
+         onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 40px rgba(0,0,0,.15)'"
+         onmouseout="this.style.transform='';this.style.boxShadow=''">
+      {% if plan.populaire %}
+      <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:{{ plan.couleur }};color:#fff;font-size:.72rem;font-weight:800;padding:.3rem .9rem;border-radius:99px;white-space:nowrap">
+        ⭐ Populaire
+      </div>
+      {% endif %}
+      <div style="font-size:2rem;margin-bottom:.5rem">{{ plan.emoji }}</div>
+      <h3 style="font-size:1.2rem;font-weight:800;color:{{ plan.couleur }};margin-bottom:.25rem">{{ plan.nom }}</h3>
+      {% if plan.description %}<p style="font-size:.82rem;color:var(--text-muted);margin-bottom:1rem">{{ plan.description }}</p>{% endif %}
+      <div style="font-size:1.8rem;font-weight:900;color:var(--text-primary);margin-bottom:.25rem">
+        {{ plan.prix|floatformat:0 }} <span style="font-size:.9rem;font-weight:600;color:var(--text-muted)">FCFA</span>
+      </div>
+      <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:1.25rem">
+        {% if plan.duree_jours >= 360 %}1 an{% elif plan.duree_jours >= 85 %}3 mois{% else %}{{ plan.duree_jours }} jours{% endif %}
+      </div>
+      <ul style="list-style:none;padding:0;margin:0 0 1.5rem;display:flex;flex-direction:column;gap:.5rem">
+        {% for feature in plan.benefices %}
+        <li style="font-size:.83rem;color:var(--text-secondary);display:flex;align-items:flex-start;gap:.5rem">
+          <span style="color:{{ plan.couleur }};font-weight:700;flex-shrink:0">✓</span> {{ feature }}
+        </li>
+        {% endfor %}
+      </ul>
+      <a href="{% url 'payments:payer_premium' module='njangi' plan_slug=plan.slug %}"
+         style="display:block;text-align:center;padding:.75rem;border-radius:var(--radius-lg);font-weight:800;font-size:.9rem;text-decoration:none;background:{% if plan.populaire %}{{ plan.couleur }}{% else %}transparent{% endif %};color:{% if plan.populaire %}#fff{% else %}{{ plan.couleur }}{% endif %};border:2px solid {{ plan.couleur }};transition:.2s">
+        Choisir ce plan →
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <!-- Aucun plan configuré dans l'admin -->
+  <div style="text-align:center;padding:3rem;background:var(--bg-card);border:1px dashed var(--border);border-radius:var(--radius-xl)">
+    <div style="font-size:3rem;margin-bottom:1rem">💰</div>
+    <h3 style="font-weight:700;margin-bottom:.5rem">Plans bientôt disponibles</h3>
+    <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:1.5rem">
+      Contactez-nous sur WhatsApp pour accéder aux offres Premium Njangi.
+    </p>
+    <a href="https://wa.me/237680625082?text=Bonjour, je veux le Premium Njangi Digital"
+       target="_blank" rel="noopener"
+       style="display:inline-flex;align-items:center;gap:.5rem;background:#25D366;color:#fff;padding:.75rem 1.75rem;border-radius:99px;font-weight:700;text-decoration:none">
+      💬 WhatsApp
+    </a>
+  </div>
+  {% endif %}
+
+  <!-- Garanties -->
+  <div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-top:2rem;padding-top:2rem;border-top:1px solid var(--border)">
+    <span style="font-size:.82rem;color:var(--text-muted)">🔒 Paiement sécurisé</span>
+    <span style="font-size:.82rem;color:var(--text-muted)">📱 MTN · Orange · Airtel</span>
+    <span style="font-size:.82rem;color:var(--text-muted)">⚡ Accès immédiat</span>
+    <span style="font-size:.82rem;color:var(--text-muted)">💬 Support WhatsApp</span>
+  </div>
+
+</div>
+{% endblock %}
