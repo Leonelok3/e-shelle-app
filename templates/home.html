@@ -690,66 +690,48 @@
   </div>
 </section>
 
-<!-- SECTION 6 — TARIFS -->
+<!-- SECTION 6 — TARIFS (remplacé par tarification par app depuis l'admin) -->
 <section class="section" id="tarifs">
   <div class="container">
-    <div class="text-center" style="margin-bottom:3.5rem">
-      <div class="section-label aos-hidden">Tarification simple</div>
-      <h2 class="section-title aos-hidden aos-delay-1">Des prix accessibles,<br>des résultats concrets</h2>
-      <p class="section-subtitle aos-hidden aos-delay-2">Pas d'engagement. Annulez à tout moment. Paiement Mobile Money disponible.</p>
+    <div class="text-center aos-hidden" style="margin-bottom:3rem">
+      <div class="section-label">Tarification par application</div>
+      <h2 class="section-title aos-hidden aos-delay-1">Chaque application,<br>son propre abonnement</h2>
+      <p class="section-subtitle aos-hidden aos-delay-2">
+        Paiement simple par Mobile Money. Accès immédiat. Pas d'engagement.
+      </p>
     </div>
-    <div class="pricing-grid">
-      <div class="pricing-card aos-hidden">
-        <div class="pricing-plan">Starter</div>
-        <div class="pricing-price">0 <sub>FCFA/mois</sub></div>
-        <p class="pricing-desc">Parfait pour découvrir la plateforme et tester les fonctionnalités de base.</p>
-        <ul class="pricing-features">
-          <li><span class="check">✓</span> 2 cours gratuits</li>
-          <li><span class="check">✓</span> 1 produit en boutique</li>
-          <li><span class="check">✓</span> Dashboard basique</li>
-          <li><span class="x">✕</span> Génération IA</li>
-          <li><span class="x">✕</span> Certificats</li>
-          <li><span class="x">✕</span> Support prioritaire</li>
-        </ul>
-        <a href="/accounts/register/" class="btn btn-outline btn-block">Commencer gratuitement</a>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem;max-width:900px;margin:0 auto" class="aos-hidden aos-delay-1">
+      <div class="glass-card" style="text-align:center;border-color:rgba(255,107,0,.2)">
+        <div style="font-size:2rem;margin-bottom:.5rem">📋</div>
+        <h3 style="font-size:1rem;font-weight:800;margin-bottom:.25rem">Annonces Cam</h3>
+        <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">Publiez illimité, mise en avant, badge Pro</p>
+        <a href="/annonces/compte/premium/" class="btn btn-outline btn-sm btn-block">Voir les offres →</a>
       </div>
-      <div class="pricing-card featured aos-hidden aos-delay-1">
-        <div class="pricing-featured-badge">⭐ Populaire</div>
-        <div class="pricing-plan">Pro</div>
-        <div class="pricing-price" style="color:var(--primary-light)">9 900 <sub>FCFA/mois</sub></div>
-        <p class="pricing-desc">L'accès complet à tous les modules. Idéal pour les entrepreneurs sérieux.</p>
-        <ul class="pricing-features">
-          <li><span class="check">✓</span> Tous les cours & formations</li>
-          <li><span class="check">✓</span> Boutique illimitée</li>
-          <li><span class="check">✓</span> Génération IA (100 req/mois)</li>
-          <li><span class="check">✓</span> Certificats officiels</li>
-          <li><span class="check">✓</span> Analytics avancés</li>
-          <li><span class="check">✓</span> Support WhatsApp prioritaire</li>
-        </ul>
-        <a href="/accounts/register/?plan=pro" class="btn btn-primary btn-block">Démarrer l'essai →</a>
-        <p style="text-align:center;font-size:.78rem;color:var(--text-muted);margin-top:.75rem">✅ 7 jours d'essai gratuit, sans carte</p>
+      <div class="glass-card" style="text-align:center;border-color:rgba(14,165,233,.2)">
+        <div style="font-size:2rem;margin-bottom:.5rem">🏠</div>
+        <h3 style="font-size:1rem;font-weight:800;margin-bottom:.25rem">Immobilier</h3>
+        <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">Biens illimités, mise en avant accueil, stats</p>
+        <a href="/immobilier/mon-compte/premium/" class="btn btn-outline btn-sm btn-block">Voir les offres →</a>
       </div>
-      <div class="pricing-card aos-hidden aos-delay-2">
-        <div class="pricing-plan">Enterprise</div>
-        <div class="pricing-price">Sur <sub>mesure</sub></div>
-        <p class="pricing-desc">Solution clé en main pour agences, écoles et entreprises avec white-label complet.</p>
-        <ul class="pricing-features">
-          <li><span class="check">✓</span> Tout le plan Pro</li>
-          <li><span class="check">✓</span> White-label (votre marque)</li>
-          <li><span class="check">✓</span> IA illimitée</li>
-          <li><span class="check">✓</span> Intégration sur mesure</li>
-          <li><span class="check">✓</span> Formation équipe incluse</li>
-          <li><span class="check">✓</span> Manager dédié</li>
-        </ul>
-        <a href="/services/contact/" class="btn btn-outline btn-block">Nous contacter</a>
+      <div class="glass-card" style="text-align:center;border-color:rgba(239,68,68,.2)">
+        <div style="font-size:2rem;margin-bottom:.5rem">🚗</div>
+        <h3 style="font-size:1rem;font-weight:800;margin-bottom:.25rem">Auto Cameroun</h3>
+        <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">Véhicules illimités, badge Pro vendeur</p>
+        <a href="/auto/compte/premium/" class="btn btn-outline btn-sm btn-block">Voir les offres →</a>
+      </div>
+      <div class="glass-card" style="text-align:center;border-color:rgba(139,92,246,.2)">
+        <div style="font-size:2rem;margin-bottom:.5rem">📚</div>
+        <h3 style="font-size:1rem;font-weight:800;margin-bottom:.25rem">Formations</h3>
+        <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">Accès toutes formations, certificats inclus</p>
+        <a href="/formations/" class="btn btn-outline btn-sm btn-block">Voir les offres →</a>
       </div>
     </div>
-    <div style="text-align:center;margin-top:2.5rem" class="aos-hidden">
-      <div style="display:inline-flex;align-items:center;gap:2rem;flex-wrap:wrap;justify-content:center;padding:1.25rem 2rem;background:rgba(46,125,50,.06);border:1px solid rgba(46,125,50,.2);border-radius:var(--radius-full);">
-        <span style="font-size:.88rem;color:var(--text-secondary)">🔒 Paiement sécurisé</span>
-        <span style="font-size:.88rem;color:var(--text-secondary)">📱 Mobile Money (MTN · Airtel)</span>
-        <span style="font-size:.88rem;color:var(--text-secondary)">↩️ Remboursement 30 jours</span>
-        <span style="font-size:.88rem;color:var(--text-secondary)">💬 Support en français</span>
+    <div style="text-align:center;margin-top:2rem" class="aos-hidden">
+      <div style="display:inline-flex;align-items:center;gap:2rem;flex-wrap:wrap;justify-content:center;padding:1rem 2rem;background:rgba(46,125,50,.06);border:1px solid rgba(46,125,50,.2);border-radius:var(--radius-full);">
+        <span style="font-size:.85rem;color:var(--text-secondary)">🔒 Paiement sécurisé</span>
+        <span style="font-size:.85rem;color:var(--text-secondary)">📱 MTN · Orange · Airtel</span>
+        <span style="font-size:.85rem;color:var(--text-secondary)">⚡ Accès immédiat</span>
+        <span style="font-size:.85rem;color:var(--text-secondary)">💬 Support WhatsApp</span>
       </div>
     </div>
   </div>

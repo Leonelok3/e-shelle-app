@@ -264,28 +264,51 @@ def payer_formation(request, formation_id):
 
 # ─── PACKS PREMIUM MARKETPLACE ───────────────────────────────────
 
+def _get_plans_for_module(module):
+    """Charge les plans depuis la DB. Fallback sur les plans hardcodés si la DB est vide."""
+    from .models import PlanPremiumApp
+    qs = PlanPremiumApp.objects.filter(module=module, actif=True).order_by("ordre", "prix")
+    if qs.exists():
+        return {p.slug: p.to_dict() for p in qs}
+    return PLANS_PREMIUM
+
+
 @login_required
 def premium_marketplace(request, module):
     """Page de choix du pack premium pour un module marketplace."""
-    if module not in MODULES_LABEL:
+    all_modules = dict(
+        list(MODULES_LABEL.items()) +
+        [("gaz", "E-Shelle Gaz"), ("pharma", "E-Shelle Pharma"),
+         ("pressing", "E-Shelle Pressing"), ("formations", "Formations"),
+         ("boutique", "Boutique"), ("rencontres", "E-Shelle Love"),
+         ("njangi", "Njangi")]
+    )
+    all_icons = dict(
+        list(MODULES_ICON.items()) +
+        [("gaz", "🔥"), ("pharma", "💊"), ("pressing", "👔"),
+         ("formations", "📚"), ("boutique", "🛒"), ("rencontres", "❤️"), ("njangi", "💰")]
+    )
+    if module not in all_modules:
         messages.error(request, "Module invalide.")
         return redirect("home")
+    plans = _get_plans_for_module(module)
     return render(request, "payments/premium_marketplace.html", {
         "module":       module,
-        "module_label": MODULES_LABEL[module],
-        "module_icon":  MODULES_ICON[module],
-        "plans":        PLANS_PREMIUM,
+        "module_label": all_modules[module],
+        "module_icon":  all_icons.get(module, "⭐"),
+        "plans":        plans,
     })
 
 
 @login_required
 def payer_premium(request, module, plan_slug):
     """Paiement du pack premium via Mobile Money + activation immédiate."""
-    if module not in MODULES_LABEL or plan_slug not in PLANS_PREMIUM:
+    plans = _get_plans_for_module(module)
+    if plan_slug not in plans:
         messages.error(request, "Paramètres invalides.")
         return redirect("home")
 
-    plan = PLANS_PREMIUM[plan_slug]
+    plan = plans[plan_slug]
 
     if request.method == "POST":
         methode   = request.POST.get("methode", "mtn_momo")
