@@ -58,10 +58,11 @@ class Command(BaseCommand):
         for ville_slug, qrts in quartiers_data.items():
             ville = villes[ville_slug]
             for nom in qrts:
+                slug_nom = nom.lower().replace(' ', '-').replace("'", '').replace('é', 'e').replace('è', 'e').replace('ê', 'e')
                 q, c = QuartierPressing.objects.get_or_create(
                     ville=ville,
                     nom=nom,
-                    defaults={"slug": f"{ville_slug}-{nom.lower().replace(' ', '-').replace("'", '')}"}
+                    defaults={"slug": f"{ville_slug}-{slug_nom}"}
                 )
                 quartiers[f"{ville_slug}_{nom}"] = q
 
