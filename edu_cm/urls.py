@@ -85,6 +85,9 @@ urlpatterns = [
     # ── E-Shelle Pharma — Annuaire pharmacies & médicaments ─────────
     path("pharma/", include("pharma.urls", namespace="pharma")),
 
+    # ── E-Shelle Pressing — Pressing & Blanchisserie ─────────────────
+    path("pressing/", include("pressing.urls", namespace="pressing")),
+
     # Page d'accueil
     path("", home_view, name="home"),
 ]

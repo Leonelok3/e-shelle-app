@@ -85,6 +85,9 @@ INSTALLED_APPS = [
 
     # ── E-Shelle Pharma — Annuaire pharmacies & médicaments ───────
     "pharma.apps.PharmaConfig",
+
+    # ── E-Shelle Pressing — Pressing & Blanchisserie ──────────────
+    "pressing.apps.PressingConfig",
 ]
 
 # AdGen

@@ -1,0 +1,143 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Commande confirmée — E-Shelle Pressing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    body{font-family:'Inter',sans-serif;background:#060B12;color:#fff}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    .shimmer-bar{background:linear-gradient(90deg,#6366F1,#818CF8,#6366F1);background-size:200% 100%;animation:shimmer 2s linear infinite}
+    @keyframes pop-in{0%{opacity:0;transform:scale(.85) translateY(20px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+    .pop-in{animation:pop-in .5s cubic-bezier(.34,1.56,.64,1) forwards}
+  </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+<!-- Navbar -->
+<nav class="sticky top-0 z-40 border-b" style="background:rgba(6,11,18,.92);backdrop-filter:blur(20px);border-color:rgba(255,255,255,.06)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-4">
+    <a href="{% url 'pressing:accueil' %}" class="flex items-center gap-2.5 flex-shrink-0">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center font-black text-base" style="background:linear-gradient(135deg,#6366F1,#4F46E5)">👔</div>
+      <span class="font-black text-white hidden sm:block">E-Shelle <span style="color:#818CF8">Pressing</span></span>
+    </a>
+  </div>
+</nav>
+
+<div class="flex-1 flex items-center justify-center px-4 py-16">
+  <div class="w-full max-w-lg pop-in">
+
+    <!-- Success icon -->
+    <div class="text-center mb-8">
+      <div class="w-20 h-20 rounded-full flex items-center justify-center text-4xl mx-auto mb-4"
+           style="background:linear-gradient(135deg,rgba(99,102,241,.2),rgba(79,70,229,.1));border:2px solid rgba(99,102,241,.4)">✅</div>
+      <h1 class="text-2xl font-black text-white mb-2">Commande envoyée !</h1>
+      <p class="text-white/40 text-sm">Le pressing a reçu votre demande et vous contactera sous peu.</p>
+    </div>
+
+    <!-- Récap commande -->
+    <div class="rounded-3xl border overflow-hidden mb-5" style="background:rgba(255,255,255,.03);border-color:rgba(99,102,241,.2)">
+      <div class="h-1 shimmer-bar"></div>
+      <div class="p-6">
+
+        <div class="flex items-center gap-3 mb-5 pb-4 border-b" style="border-color:rgba(255,255,255,.07)">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background:rgba(99,102,241,.12)">👔</div>
+          <div>
+            <div class="font-black text-white text-sm">{{ commande.pressing.nom }}</div>
+            <div class="text-xs text-white/40">{{ commande.pressing.adresse|default:commande.pressing.ville.nom }}</div>
+          </div>
+          <div class="ml-auto">
+            <span class="text-xs font-black px-2.5 py-1 rounded-full text-white" style="background:rgba(251,191,36,.15);color:#FCD34D;border:1px solid rgba(251,191,36,.2)">
+              En attente
+            </span>
+          </div>
+        </div>
+
+        <!-- Articles -->
+        <div class="space-y-2 mb-5">
+          <div class="text-xs font-bold text-white/40 uppercase tracking-wider mb-3">Articles commandés</div>
+          {% for art in articles_enrichis %}
+          <div class="flex justify-between items-center py-1.5">
+            <span class="text-sm text-white/70">{{ art.icone }} {{ art.nom }} <span class="text-white/30">×{{ art.qte }}</span></span>
+            <span class="text-sm font-bold" style="color:#818CF8">{{ art.sous_total }} F</span>
+          </div>
+          {% empty %}
+          <p class="text-white/30 text-sm">Aucun article</p>
+          {% endfor %}
+        </div>
+
+        <!-- Total -->
+        <div class="flex justify-between items-center py-3 border-t border-b mb-5" style="border-color:rgba(255,255,255,.07)">
+          <span class="font-bold text-white text-sm">Total estimé</span>
+          <span class="font-black text-lg" style="color:#6366F1">{{ commande.montant_total|floatformat:0 }} FCFA</span>
+        </div>
+
+        <!-- Infos -->
+        <div class="grid grid-cols-2 gap-3 text-xs mb-5">
+          <div>
+            <div class="text-white/30 mb-1">Client</div>
+            <div class="font-bold text-white">{{ commande.nom_client|default:"—" }}</div>
+          </div>
+          <div>
+            <div class="text-white/30 mb-1">Téléphone</div>
+            <div class="font-bold text-white">{{ commande.tel_client }}</div>
+          </div>
+          <div>
+            <div class="text-white/30 mb-1">Mode</div>
+            <div class="font-bold text-white">{{ commande.get_mode_display }}</div>
+          </div>
+          <div>
+            <div class="text-white/30 mb-1">Date souhaitée</div>
+            <div class="font-bold text-white">{{ commande.date_collecte|date:"d/m/Y"|default:"—" }}</div>
+          </div>
+          {% if commande.adresse_collecte %}
+          <div class="col-span-2">
+            <div class="text-white/30 mb-1">Adresse</div>
+            <div class="font-bold text-white">{{ commande.adresse_collecte }}</div>
+          </div>
+          {% endif %}
+          {% if commande.notes %}
+          <div class="col-span-2">
+            <div class="text-white/30 mb-1">Notes</div>
+            <div class="text-white/70">{{ commande.notes }}</div>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- CTA WhatsApp -->
+        <a href="{{ commande.whatsapp_recap_url }}" target="_blank" rel="noopener"
+           class="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl font-black text-white text-sm hover:opacity-90 transition mb-3"
+           style="background:#25D366">
+          📱 Envoyer le récap par WhatsApp
+        </a>
+        <p class="text-xs text-white/30 text-center">Partagez les détails de votre commande directement avec le pressing.</p>
+      </div>
+    </div>
+
+    <!-- Actions secondaires -->
+    <div class="flex gap-3">
+      <a href="{% url 'pressing:detail' commande.pressing.slug %}"
+         class="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl text-sm font-bold border transition hover:opacity-80"
+         style="border-color:rgba(99,102,241,.25);color:#a5b4fc;background:rgba(99,102,241,.07)">
+        ← Retour au pressing
+      </a>
+      <a href="{% url 'pressing:catalogue' %}"
+         class="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl text-sm font-bold text-white hover:opacity-90 transition"
+         style="background:linear-gradient(135deg,#6366F1,#4F46E5)">
+        Voir d'autres pressings
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<footer class="border-t py-6 px-4 text-center text-sm text-white/20" style="border-color:rgba(255,255,255,.05);background:#030712">
+  <a href="/" class="font-black hover:text-white transition" style="color:#6366F1">E-Shelle</a> &mdash; Pressing digital &mdash; Made in Cameroun 🇨🇲
+</footer>
+
+</body>
+</html>
