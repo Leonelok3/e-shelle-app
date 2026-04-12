@@ -226,10 +226,10 @@ ACCOUNT_ADAPTER          = "accounts.adapters.AccountAdapter"
 SOCIALACCOUNT_ADAPTER    = "accounts.adapters.SocialAccountAdapter"
 
 # Connexion par email ou username
-ACCOUNT_LOGIN_METHODS    = {"username", "email"}
-ACCOUNT_EMAIL_REQUIRED   = True
+ACCOUNT_LOGIN_METHODS      = {"username", "email"}
 ACCOUNT_EMAIL_VERIFICATION = "none"       # pas de vérif email via allauth (on gère)
-ACCOUNT_USERNAME_REQUIRED  = False        # généré auto si absent
+# Champs requis à l'inscription (format allauth 65+)
+ACCOUNT_SIGNUP_FIELDS      = ["email*", "password1*", "password2*"]
 
 # Social signup automatique — pas de page intermédiaire
 SOCIALACCOUNT_AUTO_SIGNUP       = True
