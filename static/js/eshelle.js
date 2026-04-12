@@ -709,6 +709,155 @@ function initWizard() {
 }
 
 /* ========================================================
+   19. SPOTLIGHT MOUSE TRACKING (service cards, glass-card)
+   ======================================================== */
+function initSpotlight() {
+  const spotlightEls = document.querySelectorAll(
+    '.service-card, .glass-card, .card.spotlight-card, .active-stat-card'
+  );
+  if (!spotlightEls.length) return;
+
+  spotlightEls.forEach(el => {
+    el.addEventListener('mousemove', e => {
+      const rect = el.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width  * 100).toFixed(1) + '%';
+      const y = ((e.clientY - rect.top)  / rect.height * 100).toFixed(1) + '%';
+      el.style.setProperty('--mx', x);
+      el.style.setProperty('--my', y);
+    }, { passive: true });
+  });
+}
+
+/* ========================================================
+   20. RIPPLE EFFECT on buttons
+   ======================================================== */
+function initRipple() {
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.btn');
+    if (!btn) return;
+
+    const rect   = btn.getBoundingClientRect();
+    const size   = Math.max(rect.width, rect.height) * 2;
+    const x      = e.clientX - rect.left - size / 2;
+    const y      = e.clientY - rect.top  - size / 2;
+
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px`;
+    btn.appendChild(ripple);
+    ripple.addEventListener('animationend', () => ripple.remove());
+  });
+}
+
+/* ========================================================
+   21. SIDEBAR BACKDROP (mobile premium)
+   ======================================================== */
+function initSidebarPremium() {
+  const sidebar    = document.getElementById('app-sidebar');
+  const toggleBtns = document.querySelectorAll('[data-toggle-sidebar]');
+  if (!sidebar) return;
+
+  // Créer le backdrop s'il n'existe pas
+  let backdrop = document.getElementById('sidebar-backdrop');
+  if (!backdrop) {
+    backdrop = document.createElement('div');
+    backdrop.id = 'sidebar-backdrop';
+    backdrop.className = 'sidebar-backdrop';
+    document.body.appendChild(backdrop);
+  }
+
+  function openSidebar() {
+    sidebar.classList.add('open');
+    backdrop.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    backdrop.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  toggleBtns.forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+    });
+  });
+
+  backdrop.addEventListener('click', closeSidebar);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeSidebar();
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 1024) closeSidebar();
+  }, { passive: true });
+}
+
+/* ========================================================
+   22. ANIMATED HUB STATS (count up on load)
+   ======================================================== */
+function initHubCounters() {
+  const vals = document.querySelectorAll('.active-stat-val');
+  if (!vals.length) return;
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting || entry.target.dataset.animated) return;
+      entry.target.dataset.animated = '1';
+
+      const el    = entry.target;
+      // Extract numeric part from text like "5 commandes"
+      const text  = el.textContent;
+      const match = text.match(/^(\d+)/);
+      if (!match) return;
+      const end  = parseInt(match[1], 10);
+      const suffix = text.slice(match[0].length); // " commandes" etc.
+
+      const duration = 1000;
+      const start    = performance.now();
+
+      function tick(now) {
+        const t  = Math.min((now - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - t, 3);
+        el.innerHTML = `${Math.round(ease * end)}<span>${suffix}</span>`;
+        if (t < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  }, { threshold: 0.5 });
+
+  vals.forEach(v => observer.observe(v));
+}
+
+/* ========================================================
+   23. STAGGER REVEAL (section categories on scroll)
+   ======================================================== */
+function initStaggerReveal() {
+  const sections = document.querySelectorAll('.services-section > div');
+  if (!sections.length) return;
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+
+  sections.forEach((s, i) => {
+    s.style.opacity = '0';
+    s.style.transform = 'translateY(20px)';
+    s.style.transition = `opacity 0.5s ease ${i * 0.06}s, transform 0.5s ease ${i * 0.06}s`;
+    observer.observe(s);
+  });
+}
+
+/* ========================================================
    19. INITIALISATION GLOBALE
    ======================================================== */
 document.addEventListener('DOMContentLoaded', () => {
@@ -722,11 +871,18 @@ document.addEventListener('DOMContentLoaded', () => {
   Modal.init();
   initCart();
   initSidebar();
+  initSidebarPremium();   // remplace initSidebar pour mobile premium
   initTabs();
   initFilters();
   initCourseProgress();
   initSearchOverlay();
   initWizard();
+
+  // Premium layer
+  initSpotlight();
+  initRipple();
+  initHubCounters();
+  initStaggerReveal();
 
   // Messages Django → Toasts automatiques
   document.querySelectorAll('[data-django-message]').forEach(el => {
