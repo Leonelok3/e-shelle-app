@@ -82,6 +82,9 @@ INSTALLED_APPS = [
 
     # ── E-Shelle Gaz — Livraison de gaz domestique ────────────────
     "gaz.apps.GazConfig",
+
+    # ── E-Shelle Pharma — Annuaire pharmacies & médicaments ───────
+    "pharma.apps.PharmaConfig",
 ]
 
 # AdGen

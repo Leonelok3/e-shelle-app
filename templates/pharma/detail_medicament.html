@@ -1,0 +1,211 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ medicament.nom }} — Disponibilité pharmacies · E-Shelle Pharma</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family:'Inter',sans-serif; background:#060B12; color:#fff; }
+    .card-hover { transition:transform .2s, box-shadow .2s; }
+    .card-hover:hover { transform:translateY(-3px); box-shadow:0 16px 32px rgba(16,185,129,.15); }
+    @keyframes glow-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.4)} 50%{box-shadow:0 0 0 12px rgba(16,185,129,0)} }
+    .wa-btn { animation: glow-pulse 2.5s ease-in-out infinite; }
+    .filter-pill { transition:all .15s; }
+    .filter-pill:hover,.filter-pill.active { background:linear-gradient(135deg,#10B981,#059669); color:#fff; border-color:transparent; }
+  </style>
+</head>
+<body class="antialiased min-h-screen">
+
+<!-- Navbar -->
+<nav class="sticky top-0 z-40 border-b" style="background:rgba(6,11,18,.92);backdrop-filter:blur(20px);border-color:rgba(255,255,255,.06)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-4">
+    <a href="{% url 'pharma:accueil' %}" class="flex items-center gap-2.5 flex-shrink-0">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center font-black text-base"
+           style="background:linear-gradient(135deg,#10B981,#059669)">💊</div>
+      <span class="font-black text-white hidden sm:block">E-Shelle <span style="color:#10B981">Pharma</span></span>
+    </a>
+    <nav class="flex items-center gap-2 ml-4 text-xs text-white/30">
+      <a href="{% url 'pharma:recherche' %}" class="hover:text-white transition">Médicaments</a>
+      <span>/</span>
+      <span class="text-white/60">{{ medicament.nom }}</span>
+    </nav>
+    <div class="ml-auto flex items-center gap-3">
+      {% if user.is_authenticated %}
+      <a href="{% url 'accounts:mon_compte' %}" class="text-sm font-medium text-white/60 hover:text-white transition">Mon Compte</a>
+      {% else %}
+      <a href="{% url 'accounts:login' %}" class="text-sm font-medium text-white/60 hover:text-white transition">Connexion</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<div class="max-w-4xl mx-auto px-4 sm:px-6 py-10">
+
+  <!-- En-tête médicament -->
+  <div class="rounded-3xl p-6 sm:p-8 mb-8 border relative overflow-hidden"
+       style="background:rgba(255,255,255,.03);border-color:rgba(16,185,129,.2)">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#10B981,#34d399)"></div>
+    <div class="flex items-start gap-5">
+      {% if medicament.image %}
+      <img src="{{ medicament.image.url }}" alt="{{ medicament.nom }}" class="w-20 h-20 object-cover rounded-2xl flex-shrink-0"/>
+      {% else %}
+      <div class="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl flex-shrink-0"
+           style="background:linear-gradient(135deg,rgba(16,185,129,.2),rgba(5,150,105,.1));border:1px solid rgba(16,185,129,.2)">
+        {{ medicament.categorie.icone|default:"💊" }}
+      </div>
+      {% endif %}
+      <div class="flex-1">
+        <div class="flex flex-wrap items-center gap-2 mb-2">
+          {% if medicament.categorie %}
+          <span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:rgba(16,185,129,.1);color:#34d399;border:1px solid rgba(16,185,129,.2)">
+            {{ medicament.categorie.icone }} {{ medicament.categorie.nom }}
+          </span>
+          {% endif %}
+          {% if medicament.ordonnance %}
+          <span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)">
+            📋 Sur ordonnance
+          </span>
+          {% endif %}
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-black text-white mb-2">{{ medicament.nom }}</h1>
+        {% if medicament.description %}
+        <p class="text-white/50 text-sm leading-relaxed">{{ medicament.description }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <div class="mb-6 space-y-3">
+    <div class="flex flex-wrap gap-2">
+      <a href="{% url 'pharma:detail_medicament' medicament.slug %}"
+         class="filter-pill text-xs font-bold px-3.5 py-1.5 rounded-full border border-white/10 text-white/60 {% if not ville_slug %}active{% endif %}">
+        Toutes villes
+      </a>
+      {% for ville in villes %}
+      <a href="?ville={{ ville.slug }}{% if garde_only %}&garde=1{% endif %}"
+         class="filter-pill text-xs font-bold px-3.5 py-1.5 rounded-full border border-white/10 text-white/60 {% if ville_slug == ville.slug %}active{% endif %}">
+        {{ ville.nom }}
+      </a>
+      {% endfor %}
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <a href="?{% if ville_slug %}ville={{ ville_slug }}&{% endif %}{% if not garde_only %}garde=1{% endif %}"
+         class="filter-pill text-xs font-bold px-3.5 py-1.5 rounded-full border border-white/10 text-white/60 {% if garde_only %}active{% endif %}">
+        🌙 Pharmacies de garde uniquement
+      </a>
+    </div>
+  </div>
+
+  <!-- Résultats -->
+  <div class="mb-3 flex items-center justify-between">
+    <h2 class="font-black text-white text-lg">
+      <span style="color:#10B981">{{ nb_results }}</span>
+      pharmacie{{ nb_results|pluralize }} disponible{{ nb_results|pluralize }}
+    </h2>
+    {% if nb_results > 0 %}
+    <span class="text-xs text-white/30">Prix le plus bas en premier</span>
+    {% endif %}
+  </div>
+
+  {% if stocks %}
+  <div class="space-y-4 mb-12">
+    {% for stock in stocks %}
+    <div class="card-hover rounded-2xl border p-5 flex flex-col sm:flex-row sm:items-center gap-4"
+         style="background:rgba(255,255,255,.03);border-color:rgba(16,185,129,.15)">
+      <!-- Info pharmacie -->
+      <div class="flex items-center gap-3 flex-1 min-w-0">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+             style="background:linear-gradient(135deg,rgba(16,185,129,.2),rgba(5,150,105,.1));border:1px solid rgba(16,185,129,.2)">
+          💊
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="font-black text-white text-sm truncate">{{ stock.pharmacie.nom }}</div>
+          <div class="text-xs text-white/40">📍 {{ stock.pharmacie.quartier.nom|default:stock.pharmacie.ville.nom }}, {{ stock.pharmacie.ville.nom }}</div>
+          <div class="text-xs text-white/30 mt-0.5">🕐 {{ stock.pharmacie.horaires }}</div>
+        </div>
+      </div>
+
+      <!-- Badges -->
+      <div class="flex flex-wrap gap-2 items-center">
+        {% if stock.pharmacie.garde %}
+        <span class="text-xs font-bold px-2 py-1 rounded-full" style="background:rgba(124,58,237,.12);color:#a78bfa;border:1px solid rgba(124,58,237,.2)">🌙 Garde</span>
+        {% endif %}
+        {% if stock.pharmacie.livraison %}
+        <span class="text-xs font-bold px-2 py-1 rounded-full" style="background:rgba(16,185,129,.1);color:#34d399;border:1px solid rgba(16,185,129,.2)">🛵 Livraison</span>
+        {% endif %}
+        {% if stock.prix %}
+        <span class="text-sm font-black px-3 py-1 rounded-full" style="background:rgba(16,185,129,.15);color:#10B981;border:1px solid rgba(16,185,129,.3)">
+          {{ stock.prix }} FCFA
+        </span>
+        {% else %}
+        <span class="text-xs text-white/30">Prix sur demande</span>
+        {% endif %}
+      </div>
+
+      <!-- CTA -->
+      <div class="flex gap-2 flex-shrink-0">
+        <a href="{{ stock.pharmacie.whatsapp_url }}" target="_blank" rel="noopener"
+           class="wa-btn flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-black text-white transition hover:opacity-90"
+           style="background:#25D366"
+           onclick="this.href='https://wa.me/{{ stock.pharmacie.whatsapp|default:stock.pharmacie.telephone }}?text={{ medicament.nom|urlencode }}'">
+          📱 WhatsApp
+        </a>
+        <a href="{{ stock.pharmacie.tel_url }}"
+           class="flex items-center justify-center px-3 py-2.5 rounded-xl text-xs font-black text-white transition hover:opacity-90"
+           style="background:rgba(59,130,246,.8)">📞</a>
+        <a href="{% url 'pharma:detail_pharmacie' stock.pharmacie.slug %}"
+           class="flex items-center justify-center px-3 py-2.5 rounded-xl text-xs font-semibold transition"
+           style="background:rgba(255,255,255,.06);color:#fff/60">
+          Voir →
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="text-center py-20">
+    <div class="text-5xl mb-4">😔</div>
+    <h3 class="text-lg font-black text-white mb-2">Rupture de stock</h3>
+    <p class="text-white/40 text-sm mb-6 max-w-sm mx-auto">
+      Aucune pharmacie ne signale ce médicament disponible actuellement. Essayez une autre ville ou contactez directement une pharmacie.
+    </p>
+    <a href="{% url 'pharma:catalogue' %}"
+       class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-white transition hover:opacity-90"
+       style="background:linear-gradient(135deg,#10B981,#059669)">
+      Voir toutes les pharmacies
+    </a>
+  </div>
+  {% endif %}
+
+  <!-- Médicaments similaires -->
+  {% if medicaments_similaires %}
+  <div class="mt-4">
+    <h3 class="font-black text-white text-base mb-4">Médicaments similaires</h3>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      {% for med in medicaments_similaires %}
+      <a href="{% url 'pharma:detail_medicament' med.slug %}"
+         class="card-hover p-4 rounded-2xl border text-center"
+         style="background:rgba(255,255,255,.03);border-color:rgba(16,185,129,.1)">
+        <div class="text-2xl mb-1">{{ med.categorie.icone|default:"💊" }}</div>
+        <div class="font-bold text-white text-xs">{{ med.nom }}</div>
+        <div class="text-xs mt-1" style="color:#10B981">{{ med.nb_pharmacies }} dispo</div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+<footer class="border-t py-6 px-4 text-center text-sm text-white/20" style="border-color:rgba(255,255,255,.05);background:#030712">
+  <a href="/" class="font-black hover:text-white transition" style="color:#10B981">E-Shelle</a>
+  &mdash; Pharmacie digitale &mdash; Made in Cameroun 🇨🇲
+</footer>
+</body>
+</html>

@@ -82,6 +82,9 @@ urlpatterns = [
     # ── E-Shelle Gaz — Livraison de gaz domestique ───────────────────
     path("gaz/", include("gaz.urls", namespace="gaz")),
 
+    # ── E-Shelle Pharma — Annuaire pharmacies & médicaments ─────────
+    path("pharma/", include("pharma.urls", namespace="pharma")),
+
     # Page d'accueil
     path("", home_view, name="home"),
 ]
