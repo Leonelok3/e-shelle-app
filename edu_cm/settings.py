@@ -88,7 +88,18 @@ INSTALLED_APPS = [
 
     # ── E-Shelle Pressing — Pressing & Blanchisserie ──────────────
     "pressing.apps.PressingConfig",
+
+    # ── E-Shelle AI — Agent Intelligent Central ────────────────────
+    "e_shelle_ai.apps.EshelleAiConfig",
 ]
+
+# ── E-Shelle AI — Configuration ─────────────────────────────────────
+OPENAI_CHAT_MODEL         = "gpt-4o"
+OPENAI_IMAGE_MODEL        = "dall-e-3"
+OPENAI_IMAGE_SIZE         = "1024x1024"
+OPENAI_IMAGE_QUALITY      = "hd"
+AI_MAX_CONTEXT_MESSAGES   = 20   # Nb messages gardés dans le contexte GPT
+AI_MEMORY_SUMMARY_THRESHOLD = 40 # Résumé auto après N messages
 
 # AdGen
 ADGEN_MAX_CAMPAIGNS_FREE = 5
