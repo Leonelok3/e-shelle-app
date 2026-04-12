@@ -167,13 +167,13 @@ def publier_vehicule(request):
         if form.is_valid() and formset.is_valid():
             vehicule = form.save(commit=False)
             vehicule.proprietaire = request.user
-            vehicule.statut = StatutVehicule.EN_ATTENTE_VALIDATION
+            vehicule.statut = StatutVehicule.PUBLIE
             if profil.est_premium:
                 vehicule.est_mis_en_avant = True
             vehicule.save()
             formset.instance = vehicule
             formset.save()
-            messages.success(request, "Annonce soumise ! Elle sera publiée après validation par notre équipe.")
+            messages.success(request, "🎉 Votre véhicule est en ligne !")
             return redirect("auto:mes_vehicules")
     else:
         form = VehiculeForm()
