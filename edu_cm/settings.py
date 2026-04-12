@@ -149,8 +149,7 @@ TEMPLATES = [
                 "resto.context_processors.resto_globals",
                 # ── Abonnements globaux (injecte user_subs dans tous les templates)
                 "accounts.context_processors.subscription_context",
-                # ── Allauth (social login) ────────────────────────────
-                "allauth.account.context_processors.account",
+                # allauth context processor — non requis pour social login
             ],
         },
     },
