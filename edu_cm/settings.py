@@ -348,20 +348,3 @@ REST_FRAMEWORK = {
 # ── E-Shelle Resto ────────────────────────────────────────────────
 RESTO_FREE_TRIAL_DAYS = 30
 
-# ── Logging (allauth debug) ───────────────────────────────────────
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {'class': 'logging.StreamHandler'},
-        'file': {
-            'class': 'logging.FileHandler',
-            'filename': '/tmp/django_errors.log',
-        },
-    },
-    'loggers': {
-        'allauth': {'handlers': ['console', 'file'], 'level': 'DEBUG', 'propagate': False},
-        'django.request': {'handlers': ['console', 'file'], 'level': 'ERROR', 'propagate': False},
-        'django': {'handlers': ['file'], 'level': 'ERROR', 'propagate': False},
-    },
-}
