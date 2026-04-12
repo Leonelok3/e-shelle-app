@@ -1,0 +1,468 @@
+{% extends "base.html" %}
+{% block title %}Mon Espace — E-Shelle{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── Hub Dashboard ──────────────────────────────────────────────── */
+.hub-greeting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.hub-greeting h1 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0;
+}
+.hub-greeting p {
+  color: var(--text-secondary);
+  font-size: .9rem;
+  margin: .25rem 0 0;
+}
+.role-badge {
+  display: inline-block;
+  padding: .2rem .65rem;
+  border-radius: 999px;
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  background: rgba(46,125,50,.2);
+  color: var(--primary-light);
+  border: 1px solid rgba(46,125,50,.3);
+}
+
+/* ── Stats actives ──────────────────────────────────────────────── */
+.active-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-bottom: 2.5rem;
+}
+.active-stat-card {
+  flex: 1;
+  min-width: 160px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  transition: border-color .2s, transform .2s;
+  text-decoration: none;
+  color: inherit;
+}
+.active-stat-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+.active-stat-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+.active-stat-body {}
+.active-stat-values {
+  display: flex;
+  gap: .75rem;
+  flex-wrap: wrap;
+}
+.active-stat-val {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.active-stat-val span {
+  font-size: .7rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-left: .2rem;
+}
+.active-stat-name {
+  font-size: .72rem;
+  color: var(--text-secondary);
+  margin-top: .1rem;
+}
+
+/* ── En cours section ───────────────────────────────────────────── */
+.section-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.section-title a {
+  font-size: .78rem;
+  font-weight: 500;
+  color: var(--primary-light);
+  text-decoration: none;
+  margin-left: auto;
+}
+
+/* ── Services grid ──────────────────────────────────────────────── */
+.services-section {
+  margin-bottom: 2.5rem;
+}
+.services-category-label {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--text-secondary);
+  margin-bottom: .75rem;
+  padding-bottom: .4rem;
+  border-bottom: 1px solid var(--border);
+}
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: .75rem;
+  margin-bottom: 1.5rem;
+}
+.service-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.1rem 1rem;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .4rem;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+  position: relative;
+  overflow: hidden;
+}
+.service-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--svc-color, var(--primary));
+  opacity: 0;
+  transition: opacity .2s;
+}
+.service-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.3);
+  border-color: var(--svc-color, var(--primary));
+}
+.service-card:hover::before {
+  opacity: 1;
+}
+.service-card.has-activity {
+  border-color: rgba(46,125,50,.3);
+  background: linear-gradient(135deg, var(--bg-card), rgba(46,125,50,.05));
+}
+.service-card.has-activity::before {
+  opacity: 1;
+}
+.svc-icon {
+  font-size: 1.6rem;
+}
+.svc-name {
+  font-size: .85rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.svc-desc {
+  font-size: .72rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+.svc-badge {
+  font-size: .65rem;
+  font-weight: 700;
+  padding: .15rem .45rem;
+  border-radius: 999px;
+  background: rgba(46,125,50,.2);
+  color: var(--primary-light);
+  margin-top: auto;
+}
+
+/* ── Formations en cours ────────────────────────────────────────── */
+.formation-mini {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: .85rem 1rem;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .2s;
+}
+.formation-mini:hover {
+  border-color: #8B5CF6;
+}
+.formation-mini-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, rgba(139,92,246,.3), rgba(245,124,0,.2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.formation-mini-body {
+  flex: 1;
+  min-width: 0;
+}
+.formation-mini-title {
+  font-size: .82rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.formation-mini-progress {
+  font-size: .7rem;
+  color: var(--text-secondary);
+  margin-top: .2rem;
+}
+
+/* ── Téléchargements ────────────────────────────────────────────── */
+.dl-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: .75rem 1rem;
+  margin-bottom: .5rem;
+}
+.dl-title {
+  font-size: .82rem;
+  font-weight: 600;
+}
+.dl-meta {
+  font-size: .7rem;
+  color: var(--text-secondary);
+}
+
+/* ── Sidebar hub ────────────────────────────────────────────────── */
+.hub-sidebar-shortcuts {
+  margin-top: .75rem;
+}
+.hub-sidebar-shortcuts a {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .78rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: .3rem 0;
+  transition: color .2s;
+}
+.hub-sidebar-shortcuts a:hover {
+  color: var(--text-primary);
+}
+
+@media (max-width: 640px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .active-stat-card {
+    min-width: 130px;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="app-layout" style="padding-top:0">
+
+  {# ── Sidebar ───────────────────────────────────────────────────────────── #}
+  <nav class="sidebar" id="app-sidebar" style="padding-top:4rem">
+    <div class="sidebar-header">
+      <svg viewBox="0 0 40 40" width="28" height="28" fill="none">
+        <rect width="40" height="40" rx="8" fill="#0D1F0D"/>
+        <path d="M10 20 C10 12 18 8 20 14 C22 8 30 12 30 20" fill="#2E7D32"/>
+        <rect x="10" y="29" width="20" height="4" rx="2" fill="#F57C00"/>
+      </svg>
+      <span>E-Shelle</span>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="sidebar-section-label">Navigation</div>
+      <a href="{% url 'dashboard:index' %}" class="sidebar-link active">
+        <span class="icon">🏠</span> Mon Espace
+      </a>
+      <a href="{% url 'formations:catalogue' %}" class="sidebar-link">
+        <span class="icon">📚</span> Formations
+      </a>
+      <a href="{% url 'boutique:index' %}" class="sidebar-link">
+        <span class="icon">🛒</span> Boutique
+      </a>
+      <a href="{% url 'resto:home' %}" class="sidebar-link">
+        <span class="icon">🍽️</span> Restaurants
+      </a>
+      <a href="{% url 'eshelle_ai:chat' %}" class="sidebar-link">
+        <span class="icon">🤖</span> E-Shelle AI
+      </a>
+
+      <div class="sidebar-section-label" style="margin-top:1rem">Compte</div>
+      <a href="{% url 'payments:historique' %}" class="sidebar-link">
+        <span class="icon">💳</span> Mes achats
+      </a>
+      <a href="{% url 'accounts:profil' %}" class="sidebar-link">
+        <span class="icon">👤</span> Mon profil
+      </a>
+      <form method="post" action="{% url 'accounts:logout' %}" style="margin:0">
+        {% csrf_token %}
+        <button type="submit" class="sidebar-link" style="color:#EF9A9A;background:none;border:none;cursor:pointer;width:100%;text-align:left;padding:0">
+          <span class="icon">↩️</span> Déconnexion
+        </button>
+      </form>
+    </div>
+  </nav>
+
+  {# ── Contenu principal ────────────────────────────────────────────────── #}
+  <main class="app-main">
+
+    {# Greeting #}
+    <div class="hub-greeting">
+      <div>
+        <h1>
+          Bonjour {{ request.user.first_name|default:request.user.username }} 👋
+          <span class="role-badge">{{ role }}</span>
+        </h1>
+        <p>Tout ce dont vous avez besoin, en un seul endroit.</p>
+      </div>
+      <button class="btn-icon btn-ghost" data-toggle-sidebar aria-label="Menu">☰</button>
+    </div>
+
+    {# ── Stats actives (services utilisés) ── #}
+    {% if stats %}
+    <div style="margin-bottom:2.5rem">
+      <div class="section-title">
+        ⚡ Mes activités récentes
+      </div>
+      <div class="active-stats">
+        {% for key, s in stats.items %}
+        <div class="active-stat-card">
+          <div class="active-stat-icon">{{ s.icon }}</div>
+          <div class="active-stat-body">
+            <div class="active-stat-values">
+              {% for item in s.items %}
+              <div class="active-stat-val">{{ item.v }}<span>{{ item.l }}</span></div>
+              {% endfor %}
+            </div>
+            <div class="active-stat-name">{{ s.label }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {# ── Formations en cours ── #}
+    {% if inscriptions %}
+    <div style="margin-bottom:2.5rem">
+      <div class="section-title">
+        📖 Formations en cours
+        <a href="{% url 'formations:catalogue' %}">Voir tout →</a>
+      </div>
+      <div class="grid-3">
+        {% for inscription in inscriptions %}
+        <a href="{% url 'formations:detail' slug=inscription.formation.slug %}" class="formation-mini">
+          <div class="formation-mini-icon">📚</div>
+          <div class="formation-mini-body">
+            <div class="formation-mini-title">{{ inscription.formation.titre }}</div>
+            <div class="formation-mini-progress">
+              Progression : {{ inscription.progression_pct }}%
+              &nbsp;·&nbsp;
+              {% if inscription.progression_pct > 0 %}Continuer{% else %}Commencer{% endif %}
+            </div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {# ── Téléchargements récents ── #}
+    {% if telechargements %}
+    <div style="margin-bottom:2.5rem">
+      <div class="section-title">
+        ⬇️ Mes téléchargements
+        <a href="{% url 'payments:historique' %}">Voir tout →</a>
+      </div>
+      {% for dl in telechargements %}
+      <div class="dl-item">
+        <div>
+          <div class="dl-title">{{ dl.produit.titre }}</div>
+          <div class="dl-meta">{{ dl.nb_telechargements }}/{{ dl.max_telechargements }} téléchargements{% if dl.expire_at %} · Expire {{ dl.expire_at|date:"d/m/Y" }}{% endif %}</div>
+        </div>
+        {% if dl.est_valide %}
+          <a href="{% url 'boutique:telecharger' token=dl.token %}" class="btn btn-primary btn-sm">⬇ Télécharger</a>
+        {% else %}
+          <span class="badge badge-gray">Expiré</span>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {# ── Certificats ── #}
+    {% if certificats %}
+    <div style="margin-bottom:2.5rem">
+      <div class="section-title">🏆 Mes certificats</div>
+      <div class="grid-3">
+        {% for cert in certificats %}
+        <div class="glass-card" style="text-align:center;padding:1.25rem">
+          <div style="font-size:2rem;margin-bottom:.5rem">🏅</div>
+          <div style="font-size:.85rem;font-weight:700;margin-bottom:.25rem">{{ cert.formation.titre }}</div>
+          <div style="font-size:.72rem;color:var(--text-secondary)">{{ cert.date_obtenu|date:"d/m/Y" }}</div>
+          <span class="badge badge-green" style="margin-top:.5rem;display:inline-block">{{ cert.code_unique }}</span>
+          {% if cert.pdf %}
+          <a href="{{ cert.pdf.url }}" class="btn btn-outline btn-sm btn-block" style="margin-top:.75rem" download>⬇ PDF</a>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {# ── Tous les services E-Shelle ── #}
+    <div class="services-section">
+      <div class="section-title">🌐 Tous les services E-Shelle</div>
+
+      {% for cat_key, cat_data in services_by_category.items %}
+      <div style="margin-bottom:1.75rem">
+        <div class="services-category-label">{{ cat_data.label }}</div>
+        <div class="services-grid">
+          {% for svc in cat_data.services %}
+          <a href="{{ svc.url }}"
+             class="service-card {% if svc.has_activity %}has-activity{% endif %}"
+             style="--svc-color:{{ svc.color }}">
+            <div class="svc-icon">{{ svc.icon }}</div>
+            <div class="svc-name">{{ svc.name }}</div>
+            <div class="svc-desc">{{ svc.desc }}</div>
+            {% if svc.has_activity %}
+            <span class="svc-badge">✓ Actif</span>
+            {% endif %}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+  </main>
+</div>
+{% endblock %}
