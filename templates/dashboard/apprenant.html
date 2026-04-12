@@ -66,22 +66,22 @@
 
     {# Stats widgets #}
     <div class="stats-grid">
-      <div class="stat-widget green">
+      <div class="stat-widget green aos-hidden">
         <div class="stat-icon">📚</div>
-        <div class="stat-value">{{ inscriptions|length }}</div>
+        <div class="stat-value" data-counter="{{ inscriptions|length }}">{{ inscriptions|length }}</div>
         <div class="stat-label">Formations inscrites</div>
       </div>
-      <div class="stat-widget orange">
+      <div class="stat-widget orange aos-hidden aos-delay-1">
         <div class="stat-icon">✅</div>
-        <div class="stat-value">{{ nb_completees }}</div>
+        <div class="stat-value" data-counter="{{ nb_completees }}">{{ nb_completees }}</div>
         <div class="stat-label">Leçons terminées</div>
       </div>
-      <div class="stat-widget">
+      <div class="stat-widget aos-hidden aos-delay-2">
         <div class="stat-icon">🏆</div>
-        <div class="stat-value">{{ certificats|length }}</div>
+        <div class="stat-value" data-counter="{{ certificats|length }}">{{ certificats|length }}</div>
         <div class="stat-label">Certificats obtenus</div>
       </div>
-      <div class="stat-widget">
+      <div class="stat-widget aos-hidden aos-delay-3">
         <div class="stat-icon">🔥</div>
         <div class="stat-value">1</div>
         <div class="stat-label">Jours consécutifs</div>

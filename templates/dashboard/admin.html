@@ -58,23 +58,23 @@
 
     {# Stats widgets #}
     <div class="stats-grid">
-      <div class="stat-widget green">
+      <div class="stat-widget green aos-hidden">
         <span class="stat-change up">+{{ new_users }} cette semaine</span>
         <div class="stat-icon">👥</div>
-        <div class="stat-value">{{ nb_users }}</div>
+        <div class="stat-value" data-counter="{{ nb_users }}">{{ nb_users }}</div>
         <div class="stat-label">Utilisateurs totaux</div>
       </div>
-      <div class="stat-widget orange">
+      <div class="stat-widget orange aos-hidden aos-delay-1">
         <div class="stat-icon">📚</div>
-        <div class="stat-value">{{ nb_formations }}</div>
+        <div class="stat-value" data-counter="{{ nb_formations }}">{{ nb_formations }}</div>
         <div class="stat-label">Formations publiées</div>
       </div>
-      <div class="stat-widget">
+      <div class="stat-widget aos-hidden aos-delay-2">
         <div class="stat-icon">🎓</div>
-        <div class="stat-value">{{ nb_inscrits }}</div>
+        <div class="stat-value" data-counter="{{ nb_inscrits }}">{{ nb_inscrits }}</div>
         <div class="stat-label">Inscriptions totales</div>
       </div>
-      <div class="stat-widget">
+      <div class="stat-widget aos-hidden aos-delay-3">
         <div class="stat-icon">💰</div>
         <div class="stat-value">{{ revenus|floatformat:0 }}</div>
         <div class="stat-label">FCFA ce mois (30j)</div>
