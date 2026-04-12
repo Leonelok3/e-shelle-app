@@ -20,8 +20,10 @@ def home_view(request):
 urlpatterns = [
     path("admin/", admin.site.urls),
 
-    # Authentification
+    # Authentification (vues custom E-Shelle)
     path("accounts/", include("accounts.urls")),
+    # Social Auth (OAuth Google / Facebook via allauth)
+    path("accounts/social/", include("allauth.socialaccount.urls")),
 
     # Anciens dashboards (compatibilité)
     path("dash/", include("progress.urls")),
