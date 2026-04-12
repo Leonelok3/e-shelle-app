@@ -354,9 +354,14 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {
         'console': {'class': 'logging.StreamHandler'},
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': str(BASE_DIR / 'django_errors.log'),
+        },
     },
     'loggers': {
-        'allauth': {'handlers': ['console'], 'level': 'DEBUG', 'propagate': False},
-        'django.request': {'handlers': ['console'], 'level': 'ERROR', 'propagate': False},
+        'allauth': {'handlers': ['console', 'file'], 'level': 'DEBUG', 'propagate': False},
+        'django.request': {'handlers': ['console', 'file'], 'level': 'ERROR', 'propagate': False},
+        'django': {'handlers': ['file'], 'level': 'ERROR', 'propagate': False},
     },
 }
