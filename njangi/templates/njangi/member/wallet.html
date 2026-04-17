@@ -1,0 +1,219 @@
+{% extends "njangi/base_dashboard.html" %}
+
+{% block title %}Mon Portefeuille — Njangi+{% endblock %}
+{% block page_title %}Mon Portefeuille{% endblock %}
+
+{% block sidebar_nav %}
+<a href="{% url 'njangi:member_dashboard' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-blue-100 hover:bg-white/10 transition">
+  🏠 Accueil
+</a>
+<a href="{% url 'njangi:member_contributions' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-blue-100 hover:bg-white/10 transition">
+  💳 Mes cotisations
+</a>
+<a href="{% url 'njangi:member_loans' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-blue-100 hover:bg-white/10 transition">
+  📋 Mes prêts
+</a>
+<a href="{% url 'njangi:member_deposits' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-blue-100 hover:bg-white/10 transition">
+  🏦 Mes dépôts
+</a>
+<a href="{% url 'njangi:member_wallet' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white font-medium bg-white/20">
+  💹 Mon portefeuille
+</a>
+<a href="{% url 'njangi:member_notifications' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-blue-100 hover:bg-white/10 transition">
+  🔔 Notifications
+</a>
+{% endblock %}
+
+{% block dashboard_content %}
+
+{% if not wallet_data %}
+<div class="text-center py-20">
+  <div class="text-6xl mb-4">💹</div>
+  <h2 class="text-xl font-bold text-gray-700 mb-2">Aucun dépôt actif</h2>
+  <p class="text-gray-400 mb-6">Déposez des fonds dans un groupe pour commencer à générer des intérêts proportionnels.</p>
+  <a href="{% url 'njangi:deposit_create' %}" class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition">
+    Faire un dépôt
+  </a>
+</div>
+{% else %}
+
+{% for item in wallet_data %}
+<div class="mb-10">
+
+  <!-- En-tête groupe -->
+  <div class="flex items-center gap-3 mb-6">
+    {% if item.membership.group.logo %}
+    <img src="{{ item.membership.group.logo.url }}" alt="" class="w-10 h-10 rounded-full object-cover">
+    {% else %}
+    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
+      {{ item.membership.group.name|first|upper }}
+    </div>
+    {% endif %}
+    <div>
+      <h2 class="text-lg font-bold text-gray-800">{{ item.membership.group.name }}</h2>
+      <p class="text-sm text-gray-500">{{ item.membership.get_role_display }}</p>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-2xl p-5 shadow">
+      <p class="text-blue-200 text-xs font-medium mb-1">Avoirs totaux</p>
+      <p class="text-2xl font-bold">{{ item.wallet_balance|floatformat:"0" }} <span class="text-sm font-normal">FCFA</span></p>
+    </div>
+    <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+      <p class="text-gray-500 text-xs font-medium mb-1">Dépôts actifs</p>
+      <p class="text-xl font-bold text-gray-800">{{ item.active_deposit_balance|floatformat:"0" }} <span class="text-sm font-normal text-gray-500">FCFA</span></p>
+    </div>
+    <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+      <p class="text-gray-500 text-xs font-medium mb-1">Intérêts cumulés</p>
+      <p class="text-xl font-bold text-green-600">+{{ item.total_interest_earned|floatformat:"0" }} <span class="text-sm font-normal text-gray-500">FCFA</span></p>
+    </div>
+    <div class="{% if item.base_fund_deficit > 0 %}bg-red-50 border border-red-100{% else %}bg-green-50 border border-green-100{% endif %} rounded-2xl p-5 shadow-sm">
+      <p class="text-gray-500 text-xs font-medium mb-1">Fonds de base</p>
+      {% if item.base_fund_deficit > 0 %}
+      <p class="text-xl font-bold text-red-600">-{{ item.base_fund_deficit|floatformat:"0" }} <span class="text-sm font-normal text-red-400">FCFA manquant</span></p>
+      {% else %}
+      <p class="text-xl font-bold text-green-600">Complet <span class="text-sm">✓</span></p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Graphique évolution + Dépôts en cours -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+
+    <!-- Graphique Chart.js -->
+    <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+      <h3 class="font-semibold text-gray-700 mb-4">Évolution des intérêts (12 derniers mois)</h3>
+      {% if item.evolution %}
+      <div class="relative" style="height:220px">
+        <canvas id="walletChart_{{ forloop.counter }}" style="height:220px"></canvas>
+      </div>
+      <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('walletChart_{{ forloop.counter }}').getContext('2d');
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: [{% for e in item.evolution %}"{{ e.label }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+            datasets: [
+              {
+                label: 'Intérêts du mois (FCFA)',
+                data: [{% for e in item.evolution %}{{ e.interest }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                backgroundColor: 'rgba(37,99,235,0.7)',
+                borderRadius: 6,
+                yAxisID: 'y'
+              },
+              {
+                label: 'Avoirs totaux (FCFA)',
+                data: [{% for e in item.evolution %}{{ e.wallet_balance }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                type: 'line',
+                borderColor: '#22c55e',
+                backgroundColor: 'rgba(34,197,94,0.1)',
+                tension: 0.3,
+                fill: true,
+                yAxisID: 'y1',
+                pointRadius: 4
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
+            scales: {
+              y:  { position: 'left',  beginAtZero: true, ticks: { font: { size: 10 } } },
+              y1: { position: 'right', beginAtZero: true, ticks: { font: { size: 10 } }, grid: { drawOnChartArea: false } }
+            }
+          }
+        });
+      });
+      </script>
+      {% else %}
+      <div class="flex items-center justify-center h-40 text-gray-400 text-sm">
+        Aucun relevé disponible — les intérêts sont calculés à la fin de chaque mois.
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Score de fiabilité -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col items-center justify-center">
+      {% with badge=item.membership.reliability_badge %}
+      <div class="relative w-28 h-28 mb-4">
+        <svg class="w-28 h-28 -rotate-90" viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="15.9" fill="none" stroke="#e5e7eb" stroke-width="3"/>
+          <circle cx="18" cy="18" r="15.9" fill="none" stroke="{{ badge.2 }}" stroke-width="3"
+            stroke-dasharray="{{ item.membership.reliability_score }}, 100" stroke-linecap="round"/>
+        </svg>
+        <div class="absolute inset-0 flex flex-col items-center justify-center">
+          <span class="text-2xl font-bold text-gray-800">{{ item.membership.reliability_score }}</span>
+          <span class="text-xs text-gray-500">/ 100</span>
+        </div>
+      </div>
+      <p class="font-semibold text-gray-700" style="color: {{ badge.2 }}">{{ badge.1 }}</p>
+      <p class="text-xs text-gray-400 mt-1 text-center">Score de fiabilité basé sur vos cotisations et remboursements</p>
+      {% endwith %}
+    </div>
+  </div>
+
+  <!-- Tableau des dépôts actifs -->
+  {% if item.deposits %}
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+      <h3 class="font-semibold text-gray-700">Dépôts actifs</h3>
+      <a href="{% url 'njangi:deposit_create' %}" class="text-sm font-medium text-blue-600 hover:text-blue-700">+ Nouveau dépôt</a>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="bg-gray-50 text-gray-500 text-xs uppercase">
+            <th class="text-left px-6 py-3">Montant</th>
+            <th class="text-left px-6 py-3">Taux</th>
+            <th class="text-left px-6 py-3">Déposé le</th>
+            <th class="text-left px-6 py-3">Échéance</th>
+            <th class="text-left px-6 py-3">Intérêts courus</th>
+            <th class="text-right px-6 py-3">Action</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-50">
+          {% for dep in item.deposits %}
+          <tr class="hover:bg-gray-50 transition">
+            <td class="px-6 py-4 font-semibold text-gray-800">{{ dep.amount|floatformat:"0" }} FCFA</td>
+            <td class="px-6 py-4 text-gray-600">{{ dep.interest_rate }} %/mois</td>
+            <td class="px-6 py-4 text-gray-500">{{ dep.deposited_at|date:"d/m/Y" }}</td>
+            <td class="px-6 py-4 text-gray-500">
+              {% if dep.maturity_date %}{{ dep.maturity_date|date:"d/m/Y" }}{% else %}—{% endif %}
+            </td>
+            <td class="px-6 py-4 text-green-600 font-medium">+{{ dep.current_interest|floatformat:"0" }} FCFA</td>
+            <td class="px-6 py-4 text-right">
+              <form method="post" action="{% url 'njangi:deposit_withdraw' dep.pk %}"
+                    onsubmit="return confirm('Confirmer le retrait de ce dépôt ?')">
+                {% csrf_token %}
+                <button type="submit" class="text-xs px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg font-medium transition">
+                  Retirer
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+  <div class="bg-white rounded-2xl border border-dashed border-gray-200 p-8 text-center">
+    <p class="text-gray-400 mb-3">Aucun dépôt actif dans ce groupe</p>
+    <a href="{% url 'njangi:deposit_create' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition">
+      Faire un premier dépôt
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+
+{% if not forloop.last %}<hr class="border-gray-200 my-8">{% endif %}
+{% endfor %}
+
+{% endif %}
+{% endblock %}

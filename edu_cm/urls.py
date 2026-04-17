@@ -99,6 +99,9 @@ urlpatterns = [
     # ── E-Shelle AI — Agent Intelligent Central ───────────────────────
     path("ai/", include("e_shelle_ai.urls", namespace="eshelle_ai")),
 
+    # ── Facebook Agent IA — Dashboard auto-publication ────────────────
+    path("facebook-agent/", include("facebook_agent.urls", namespace="facebook_agent")),
+
     # Page d'accueil
     path("", home_view, name="home"),
 ]

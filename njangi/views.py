@@ -464,3 +464,145 @@ class PremiumView(TemplateView):
             plans = []
         ctx['plans'] = plans
         return ctx
+
+
+# ── Wallet / Intérêts membres ─────────────────────────────────────────────────
+
+class MemberWalletView(LoginRequiredMixin, TemplateView):
+    """Portfolio personnel : dépôts + intérêts cumulés + évolution Chart.js."""
+    template_name = "njangi/member/wallet.html"
+
+    def get_context_data(self, **kwargs):
+        from njangi.services import InterestCalculationService
+        ctx = super().get_context_data(**kwargs)
+        memberships = Membership.objects.filter(
+            user=self.request.user, is_active=True
+        ).select_related("group")
+
+        wallet_data = []
+        for ms in memberships:
+            evolution = InterestCalculationService.get_member_evolution(ms, last_n_months=12)
+            deposits = FundDeposit.objects.filter(
+                membership=ms, status="active"
+            ).order_by("-deposited_at")
+            wallet_data.append({
+                "membership": ms,
+                "deposits": deposits,
+                "evolution": evolution,          # list of dicts: {label, interest, wallet_balance}
+                "wallet_balance": ms.wallet_balance,
+                "total_interest_earned": ms.total_interest_earned,
+                "active_deposit_balance": ms.active_deposit_balance,
+                "base_fund_deficit": ms.base_fund_deficit,
+            })
+
+        ctx["wallet_data"] = wallet_data
+        return ctx
+
+
+# ── Bureau — Intérêts mensuels ────────────────────────────────────────────────
+
+class BureauMonthlyInterestView(BureauRequiredMixin, TemplateView):
+    """Liste des relevés mensuels d'intérêts pour le groupe."""
+    template_name = "njangi/bureau/monthly_interest.html"
+
+    def get_context_data(self, **kwargs):
+        from njangi.models.wallet import MonthlyGroupInterest
+        from njangi.services import InterestCalculationService
+        ctx = super().get_context_data(**kwargs)
+        group = self.group
+
+        ctx["records"] = MonthlyGroupInterest.objects.filter(
+            group=group
+        ).prefetch_related("member_statements__membership__user").order_by("-year", "-month")
+
+        # Projection mois suivant
+        try:
+            ctx["projection"] = InterestCalculationService.simulate_next_month(group)
+        except Exception:
+            ctx["projection"] = None
+
+        return ctx
+
+
+class BureauCalculateInterestView(BureauRequiredMixin, View):
+    """Déclenche le calcul des intérêts pour un mois donné (POST)."""
+
+    def post(self, request, slug):
+        from njangi.services import InterestCalculationService
+        import json
+
+        year  = int(request.POST.get("year",  timezone.now().year))
+        month = int(request.POST.get("month", timezone.now().month))
+
+        try:
+            record = InterestCalculationService.calculate_month(self.group, year, month)
+            messages.success(
+                request,
+                f"Intérêts {month:02d}/{year} calculés : "
+                f"{int(record.total_interest_generated):,} FCFA répartis entre "
+                f"{record.nb_depositors} déposant(s)."
+            )
+        except Exception as exc:
+            messages.error(request, f"Erreur lors du calcul : {exc}")
+
+        return redirect("njangi:bureau_monthly_interest", slug=slug)
+
+
+# ── Bureau — Distribution (bouffe / main) ─────────────────────────────────────
+
+class DistributionPreviewView(BureauRequiredMixin, View):
+    """Aperçu des déductions avant distribution de la main à un membre."""
+    template_name = "njangi/bureau/distribution_preview.html"
+
+    def get(self, request, slug, membership_pk):
+        from django.shortcuts import render
+        from njangi.services import DistributionCalculator
+
+        member_ms = get_object_or_404(
+            Membership, pk=membership_pk, group=self.group, is_active=True
+        )
+        gross = self.group.contribution_amount * self.group.member_count
+        preview = DistributionCalculator.preview(member_ms, gross_amount=gross)
+
+        return render(request, self.template_name, {
+            "group": self.group,
+            "membership": self.membership,
+            "recipient": member_ms,
+            "preview": preview,
+        })
+
+    def post(self, request, slug, membership_pk):
+        """Confirme et enregistre la distribution."""
+        from njangi.services import DistributionCalculator
+        from njangi.models import Session
+
+        member_ms = get_object_or_404(
+            Membership, pk=membership_pk, group=self.group, is_active=True
+        )
+        gross = self.group.contribution_amount * self.group.member_count
+        preview = DistributionCalculator.preview(member_ms, gross_amount=gross)
+
+        if not preview["can_receive"]:
+            messages.error(
+                request,
+                f"Distribution bloquée : {preview.get('blocked', 'conditions non remplies')}."
+            )
+            return redirect("njangi:bureau_members", slug=slug)
+
+        # Enregistrement dans la session en cours (si existante)
+        active_session = self.group.sessions.filter(status="in_progress").first()
+        if active_session:
+            if member_ms.hand_order:
+                active_session.distributed_hand_to = member_ms
+                active_session.hand_amount = preview["net_amount"]
+                active_session.save(update_fields=["distributed_hand_to", "hand_amount"])
+            member_ms.total_received += preview["net_amount"]
+            member_ms.save(update_fields=["total_received"])
+            messages.success(
+                request,
+                f"Distribution confirmée : {int(preview['net_amount']):,} FCFA versés à {member_ms.user}."
+            )
+        else:
+            messages.warning(request, "Aucune séance en cours — distribution non enregistrée.")
+
+        return redirect("njangi:bureau_members", slug=slug)
