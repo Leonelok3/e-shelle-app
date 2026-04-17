@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }} — E-Shelle{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root { --fb-blue: #1877F2; --fb-blue-dark: #0d5cc7; }
+  .fb-layout { display:flex; min-height:100vh; padding-top:4rem; }
+  .fb-sidebar {
+    width:240px; flex-shrink:0; background:var(--surface-1);
+    border-right:1px solid var(--border); padding:1.5rem 0;
+    position:fixed; top:4rem; bottom:0; overflow-y:auto;
+  }
+  .fb-sidebar .logo {
+    padding:0 1.2rem 1.5rem; font-family:var(--font-display); font-size:1rem;
+    font-weight:800; display:flex; align-items:center; gap:.6rem;
+    color:var(--fb-blue); border-bottom:1px solid var(--border); margin-bottom:1rem;
+  }
+  .fb-nav-link {
+    display:flex; align-items:center; gap:.7rem; padding:.65rem 1.2rem;
+    color:var(--text-secondary); text-decoration:none; font-size:.9rem;
+    transition:background .15s,color .15s;
+  }
+  .fb-nav-link:hover,.fb-nav-link.active { background:rgba(24,119,242,.08); color:var(--fb-blue); }
+  .fb-main { margin-left:240px; flex:1; padding:2rem; }
+  .card { background:var(--surface-1); border:1px solid var(--border); border-radius:12px; padding:1.2rem 1.5rem; margin-bottom:1.5rem; }
+  .table-sm { width:100%; border-collapse:collapse; font-size:.82rem; }
+  .table-sm th { text-align:left; padding:.5rem .75rem; color:var(--text-secondary); font-weight:600; border-bottom:1px solid var(--border); }
+  .table-sm td { padding:.5rem .75rem; border-bottom:1px solid var(--border); vertical-align:top; }
+  .table-sm tr:last-child td { border-bottom:none; }
+  .badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:.75rem; font-weight:600; white-space:nowrap; }
+  .badge-success { background:rgba(40,167,69,.15); color:#28a745; }
+  .badge-error   { background:rgba(220,53,69,.15);  color:#dc3545; }
+  .badge-warning { background:rgba(255,193,7,.15);  color:#ffc107; }
+  .badge-info    { background:rgba(23,162,184,.15); color:#17a2b8; }
+  .chip { display:inline-flex; background:rgba(24,119,242,.1); color:var(--fb-blue); border-radius:20px; padding:2px 10px; font-size:.75rem; font-weight:600; }
+  .filter-bar { display:flex; align-items:center; gap:.75rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+  .filter-select { background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:.5rem .9rem; color:var(--text-primary); font-size:.85rem; }
+  .btn-sm { background:var(--fb-blue); color:#fff; border:none; border-radius:8px; padding:.45rem 1rem; font-size:.85rem; font-weight:600; cursor:pointer; }
+  .btn-sm:hover { background:var(--fb-blue-dark); }
+  .pagination { display:flex; gap:.5rem; justify-content:center; margin-top:1.5rem; flex-wrap:wrap; }
+  .pagination a,.pagination span {
+    padding:.4rem .85rem; border-radius:6px; border:1px solid var(--border);
+    font-size:.85rem; text-decoration:none; color:var(--text-primary); background:var(--surface-1);
+  }
+  .pagination .current { background:var(--fb-blue); color:#fff; border-color:var(--fb-blue); }
+  .detail-pre { font-family:var(--font-mono,monospace); font-size:.75rem; background:var(--surface-2); border-radius:6px; padding:.5rem; margin-top:.4rem; white-space:pre-wrap; word-break:break-all; color:var(--text-secondary); }
+  @media(max-width:900px){.fb-sidebar{display:none}.fb-main{margin-left:0}}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="fb-layout">
+  <nav class="fb-sidebar">
+    <div class="logo">📘 FB Agent IA</div>
+    <a href="{% url 'facebook_agent:dashboard' %}" class="fb-nav-link">📊 Dashboard</a>
+    <a href="{% url 'facebook_agent:published_posts' %}" class="fb-nav-link">📰 Posts Publiés</a>
+    <a href="{% url 'facebook_agent:scheduled_posts' %}" class="fb-nav-link">🗓 Posts Planifiés</a>
+    <a href="{% url 'facebook_agent:create_scheduled_post' %}" class="fb-nav-link">✏️ Créer un Post</a>
+    <a href="{% url 'facebook_agent:logs' %}" class="fb-nav-link active">📋 Logs Agent</a>
+    <a href="/admin/facebook_agent/" class="fb-nav-link">⚙️ Admin Django</a>
+  </nav>
+
+  <main class="fb-main">
+    <div style="margin-bottom:1.5rem">
+      <h1 style="font-family:var(--font-display);font-size:1.5rem;font-weight:800;margin:0">📋 Logs de l'Agent</h1>
+      <p style="color:var(--text-secondary);font-size:.9rem;margin:.25rem 0 0">Historique complet des actions de l'agent IA Facebook</p>
+    </div>
+
+    {# Filtres #}
+    <form method="get" class="filter-bar">
+      <select name="level" class="filter-select">
+        <option value="">Tous les niveaux</option>
+        {% for val, label in level_choices %}
+          <option value="{{ val }}" {% if level_filter == val %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      <select name="section" class="filter-select">
+        <option value="">Toutes les sections</option>
+        {% for val, label in section_choices %}
+          <option value="{{ val }}" {% if section_filter == val %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      <select name="action" class="filter-select">
+        <option value="">Toutes les actions</option>
+        {% for val, label in action_choices %}
+          <option value="{{ val }}" {% if action_filter == val %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn-sm">Filtrer</button>
+      <a href="{% url 'facebook_agent:logs' %}" style="font-size:.85rem;color:var(--text-secondary)">✕ Réinitialiser</a>
+    </form>
+
+    <div class="card">
+      {% if page_obj %}
+      <table class="table-sm">
+        <thead>
+          <tr>
+            <th style="width:140px">Date</th>
+            <th style="width:90px">Niveau</th>
+            <th style="width:100px">Section</th>
+            <th style="width:160px">Action</th>
+            <th>Message</th>
+            <th style="width:80px">Durée</th>
+            <th style="width:80px">Tokens</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in page_obj %}
+          <tr>
+            <td style="white-space:nowrap;color:var(--text-secondary)">{{ log.created_at|date:"d/m/Y H:i:s" }}</td>
+            <td><span class="badge badge-{{ log.level }}">{{ log.level|upper }}</span></td>
+            <td>{% if log.section %}<span class="chip">{{ log.section }}</span>{% else %}<span style="color:var(--text-secondary)">—</span>{% endif %}</td>
+            <td style="color:var(--text-secondary)">{{ log.get_action_display }}</td>
+            <td>
+              {{ log.message }}
+              {% if log.details %}
+                <div class="detail-pre">{{ log.details }}</div>
+              {% endif %}
+            </td>
+            <td style="color:var(--text-secondary)">{% if log.duration_ms %}{{ log.duration_ms }}ms{% else %}—{% endif %}</td>
+            <td style="color:var(--text-secondary)">{% if log.tokens_used %}{{ log.tokens_used }}{% else %}—{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% if page_obj.has_other_pages %}
+      <div class="pagination">
+        {% if page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}&level={{ level_filter }}&section={{ section_filter }}&action={{ action_filter }}">&laquo;</a>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <span class="current">{{ num }}</span>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}&level={{ level_filter }}&section={{ section_filter }}&action={{ action_filter }}">{{ num }}</a>
+          {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}&level={{ level_filter }}&section={{ section_filter }}&action={{ action_filter }}">&raquo;</a>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {% else %}
+        <p style="color:var(--text-secondary);text-align:center;padding:2rem 0">Aucun log disponible.</p>
+      {% endif %}
+    </div>
+  </main>
+</div>
+{% endblock %}

@@ -690,66 +690,48 @@
   </div>
 </section>
 
-<!-- SECTION 6 — TARIFS -->
+<!-- SECTION 6 — TARIFS (remplacé par tarification par app depuis l'admin) -->
 <section class="section" id="tarifs">
   <div class="container">
-    <div class="text-center" style="margin-bottom:3.5rem">
-      <div class="section-label aos-hidden">Tarification simple</div>
-      <h2 class="section-title aos-hidden aos-delay-1">Des prix accessibles,<br>des résultats concrets</h2>
-      <p class="section-subtitle aos-hidden aos-delay-2">Pas d'engagement. Annulez à tout moment. Paiement Mobile Money disponible.</p>
+    <div class="text-center aos-hidden" style="margin-bottom:3rem">
+      <div class="section-label">Tarification par application</div>
+      <h2 class="section-title aos-hidden aos-delay-1">Chaque application,<br>son propre abonnement</h2>
+      <p class="section-subtitle aos-hidden aos-delay-2">
+        Paiement simple par Mobile Money. Accès immédiat. Pas d'engagement.
+      </p>
     </div>
-    <div class="pricing-grid">
-      <div class="pricing-card aos-hidden">
-        <div class="pricing-plan">Starter</div>
-        <div class="pricing-price">0 <sub>FCFA/mois</sub></div>
-        <p class="pricing-desc">Parfait pour découvrir la plateforme et tester les fonctionnalités de base.</p>
-        <ul class="pricing-features">
-          <li><span class="check">✓</span> 2 cours gratuits</li>
-          <li><span class="check">✓</span> 1 produit en boutique</li>
-          <li><span class="check">✓</span> Dashboard basique</li>
-          <li><span class="x">✕</span> Génération IA</li>
-          <li><span class="x">✕</span> Certificats</li>
-          <li><span class="x">✕</span> Support prioritaire</li>
-        </ul>
-        <a href="/accounts/register/" class="btn btn-outline btn-block">Commencer gratuitement</a>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem;max-width:900px;margin:0 auto" class="aos-hidden aos-delay-1">
+      <div class="glass-card" style="text-align:center;border-color:rgba(255,107,0,.2)">
+        <div style="font-size:2rem;margin-bottom:.5rem">📋</div>
+        <h3 style="font-size:1rem;font-weight:800;margin-bottom:.25rem">Annonces Cam</h3>
+        <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">Publiez illimité, mise en avant, badge Pro</p>
+        <a href="/annonces/compte/premium/" class="btn btn-outline btn-sm btn-block">Voir les offres →</a>
       </div>
-      <div class="pricing-card featured aos-hidden aos-delay-1">
-        <div class="pricing-featured-badge">⭐ Populaire</div>
-        <div class="pricing-plan">Pro</div>
-        <div class="pricing-price" style="color:var(--primary-light)">9 900 <sub>FCFA/mois</sub></div>
-        <p class="pricing-desc">L'accès complet à tous les modules. Idéal pour les entrepreneurs sérieux.</p>
-        <ul class="pricing-features">
-          <li><span class="check">✓</span> Tous les cours & formations</li>
-          <li><span class="check">✓</span> Boutique illimitée</li>
-          <li><span class="check">✓</span> Génération IA (100 req/mois)</li>
-          <li><span class="check">✓</span> Certificats officiels</li>
-          <li><span class="check">✓</span> Analytics avancés</li>
-          <li><span class="check">✓</span> Support WhatsApp prioritaire</li>
-        </ul>
-        <a href="/accounts/register/?plan=pro" class="btn btn-primary btn-block">Démarrer l'essai →</a>
-        <p style="text-align:center;font-size:.78rem;color:var(--text-muted);margin-top:.75rem">✅ 7 jours d'essai gratuit, sans carte</p>
+      <div class="glass-card" style="text-align:center;border-color:rgba(14,165,233,.2)">
+        <div style="font-size:2rem;margin-bottom:.5rem">🏠</div>
+        <h3 style="font-size:1rem;font-weight:800;margin-bottom:.25rem">Immobilier</h3>
+        <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">Biens illimités, mise en avant accueil, stats</p>
+        <a href="/immobilier/mon-compte/premium/" class="btn btn-outline btn-sm btn-block">Voir les offres →</a>
       </div>
-      <div class="pricing-card aos-hidden aos-delay-2">
-        <div class="pricing-plan">Enterprise</div>
-        <div class="pricing-price">Sur <sub>mesure</sub></div>
-        <p class="pricing-desc">Solution clé en main pour agences, écoles et entreprises avec white-label complet.</p>
-        <ul class="pricing-features">
-          <li><span class="check">✓</span> Tout le plan Pro</li>
-          <li><span class="check">✓</span> White-label (votre marque)</li>
-          <li><span class="check">✓</span> IA illimitée</li>
-          <li><span class="check">✓</span> Intégration sur mesure</li>
-          <li><span class="check">✓</span> Formation équipe incluse</li>
-          <li><span class="check">✓</span> Manager dédié</li>
-        </ul>
-        <a href="/services/contact/" class="btn btn-outline btn-block">Nous contacter</a>
+      <div class="glass-card" style="text-align:center;border-color:rgba(239,68,68,.2)">
+        <div style="font-size:2rem;margin-bottom:.5rem">🚗</div>
+        <h3 style="font-size:1rem;font-weight:800;margin-bottom:.25rem">Auto Cameroun</h3>
+        <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">Véhicules illimités, badge Pro vendeur</p>
+        <a href="/auto/compte/premium/" class="btn btn-outline btn-sm btn-block">Voir les offres →</a>
+      </div>
+      <div class="glass-card" style="text-align:center;border-color:rgba(139,92,246,.2)">
+        <div style="font-size:2rem;margin-bottom:.5rem">📚</div>
+        <h3 style="font-size:1rem;font-weight:800;margin-bottom:.25rem">Formations</h3>
+        <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">Accès toutes formations, certificats inclus</p>
+        <a href="/formations/" class="btn btn-outline btn-sm btn-block">Voir les offres →</a>
       </div>
     </div>
-    <div style="text-align:center;margin-top:2.5rem" class="aos-hidden">
-      <div style="display:inline-flex;align-items:center;gap:2rem;flex-wrap:wrap;justify-content:center;padding:1.25rem 2rem;background:rgba(46,125,50,.06);border:1px solid rgba(46,125,50,.2);border-radius:var(--radius-full);">
-        <span style="font-size:.88rem;color:var(--text-secondary)">🔒 Paiement sécurisé</span>
-        <span style="font-size:.88rem;color:var(--text-secondary)">📱 Mobile Money (MTN · Airtel)</span>
-        <span style="font-size:.88rem;color:var(--text-secondary)">↩️ Remboursement 30 jours</span>
-        <span style="font-size:.88rem;color:var(--text-secondary)">💬 Support en français</span>
+    <div style="text-align:center;margin-top:2rem" class="aos-hidden">
+      <div style="display:inline-flex;align-items:center;gap:2rem;flex-wrap:wrap;justify-content:center;padding:1rem 2rem;background:rgba(46,125,50,.06);border:1px solid rgba(46,125,50,.2);border-radius:var(--radius-full);">
+        <span style="font-size:.85rem;color:var(--text-secondary)">🔒 Paiement sécurisé</span>
+        <span style="font-size:.85rem;color:var(--text-secondary)">📱 MTN · Orange · Airtel</span>
+        <span style="font-size:.85rem;color:var(--text-secondary)">⚡ Accès immédiat</span>
+        <span style="font-size:.85rem;color:var(--text-secondary)">💬 Support WhatsApp</span>
       </div>
     </div>
   </div>
@@ -796,6 +778,174 @@
     </div>
   </div>
 </section>
+
+<div class="divider-gradient" style="margin:0"></div>
+
+<!-- SECTION — ECOSYSTÈME COMPLET -->
+<section class="section" id="ecosysteme" style="background:linear-gradient(180deg,var(--bg-primary) 0%,rgba(27,101,52,.04) 50%,var(--bg-primary) 100%)">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:3rem">
+      <div class="section-label aos-hidden">17 applications</div>
+      <h2 class="section-title aos-hidden aos-delay-1">Tout l'écosystème<br><span class="text-gradient">E-Shelle</span></h2>
+      <p class="section-subtitle aos-hidden aos-delay-2">Une seule plateforme, 17 applications pour transformer votre quotidien au Cameroun et en Afrique.</p>
+    </div>
+
+    <!-- Grille des 17 apps -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:1rem;margin-bottom:2.5rem" class="eco-grid aos-hidden aos-delay-1">
+
+      <!-- Formations -->
+      <a href="/formations/" class="eco-card" style="--eco-color:#8B5CF6;--eco-bg:rgba(139,92,246,.08)">
+        <div class="eco-icon">📚</div>
+        <div class="eco-name">Formations</div>
+        <div class="eco-desc">IA, Marketing, Anglais</div>
+      </a>
+
+      <!-- Boutique -->
+      <a href="/boutique/" class="eco-card" style="--eco-color:#F59E0B;--eco-bg:rgba(245,158,11,.08)">
+        <div class="eco-icon">🛒</div>
+        <div class="eco-name">Boutique</div>
+        <div class="eco-desc">Templates, ebooks, outils</div>
+      </a>
+
+      <!-- Services Web -->
+      <a href="/services/" class="eco-card" style="--eco-color:#3B82F6;--eco-bg:rgba(59,130,246,.08)">
+        <div class="eco-icon">🌐</div>
+        <div class="eco-name">Services Web</div>
+        <div class="eco-desc">Sites, e-commerce, IA</div>
+      </a>
+
+      <!-- E-Shelle AI -->
+      <a href="/ai/" class="eco-card" style="--eco-color:#00D4AA;--eco-bg:rgba(0,212,170,.08)">
+        <div class="eco-icon">🤖</div>
+        <div class="eco-name">E-Shelle AI</div>
+        <div class="eco-desc">GPT-4o · DALL·E 3</div>
+      </a>
+
+      <!-- Gaz -->
+      <a href="/gaz/" class="eco-card" style="--eco-color:#FF6B00;--eco-bg:rgba(255,107,0,.08)">
+        <div class="eco-icon">🔥</div>
+        <div class="eco-name">E-Shelle Gaz</div>
+        <div class="eco-desc">Livraison domicile</div>
+      </a>
+
+      <!-- Pharma -->
+      <a href="/pharma/" class="eco-card" style="--eco-color:#10B981;--eco-bg:rgba(16,185,129,.08)">
+        <div class="eco-icon">💊</div>
+        <div class="eco-name">Pharma</div>
+        <div class="eco-desc">Médicaments, prix, dispo</div>
+      </a>
+
+      <!-- Pressing -->
+      <a href="/pressing/" class="eco-card" style="--eco-color:#6366F1;--eco-bg:rgba(99,102,241,.08)">
+        <div class="eco-icon">👔</div>
+        <div class="eco-name">Pressing</div>
+        <div class="eco-desc">Nettoyage, livraison</div>
+      </a>
+
+      <!-- Resto -->
+      <a href="/resto/" class="eco-card" style="--eco-color:#E85D26;--eco-bg:rgba(232,93,38,.08)">
+        <div class="eco-icon">🍽️</div>
+        <div class="eco-name">Resto</div>
+        <div class="eco-desc">Restaurants Cameroun</div>
+      </a>
+
+      <!-- Immobilier -->
+      <a href="/immobilier/" class="eco-card" style="--eco-color:#0EA5E9;--eco-bg:rgba(14,165,233,.08)">
+        <div class="eco-icon">🏠</div>
+        <div class="eco-name">Immobilier</div>
+        <div class="eco-desc">Vente, location, terrain</div>
+      </a>
+
+      <!-- Auto -->
+      <a href="/auto/" class="eco-card" style="--eco-color:#EF4444;--eco-bg:rgba(239,68,68,.08)">
+        <div class="eco-icon">🚗</div>
+        <div class="eco-name">Auto</div>
+        <div class="eco-desc">Véhicules, pièces</div>
+      </a>
+
+      <!-- Annonces -->
+      <a href="/annonces/" class="eco-card" style="--eco-color:#F97316;--eco-bg:rgba(249,115,22,.08)">
+        <div class="eco-icon">📢</div>
+        <div class="eco-name">Annonces</div>
+        <div class="eco-desc">Petites annonces locales</div>
+      </a>
+
+      <!-- Agro -->
+      <a href="/agro/" class="eco-card" style="--eco-color:#2D6A4F;--eco-bg:rgba(45,106,79,.08)">
+        <div class="eco-icon">🌿</div>
+        <div class="eco-name">Agro</div>
+        <div class="eco-desc">Marché B2B/B2C</div>
+      </a>
+
+      <!-- Love -->
+      <a href="/rencontres/" class="eco-card" style="--eco-color:#E8436A;--eco-bg:rgba(232,67,106,.08)">
+        <div class="eco-icon">❤️</div>
+        <div class="eco-name">E-Shelle Love</div>
+        <div class="eco-desc">Rencontres sérieuses</div>
+      </a>
+
+      <!-- AdGen -->
+      <a href="/pub/" class="eco-card" style="--eco-color:#6C3FE8;--eco-bg:rgba(108,63,232,.08)">
+        <div class="eco-icon">✨</div>
+        <div class="eco-name">AdGen</div>
+        <div class="eco-desc">Pubs IA en 20 sec</div>
+      </a>
+
+      <!-- EduCam Pro -->
+      <a href="/edu/" class="eco-card" style="--eco-color:#3B82F6;--eco-bg:rgba(59,130,246,.08)">
+        <div class="eco-icon">🎓</div>
+        <div class="eco-name">EduCam Pro</div>
+        <div class="eco-desc">Examens camerounais</div>
+      </a>
+
+      <!-- Njangi -->
+      <a href="/njangi/" class="eco-card" style="--eco-color:#1B6CA8;--eco-bg:rgba(27,108,168,.08)">
+        <div class="eco-icon">💰</div>
+        <div class="eco-name">Njangi</div>
+        <div class="eco-desc">Tontine digitale</div>
+      </a>
+
+      <!-- Dashboard -->
+      <a href="/dashboard/" class="eco-card" style="--eco-color:#1B6534;--eco-bg:rgba(27,101,52,.12);border-color:rgba(27,101,52,.3)">
+        <div class="eco-icon">📊</div>
+        <div class="eco-name">Mon Espace</div>
+        <div class="eco-desc">Tableau de bord</div>
+      </a>
+
+    </div>
+
+    <!-- CTA centré -->
+    <div class="text-center aos-hidden">
+      <a href="/accounts/register/" class="btn btn-primary btn-lg" style="margin-right:.75rem">Commencer gratuitement →</a>
+      <a href="/dashboard/" class="btn btn-outline btn-lg">Accéder à mon espace</a>
+    </div>
+  </div>
+</section>
+
+<style>
+.eco-card {
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:1.25rem .75rem;border-radius:var(--radius-lg);text-decoration:none;
+  background:var(--eco-bg);border:1px solid color-mix(in srgb,var(--eco-color) 20%,transparent);
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+  text-align:center;gap:.35rem;
+}
+.eco-card:hover {
+  transform:translateY(-4px) scale(1.03);
+  box-shadow:0 12px 32px color-mix(in srgb,var(--eco-color) 20%,transparent);
+  border-color:color-mix(in srgb,var(--eco-color) 45%,transparent);
+}
+.eco-icon { font-size:2rem;line-height:1;margin-bottom:.1rem }
+.eco-name { font-size:.83rem;font-weight:800;color:var(--text-primary);line-height:1.2 }
+.eco-desc { font-size:.7rem;color:var(--text-muted);line-height:1.3 }
+@media(max-width:480px) {
+  .eco-grid { grid-template-columns:repeat(3,1fr) !important; gap:.65rem !important; }
+  .eco-card { padding:.9rem .5rem; }
+  .eco-icon { font-size:1.5rem; }
+  .eco-name { font-size:.75rem; }
+  .eco-desc { display:none; }
+}
+</style>
 
 <div class="divider-gradient" style="margin:0"></div>
 

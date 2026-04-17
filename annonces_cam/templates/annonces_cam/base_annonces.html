@@ -31,6 +31,15 @@
 
   {% block ann_content %}{% endblock %}
 </div>
+
+{% if user.is_authenticated %}
+<a href="{% url 'dashboard:index' %}"
+   style="position:fixed;bottom:5rem;right:1.5rem;z-index:999;display:flex;align-items:center;gap:.5rem;background:linear-gradient(135deg,#2E7D32,#F57C00);color:#fff;font-size:.78rem;font-weight:700;padding:.55rem 1rem;border-radius:999px;box-shadow:0 4px 20px rgba(46,125,50,0.5);text-decoration:none;white-space:nowrap;transition:transform .2s,box-shadow .2s"
+   onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 28px rgba(46,125,50,0.7)'"
+   onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(46,125,50,0.5)'">
+  🏠 Mon espace
+</a>
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}

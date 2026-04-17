@@ -48,6 +48,13 @@ class Group(models.Model):
     fund_reserve_pct      = models.PositiveSmallIntegerField(default=20, verbose_name="Réserve min fond commun (%)")
     require_guarantor     = models.BooleanField(default=True, verbose_name="Garant obligatoire pour prêt")
 
+    # Module 6 — Fonds de base obligatoire
+    base_fund_required    = models.DecimalField(
+        max_digits=12, decimal_places=0, default=0,
+        verbose_name="Fonds de base obligatoire (FCFA)",
+        help_text="Montant minimum que chaque membre doit maintenir (ex: 30 000 FCFA)"
+    )
+
     # ── Calendrier ────────────────────────────────────────────────────────────
     start_date         = models.DateField(verbose_name="Date de début du cycle")
     next_session_date  = models.DateField(null=True, blank=True, verbose_name="Prochaine séance")
@@ -149,6 +156,13 @@ class Membership(models.Model):
     total_received    = models.DecimalField(max_digits=14, decimal_places=0, default=0, verbose_name="Total reçu — mains (FCFA)")
     total_penalties   = models.DecimalField(max_digits=12, decimal_places=0, default=0, verbose_name="Total pénalités payées (FCFA)")
 
+    # Score de fiabilité (0-100), mis à jour automatiquement
+    reliability_score = models.PositiveSmallIntegerField(
+        default=100,
+        verbose_name="Score de fiabilité",
+        help_text="Score 0-100 basé sur les retards, absences et remboursements"
+    )
+
     class Meta:
         verbose_name = "Membre"
         verbose_name_plural = "Membres"
@@ -176,3 +190,56 @@ class Membership(models.Model):
         return Contribution.objects.filter(
             membership=self, status__in=("pending", "late")
         ).count()
+
+    @property
+    def active_deposit_balance(self):
+        """Solde total des dépôts actifs de ce membre dans le fond commun."""
+        from django.db.models import Sum
+        from njangi.models.fund import FundDeposit
+        result = FundDeposit.objects.filter(
+            membership=self, status="active"
+        ).aggregate(total=Sum("amount"))
+        return result["total"] or 0
+
+    @property
+    def base_fund_deficit(self):
+        """Manque à combler pour atteindre le fonds de base obligatoire."""
+        required = self.group.base_fund_required
+        if not required:
+            return 0
+        return max(0, int(required) - int(self.active_deposit_balance))
+
+    @property
+    def wallet_balance(self):
+        """Avoirs totaux : dépôts + intérêts cumulés."""
+        from django.db.models import Sum
+        from njangi.models.wallet import MemberMonthlyStatement
+        cumul = MemberMonthlyStatement.objects.filter(
+            membership=self
+        ).aggregate(total=Sum("interest_earned"))
+        return int(self.active_deposit_balance) + int(cumul["total"] or 0)
+
+    @property
+    def total_interest_earned(self):
+        """Intérêts cumulés sur tous les mois."""
+        from django.db.models import Sum
+        from njangi.models.wallet import MemberMonthlyStatement
+        result = MemberMonthlyStatement.objects.filter(
+            membership=self
+        ).aggregate(total=Sum("interest_earned"))
+        return result["total"] or 0
+
+    @property
+    def reliability_badge(self):
+        score = self.reliability_score
+        if score >= 90:
+            return ("excellent", "Excellent", "#22c55e")
+        elif score >= 75:
+            return ("good", "Bon", "#84cc16")
+        elif score >= 50:
+            return ("medium", "Moyen", "#f59e0b")
+        else:
+            return ("poor", "Faible", "#ef4444")
+
+    def formatted_amount(self, amount):
+        return f"{int(amount):,}".replace(",", " ") + " FCFA"

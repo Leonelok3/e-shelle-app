@@ -33,6 +33,7 @@ class Loan(models.Model):
     requested_at  = models.DateTimeField(auto_now_add=True)
     approved_at   = models.DateTimeField(null=True, blank=True)
     disbursed_at  = models.DateTimeField(null=True, blank=True)
+    completed_at  = models.DateTimeField(null=True, blank=True, verbose_name="Remboursé le")
     due_date      = models.DateField(null=True, blank=True, verbose_name="Date d'échéance")
 
     # Montants calculés à l'approbation
@@ -133,11 +134,18 @@ class Loan(models.Model):
         self.reviewed_by = reviewer
         self.save()
 
+    def mark_defaulted(self):
+        """Marque le prêt en défaut si échu et non remboursé."""
+        if self.status == "active" and self.is_overdue:
+            self.status = "defaulted"
+            self.save(update_fields=["status"])
+
     def check_completion(self):
         """Clôture le prêt si entièrement remboursé."""
         if self.total_repaid >= self.total_due:
             self.status = "completed"
-            self.save(update_fields=["status"])
+            self.completed_at = timezone.now()
+            self.save(update_fields=["status", "completed_at"])
 
 
 class LoanRepayment(models.Model):

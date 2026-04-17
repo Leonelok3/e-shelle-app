@@ -208,13 +208,13 @@ def publier_annonce(request):
         if form.is_valid() and formset.is_valid():
             annonce         = form.save(commit=False)
             annonce.vendeur = request.user
-            annonce.statut  = StatutAnnonce.EN_ATTENTE_VALIDATION
+            annonce.statut  = StatutAnnonce.PUBLIEE
             if profil.est_premium:
                 annonce.est_mise_en_avant = True
             annonce.save()
             formset.instance = annonce
             formset.save()
-            messages.success(request, "Annonce soumise ! Elle sera publiée après validation.")
+            messages.success(request, "🎉 Votre annonce est en ligne !")
             return redirect("annonces:mes_annonces")
     else:
         form    = AnnonceForm()

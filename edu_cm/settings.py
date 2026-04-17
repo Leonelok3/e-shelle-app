@@ -92,6 +92,13 @@ INSTALLED_APPS = [
     # ── E-Shelle AI — Agent Intelligent Central ────────────────────
     "e_shelle_ai.apps.EshelleAiConfig",
 
+    # ── Facebook Agent IA — Auto-publication sur la page Facebook ──
+    "facebook_agent.apps.FacebookAgentConfig",
+
+    # ── Celery Beat — Scheduler persistant en base ──────────────────
+    "django_celery_beat",
+    "django_celery_results",
+
     # ── Social Auth (Google, Facebook) ─────────────────────────────
     "allauth",
     "allauth.account",
@@ -149,8 +156,7 @@ TEMPLATES = [
                 "resto.context_processors.resto_globals",
                 # ── Abonnements globaux (injecte user_subs dans tous les templates)
                 "accounts.context_processors.subscription_context",
-                # ── Allauth (social login) ────────────────────────────
-                "allauth.account.context_processors.account",
+                # allauth context processor — non requis pour social login
             ],
         },
     },
@@ -348,3 +354,20 @@ REST_FRAMEWORK = {
 
 # ── E-Shelle Resto ────────────────────────────────────────────────
 RESTO_FREE_TRIAL_DAYS = 30
+
+# ── Facebook Agent IA ─────────────────────────────────────────────
+FACEBOOK_APP_ID     = os.getenv("FACEBOOK_APP_ID", "")
+FACEBOOK_APP_SECRET = os.getenv("FACEBOOK_APP_SECRET", "")
+
+# ── Celery — Broker & Backend ──────────────────────────────────────
+CELERY_BROKER_URL         = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
+CELERY_RESULT_BACKEND     = "django-db"          # stockage résultats en base Django
+CELERY_CACHE_BACKEND      = "default"
+CELERY_ACCEPT_CONTENT     = ["json"]
+CELERY_TASK_SERIALIZER    = "json"
+CELERY_RESULT_SERIALIZER  = "json"
+CELERY_TIMEZONE           = TIME_ZONE
+CELERY_BEAT_SCHEDULER     = "django_celery_beat.schedulers:DatabaseScheduler"
+
+# Celery Beat — planning défini dans edu_cm/celery.py (app.conf.beat_schedule)
+

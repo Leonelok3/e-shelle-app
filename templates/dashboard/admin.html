@@ -36,9 +36,12 @@
       <a href="/admin/" class="sidebar-link">
         <span class="icon">⚙️</span> Django Admin
       </a>
-      <a href="{% url 'accounts:logout' %}" class="sidebar-link" style="color:#EF9A9A">
-        <span class="icon">↩️</span> Déconnexion
-      </a>
+      <form method="post" action="{% url 'accounts:logout' %}" style="margin:0">
+        {% csrf_token %}
+        <button type="submit" class="sidebar-link" style="color:#EF9A9A;background:none;border:none;cursor:pointer;width:100%;text-align:left;padding:0">
+          <span class="icon">↩️</span> Déconnexion
+        </button>
+      </form>
     </div>
   </nav>
 
@@ -55,23 +58,23 @@
 
     {# Stats widgets #}
     <div class="stats-grid">
-      <div class="stat-widget green">
+      <div class="stat-widget green aos-hidden">
         <span class="stat-change up">+{{ new_users }} cette semaine</span>
         <div class="stat-icon">👥</div>
-        <div class="stat-value">{{ nb_users }}</div>
+        <div class="stat-value" data-counter="{{ nb_users }}">{{ nb_users }}</div>
         <div class="stat-label">Utilisateurs totaux</div>
       </div>
-      <div class="stat-widget orange">
+      <div class="stat-widget orange aos-hidden aos-delay-1">
         <div class="stat-icon">📚</div>
-        <div class="stat-value">{{ nb_formations }}</div>
+        <div class="stat-value" data-counter="{{ nb_formations }}">{{ nb_formations }}</div>
         <div class="stat-label">Formations publiées</div>
       </div>
-      <div class="stat-widget">
+      <div class="stat-widget aos-hidden aos-delay-2">
         <div class="stat-icon">🎓</div>
-        <div class="stat-value">{{ nb_inscrits }}</div>
+        <div class="stat-value" data-counter="{{ nb_inscrits }}">{{ nb_inscrits }}</div>
         <div class="stat-label">Inscriptions totales</div>
       </div>
-      <div class="stat-widget">
+      <div class="stat-widget aos-hidden aos-delay-3">
         <div class="stat-icon">💰</div>
         <div class="stat-value">{{ revenus|floatformat:0 }}</div>
         <div class="stat-label">FCFA ce mois (30j)</div>

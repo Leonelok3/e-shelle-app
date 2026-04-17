@@ -138,18 +138,51 @@ class MatchAdmin(admin.ModelAdmin):
 @admin.register(PlanPremiumRencontre)
 class PlanPremiumRencontreAdmin(admin.ModelAdmin):
     list_display = [
-        'get_nom_display', 'prix_mensuel', 'prix_annuel', 'prix_xaf_mensuel',
-        'likes_par_jour', 'messages_par_jour', 'photos_max'
+        'plan_badge', 'prix_xaf_display', 'prix_annuel_display',
+        'likes_par_jour', 'messages_par_jour', 'photos_max',
+        'filtre_avance', 'mode_incognito',
     ]
+    ordering = ['prix_xaf_mensuel']
+
     fieldsets = (
-        ('Identité', {'fields': ('nom', 'description')}),
-        ('Prix', {'fields': ('prix_mensuel', 'prix_annuel', 'prix_xaf_mensuel', 'prix_xaf_annuel')}),
-        ('Limites', {'fields': ('likes_par_jour', 'super_likes_par_jour', 'messages_par_jour', 'photos_max')}),
-        ('Fonctionnalités', {
-            'fields': ('peut_voir_qui_a_like', 'peut_rembobiner', 'boost_profil_par_semaine',
-                       'badge_premium', 'filtre_avance', 'sans_publicite', 'mode_incognito', 'stats_profil')
+        ('🏷️ Identité du plan', {
+            'fields': ('nom', 'description'),
+            'description': 'Silver = entrée de gamme · Gold = populaire · Platinum = tout illimité'
+        }),
+        ('💰 Tarification FCFA (Mobile Money)', {
+            'fields': ('prix_xaf_mensuel', 'prix_xaf_annuel'),
+            'description': 'Saisir les prix en FCFA. Le prix annuel doit offrir ~2 mois gratuits.'
+        }),
+        ('📊 Limites d\'utilisation', {
+            'fields': ('likes_par_jour', 'super_likes_par_jour', 'messages_par_jour', 'photos_max', 'boost_profil_par_semaine'),
+            'description': 'Mettre -1 pour illimité.'
+        }),
+        ('✨ Fonctionnalités incluses', {
+            'fields': ('peut_voir_qui_a_like', 'peut_rembobiner', 'badge_premium',
+                       'filtre_avance', 'sans_publicite', 'mode_incognito', 'stats_profil'),
         }),
     )
+
+    def plan_badge(self, obj):
+        colors = {'silver': '#9CA3AF', 'gold': '#F59E0B', 'platinum': '#8B5CF6'}
+        icons  = {'silver': '🥈', 'gold': '🥇', 'platinum': '💎'}
+        color  = colors.get(obj.nom, '#666')
+        icon   = icons.get(obj.nom, '⭐')
+        return format_html(
+            '<span style="color:{};font-weight:800;font-size:1rem">{} {}</span>',
+            color, icon, obj.get_nom_display()
+        )
+    plan_badge.short_description = 'Plan'
+    plan_badge.admin_order_field = 'nom'
+
+    def prix_xaf_display(self, obj):
+        return format_html('<strong>{:,} FCFA</strong>/mois', int(obj.prix_xaf_mensuel)).replace(',', ' ')
+    prix_xaf_display.short_description = 'Prix mensuel'
+    prix_xaf_display.admin_order_field = 'prix_xaf_mensuel'
+
+    def prix_annuel_display(self, obj):
+        return format_html('{:,} FCFA/an', int(obj.prix_xaf_annuel)).replace(',', ' ')
+    prix_annuel_display.short_description = 'Prix annuel'
 
 
 @admin.register(AbonnementRencontre)

@@ -1,0 +1,506 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }} — E-Shelle{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root {
+    --fb-blue: #1877F2;
+    --fb-blue-dark: #0d5cc7;
+  }
+  .fb-layout {
+    display: flex;
+    min-height: 100vh;
+    padding-top: 4rem;
+  }
+  .fb-sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    background: var(--surface-1);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 4rem;
+    bottom: 0;
+    overflow-y: auto;
+  }
+  .fb-sidebar .logo {
+    padding: 0 1.2rem 1.5rem;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    color: var(--fb-blue);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1rem;
+  }
+  .fb-nav-link {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    padding: .65rem 1.2rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: .9rem;
+    transition: background .15s, color .15s;
+    border-radius: 0;
+  }
+  .fb-nav-link:hover, .fb-nav-link.active {
+    background: rgba(24,119,242,.08);
+    color: var(--fb-blue);
+  }
+  .fb-main {
+    margin-left: 240px;
+    flex: 1;
+    padding: 2rem;
+    max-width: 1200px;
+  }
+  .stat-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+  .stat-card .value {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: .25rem;
+  }
+  .stat-card .label {
+    color: var(--text-secondary);
+    font-size: .82rem;
+  }
+  .stat-card .icon {
+    font-size: 1.8rem;
+    margin-bottom: .75rem;
+  }
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 1rem;
+  }
+  .card {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .log-row {
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+    padding: .6rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: .85rem;
+  }
+  .log-row:last-child { border-bottom: none; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: .75rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge-success { background: rgba(40,167,69,.15); color: #28a745; }
+  .badge-error   { background: rgba(220,53,69,.15);  color: #dc3545; }
+  .badge-warning { background: rgba(255,193,7,.15);  color: #ffc107; }
+  .badge-info    { background: rgba(23,162,184,.15); color: #17a2b8; }
+  .publish-btn {
+    background: var(--fb-blue);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: .55rem 1.1rem;
+    font-size: .88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .publish-btn:hover { background: var(--fb-blue-dark); }
+  .publish-btn:disabled { opacity: .5; cursor: not-allowed; }
+  .section-select {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .5rem .9rem;
+    color: var(--text-primary);
+    font-size: .88rem;
+  }
+  .table-sm { width: 100%; border-collapse: collapse; font-size: .85rem; }
+  .table-sm th {
+    text-align: left;
+    padding: .5rem .75rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+  }
+  .table-sm td {
+    padding: .5rem .75rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .table-sm tr:last-child td { border-bottom: none; }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    background: rgba(24,119,242,.1);
+    color: var(--fb-blue);
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: .78rem;
+    font-weight: 600;
+  }
+  .preview-box {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    font-size: .9rem;
+    white-space: pre-wrap;
+    min-height: 80px;
+    color: var(--text-secondary);
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  @media (max-width: 900px) {
+    .fb-sidebar { display: none; }
+    .fb-main { margin-left: 0; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="fb-layout">
+
+  {# ─── Sidebar ─────────────────────────────────────────────────── #}
+  <nav class="fb-sidebar">
+    <div class="logo">📘 FB Agent IA</div>
+
+    <a href="{% url 'facebook_agent:dashboard' %}" class="fb-nav-link active">📊 Dashboard</a>
+    <a href="{% url 'facebook_agent:published_posts' %}" class="fb-nav-link">📰 Posts Publiés</a>
+    <a href="{% url 'facebook_agent:scheduled_posts' %}" class="fb-nav-link">🗓 Posts Planifiés</a>
+    <a href="{% url 'facebook_agent:create_scheduled_post' %}" class="fb-nav-link">✏️ Créer un Post</a>
+    <a href="{% url 'facebook_agent:logs' %}" class="fb-nav-link">📋 Logs Agent</a>
+    <a href="/admin/facebook_agent/" class="fb-nav-link">⚙️ Admin Django</a>
+  </nav>
+
+  {# ─── Main ────────────────────────────────────────────────────── #}
+  <main class="fb-main">
+
+    {# En-tête #}
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2rem">
+      <div>
+        <h1 style="font-family:var(--font-display);font-size:1.5rem;font-weight:800;margin:0">
+          📘 Facebook Agent IA
+        </h1>
+        <p style="color:var(--text-secondary);font-size:.9rem;margin:.25rem 0 0">
+          Auto-publication intelligente sur la page E-Shelle
+          {% if page_config %}&nbsp;— <strong>{{ page_config.page_name }}</strong>{% endif %}
+        </p>
+      </div>
+      {% if page_config and page_config.is_token_valid %}
+        <span class="badge badge-success">● Token valide</span>
+      {% elif page_config %}
+        <span class="badge badge-error">● Token expiré !</span>
+      {% endif %}
+    </div>
+
+    {# Messages Django #}
+    {% for msg in messages %}
+    <div style="background:{% if msg.tags == 'success' %}rgba(40,167,69,.1){% else %}rgba(220,53,69,.1){% endif %};
+                border:1px solid {% if msg.tags == 'success' %}#28a745{% else %}#dc3545{% endif %};
+                border-radius:8px;padding:.8rem 1rem;margin-bottom:1rem;font-size:.88rem">
+      {{ msg }}
+    </div>
+    {% endfor %}
+
+    {# ── Stats ──────────────────────────────────────────────────── #}
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="icon">📰</div>
+        <div class="value">{{ total_published }}</div>
+        <div class="label">Posts publiés (total)</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">📅</div>
+        <div class="value">{{ published_today }}</div>
+        <div class="label">Publiés aujourd'hui</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">📆</div>
+        <div class="value">{{ published_week }}</div>
+        <div class="label">Cette semaine</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">⏳</div>
+        <div class="value">{{ pending_posts }}</div>
+        <div class="label">En attente</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">❌</div>
+        <div class="value" style="color:#dc3545">{{ failed_today }}</div>
+        <div class="label">Échecs aujourd'hui</div>
+      </div>
+      {% if page_insights.fan_count %}
+      <div class="stat-card">
+        <div class="icon">👥</div>
+        <div class="value">{{ page_insights.fan_count }}</div>
+        <div class="label">Abonnés Facebook</div>
+      </div>
+      {% endif %}
+    </div>
+
+    {# ── Publication manuelle + Aperçu IA ───────────────────────── #}
+    <div class="grid-2">
+      <div class="card">
+        <p class="section-title">🚀 Publier maintenant</p>
+        <form method="post" action="{% url 'facebook_agent:publish_now' %}" id="publish-form">
+          {% csrf_token %}
+          {% if page_config %}
+            <input type="hidden" name="page_config_id" value="{{ page_config.id }}">
+          {% endif %}
+          <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:center">
+            <select name="section" class="section-select" id="pub-section">
+              {% for val, label in content_rules %}
+                <option value="{{ val.section }}">{{ val.get_section_display }}</option>
+              {% empty %}
+                <option value="general">Général</option>
+                <option value="annonces">Annonces</option>
+                <option value="immobilier">Immobilier</option>
+                <option value="auto">Auto</option>
+                <option value="agro">Agro</option>
+                <option value="rencontres">Rencontres</option>
+                <option value="njangi">Njangi</option>
+                <option value="promo">Promotions</option>
+              {% endfor %}
+            </select>
+            <button type="submit" class="publish-btn" {% if not page_config %}disabled title="Aucune page configurée"{% endif %}>
+              Publier →
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <p class="section-title">👁 Aperçu IA (sans publier)</p>
+        <div style="display:flex;gap:.75rem;align-items:center;margin-bottom:.75rem;flex-wrap:wrap">
+          <select class="section-select" id="preview-section">
+            <option value="general">Général</option>
+            <option value="annonces">Annonces</option>
+            <option value="immobilier">Immobilier</option>
+            <option value="auto">Auto</option>
+            <option value="agro">Agro</option>
+            <option value="rencontres">Rencontres</option>
+            <option value="njangi">Njangi</option>
+            <option value="promo">Promotions</option>
+          </select>
+          <button class="publish-btn" id="preview-btn" onclick="previewContent()">Générer aperçu</button>
+        </div>
+        <div class="preview-box" id="preview-output">Le texte généré par l'IA apparaîtra ici…</div>
+        <div style="font-size:.78rem;color:var(--text-secondary);margin-top:.5rem" id="preview-tokens"></div>
+      </div>
+    </div>
+
+    {# ── Stats par section ───────────────────────────────────────── #}
+    {% if section_stats %}
+    <div class="card">
+      <p class="section-title">📊 Posts par section (7 derniers jours)</p>
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem">
+        {% for s in section_stats %}
+          <span class="chip">{{ s.section }} &nbsp;<strong>{{ s.count }}</strong></span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {# ── Graphique ───────────────────────────────────────────────── #}
+    {% if chart_labels %}
+    <div class="card">
+      <p class="section-title">📈 Publications des 7 derniers jours</p>
+      <canvas id="pubChart" height="90"></canvas>
+    </div>
+    {% endif %}
+
+    {# ── Posts récents + Logs ────────────────────────────────────── #}
+    <div class="grid-2">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+          <p class="section-title" style="margin:0">📰 Posts récents</p>
+          <a href="{% url 'facebook_agent:published_posts' %}" style="font-size:.82rem;color:var(--fb-blue)">Voir tout →</a>
+        </div>
+        {% if recent_published %}
+        <table class="table-sm">
+          <thead>
+            <tr>
+              <th>Section</th>
+              <th>Aperçu</th>
+              <th>Publié le</th>
+              <th>❤️</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for post in recent_published %}
+            <tr>
+              <td><span class="chip">{{ post.section }}</span></td>
+              <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                {{ post.content|truncatechars:60 }}
+              </td>
+              <td style="white-space:nowrap">{{ post.published_at|date:"d/m H:i" }}</td>
+              <td>{{ post.likes_count }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+          <p style="color:var(--text-secondary);font-size:.88rem">Aucun post publié pour le moment.</p>
+        {% endif %}
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+          <p class="section-title" style="margin:0">📋 Logs récents</p>
+          <a href="{% url 'facebook_agent:logs' %}" style="font-size:.82rem;color:var(--fb-blue)">Voir tout →</a>
+        </div>
+        {% for log in recent_logs %}
+        <div class="log-row">
+          <span class="badge badge-{{ log.level }}">{{ log.level|upper }}</span>
+          <div style="flex:1;min-width:0">
+            <div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ log.message }}</div>
+            <div style="color:var(--text-secondary);font-size:.75rem;margin-top:2px">
+              {{ log.get_action_display }} — {{ log.created_at|date:"d/m H:i:s" }}
+            </div>
+          </div>
+        </div>
+        {% empty %}
+          <p style="color:var(--text-secondary);font-size:.88rem">Aucun log disponible.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    {# ── Posts planifiés à venir ──────────────────────────────────── #}
+    {% if upcoming_posts %}
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+        <p class="section-title" style="margin:0">🗓 À venir</p>
+        <a href="{% url 'facebook_agent:scheduled_posts' %}" style="font-size:.82rem;color:var(--fb-blue)">Voir tout →</a>
+      </div>
+      <table class="table-sm">
+        <thead>
+          <tr><th>Titre</th><th>Section</th><th>Planifié le</th><th>Statut</th></tr>
+        </thead>
+        <tbody>
+          {% for post in upcoming_posts %}
+          <tr>
+            <td>{{ post.title|truncatechars:40 }}</td>
+            <td><span class="chip">{{ post.section }}</span></td>
+            <td style="white-space:nowrap">{{ post.scheduled_at|date:"d/m/Y H:i" }}</td>
+            <td><span class="badge badge-{% if post.status == 'approuve' %}success{% else %}warning{% endif %}">
+              {{ post.get_status_display }}</span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+  </main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if chart_labels %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script>
+const ctx = document.getElementById('pubChart').getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: {{ chart_labels|safe }},
+    datasets: [{
+      label: 'Posts publiés',
+      data: {{ chart_published|safe }},
+      backgroundColor: 'rgba(24,119,242,.6)',
+      borderColor: '#1877F2',
+      borderWidth: 1,
+      borderRadius: 4,
+    }, {
+      label: 'Likes',
+      data: {{ chart_likes|safe }},
+      backgroundColor: 'rgba(40,167,69,.4)',
+      borderColor: '#28a745',
+      borderWidth: 1,
+      borderRadius: 4,
+      type: 'line',
+      yAxisID: 'y1',
+    }],
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'top' } },
+    scales: {
+      y:  { beginAtZero: true, ticks: { stepSize: 1 } },
+      y1: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false } },
+    },
+  },
+});
+</script>
+{% endif %}
+
+<script>
+async function previewContent() {
+  const btn = document.getElementById('preview-btn');
+  const out = document.getElementById('preview-output');
+  const tok = document.getElementById('preview-tokens');
+  const section = document.getElementById('preview-section').value;
+
+  btn.disabled = true;
+  btn.textContent = 'Génération…';
+  out.textContent = '⏳ L\'IA génère le contenu…';
+  tok.textContent = '';
+
+  try {
+    const resp = await fetch("{% url 'facebook_agent:api_preview' %}", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}',
+      },
+      body: JSON.stringify({ section }),
+    });
+    const data = await resp.json();
+    if (data.status === 'success') {
+      out.textContent = data.content;
+      tok.textContent = `Tokens utilisés : ${data.tokens_used}`;
+    } else {
+      out.textContent = `Erreur : ${data.message}`;
+    }
+  } catch(e) {
+    out.textContent = `Erreur réseau : ${e.message}`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Générer aperçu';
+  }
+}
+</script>
+{% endblock %}

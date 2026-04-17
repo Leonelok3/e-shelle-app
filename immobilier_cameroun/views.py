@@ -230,12 +230,10 @@ def publier_bien(request):
             bien.proprietaire = request.user
 
             # Statut initial selon le type de compte
+            bien.statut           = StatutBien.PUBLIE
+            bien.date_publication = timezone.now()
             if profil.est_premium_actif:
-                bien.statut           = StatutBien.PUBLIE
                 bien.est_mis_en_avant = True
-                bien.date_publication = timezone.now()
-            else:
-                bien.statut = StatutBien.EN_ATTENTE_VALIDATION
 
             bien.save()
 
@@ -253,10 +251,7 @@ def publier_bien(request):
             for deleted in formset.deleted_objects:
                 deleted.delete()
 
-            if bien.statut == StatutBien.PUBLIE:
-                messages.success(request, "🎉 Votre bien a été publié avec succès !")
-            else:
-                messages.info(request, "📋 Votre bien a été soumis et sera validé sous 24h.")
+            messages.success(request, "🎉 Votre bien est en ligne !")
 
             return redirect("immobilier:mes_biens")
     else:

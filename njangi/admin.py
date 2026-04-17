@@ -10,6 +10,7 @@ from .models import (
     FundDeposit, FundTransaction,
     Loan, LoanRepayment,
     Notification, Document,
+    MonthlyGroupInterest, MemberMonthlyStatement,
 )
 
 
@@ -150,3 +151,63 @@ class DocumentAdmin(admin.ModelAdmin):
     list_display  = ("group", "type", "title", "uploaded_by", "created_at")
     list_filter   = ("type", "group")
     search_fields = ("title", "group__name")
+
+
+# ── Wallet — Intérêts mensuels ────────────────────────────────────────────────
+
+class MemberMonthlyStatementInline(admin.TabularInline):
+    model = MemberMonthlyStatement
+    extra = 0
+    fields = ("membership", "deposit_balance", "pool_share_pct", "interest_earned", "cumulative_interest", "wallet_balance")
+    readonly_fields = ("membership", "deposit_balance", "pool_share_pct", "interest_earned", "cumulative_interest", "wallet_balance")
+    can_delete = False
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(MonthlyGroupInterest)
+class MonthlyGroupInterestAdmin(admin.ModelAdmin):
+    list_display  = ("group", "period_label", "formatted_pool", "nb_active_loans", "nb_depositors", "formatted_interest", "utilization_rate_badge", "is_calculated", "calculated_at")
+    list_filter   = ("group", "is_calculated", "year")
+    search_fields = ("group__name",)
+    readonly_fields = ("calculated_at", "utilization_rate", "formatted_interest", "formatted_pool")
+    inlines       = [MemberMonthlyStatementInline]
+    ordering      = ("-year", "-month")
+
+    fieldsets = (
+        ("Période", {"fields": ("group", "year", "month")}),
+        ("Snapshot financier", {"fields": ("total_pool", "total_loans_outstanding", "total_interest_generated", "nb_active_loans", "nb_depositors")}),
+        ("Statut", {"fields": ("is_calculated", "calculated_at")}),
+    )
+
+    actions = ["recalculate_selected"]
+
+    def utilization_rate_badge(self, obj):
+        rate = obj.utilization_rate
+        color = "#22c55e" if rate < 60 else "#f59e0b" if rate < 85 else "#ef4444"
+        return format_html(
+            '<span style="background:{};color:#fff;padding:2px 8px;border-radius:12px;font-size:12px">{} %</span>',
+            color, rate
+        )
+    utilization_rate_badge.short_description = "Utilisation pool"
+
+    @admin.action(description="Recalculer les intérêts pour les mois sélectionnés")
+    def recalculate_selected(self, request, queryset):
+        from njangi.services import InterestCalculationService
+        count = 0
+        for record in queryset:
+            try:
+                InterestCalculationService.calculate_month(record.group, record.year, record.month)
+                count += 1
+            except Exception as exc:
+                self.message_user(request, f"Erreur {record}: {exc}", level="error")
+        self.message_user(request, f"{count} mois recalculé(s) avec succès.")
+
+
+@admin.register(MemberMonthlyStatement)
+class MemberMonthlyStatementAdmin(admin.ModelAdmin):
+    list_display  = ("membership", "period_label", "formatted_deposit", "pool_share_pct", "formatted_interest", "formatted_cumulative", "formatted_wallet")
+    list_filter   = ("monthly_record__group", "monthly_record__year")
+    search_fields = ("membership__user__username", "membership__group__name")
+    readonly_fields = ("period_label", "formatted_interest", "formatted_deposit", "formatted_cumulative", "formatted_wallet")

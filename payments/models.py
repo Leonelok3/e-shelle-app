@@ -71,6 +71,71 @@ class Transaction(models.Model):
         return f"{self.reference} — {self.utilisateur.username} — {self.montant} {self.devise} ({self.statut})"
 
 
+class PlanPremiumApp(models.Model):
+    """
+    Plans premium par application — gérable depuis l'admin Django.
+    Remplace les dicts hardcodés dans views.py.
+    """
+    MODULE_CHOICES = [
+        ("annonces",   "📋 Annonces Cam"),
+        ("immo",       "🏠 Immobilier"),
+        ("auto",       "🚗 Auto Cameroun"),
+        ("agro",       "🌿 E-Shelle Agro"),
+        ("gaz",        "🔥 E-Shelle Gaz"),
+        ("pharma",     "💊 E-Shelle Pharma"),
+        ("pressing",   "👔 E-Shelle Pressing"),
+        ("formations", "📚 Formations"),
+        ("boutique",   "🛒 Boutique"),
+        ("rencontres", "❤️ E-Shelle Love"),
+        ("njangi",     "💰 Njangi"),
+        ("general",    "🌐 Général (toutes apps)"),
+    ]
+
+    module       = models.CharField("Application", max_length=30, choices=MODULE_CHOICES)
+    slug         = models.SlugField("Identifiant", max_length=30,
+                                     help_text="ex: starter, pro, expert — sans espaces")
+    nom          = models.CharField("Nom du plan", max_length=50)
+    emoji        = models.CharField("Emoji", max_length=10, default="⭐")
+    prix         = models.PositiveIntegerField("Prix (FCFA)")
+    duree_jours  = models.PositiveIntegerField("Durée (jours)", default=30)
+    description  = models.TextField("Description courte", blank=True,
+                                     help_text="Phrase d'accroche affichée sous le nom du plan")
+    benefices    = models.JSONField(
+        "Bénéfices",
+        default=list,
+        help_text='Liste JSON des bénéfices. Ex: ["30 jours Premium","Annonces illimitées"]'
+    )
+    populaire    = models.BooleanField("Plan populaire ⭐", default=False)
+    couleur      = models.CharField("Couleur hex", max_length=20, default="#4CAF50",
+                                     help_text="Ex: #8B5CF6 pour violet")
+    actif        = models.BooleanField("Actif", default=True)
+    ordre        = models.PositiveSmallIntegerField("Ordre d'affichage", default=0)
+    created_at   = models.DateTimeField(auto_now_add=True)
+    updated_at   = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = [("module", "slug")]
+        ordering        = ["module", "ordre", "prix"]
+        verbose_name    = "Plan Premium (par app)"
+        verbose_name_plural = "Plans Premium (par app)"
+
+    def __str__(self):
+        return f"{self.get_module_display()} — {self.nom} ({self.prix:,} FCFA/{self.duree_jours}j)"
+
+    def to_dict(self):
+        """Retourne le plan au format compatible avec l'ancien dict PLANS_PREMIUM."""
+        return {
+            "nom":         self.nom,
+            "emoji":       self.emoji,
+            "prix":        self.prix,
+            "duree_jours": self.duree_jours,
+            "couleur":     self.couleur,
+            "populaire":   self.populaire,
+            "features":    self.benefices if isinstance(self.benefices, list) else [],
+            "description": self.description,
+        }
+
+
 class Coupon(models.Model):
     """Codes promo et réductions."""
     TYPES = [

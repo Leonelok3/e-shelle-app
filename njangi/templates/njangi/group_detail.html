@@ -1,0 +1,169 @@
+{% extends "njangi/base_njangi.html" %}
+
+{% block title %}{{ group.name }} — Njangi+{% endblock %}
+
+{% block njangi_content %}
+<div class="max-w-4xl mx-auto px-4 py-10">
+
+  <!-- En-tête groupe -->
+  <div class="bg-gradient-to-br from-blue-700 to-indigo-800 text-white rounded-3xl p-8 mb-8 shadow-xl">
+    <div class="flex items-start gap-5">
+      {% if group.logo %}
+      <img src="{{ group.logo.url }}" alt="{{ group.name }}" class="w-16 h-16 rounded-2xl object-cover shadow">
+      {% else %}
+      <div class="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center text-3xl font-bold">
+        {{ group.name|first|upper }}
+      </div>
+      {% endif %}
+      <div class="flex-1 min-w-0">
+        <h1 class="text-2xl font-bold mb-1">{{ group.name }}</h1>
+        {% if group.description %}
+        <p class="text-blue-200 text-sm mb-3">{{ group.description }}</p>
+        {% endif %}
+        <div class="flex flex-wrap gap-3 text-xs">
+          <span class="bg-white/15 px-3 py-1.5 rounded-full">
+            🗓 {{ group.frequency_label }}
+          </span>
+          <span class="bg-white/15 px-3 py-1.5 rounded-full">
+            💰 {{ group.formatted_contribution }}/séance
+          </span>
+          <span class="bg-white/15 px-3 py-1.5 rounded-full">
+            👥 {{ group.member_count }} / {{ group.max_members }} membres
+          </span>
+          <span class="px-3 py-1.5 rounded-full
+            {% if group.status == 'active' %}bg-green-400/20 text-green-300
+            {% elif group.status == 'paused' %}bg-yellow-400/20 text-yellow-300
+            {% else %}bg-red-400/20 text-red-300{% endif %}">
+            {{ group.get_status_display }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Action membre -->
+      {% if my_membership %}
+      <a href="{% url 'njangi:member_dashboard' %}"
+         class="flex-shrink-0 px-5 py-2.5 bg-white text-blue-700 rounded-xl font-semibold text-sm hover:bg-blue-50 transition shadow">
+        Mon espace
+      </a>
+      {% elif group.status == 'active' and group.member_count < group.max_members %}
+      <a href="{% url 'njangi:join' %}"
+         class="flex-shrink-0 px-5 py-2.5 bg-white text-blue-700 rounded-xl font-semibold text-sm hover:bg-blue-50 transition shadow">
+        Rejoindre
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Infos financières rapides -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm text-center">
+      <p class="text-gray-400 text-xs mb-1">Taux prêts</p>
+      <p class="text-xl font-bold text-gray-800">{{ group.fund_loan_rate }} <span class="text-sm font-normal text-gray-500">%/mois</span></p>
+    </div>
+    <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm text-center">
+      <p class="text-gray-400 text-xs mb-1">Taux dépôts</p>
+      <p class="text-xl font-bold text-green-600">{{ group.fund_deposit_rate }} <span class="text-sm font-normal text-gray-500">%/mois</span></p>
+    </div>
+    <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm text-center">
+      <p class="text-gray-400 text-xs mb-1">Emprunt max</p>
+      <p class="text-xl font-bold text-gray-800">×{{ group.max_loan_multiplier }} <span class="text-sm font-normal text-gray-500">cotisations</span></p>
+    </div>
+    <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm text-center">
+      <p class="text-gray-400 text-xs mb-1">Pénalité retard</p>
+      <p class="text-xl font-bold text-red-500">{{ group.penalty_per_day|floatformat:"0" }} <span class="text-sm font-normal text-gray-500">FCFA/j</span></p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Membres -->
+    <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-100">
+        <h2 class="font-semibold text-gray-700">Membres ({{ members|length }})</h2>
+      </div>
+      <div class="divide-y divide-gray-50">
+        {% for member in members %}
+        <div class="flex items-center gap-4 px-6 py-3.5">
+          <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-sm font-bold flex-shrink-0">
+            {{ member.user.get_full_name|default:member.user.username|first|upper }}
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="font-medium text-gray-800 truncate">
+              {{ member.user.get_full_name|default:member.user.username }}
+            </p>
+            <p class="text-xs text-gray-400">{{ member.get_role_display }}
+              {% if member.hand_order %} · Main #{{ member.hand_order }}{% endif %}
+            </p>
+          </div>
+          {% with badge=member.reliability_badge %}
+          <span class="flex-shrink-0 text-xs px-2 py-1 rounded-full font-medium"
+                style="background-color:{{ badge.2 }}20; color:{{ badge.2 }}">
+            {{ badge.1 }}
+          </span>
+          {% endwith %}
+        </div>
+        {% empty %}
+        <div class="px-6 py-8 text-center text-gray-400 text-sm">Aucun membre actif.</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Séances récentes & infos -->
+    <div class="space-y-4">
+
+      <!-- Prochaine séance -->
+      {% if group.next_session_date %}
+      <div class="bg-blue-50 rounded-2xl p-5 border border-blue-100">
+        <p class="text-xs font-semibold text-blue-400 uppercase mb-1">Prochaine séance</p>
+        <p class="text-lg font-bold text-blue-700">{{ group.next_session_date|date:"d F Y" }}</p>
+      </div>
+      {% endif %}
+
+      <!-- Séances récentes -->
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div class="px-5 py-4 border-b border-gray-100">
+          <h3 class="font-semibold text-gray-700 text-sm">Séances récentes</h3>
+        </div>
+        <div class="divide-y divide-gray-50">
+          {% for session in recent_sessions %}
+          <div class="px-5 py-3">
+            <div class="flex justify-between items-center">
+              <div>
+                <p class="text-sm font-medium text-gray-700">Séance #{{ session.session_number }}</p>
+                <p class="text-xs text-gray-400">{{ session.date|date:"d/m/Y" }}</p>
+              </div>
+              <span class="text-xs px-2 py-1 rounded-full
+                {% if session.status == 'completed' %}bg-green-100 text-green-700
+                {% elif session.status == 'in_progress' %}bg-blue-100 text-blue-700
+                {% else %}bg-gray-100 text-gray-600{% endif %}">
+                {{ session.get_status_display }}
+              </span>
+            </div>
+          </div>
+          {% empty %}
+          <div class="px-5 py-6 text-center text-gray-400 text-sm">Aucune séance</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Code invitation (pour membres du bureau) -->
+      {% if my_membership and my_membership.is_bureau %}
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+        <p class="text-xs font-semibold text-gray-400 uppercase mb-2">Code d'invitation</p>
+        <div class="flex items-center gap-3">
+          <code class="flex-1 bg-gray-100 text-gray-800 font-mono font-bold text-lg px-4 py-2 rounded-xl tracking-widest">
+            {{ group.invite_code }}
+          </code>
+          <button onclick="navigator.clipboard.writeText('{{ group.invite_code }}').then(()=>this.textContent='✓')"
+                  class="px-3 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl text-xs font-medium transition">
+            Copier
+          </button>
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}

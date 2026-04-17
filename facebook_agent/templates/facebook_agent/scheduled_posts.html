@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }} — E-Shelle{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root { --fb-blue: #1877F2; --fb-blue-dark: #0d5cc7; }
+  .fb-layout { display:flex; min-height:100vh; padding-top:4rem; }
+  .fb-sidebar {
+    width:240px; flex-shrink:0; background:var(--surface-1);
+    border-right:1px solid var(--border); padding:1.5rem 0;
+    position:fixed; top:4rem; bottom:0; overflow-y:auto;
+  }
+  .fb-sidebar .logo {
+    padding:0 1.2rem 1.5rem; font-family:var(--font-display); font-size:1rem;
+    font-weight:800; display:flex; align-items:center; gap:.6rem;
+    color:var(--fb-blue); border-bottom:1px solid var(--border); margin-bottom:1rem;
+  }
+  .fb-nav-link {
+    display:flex; align-items:center; gap:.7rem; padding:.65rem 1.2rem;
+    color:var(--text-secondary); text-decoration:none; font-size:.9rem;
+    transition:background .15s,color .15s;
+  }
+  .fb-nav-link:hover,.fb-nav-link.active { background:rgba(24,119,242,.08); color:var(--fb-blue); }
+  .fb-main { margin-left:240px; flex:1; padding:2rem; }
+  .card { background:var(--surface-1); border:1px solid var(--border); border-radius:12px; padding:1.2rem 1.5rem; margin-bottom:1.5rem; }
+  .section-title { font-family:var(--font-display); font-size:1rem; font-weight:700; margin:0 0 1rem; }
+  .table-sm { width:100%; border-collapse:collapse; font-size:.85rem; }
+  .table-sm th { text-align:left; padding:.55rem .75rem; color:var(--text-secondary); font-weight:600; border-bottom:1px solid var(--border); }
+  .table-sm td { padding:.55rem .75rem; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .table-sm tr:last-child td { border-bottom:none; }
+  .chip { display:inline-flex; align-items:center; background:rgba(24,119,242,.1); color:var(--fb-blue); border-radius:20px; padding:2px 10px; font-size:.78rem; font-weight:600; }
+  .badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:.75rem; font-weight:600; white-space:nowrap; }
+  .badge-success { background:rgba(40,167,69,.15); color:#28a745; }
+  .badge-error   { background:rgba(220,53,69,.15);  color:#dc3545; }
+  .badge-warning { background:rgba(255,193,7,.15);  color:#ffc107; }
+  .badge-info    { background:rgba(23,162,184,.15); color:#17a2b8; }
+  .btn-sm { background:var(--fb-blue); color:#fff; border:none; border-radius:8px; padding:.45rem 1rem; font-size:.85rem; font-weight:600; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn-sm:hover { background:var(--fb-blue-dark); color:#fff; }
+  .overdue { color:#dc3545; }
+  @media(max-width:900px){.fb-sidebar{display:none}.fb-main{margin-left:0}}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="fb-layout">
+  <nav class="fb-sidebar">
+    <div class="logo">📘 FB Agent IA</div>
+    <a href="{% url 'facebook_agent:dashboard' %}" class="fb-nav-link">📊 Dashboard</a>
+    <a href="{% url 'facebook_agent:published_posts' %}" class="fb-nav-link">📰 Posts Publiés</a>
+    <a href="{% url 'facebook_agent:scheduled_posts' %}" class="fb-nav-link active">🗓 Posts Planifiés</a>
+    <a href="{% url 'facebook_agent:create_scheduled_post' %}" class="fb-nav-link">✏️ Créer un Post</a>
+    <a href="{% url 'facebook_agent:logs' %}" class="fb-nav-link">📋 Logs Agent</a>
+    <a href="/admin/facebook_agent/" class="fb-nav-link">⚙️ Admin Django</a>
+  </nav>
+
+  <main class="fb-main">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem">
+      <div>
+        <h1 style="font-family:var(--font-display);font-size:1.5rem;font-weight:800;margin:0">🗓 Posts Planifiés</h1>
+        <p style="color:var(--text-secondary);font-size:.9rem;margin:.25rem 0 0">Posts en attente de publication automatique</p>
+      </div>
+      <a href="{% url 'facebook_agent:create_scheduled_post' %}" class="btn-sm">+ Créer un post</a>
+    </div>
+
+    {% for msg in messages %}
+    <div style="background:{% if msg.tags == 'success' %}rgba(40,167,69,.1){% else %}rgba(220,53,69,.1){% endif %};
+                border:1px solid {% if msg.tags == 'success' %}#28a745{% else %}#dc3545{% endif %};
+                border-radius:8px;padding:.8rem 1rem;margin-bottom:1rem;font-size:.88rem">
+      {{ msg }}
+    </div>
+    {% endfor %}
+
+    <div class="card">
+      {% if posts %}
+      <table class="table-sm">
+        <thead>
+          <tr>
+            <th>Titre</th>
+            <th>Section</th>
+            <th>Planifié le</th>
+            <th>Statut</th>
+            <th>IA</th>
+            <th>Approbation</th>
+            <th>Tentatives</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for post in posts %}
+          <tr>
+            <td>
+              <span title="{{ post.content }}">{{ post.title|truncatechars:40 }}</span>
+              {% if post.error_message %}
+                <div style="font-size:.75rem;color:#dc3545;margin-top:2px">{{ post.error_message|truncatechars:60 }}</div>
+              {% endif %}
+            </td>
+            <td><span class="chip">{{ post.section }}</span></td>
+            <td style="white-space:nowrap" class="{% if post.scheduled_at < now and post.status != 'publie' %}overdue{% endif %}">
+              {{ post.scheduled_at|date:"d/m/Y H:i" }}
+              {% if post.scheduled_at < now and post.status not in 'publie,annule' %}
+                <span style="font-size:.75rem"> ⚠ En retard</span>
+              {% endif %}
+            </td>
+            <td>
+              <span class="badge badge-{% if post.status == 'publie' %}success{% elif post.status == 'echec' %}error{% elif post.status == 'approuve' %}info{% elif post.status == 'annule' %}error{% else %}warning{% endif %}">
+                {{ post.get_status_display }}
+              </span>
+            </td>
+            <td>{% if post.ai_generated %}🤖{% else %}✏️{% endif %}</td>
+            <td>{% if post.requires_approval %}⚠️ Oui{% else %}Auto{% endif %}</td>
+            <td>{{ post.retry_count }}/3</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <p style="color:var(--text-secondary);text-align:center;padding:2rem 0">
+          Aucun post planifié.
+          <a href="{% url 'facebook_agent:create_scheduled_post' %}" style="color:var(--fb-blue)">Créer un post →</a>
+        </p>
+      {% endif %}
+    </div>
+  </main>
+</div>
+{% endblock %}

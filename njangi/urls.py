@@ -21,6 +21,7 @@ urlpatterns = [
     path("mon-espace/depots/",              views.MemberDepositsView.as_view(),       name="member_deposits"),
     path("mon-espace/depots/nouveau/",      views.DepositCreateView.as_view(),        name="deposit_create"),
     path("mon-espace/depots/<int:pk>/retirer/", views.DepositWithdrawView.as_view(), name="deposit_withdraw"),
+    path("mon-espace/portefeuille/",         views.MemberWalletView.as_view(),         name="member_wallet"),
     path("mon-espace/notifications/",       views.MemberNotificationsView.as_view(),  name="member_notifications"),
 
     # ── Bureau (président / trésorier / secrétaire) ───────────────────────────
@@ -36,6 +37,12 @@ urlpatterns = [
     path("bureau/<slug:slug>/prets/<int:pk>/refuser/",  views.LoanRejectView.as_view(),         name="loan_reject"),
     path("bureau/<slug:slug>/prets/<int:pk>/decaisser/", views.LoanDisburseView.as_view(),     name="loan_disburse"),
     path("bureau/<slug:slug>/fond/",                    views.FundView.as_view(),               name="fund"),
+    path("bureau/<slug:slug>/interets/",                views.BureauMonthlyInterestView.as_view(),  name="bureau_monthly_interest"),
+    path("bureau/<slug:slug>/interets/calculer/",       views.BureauCalculateInterestView.as_view(), name="bureau_calculate_interest"),
+    path("bureau/<slug:slug>/distribution/<int:membership_pk>/", views.DistributionPreviewView.as_view(), name="distribution_preview"),
+
+    # ── Premium ───────────────────────────────────────────────────────────────
+    path("premium/", views.PremiumView.as_view(), name="premium"),
 
     # ── HTMX partials ─────────────────────────────────────────────────────────
     path("htmx/cotisation/<int:pk>/payer/",   views.HtmxContributionPayView.as_view(),  name="htmx_contribution_pay"),

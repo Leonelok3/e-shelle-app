@@ -11,46 +11,28 @@ from ..models import (
 from ..forms import ActeurAgroForm
 
 
-PLANS = {
-    'silver': {
-        'nom': 'Silver', 'emoji': '🥈',
-        'prix_xaf': 9900, 'prix_eur': 15,
-        'features': [
-            "Jusqu'à 20 produits",
-            "Badge Silver",
-            "10 demandes de devis/mois",
-            "Statistiques de base",
-            "Apparition dans les catégories",
-        ],
-    },
-    'gold': {
-        'nom': 'Gold', 'emoji': '🥇',
-        'prix_xaf': 24900, 'prix_eur': 38,
-        'features': [
-            "Produits illimités",
-            "Badge Gold + priorité dans les résultats",
-            "Devis illimités",
-            "Analytics avancées",
-            "Export leads Excel",
-            "Accès aux AO privés",
-            "1 mise en avant/mois newsletter",
-        ],
-    },
-    'platinum': {
-        'nom': 'Platinum', 'emoji': '💎',
-        'prix_xaf': 59900, 'prix_eur': 90,
-        'features': [
-            "TOUT illimité",
-            "Badge Platinum animé + profil vérifié",
-            "Mise en avant permanente accueil",
-            "Vitrine Exportateur dédiée",
-            "Support prioritaire WhatsApp",
-            "Rapport mensuel marché",
-            "Intégration newsletters B2B",
-            "Salons virtuels E-Shelle",
-        ],
-    },
+# Plans fallback si la DB est vide
+_PLANS_FALLBACK = {
+    'silver':   {'nom': 'Silver',   'emoji': '🥈', 'prix_xaf': 9900,  'features': ["Jusqu'à 20 produits","Badge Silver","10 devis/mois","Statistiques de base"]},
+    'gold':     {'nom': 'Gold',     'emoji': '🥇', 'prix_xaf': 24900, 'features': ["Produits illimités","Badge Gold + priorité","Devis illimités","Analytics avancées","Accès AO privés"]},
+    'platinum': {'nom': 'Platinum', 'emoji': '💎', 'prix_xaf': 59900, 'features': ["TOUT illimité","Badge Platinum animé","Vitrine exportateur","Support WhatsApp dédié","Rapport mensuel marché"]},
 }
+
+# Mapping slug agro → slug PlanPremiumApp
+_PLAN_MAP = {'silver': 'silver', 'gold': 'gold', 'platinum': 'platinum'}
+
+
+def _get_plans_agro():
+    """Charge les plans agro depuis PlanPremiumApp. Fallback sur le dict."""
+    try:
+        from payments.models import PlanPremiumApp
+        qs = PlanPremiumApp.objects.filter(module='agro', actif=True).order_by('ordre', 'prix')
+        if qs.exists():
+            return {p.slug: {'nom': p.nom, 'emoji': p.emoji, 'prix_xaf': p.prix,
+                             'features': p.benefices if isinstance(p.benefices, list) else []} for p in qs}
+    except Exception:
+        pass
+    return _PLANS_FALLBACK
 
 
 @login_required
@@ -161,9 +143,10 @@ def mes_avis(request):
 
 
 def page_premium(request):
-    """Page de présentation des plans premium."""
+    """Page de présentation des plans premium — chargée depuis l'admin."""
+    plans = _get_plans_agro()
     context = {
-        'plans':      PLANS,
+        'plans':      plans,
         'page_title': "Plans Premium E-Shelle Agro",
     }
     return render(request, 'agro/premium/plans.html', context)
@@ -172,12 +155,11 @@ def page_premium(request):
 @login_required
 def souscrire(request, plan):
     """Redirige vers le paiement du pack premium Agro."""
-    # Mapping plans Agro → plans payments
-    plan_map = {'silver': 'starter', 'gold': 'pro', 'platinum': 'expert'}
-    if plan not in plan_map:
+    plans = _get_plans_agro()
+    if plan not in plans:
         messages.error(request, "Plan invalide.")
         return redirect('agro:premium')
-    return redirect('payments:payer_premium', module='agro', plan_slug=plan_map[plan])
+    return redirect('payments:payer_premium', module='agro', plan_slug=plan)
 
 
 @login_required

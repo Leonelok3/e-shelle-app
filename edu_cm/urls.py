@@ -22,8 +22,14 @@ urlpatterns = [
 
     # Authentification (vues custom E-Shelle)
     path("accounts/", include("accounts.urls")),
-    # Social Auth (OAuth Google / Facebook via allauth)
+    # Allauth account URLs (account_inactive, etc.)
+    path("accounts/", include("allauth.account.urls")),
+    # Social Auth — URLs de base (connections, disconnect, signup)
     path("accounts/social/", include("allauth.socialaccount.urls")),
+    # Social Auth — OAuth2 Google : google/ est déjà dans le module
+    path("accounts/social/", include("allauth.socialaccount.providers.google.urls")),
+    # Social Auth — OAuth2 Facebook : facebook/ est déjà dans le module
+    path("accounts/social/", include("allauth.socialaccount.providers.facebook.urls")),
 
     # Anciens dashboards (compatibilité)
     path("dash/", include("progress.urls")),
@@ -92,6 +98,9 @@ urlpatterns = [
 
     # ── E-Shelle AI — Agent Intelligent Central ───────────────────────
     path("ai/", include("e_shelle_ai.urls", namespace="eshelle_ai")),
+
+    # ── Facebook Agent IA — Dashboard auto-publication ────────────────
+    path("facebook-agent/", include("facebook_agent.urls", namespace="facebook_agent")),
 
     # Page d'accueil
     path("", home_view, name="home"),
