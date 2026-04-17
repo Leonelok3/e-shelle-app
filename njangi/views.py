@@ -592,10 +592,9 @@ class DistributionPreviewView(BureauRequiredMixin, View):
         # Enregistrement dans la session en cours (si existante)
         active_session = self.group.sessions.filter(status="in_progress").first()
         if active_session:
-            if member_ms.hand_order:
-                active_session.distributed_hand_to = member_ms
-                active_session.hand_amount = preview["net_amount"]
-                active_session.save(update_fields=["distributed_hand_to", "hand_amount"])
+            active_session.beneficiary  = member_ms
+            active_session.hand_amount  = preview["net_amount"]
+            active_session.save(update_fields=["beneficiary", "hand_amount"])
             member_ms.total_received += preview["net_amount"]
             member_ms.save(update_fields=["total_received"])
             messages.success(
