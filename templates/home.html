@@ -398,8 +398,15 @@
         <div class="module-icon">💰</div>
         <div style="position:absolute;top:1.25rem;right:1.25rem"><span class="badge" style="background:rgba(27,108,168,.15);color:#1B6CA8;border:1px solid rgba(27,108,168,.3)">Nouveau</span></div>
         <h3>Njangi Digital</h3>
-        <p>Gérez votre tontine en ligne — cotisations, mains, prêts, fond commun. 100 % numérique, 0 papier, sécurisé.</p>
-        <a href="/njangi/" class="btn btn-sm" style="border:1px solid rgba(27,108,168,.4);color:#1B6CA8">Rejoindre →</a>
+        <p>Gérez votre tontine en ligne — cotisations, mains, prêts, fond commun et intérêts proportionnels. 100 % numérique, 0 papier.</p>
+        {% if user.is_authenticated %}
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <a href="/njangi/mon-espace/" class="btn btn-sm" style="background:#1B6CA8;color:#fff;border:none">Mon espace →</a>
+          <a href="/njangi/groupe/creer/" class="btn btn-sm" style="border:1px solid rgba(27,108,168,.4);color:#1B6CA8">Créer un groupe</a>
+        </div>
+        {% else %}
+        <a href="/njangi/" class="btn btn-sm" style="border:1px solid rgba(27,108,168,.4);color:#1B6CA8">Découvrir →</a>
+        {% endif %}
       </div>
       <div class="module-card aos-hidden" style="animation-delay:.8s;border-color:rgba(108,63,232,.25)">
         <div class="module-icon">✨</div>
