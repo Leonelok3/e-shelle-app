@@ -8,7 +8,7 @@ from django.views.generic import TemplateView, DetailView, CreateView, View
 from django.http import HttpResponse
 from django.utils import timezone
 
-from .models import Group, Membership, Session, Contribution, FundDeposit, Loan, LoanRepayment, Notification
+from .models import Group, Membership, Session, Contribution, FundDeposit, Loan, LoanRepayment, Notification, SubscriptionRequest
 from .forms import GroupCreateForm, JoinGroupForm, LoanRequestForm, DepositCreateForm, ContributionPayForm, RepaymentForm
 
 
@@ -91,14 +91,25 @@ class JoinGroupView(LoginRequiredMixin, View):
         if form.is_valid():
             code = form.cleaned_data["invite_code"].upper()
             group = get_object_or_404(Group, invite_code=code, status="active")
-            _, created = Membership.objects.get_or_create(
-                user=request.user, group=group,
-                defaults={"is_active": True}
-            )
-            if created:
-                messages.success(request, f"Bienvenue dans le groupe « {group.name} » !")
-            else:
+
+            # Vérifier si déjà membre
+            existing = Membership.objects.filter(user=request.user, group=group).first()
+            if existing:
                 messages.info(request, "Vous êtes déjà membre de ce groupe.")
+                return redirect("njangi:member_dashboard")
+
+            # Vérifier la limite du plan
+            if not group.can_add_member:
+                messages.warning(
+                    request,
+                    f"Le groupe « {group.name} » a atteint la limite de son plan "
+                    f"({group.plan_config['max_members']} membres). "
+                    f"Le président doit passer à un plan supérieur."
+                )
+                return redirect("njangi:upgrade", slug=group.slug)
+
+            Membership.objects.create(user=request.user, group=group, is_active=True)
+            messages.success(request, f"Bienvenue dans le groupe « {group.name} » !")
             return redirect("njangi:member_dashboard")
         return render(request, self.template_name, {"form": form})
 
@@ -605,3 +616,61 @@ class DistributionPreviewView(BureauRequiredMixin, View):
             messages.warning(request, "Aucune séance en cours — distribution non enregistrée.")
 
         return redirect("njangi:bureau_members", slug=slug)
+
+
+# ── Abonnement / Upgrade ──────────────────────────────────────────────────────
+
+class UpgradeView(MembershipRequiredMixin, TemplateView):
+    """Page d'upgrade — affiche les plans et les instructions de paiement."""
+    template_name = "njangi/upgrade.html"
+
+    def get_context_data(self, **kwargs):
+        from njangi.models.group import PLAN_CONFIG
+        ctx = super().get_context_data(**kwargs)
+        ctx["plan_config"] = PLAN_CONFIG
+        ctx["pending_request"] = SubscriptionRequest.objects.filter(
+            group=self.group, status="pending"
+        ).first()
+        return ctx
+
+
+class SubscriptionRequestView(MembershipRequiredMixin, View):
+    """Soumettre une demande d'abonnement après paiement."""
+    template_name = "njangi/subscription_request.html"
+
+    def get(self, request, slug):
+        from django.shortcuts import render
+        from njangi.models.group import PLAN_CONFIG
+        plan = request.GET.get("plan", "standard")
+        duration = int(request.GET.get("duration", 1))
+        return render(request, self.template_name, {
+            "group": self.group,
+            "membership": self.membership,
+            "plan": plan,
+            "duration": duration,
+            "plan_config": PLAN_CONFIG,
+        })
+
+    def post(self, request, slug):
+        plan = request.POST.get("plan", "standard")
+        duration = int(request.POST.get("duration_months", 1))
+        sub = SubscriptionRequest(
+            group=self.group,
+            requested_by=request.user,
+            plan=plan,
+            duration_months=duration,
+            payment_method=request.POST.get("payment_method", "mtn_momo"),
+            phone_used=request.POST.get("phone_used", ""),
+            payment_date=request.POST.get("payment_date"),
+            payment_ref=request.POST.get("payment_ref", ""),
+            amount_paid=request.POST.get("amount_paid", 0),
+            notes=request.POST.get("notes", ""),
+        )
+        sub.compute_amount()
+        sub.save()
+        messages.success(
+            request,
+            "Demande enregistrée ! Le fondateur va vérifier votre paiement "
+            "et activer votre groupe sous 24h. Merci !"
+        )
+        return redirect("njangi:upgrade", slug=slug)

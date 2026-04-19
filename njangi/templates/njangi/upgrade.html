@@ -1,0 +1,155 @@
+{% extends "njangi/base_dashboard.html" %}
+
+{% block title %}Passer au plan supérieur — {{ group.name }}{% endblock %}
+{% block page_title %}Passer au plan supérieur{% endblock %}
+
+{% block sidebar_nav %}
+<a href="{% url 'njangi:member_dashboard' %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-blue-100 hover:bg-white/10 transition">
+  ← Mon espace
+</a>
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="max-w-3xl mx-auto">
+
+  <!-- Plan actuel -->
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6 flex items-center gap-4">
+    <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl font-bold"
+         style="background: {{ group.plan_color }}20; color: {{ group.plan_color }}">
+      💰
+    </div>
+    <div class="flex-1">
+      <p class="text-sm text-gray-500">Groupe</p>
+      <p class="font-bold text-gray-800 text-lg">{{ group.name }}</p>
+    </div>
+    <div class="text-right">
+      <p class="text-xs text-gray-400 mb-1">Plan actuel</p>
+      <span class="px-3 py-1.5 rounded-full text-sm font-bold"
+            style="background: {{ group.plan_color }}20; color: {{ group.plan_color }}">
+        {{ group.plan_label }}
+      </span>
+      {% if group.plan != 'free' and group.plan_days_remaining is not None %}
+      <p class="text-xs text-gray-400 mt-1">Expire dans {{ group.plan_days_remaining }} jour(s)</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Demande en attente -->
+  {% if pending_request %}
+  <div class="bg-yellow-50 border border-yellow-200 rounded-2xl p-5 mb-6">
+    <div class="flex items-center gap-3">
+      <span class="text-2xl">⏳</span>
+      <div>
+        <p class="font-semibold text-yellow-800">Demande en cours de vérification</p>
+        <p class="text-sm text-yellow-600">
+          Plan {{ pending_request.get_plan_display }} demandé le {{ pending_request.created_at|date:"d/m/Y" }}.
+          Le fondateur va activer votre groupe sous 24h après vérification du paiement.
+        </p>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Plans disponibles -->
+  <h2 class="text-lg font-bold text-gray-800 mb-4">Choisissez votre plan</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+
+    <!-- Standard -->
+    <div class="bg-white rounded-2xl border-2 border-blue-200 shadow-sm p-6 relative">
+      <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+        <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">Populaire</span>
+      </div>
+      <div class="text-center mb-4">
+        <p class="font-bold text-gray-800 text-lg">Standard</p>
+        <p class="text-3xl font-extrabold text-blue-600 mt-1">3 000 <span class="text-base font-normal text-gray-500">FCFA/mois</span></p>
+      </div>
+      <ul class="space-y-2 text-sm text-gray-600 mb-5">
+        <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Membres illimités</li>
+        <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Séances & cotisations</li>
+        <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Prêts & remboursements</li>
+        <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Fond commun</li>
+        <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Historique complet</li>
+      </ul>
+      <a href="{% url 'njangi:subscription_request' group.slug %}?plan=standard"
+         class="block text-center px-4 py-2.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition text-sm">
+        Choisir Standard
+      </a>
+    </div>
+
+    <!-- Pro -->
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+      <div class="text-center mb-4">
+        <p class="font-bold text-gray-800 text-lg">Pro</p>
+        <p class="text-3xl font-extrabold text-purple-600 mt-1">7 000 <span class="text-base font-normal text-gray-500">FCFA/mois</span></p>
+      </div>
+      <ul class="space-y-2 text-sm text-gray-600 mb-5">
+        <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Tout Standard inclus</li>
+        <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Intérêts proportionnels</li>
+        <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Portefeuille membre</li>
+        <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Score de fiabilité</li>
+        <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Rapports détaillés</li>
+      </ul>
+      <a href="{% url 'njangi:subscription_request' group.slug %}?plan=pro"
+         class="block text-center px-4 py-2.5 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition text-sm">
+        Choisir Pro
+      </a>
+    </div>
+
+    <!-- Association -->
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+      <div class="text-center mb-4">
+        <p class="font-bold text-gray-800 text-lg">Association</p>
+        <p class="text-3xl font-extrabold text-yellow-600 mt-1">15 000 <span class="text-base font-normal text-gray-500">FCFA/mois</span></p>
+      </div>
+      <ul class="space-y-2 text-sm text-gray-600 mb-5">
+        <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Tout Pro inclus</li>
+        <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Jusqu'à 5 groupes</li>
+        <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Support prioritaire</li>
+        <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Formation incluse</li>
+      </ul>
+      <a href="{% url 'njangi:subscription_request' group.slug %}?plan=association"
+         class="block text-center px-4 py-2.5 bg-yellow-500 text-white rounded-xl font-semibold hover:bg-yellow-600 transition text-sm">
+        Choisir Association
+      </a>
+    </div>
+  </div>
+
+  <!-- Instructions paiement -->
+  <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 p-6">
+    <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+      <span>📱</span> Comment payer
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-white rounded-xl p-4 border border-blue-100">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-xl">🟡</span>
+          <span class="font-semibold text-gray-700">MTN Mobile Money</span>
+        </div>
+        <p class="text-sm text-gray-600">Envoyez le montant au :</p>
+        <p class="font-bold text-gray-800 text-lg mt-1">+237 680 625 082</p>
+        <p class="text-xs text-gray-400 mt-1">Nom : E-Shelle Njangi+</p>
+      </div>
+      <div class="bg-white rounded-xl p-4 border border-blue-100">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-xl">🟠</span>
+          <span class="font-semibold text-gray-700">Orange Money</span>
+        </div>
+        <p class="text-sm text-gray-600">Envoyez le montant au :</p>
+        <p class="font-bold text-gray-800 text-lg mt-1">+237 680 625 082</p>
+        <p class="text-xs text-gray-400 mt-1">Nom : E-Shelle Njangi+</p>
+      </div>
+    </div>
+    <div class="mt-4 bg-white rounded-xl p-4 border border-blue-100">
+      <p class="text-sm text-gray-600">
+        <strong>Dépôt bancaire :</strong> Contactez-nous sur WhatsApp au <strong>+237 680 625 082</strong> pour les coordonnées bancaires.
+      </p>
+    </div>
+    <p class="text-xs text-gray-400 mt-3 text-center">
+      Après le paiement, cliquez sur le plan choisi et remplissez le formulaire avec votre référence de paiement.
+      Activation sous 24h.
+    </p>
+  </div>
+
+</div>
+{% endblock %}

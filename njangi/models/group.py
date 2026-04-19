@@ -3,7 +3,24 @@ Njangi+ — Modèles Groupe & Membres
 """
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 from django.utils.text import slugify
+
+# ── Plans & tarifs ────────────────────────────────────────────────────────────
+
+PLAN_CHOICES = [
+    ("free",        "Gratuit"),
+    ("standard",    "Standard"),
+    ("pro",         "Pro"),
+    ("association", "Association"),
+]
+
+PLAN_CONFIG = {
+    "free":        {"label": "Gratuit",      "max_members": 5,    "price": 0,     "color": "#6b7280"},
+    "standard":    {"label": "Standard",     "max_members": None, "price": 3000,  "color": "#1B6CA8"},
+    "pro":         {"label": "Pro",          "max_members": None, "price": 7000,  "color": "#7c3aed"},
+    "association": {"label": "Association",  "max_members": None, "price": 15000, "color": "#F5A623"},
+}
 
 
 class Group(models.Model):
@@ -69,6 +86,11 @@ class Group(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    # ── Abonnement / Plan ─────────────────────────────────────────────────────
+    plan            = models.CharField(max_length=15, choices=PLAN_CHOICES, default="free", verbose_name="Plan")
+    plan_expires_at = models.DateTimeField(null=True, blank=True, verbose_name="Expire le")
+    plan_note       = models.TextField(blank=True, verbose_name="Note activation")
+
     class Meta:
         verbose_name = "Groupe Njangi"
         verbose_name_plural = "Groupes Njangi"
@@ -114,6 +136,49 @@ class Group(models.Model):
         balance = self.fund_balance
         reserve = balance * self.fund_reserve_pct / 100
         return max(0, balance - reserve)
+
+    # ── Propriétés plan ───────────────────────────────────────────────────────
+
+    @property
+    def plan_config(self):
+        return PLAN_CONFIG.get(self.plan, PLAN_CONFIG["free"])
+
+    @property
+    def is_plan_active(self):
+        if self.plan == "free":
+            return True
+        if not self.plan_expires_at:
+            return False
+        return timezone.now() < self.plan_expires_at
+
+    @property
+    def plan_max_members(self):
+        return self.plan_config["max_members"]  # None = illimité
+
+    @property
+    def can_add_member(self):
+        """Vérifie si le groupe peut accueillir un nouveau membre selon son plan."""
+        if not self.is_plan_active:
+            return False
+        max_m = self.plan_max_members
+        if max_m is None:
+            return True
+        return self.member_count < max_m
+
+    @property
+    def plan_label(self):
+        return self.plan_config["label"]
+
+    @property
+    def plan_color(self):
+        return self.plan_config["color"]
+
+    @property
+    def plan_days_remaining(self):
+        if self.plan == "free" or not self.plan_expires_at:
+            return None
+        delta = self.plan_expires_at - timezone.now()
+        return max(0, delta.days)
 
     @property
     def frequency_label(self):

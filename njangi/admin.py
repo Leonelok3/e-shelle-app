@@ -11,6 +11,7 @@ from .models import (
     Loan, LoanRepayment,
     Notification, Document,
     MonthlyGroupInterest, MemberMonthlyStatement,
+    SubscriptionRequest,
 )
 
 
@@ -41,6 +42,7 @@ class GroupAdmin(admin.ModelAdmin):
         )}),
         ("Calendrier", {"fields": ("start_date", "next_session_date", "current_cycle")}),
         ("État", {"fields": ("status",)}),
+        ("Abonnement", {"fields": ("plan", "plan_expires_at", "plan_note")}),
         ("Fond commun (calculé)", {"fields": ("fund_balance", "fund_available_for_loans"), "classes": ("collapse",)}),
     )
 
@@ -211,3 +213,56 @@ class MemberMonthlyStatementAdmin(admin.ModelAdmin):
     list_filter   = ("monthly_record__group", "monthly_record__year")
     search_fields = ("membership__user__username", "membership__group__name")
     readonly_fields = ("period_label", "formatted_interest", "formatted_deposit", "formatted_cumulative", "formatted_wallet")
+
+
+# ── Abonnements ───────────────────────────────────────────────────────────────
+
+@admin.register(SubscriptionRequest)
+class SubscriptionRequestAdmin(admin.ModelAdmin):
+    list_display  = ("group", "plan_badge", "duration_months", "amount_paid", "payment_method", "payment_date", "status_badge", "created_at")
+    list_filter   = ("status", "plan", "payment_method")
+    search_fields = ("group__name", "requested_by__username", "phone_used", "payment_ref")
+    readonly_fields = ("created_at", "processed_at", "processed_by", "amount_expected")
+    actions = ["approve_requests", "reject_requests"]
+
+    fieldsets = (
+        ("Groupe & Plan", {"fields": ("group", "requested_by", "plan", "duration_months", "amount_expected")}),
+        ("Paiement déclaré", {"fields": ("payment_method", "phone_used", "payment_date", "payment_ref", "amount_paid", "notes")}),
+        ("Traitement", {"fields": ("status", "processed_by", "processed_at", "rejection_reason")}),
+    )
+
+    def plan_badge(self, obj):
+        colors = {"standard": "#1B6CA8", "pro": "#7c3aed", "association": "#F5A623"}
+        color = colors.get(obj.plan, "#6b7280")
+        return format_html(
+            '<span style="background:{};color:#fff;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600">{}</span>',
+            color, obj.get_plan_display().split(" —")[0]
+        )
+    plan_badge.short_description = "Plan"
+
+    def status_badge(self, obj):
+        colors = {"pending": "#f59e0b", "approved": "#22c55e", "rejected": "#ef4444"}
+        labels = {"pending": "⏳ En attente", "approved": "✓ Approuvé", "rejected": "✗ Refusé"}
+        color = colors.get(obj.status, "#6b7280")
+        return format_html(
+            '<span style="color:{};font-weight:600">{}</span>',
+            color, labels.get(obj.status, obj.status)
+        )
+    status_badge.short_description = "Statut"
+
+    @admin.action(description="✅ Approuver et activer le plan")
+    def approve_requests(self, request, queryset):
+        count = 0
+        for sub in queryset.filter(status="pending"):
+            sub.approve(request.user)
+            count += 1
+        self.message_user(request, f"{count} abonnement(s) activé(s) avec succès.")
+
+    @admin.action(description="❌ Refuser les demandes sélectionnées")
+    def reject_requests(self, request, queryset):
+        count = queryset.filter(status="pending").update(
+            status="rejected",
+            processed_by=request.user,
+            processed_at=__import__("django.utils.timezone", fromlist=["timezone"]).timezone.now()
+        )
+        self.message_user(request, f"{count} demande(s) refusée(s).", level="warning")

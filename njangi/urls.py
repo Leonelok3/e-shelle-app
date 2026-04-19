@@ -44,6 +44,10 @@ urlpatterns = [
     # ── Premium ───────────────────────────────────────────────────────────────
     path("premium/", views.PremiumView.as_view(), name="premium"),
 
+    # ── Abonnement ────────────────────────────────────────────────────────────
+    path("groupe/<slug:slug>/upgrade/",   views.UpgradeView.as_view(),             name="upgrade"),
+    path("groupe/<slug:slug>/souscrire/", views.SubscriptionRequestView.as_view(), name="subscription_request"),
+
     # ── HTMX partials ─────────────────────────────────────────────────────────
     path("htmx/cotisation/<int:pk>/payer/",   views.HtmxContributionPayView.as_view(),  name="htmx_contribution_pay"),
     path("htmx/remboursement/<int:pk>/",      views.HtmxRepaymentView.as_view(),        name="htmx_repayment"),

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rapport Njangi+ Digital — E-Shelle</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; color: #1a1a2e; background: #fff; font-size: 13px; line-height: 1.6; }
+
+  /* PAGE BREAKS */
+  @media print {
+    .page-break { page-break-before: always; }
+    .no-break { page-break-inside: avoid; }
+    body { font-size: 11px; }
+    .cover { min-height: 100vh; }
+  }
+
+  /* COVER */
+  .cover {
+    background: linear-gradient(135deg, #0D3B6E 0%, #1B6CA8 60%, #F5A623 100%);
+    color: white;
+    padding: 80px 60px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+  .cover-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 6px 18px;
+    font-size: 12px;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .cover h1 { font-size: 52px; font-weight: 900; line-height: 1.1; margin-bottom: 16px; }
+  .cover h1 span { color: #F5A623; }
+  .cover-subtitle { font-size: 20px; color: rgba(255,255,255,0.8); margin-bottom: 50px; max-width: 600px; }
+  .cover-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 60px; }
+  .cover-meta-item { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; text-align: center; }
+  .cover-meta-item .num { font-size: 32px; font-weight: 800; color: #F5A623; }
+  .cover-meta-item .lbl { font-size: 11px; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+  .cover-footer { position: absolute; bottom: 40px; left: 60px; right: 60px; display: flex; justify-content: space-between; color: rgba(255,255,255,0.5); font-size: 11px; }
+
+  /* CONTENT */
+  .content { padding: 50px 60px; }
+  h2.section-title {
+    font-size: 22px; font-weight: 800; color: #0D3B6E;
+    border-left: 5px solid #F5A623;
+    padding-left: 14px; margin: 40px 0 20px;
+  }
+  h3.sub-title { font-size: 15px; font-weight: 700; color: #1B6CA8; margin: 24px 0 12px; }
+  p { color: #444; margin-bottom: 10px; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 12px; }
+  th { background: #0D3B6E; color: white; padding: 10px 14px; text-align: left; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  td { padding: 9px 14px; border-bottom: 1px solid #f0f0f0; color: #333; vertical-align: top; }
+  tr:nth-child(even) td { background: #f8faff; }
+  tr:hover td { background: #eef4ff; }
+
+  /* CARDS */
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0; }
+  .card {
+    border-radius: 12px; padding: 20px;
+    border: 1px solid #e5e7eb;
+    background: linear-gradient(135deg, #f8faff, #fff);
+  }
+  .card-icon { font-size: 28px; margin-bottom: 10px; }
+  .card-title { font-weight: 700; color: #0D3B6E; font-size: 13px; margin-bottom: 6px; }
+  .card-desc { font-size: 11px; color: #666; }
+
+  /* BADGE */
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .badge-green { background: #dcfce7; color: #166534; }
+  .badge-blue  { background: #dbeafe; color: #1e40af; }
+  .badge-gold  { background: #fef9c3; color: #92400e; }
+  .badge-new   { background: #fef3c7; color: #d97706; }
+
+  /* CODE */
+  .code-block {
+    background: #1e293b; color: #e2e8f0;
+    border-radius: 10px; padding: 18px 20px;
+    font-family: 'Courier New', monospace; font-size: 11px;
+    line-height: 1.7; margin: 14px 0;
+  }
+  .code-block .comment { color: #64748b; }
+  .code-block .cmd { color: #86efac; }
+
+  /* FORMULA */
+  .formula {
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    border: 1px solid #bfdbfe;
+    border-radius: 12px; padding: 20px 24px; margin: 16px 0;
+    text-align: center;
+  }
+  .formula .eq { font-size: 16px; font-weight: 700; color: #1e40af; font-family: 'Courier New', monospace; }
+  .formula .legend { font-size: 11px; color: #64748b; margin-top: 10px; }
+
+  /* TIMELINE */
+  .timeline { border-left: 3px solid #1B6CA8; padding-left: 24px; margin: 20px 0; }
+  .timeline-item { margin-bottom: 18px; position: relative; }
+  .timeline-item::before {
+    content: ''; position: absolute; left: -30px; top: 5px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #1B6CA8; border: 2px solid white; outline: 2px solid #1B6CA8;
+  }
+  .timeline-item .step { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #1B6CA8; font-weight: 700; }
+  .timeline-item .title { font-weight: 700; color: #1a1a2e; font-size: 13px; }
+  .timeline-item .desc { color: #666; font-size: 11px; margin-top: 2px; }
+
+  /* SCORE */
+  .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0; }
+  .score-item { text-align: center; padding: 16px; border-radius: 10px; }
+  .score-item .val { font-size: 22px; font-weight: 800; }
+  .score-item .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+
+  /* SEPARATOR */
+  .sep { border: none; border-top: 2px solid #f0f0f0; margin: 30px 0; }
+
+  /* FOOTER */
+  .report-footer {
+    background: #0D3B6E; color: white;
+    padding: 30px 60px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 60px;
+  }
+  .report-footer .logo { font-size: 20px; font-weight: 800; }
+  .report-footer .logo span { color: #F5A623; }
+  .report-footer p { font-size: 11px; color: rgba(255,255,255,0.6); }
+
+  /* ALERT */
+  .alert { border-radius: 10px; padding: 14px 18px; margin: 16px 0; font-size: 12px; }
+  .alert-info { background: #eff6ff; border-left: 4px solid #3b82f6; color: #1e40af; }
+  .alert-success { background: #f0fdf4; border-left: 4px solid #22c55e; color: #166534; }
+  .alert-warning { background: #fffbeb; border-left: 4px solid #f59e0b; color: #92400e; }
+
+  /* URL TABLE */
+  .url-path { font-family: 'Courier New', monospace; font-size: 11px; color: #0D3B6E; background: #eff6ff; padding: 2px 6px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ COVER ═══════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-badge">Documentation Technique & Fonctionnelle</div>
+  <h1>Njangi<span>+</span><br>Digital</h1>
+  <p class="cover-subtitle">Plateforme de gestion de tontine numérique — Module de la suite E-Shelle. Cotisations, mains, prêts, fond commun et intérêts proportionnels.</p>
+
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <div class="num">12</div>
+      <div class="lbl">Modèles Django</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="num">28</div>
+      <div class="lbl">URLs / Vues</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="num">4</div>
+      <div class="lbl">Services métier</div>
+    </div>
+  </div>
+
+  <div class="cover-footer">
+    <span>E-Shelle — Suite SaaS Cameroun</span>
+    <span>Version 2.0 — Avril 2026</span>
+    <span>Django 6.0 · Python 3.12</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ SOMMAIRE ═══════════════════════════════════════ -->
+<div class="content page-break">
+  <h2 class="section-title">Sommaire</h2>
+  <table>
+    <tr><td style="width:40px;color:#1B6CA8;font-weight:700">1.</td><td><strong>Présentation du module</strong></td><td style="color:#999;text-align:right">Contexte & objectifs</td></tr>
+    <tr><td style="color:#1B6CA8;font-weight:700">2.</td><td><strong>Architecture technique</strong></td><td style="color:#999;text-align:right">Modèles, services, URLs</td></tr>
+    <tr><td style="color:#1B6CA8;font-weight:700">3.</td><td><strong>Fonctionnalités détaillées</strong></td><td style="color:#999;text-align:right">Tontine, fond commun, prêts, intérêts</td></tr>
+    <tr><td style="color:#1B6CA8;font-weight:700">4.</td><td><strong>Algorithme d'intérêts proportionnels</strong></td><td style="color:#999;text-align:right">Formule & calcul mensuel</td></tr>
+    <tr><td style="color:#1B6CA8;font-weight:700">5.</td><td><strong>Score de fiabilité</strong></td><td style="color:#999;text-align:right">Système de scoring membres</td></tr>
+    <tr><td style="color:#1B6CA8;font-weight:700">6.</td><td><strong>Distribution (bouffe)</strong></td><td style="color:#999;text-align:right">Calcul avec déductions automatiques</td></tr>
+    <tr><td style="color:#1B6CA8;font-weight:700">7.</td><td><strong>Guide d'utilisation</strong></td><td style="color:#999;text-align:right">Membre & Bureau étape par étape</td></tr>
+    <tr><td style="color:#1B6CA8;font-weight:700">8.</td><td><strong>Administration & Commandes</strong></td><td style="color:#999;text-align:right">Django admin & CLI</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════ 1. PRÉSENTATION ═══════════════════════════════════════ -->
+<div class="content page-break">
+  <h2 class="section-title">1. Présentation du module</h2>
+
+  <p>Njangi+ Digital est le module de gestion de tontine de la plateforme E-Shelle. Il numérise intégralement la pratique traditionnelle camerounaise du <em>njangi</em> (tontine), en ajoutant des fonctionnalités financières avancées absentes des solutions existantes.</p>
+
+  <div class="alert alert-info">
+    <strong>Positionnement :</strong> Njangi+ se distingue par son algorithme de répartition proportionnelle des intérêts — chaque déposant gagne des intérêts <em>uniquement</em> quand son argent finance réellement un prêt actif, proportionnellement à sa contribution au pool.
+  </div>
+
+  <h3 class="sub-title">Problèmes résolus</h3>
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">📒</div>
+      <div class="card-title">Gestion papier → numérique</div>
+      <div class="card-desc">Fin des cahiers, reçus perdus et conflits de chiffres. Tout est horodaté et traçable.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔍</div>
+      <div class="card-title">Transparence totale</div>
+      <div class="card-desc">Chaque membre voit ses cotisations, son solde et ses intérêts en temps réel.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">💹</div>
+      <div class="card-title">Intérêts équitables</div>
+      <div class="card-desc">Répartition au prorata du dépôt. Plus tu déposes, plus tu gagnes.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎯</div>
+      <div class="card-title">Score de fiabilité</div>
+      <div class="card-desc">Chaque membre est noté sur son comportement de paiement. Encourage la discipline.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏦</div>
+      <div class="card-title">Prêts encadrés</div>
+      <div class="card-desc">Demande, approbation, décaissement et suivi des remboursements automatisés.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📱</div>
+      <div class="card-title">Mobile-first</div>
+      <div class="card-desc">Interface responsive optimisée pour smartphone. Accessible sans télécharger d'app.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ 2. ARCHITECTURE ═══════════════════════════════════════ -->
+<div class="content page-break">
+  <h2 class="section-title">2. Architecture technique</h2>
+
+  <h3 class="sub-title">Stack technologique</h3>
+  <table>
+    <thead><tr><th>Composant</th><th>Technologie</th><th>Version</th></tr></thead>
+    <tbody>
+      <tr><td>Backend framework</td><td>Django</td><td>6.0.2</td></tr>
+      <tr><td>Langage</td><td>Python</td><td>3.12</td></tr>
+      <tr><td>Base de données</td><td>PostgreSQL / SQLite</td><td>—</td></tr>
+      <tr><td>Serveur WSGI</td><td>Gunicorn</td><td>25.0.1</td></tr>
+      <tr><td>Reverse proxy</td><td>Nginx</td><td>—</td></tr>
+      <tr><td>UI Framework</td><td>Tailwind CSS (CDN)</td><td>3.x</td></tr>
+      <tr><td>Graphiques</td><td>Chart.js</td><td>4.x</td></tr>
+      <tr><td>Interactions HTMX</td><td>HTMX</td><td>1.9</td></tr>
+      <tr><td>Tâches async</td><td>Celery + Redis</td><td>5.6 / 7.4</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Modèles de données</h3>
+  <table>
+    <thead><tr><th>Modèle</th><th>Description</th><th>Champs clés</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Group</strong></td><td>Groupe tontine</td><td>name, slug, invite_code, frequency, contribution_amount, fund_loan_rate, base_fund_required</td></tr>
+      <tr><td><strong>Membership</strong></td><td>Appartenance membre</td><td>user, group, role, hand_order, reliability_score, total_contributed</td></tr>
+      <tr><td><strong>Session</strong></td><td>Séance de réunion</td><td>date, beneficiary, hand_amount, total_collected, status</td></tr>
+      <tr><td><strong>Contribution</strong></td><td>Cotisation par séance</td><td>amount_due, amount_paid, is_late, penalty_amount, status</td></tr>
+      <tr><td><strong>FundDeposit</strong></td><td>Dépôt fond commun</td><td>amount, interest_rate, duration_months, current_interest</td></tr>
+      <tr><td><strong>FundTransaction</strong></td><td>Mouvement financier</td><td>type, amount, signed_amount, description, created_at</td></tr>
+      <tr><td><strong>Loan</strong></td><td>Prêt accordé</td><td>amount_approved, interest_rate, duration_months, total_due, status</td></tr>
+      <tr><td><strong>LoanRepayment</strong></td><td>Remboursement</td><td>amount_paid, principal_part, interest_part, balance_after</td></tr>
+      <tr><td><strong>MonthlyGroupInterest</strong> <span class="badge badge-new">Nouveau</span></td><td>Intérêts mensuels groupe</td><td>year, month, total_pool, total_interest_generated, nb_depositors</td></tr>
+      <tr><td><strong>MemberMonthlyStatement</strong> <span class="badge badge-new">Nouveau</span></td><td>Relevé mensuel membre</td><td>deposit_balance, pool_share_pct, interest_earned, wallet_balance</td></tr>
+      <tr><td><strong>Notification</strong></td><td>Alertes membres</td><td>type, title, message, is_read</td></tr>
+      <tr><td><strong>Document</strong></td><td>PV et contrats</td><td>type, title, file, uploaded_by</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Services métier</h3>
+  <table>
+    <thead><tr><th>Service</th><th>Rôle</th></tr></thead>
+    <tbody>
+      <tr><td><strong>InterestCalculationService</strong></td><td>Calcule et stocke les intérêts mensuels proportionnels pour un groupe</td></tr>
+      <tr><td><strong>DistributionCalculator</strong></td><td>Calcule la bouffe nette après déductions automatiques (prêts, pénalités, fonds de base)</td></tr>
+      <tr><td><strong>ReliabilityScoreService</strong></td><td>Calcule et met à jour le score de fiabilité 0–100 de chaque membre</td></tr>
+      <tr><td><strong>PenaltyService</strong></td><td>Applique automatiquement les pénalités de retard sur les cotisations impayées</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════ 3. FONCTIONNALITÉS ═══════════════════════════════════════ -->
+<div class="content page-break">
+  <h2 class="section-title">3. Fonctionnalités détaillées</h2>
+
+  <h3 class="sub-title">3.1 Gestion du groupe</h3>
+  <table>
+    <thead><tr><th>Fonctionnalité</th><th>Détail</th><th>Statut</th></tr></thead>
+    <tbody>
+      <tr><td>Création groupe</td><td>Nom, description, logo, fréquence, cotisation, règles de prêt</td><td><span class="badge badge-green">✓ Actif</span></td></tr>
+      <tr><td>Code d'invitation</td><td>8 caractères alphanumériques auto-générés, unique</td><td><span class="badge badge-green">✓ Actif</span></td></tr>
+      <tr><td>Rôles</td><td>Président / Trésorier / Secrétaire / Membre</td><td><span class="badge badge-green">✓ Actif</span></td></tr>
+      <tr><td>Ordre de rotation</td><td>Numéro de main par membre, rotation configurable</td><td><span class="badge badge-green">✓ Actif</span></td></tr>
+      <tr><td>Fonds de base obligatoire</td><td>Montant minimum que chaque membre doit maintenir en dépôt</td><td><span class="badge badge-new">Nouveau</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">3.2 Séances & Cotisations</h3>
+  <table>
+    <thead><tr><th>Fonctionnalité</th><th>Détail</th></tr></thead>
+    <tbody>
+      <tr><td>Création séance</td><td>Date, numéro, cycle — génère automatiquement une cotisation par membre</td></tr>
+      <tr><td>Flux séance</td><td>Planifiée → En cours (ouverte) → Clôturée</td></tr>
+      <tr><td>Paiement cotisation</td><td>HTMX — sans rechargement de page. MTN MoMo / Orange Money / Espèces / Virement</td></tr>
+      <tr><td>Pénalités retard</td><td>Calcul automatique : jours_retard × pénalité_par_jour configurée</td></tr>
+      <tr><td>Taux de présence</td><td>Calculé automatiquement à la clôture de chaque séance</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">3.3 Fond commun</h3>
+  <table>
+    <thead><tr><th>Fonctionnalité</th><th>Détail</th></tr></thead>
+    <tbody>
+      <tr><td>Dépôts volontaires</td><td>Taux configurable (%/mois), durée en mois, intérêts calculés au prorata</td></tr>
+      <tr><td>Retrait avec intérêts</td><td>Capital + intérêts courus versés automatiquement</td></tr>
+      <tr><td>Réserve obligatoire</td><td>% minimum du fond non prêtable (défaut : 20%)</td></tr>
+      <tr><td>Audit trail complet</td><td>Chaque centime traçé : deposit_in, loan_out, repayment, interest_in, penalty_in…</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">3.4 Prêts</h3>
+  <table>
+    <thead><tr><th>Étape</th><th>Action</th><th>Acteur</th></tr></thead>
+    <tbody>
+      <tr><td>1. Demande</td><td>Membre soumet montant + objet + garant</td><td>Membre</td></tr>
+      <tr><td>2. Vérification</td><td>Bureau vérifie score fiabilité, solde fond, ratio max</td><td>Bureau</td></tr>
+      <tr><td>3. Approbation</td><td>Montant approuvé, taux appliqué, totaux calculés</td><td>Président/Trésorier</td></tr>
+      <tr><td>4. Décaissement</td><td>Fond débité, date d'échéance fixée, prêt actif</td><td>Trésorier</td></tr>
+      <tr><td>5. Remboursement</td><td>Paiements partiels, répartition intérêts/capital automatique</td><td>Membre</td></tr>
+      <tr><td>6. Clôture</td><td>Prêt marqué "Remboursé" quand total_repaid ≥ total_due</td><td>Système</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-warning">
+    <strong>Règle de sécurité :</strong> Un membre ne peut emprunter que N × sa cotisation (N configurable, défaut 3×). Le fond doit avoir suffisamment après déduction de la réserve obligatoire.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ 4. ALGORITHME INTÉRÊTS ═══════════════════════════════════════ -->
+<div class="content page-break">
+  <h2 class="section-title">4. Algorithme d'intérêts proportionnels</h2>
+
+  <p>C'est la fonctionnalité centrale et différenciante de Njangi+. Contrairement à un taux fixe appliqué à tous les dépôts, les intérêts sont générés <strong>uniquement par les prêts actifs</strong> et redistribués <strong>proportionnellement</strong> aux déposants selon leur contribution au pool.</p>
+
+  <div class="formula">
+    <div class="eq">intérêt_membre = (dépôt_membre / pool_total) × intérêts_générés_mois</div>
+    <div class="legend">
+      pool_total = somme des dépôts actifs ce mois |
+      intérêts_générés = Σ (loan.amount × loan.rate/100) pour chaque prêt actif
+    </div>
+  </div>
+
+  <h3 class="sub-title">Exemple concret</h3>
+  <table>
+    <thead><tr><th>Membre</th><th>Dépôt actif</th><th>Part du pool</th><th>Prêts actifs</th><th>Intérêts prêts</th><th>Intérêts gagnés</th></tr></thead>
+    <tbody>
+      <tr><td>Marie</td><td>200 000 FCFA</td><td>50 %</td><td rowspan="3" style="vertical-align:middle;text-align:center">1 prêt de 300 000 FCFA à 10%/mois = <strong>30 000 FCFA</strong></td><td rowspan="3" style="vertical-align:middle;text-align:center">30 000 FCFA</td><td><strong style="color:#166534">15 000 FCFA</strong></td></tr>
+      <tr><td>Paul</td><td>120 000 FCFA</td><td>30 %</td><td><strong style="color:#166534">9 000 FCFA</strong></td></tr>
+      <tr><td>Sophie</td><td>80 000 FCFA</td><td>20 %</td><td><strong style="color:#166534">6 000 FCFA</strong></td></tr>
+      <tr style="background:#f0fdf4"><td><strong>Total</strong></td><td><strong>400 000 FCFA</strong></td><td><strong>100 %</strong></td><td colspan="2"></td><td><strong style="color:#166534">30 000 FCFA</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Principe clé</h3>
+  <div class="alert alert-success">
+    Si <strong>aucun prêt n'est actif</strong> ce mois, les intérêts générés = 0. Les déposants ne gagnent que lorsque leur argent est effectivement mis au travail via des prêts. Cela incite le groupe à maximiser l'utilisation du fond.
+  </div>
+
+  <h3 class="sub-title">Stockage mensuel</h3>
+  <p>Chaque calcul mensuel crée :</p>
+  <ul style="padding-left:20px;color:#444;margin-bottom:10px">
+    <li style="margin-bottom:6px">1 enregistrement <strong>MonthlyGroupInterest</strong> — snapshot global du groupe</li>
+    <li>N enregistrements <strong>MemberMonthlyStatement</strong> — un par déposant actif</li>
+  </ul>
+  <p>Ces données sont <strong>permanentes</strong> et permettent de consulter l'historique complet et de générer des graphiques d'évolution.</p>
+
+  <h3 class="sub-title">Commande de calcul</h3>
+  <div class="code-block">
+    <span class="comment"># Calcul mois en cours, tous groupes actifs</span><br>
+    <span class="cmd">python manage.py calculate_monthly_interests</span><br><br>
+    <span class="comment"># Calcul pour un groupe et un mois spécifique</span><br>
+    <span class="cmd">python manage.py calculate_monthly_interests --group mon-groupe --year 2026 --month 4</span><br><br>
+    <span class="comment"># Recalculer tout l'historique depuis la création du groupe</span><br>
+    <span class="cmd">python manage.py calculate_monthly_interests --group mon-groupe --all-months</span><br><br>
+    <span class="comment"># Simulation sans sauvegarder (dry-run)</span><br>
+    <span class="cmd">python manage.py calculate_monthly_interests --dry-run</span><br><br>
+    <span class="comment"># Projection du mois suivant</span><br>
+    <span class="cmd">python manage.py calculate_monthly_interests --group mon-groupe --simulate</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ 5. SCORE FIABILITÉ ═══════════════════════════════════════ -->
+<div class="content page-break">
+  <h2 class="section-title">5. Score de fiabilité membres</h2>
+
+  <p>Chaque membre dispose d'un score de 0 à 100, calculé automatiquement sur l'ensemble de son historique dans le groupe. Ce score influence les décisions de prêt et reflète la confiance accordée au membre.</p>
+
+  <div class="score-grid">
+    <div class="score-item" style="background:#dcfce7">
+      <div class="val" style="color:#166534">90–100</div>
+      <div class="lbl" style="color:#166534">Excellent</div>
+    </div>
+    <div class="score-item" style="background:#d9f99d">
+      <div class="val" style="color:#365314">75–89</div>
+      <div class="lbl" style="color:#365314">Bon</div>
+    </div>
+    <div class="score-item" style="background:#fef3c7">
+      <div class="val" style="color:#92400e">50–74</div>
+      <div class="lbl" style="color:#92400e">Moyen</div>
+    </div>
+    <div class="score-item" style="background:#fee2e2">
+      <div class="val" style="color:#991b1b">0–49</div>
+      <div class="lbl" style="color:#991b1b">Faible</div>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Critères de scoring</h3>
+  <table>
+    <thead><tr><th>Événement</th><th>Impact sur le score</th></tr></thead>
+    <tbody>
+      <tr><td>Cotisation payée à temps</td><td style="color:#166534;font-weight:700">+2 points</td></tr>
+      <tr><td>Cotisation payée en retard</td><td style="color:#d97706;font-weight:700">−5 points</td></tr>
+      <tr><td>Cotisation absente (non payée)</td><td style="color:#dc2626;font-weight:700">−10 points</td></tr>
+      <tr><td>Prêt remboursé intégralement</td><td style="color:#166534;font-weight:700">+5 points</td></tr>
+      <tr><td>Prêt en défaut (overdue)</td><td style="color:#dc2626;font-weight:700">−20 points</td></tr>
+      <tr><td>Prêt actif en retard</td><td style="color:#d97706;font-weight:700">−10 points</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-info">
+    Le score est affiché sur la page portefeuille membre (graphique circulaire) et sur la page membres du bureau. Il est utilisé par le bureau pour évaluer les demandes de prêt.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ 6. DISTRIBUTION ═══════════════════════════════════════ -->
+<div class="content page-break">
+  <h2 class="section-title">6. Distribution (Bouffe / Main)</h2>
+
+  <p>Lors de chaque séance, le bénéficiaire de la "main" reçoit la totalité des cotisations collectées. Njangi+ calcule automatiquement les déductions avant versement.</p>
+
+  <h3 class="sub-title">Calcul de la distribution nette</h3>
+  <table>
+    <thead><tr><th>Élément</th><th>Description</th><th>Priorité</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Montant brut</strong></td><td>Cotisation × nombre de membres</td><td>—</td></tr>
+      <tr><td>− Déficit fonds de base</td><td>Si le membre n'a pas atteint le fonds de base obligatoire, la différence est retenue</td><td>1</td></tr>
+      <tr><td>− Solde prêt actif</td><td>Capital restant dû sur tout prêt en cours</td><td>2</td></tr>
+      <tr><td>− Pénalités impayées</td><td>Pénalités de retard accumulées non réglées</td><td>3</td></tr>
+      <tr><td>− Cotisations en retard</td><td>Cotisations partielles ou impayées</td><td>4</td></tr>
+      <tr style="background:#f0fdf4"><td><strong>= Montant net</strong></td><td><strong>Ce que le membre reçoit réellement</strong></td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-warning">
+    <strong>Blocage automatique :</strong> Si le montant net est négatif ou si le membre ne remplit pas les conditions minimales définies par le bureau, la distribution est bloquée jusqu'à régularisation.
+  </div>
+
+  <h3 class="sub-title">Flux de distribution</h3>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="step">Étape 1</div>
+      <div class="title">Bureau sélectionne le bénéficiaire</div>
+      <div class="desc">Depuis la page Membres → bouton "Distribution"</div>
+    </div>
+    <div class="timeline-item">
+      <div class="step">Étape 2</div>
+      <div class="title">Aperçu des déductions</div>
+      <div class="desc">Page de preview : brut → détail déductions → net à verser</div>
+    </div>
+    <div class="timeline-item">
+      <div class="step">Étape 3</div>
+      <div class="title">Confirmation</div>
+      <div class="desc">Le bureau valide. Le montant net est enregistré dans la séance en cours.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="step">Étape 4</div>
+      <div class="title">Mise à jour automatique</div>
+      <div class="desc">total_received du membre mis à jour. Bénéficiaire enregistré dans la séance.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ 7. GUIDE UTILISATION ═══════════════════════════════════════ -->
+<div class="content page-break">
+  <h2 class="section-title">7. Guide d'utilisation</h2>
+
+  <h3 class="sub-title">7.1 Créer et configurer un groupe (Président)</h3>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="step">1</div>
+      <div class="title">Accéder à la création</div>
+      <div class="desc"><span class="url-path">/njangi/groupe/creer/</span> — Remplir nom, fréquence, cotisation, taux prêts, taux dépôts, pénalité, règles de prêt</div>
+    </div>
+    <div class="timeline-item">
+      <div class="step">2</div>
+      <div class="title">Partager le code d'invitation</div>
+      <div class="desc">Le code 8 caractères s'affiche dans le tableau de bord bureau. Le partager aux membres via WhatsApp/SMS.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="step">3</div>
+      <div class="title">Configurer les rôles et ordres de main</div>
+      <div class="desc">Depuis Membres → modifier le rôle et le numéro de main de chaque participant</div>
+    </div>
+  </div>
+
+  <h3 class="sub-title">7.2 Rejoindre un groupe (Membre)</h3>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="step">1</div>
+      <div class="title">S'inscrire sur E-Shelle</div>
+      <div class="desc">Créer un compte sur la plateforme si pas encore fait</div>
+    </div>
+    <div class="timeline-item">
+      <div class="step">2</div>
+      <div class="title">Saisir le code d'invitation</div>
+      <div class="desc"><span class="url-path">/njangi/rejoindre/</span> → entrer le code 8 caractères reçu du président</div>
+    </div>
+    <div class="timeline-item">
+      <div class="step">3</div>
+      <div class="title">Accéder au tableau de bord</div>
+      <div class="desc"><span class="url-path">/njangi/mon-espace/</span> → voir ses cotisations, prêts, dépôts et portefeuille</div>
+    </div>
+  </div>
+
+  <h3 class="sub-title">7.3 Gérer une séance (Bureau)</h3>
+  <table>
+    <thead><tr><th>Action</th><th>URL</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>Créer la séance</td><td><span class="url-path">/bureau/&lt;slug&gt;/seances/creer/</span></td><td>Date, numéro — cotisations auto-créées</td></tr>
+      <tr><td>Ouvrir la séance</td><td>Bouton dans détail séance</td><td>Statut → "En cours"</td></tr>
+      <tr><td>Enregistrer paiements</td><td>HTMX inline</td><td>Méthode paiement + référence transaction</td></tr>
+      <tr><td>Clôturer</td><td>Bouton clôturer</td><td>Calcul automatique totaux + main bénéficiaire</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">7.4 Calculer les intérêts du mois (Bureau)</h3>
+  <table>
+    <thead><tr><th>Étape</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Aller dans <span class="url-path">/bureau/&lt;slug&gt;/interets/</span></td></tr>
+      <tr><td>2</td><td>Cliquer "⚡ Calculer un mois" → choisir année et mois</td></tr>
+      <tr><td>3</td><td>Le système calcule automatiquement les intérêts de chaque déposant</td></tr>
+      <tr><td>4</td><td>Déployer chaque mois pour voir le détail par membre</td></tr>
+      <tr><td>5</td><td>Les membres voient leurs intérêts sur <span class="url-path">/mon-espace/portefeuille/</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════ 8. ADMINISTRATION ═══════════════════════════════════════ -->
+<div class="content page-break">
+  <h2 class="section-title">8. Administration & Commandes</h2>
+
+  <h3 class="sub-title">Django Admin</h3>
+  <p>Accessible via <span class="url-path">/admin/</span> — Toutes les entités Njangi+ sont administrables :</p>
+  <table>
+    <thead><tr><th>Section Admin</th><th>Fonctionnalités</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Groupes Njangi</strong></td><td>Créer, modifier, voir membres inline, voir solde fond</td></tr>
+      <tr><td><strong>Membres</strong></td><td>Gérer rôles, scores, totaux</td></tr>
+      <tr><td><strong>Séances</strong></td><td>Voir cotisations inline, statuts</td></tr>
+      <tr><td><strong>Prêts</strong></td><td>Voir remboursements inline, progression</td></tr>
+      <tr><td><strong>Fond commun</strong></td><td>Dépôts actifs, transactions signées</td></tr>
+      <tr><td><strong>Intérêts mensuels</strong></td><td>Voir relevés par membre inline, action "Recalculer"</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Commandes de gestion</h3>
+  <div class="code-block">
+    <span class="comment"># ── Intérêts mensuels ──────────────────────────────────────────</span><br>
+    <span class="comment"># Calcul mois en cours, tous groupes</span><br>
+    <span class="cmd">python manage.py calculate_monthly_interests</span><br><br>
+    <span class="comment"># Calcul pour un groupe spécifique</span><br>
+    <span class="cmd">python manage.py calculate_monthly_interests --group &lt;slug&gt; --year 2026 --month 4</span><br><br>
+    <span class="comment"># Recalcul complet depuis la création</span><br>
+    <span class="cmd">python manage.py calculate_monthly_interests --group &lt;slug&gt; --all-months</span><br><br>
+    <span class="comment"># ── Déploiement production ─────────────────────────────────────</span><br>
+    <span class="cmd">git pull origin main</span><br>
+    <span class="cmd">python manage.py migrate</span><br>
+    <span class="cmd">python manage.py collectstatic --noinput</span><br>
+    <span class="cmd">sudo systemctl restart gunicorn</span>
+  </div>
+
+  <h3 class="sub-title">URLs complètes</h3>
+  <table>
+    <thead><tr><th>URL</th><th>Vue</th><th>Accès</th></tr></thead>
+    <tbody>
+      <tr><td><span class="url-path">/njangi/</span></td><td>LandingView</td><td>Public</td></tr>
+      <tr><td><span class="url-path">/njangi/rejoindre/</span></td><td>JoinGroupView</td><td>Connecté</td></tr>
+      <tr><td><span class="url-path">/njangi/groupe/creer/</span></td><td>CreateGroupView</td><td>Connecté</td></tr>
+      <tr><td><span class="url-path">/njangi/groupe/&lt;slug&gt;/</span></td><td>GroupDetailView</td><td>Public</td></tr>
+      <tr><td><span class="url-path">/njangi/mon-espace/</span></td><td>MemberDashboardView</td><td>Membre</td></tr>
+      <tr><td><span class="url-path">/njangi/mon-espace/cotisations/</span></td><td>MemberContributionsView</td><td>Membre</td></tr>
+      <tr><td><span class="url-path">/njangi/mon-espace/prets/</span></td><td>MemberLoansView</td><td>Membre</td></tr>
+      <tr><td><span class="url-path">/njangi/mon-espace/depots/</span></td><td>MemberDepositsView</td><td>Membre</td></tr>
+      <tr><td><span class="url-path">/njangi/mon-espace/portefeuille/</span></td><td>MemberWalletView</td><td>Membre</td></tr>
+      <tr><td><span class="url-path">/njangi/bureau/&lt;slug&gt;/</span></td><td>BureauDashboardView</td><td>Bureau</td></tr>
+      <tr><td><span class="url-path">/njangi/bureau/&lt;slug&gt;/membres/</span></td><td>BureauMembersView</td><td>Bureau</td></tr>
+      <tr><td><span class="url-path">/njangi/bureau/&lt;slug&gt;/seances/</span></td><td>BureauSessionsView</td><td>Bureau</td></tr>
+      <tr><td><span class="url-path">/njangi/bureau/&lt;slug&gt;/prets/</span></td><td>BureauLoansView</td><td>Bureau</td></tr>
+      <tr><td><span class="url-path">/njangi/bureau/&lt;slug&gt;/fond/</span></td><td>FundView</td><td>Bureau</td></tr>
+      <tr><td><span class="url-path">/njangi/bureau/&lt;slug&gt;/interets/</span></td><td>BureauMonthlyInterestView</td><td>Bureau</td></tr>
+      <tr><td><span class="url-path">/njangi/bureau/&lt;slug&gt;/distribution/&lt;pk&gt;/</span></td><td>DistributionPreviewView</td><td>Bureau</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════ FOOTER ═══════════════════════════════════════ -->
+<div class="report-footer">
+  <div>
+    <div class="logo">E-<span>Shelle</span></div>
+    <p>Suite SaaS · Cameroun & Diaspora</p>
+  </div>
+  <div style="text-align:center">
+    <p>Njangi+ Digital — Version 2.0</p>
+    <p>Rapport généré le 18 Avril 2026</p>
+  </div>
+  <div style="text-align:right">
+    <p>Django 6.0 · Python 3.12</p>
+    <p>Déployé sur srv1185662</p>
+  </div>
+</div>
+
+</body>
+</html>
