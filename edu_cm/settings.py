@@ -371,3 +371,43 @@ CELERY_BEAT_SCHEDULER     = "django_celery_beat.schedulers:DatabaseScheduler"
 
 # Celery Beat — planning défini dans edu_cm/celery.py (app.conf.beat_schedule)
 
+# ── Logging — capture les erreurs Django en production ─────────────────────────
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{asctime} {levelname} {name} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "django_errors": {
+            "level": "ERROR",
+            "class": "logging.FileHandler",
+            "filename": os.getenv("DJANGO_LOG_FILE", "/tmp/django_errors.log"),
+            "formatter": "verbose",
+        },
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "WARNING",
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["django_errors", "console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+        "django.request": {
+            "handlers": ["django_errors", "console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+    },
+}
+
