@@ -1,6 +1,17 @@
 {% extends "njangi/bureau/dashboard.html" %}
 {% block page_title %}Fond commun — {{ group.name }}{% endblock %}
 
+{% block topbar_actions %}
+<a href="{% url 'njangi:fund_statement_pdf' group.slug %}"
+   class="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-xl text-sm font-semibold hover:bg-green-700 transition shadow-sm">
+  📄 Exporter PDF
+</a>
+<a href="{% url 'njangi:fund_reconciliation' group.slug %}"
+   class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-50 transition shadow-sm">
+  🔍 Réconciliation
+</a>
+{% endblock %}
+
 {% block dashboard_content %}
 
 <!-- KPIs fond -->

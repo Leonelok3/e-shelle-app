@@ -121,4 +121,30 @@ app.conf.beat_schedule = {
         "task": "facebook_agent.tasks.update_daily_stats",
         "schedule": crontab(minute=30),
     },
+
+    # ── Njangi Digital — Tontine & Fond commun ──────────────────────────────
+
+    # Calcul intérêts mensuels — 1er de chaque mois à 2h00
+    "njangi-monthly-interests": {
+        "task": "njangi.tasks.calculate_monthly_interests_all",
+        "schedule": crontab(hour=2, minute=0, day_of_month=1),
+    },
+
+    # Application des pénalités de retard — chaque jour à 6h30
+    "njangi-daily-penalties": {
+        "task": "njangi.tasks.apply_penalties_all",
+        "schedule": crontab(hour=6, minute=30),
+    },
+
+    # Vérification défauts de prêts — chaque jour à 7h30
+    "njangi-check-defaults": {
+        "task": "njangi.tasks.check_loan_defaults",
+        "schedule": crontab(hour=7, minute=30),
+    },
+
+    # Mise à jour scores de fiabilité — chaque dimanche à 3h
+    "njangi-reliability-scores": {
+        "task": "njangi.tasks.update_reliability_scores",
+        "schedule": crontab(hour=3, minute=0, day_of_week=0),
+    },
 }

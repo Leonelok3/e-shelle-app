@@ -5,6 +5,7 @@ from .loan import Loan, LoanRepayment
 from .notification import Notification, Document
 from .wallet import MonthlyGroupInterest, MemberMonthlyStatement
 from .subscription import SubscriptionRequest
+from .audit import AuditLog
 
 __all__ = [
     "Group", "Membership",
@@ -14,4 +15,5 @@ __all__ = [
     "Notification", "Document",
     "MonthlyGroupInterest", "MemberMonthlyStatement",
     "SubscriptionRequest",
+    "AuditLog",
 ]

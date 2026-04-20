@@ -10,7 +10,7 @@ from calendar import monthrange
 from datetime import date, datetime
 from decimal import Decimal
 
-from django.db import transaction
+from django.db import models, transaction
 from django.db.models import Q, Sum
 from django.utils import timezone
 
@@ -190,11 +190,15 @@ class InterestCalculationService:
         Retourne l'évolution mensuelle des avoirs d'un membre (pour graphique).
         """
         from njangi.models.wallet import MemberMonthlyStatement
-        statements = MemberMonthlyStatement.objects.filter(
-            membership=membership
-        ).select_related("monthly_record").order_by(
-            "monthly_record__year", "monthly_record__month"
-        )[-last_n_months:]
+        # Django ne supporte pas l'indexation négative → on prend les N derniers en ordre décroissant puis on inverse
+        statements = list(
+            MemberMonthlyStatement.objects.filter(
+                membership=membership
+            ).select_related("monthly_record").order_by(
+                "-monthly_record__year", "-monthly_record__month"
+            )[:last_n_months]
+        )
+        statements.reverse()  # Chronologique ascendant pour les graphiques
 
         return [
             {
@@ -450,6 +454,122 @@ class ReliabilityScoreService:
 # ═══════════════════════════════════════════════════════════════════════════
 # SERVICE 4 — Pénalités automatiques
 # ═══════════════════════════════════════════════════════════════════════════
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SERVICE 5 — Réconciliation du fond commun
+# ═══════════════════════════════════════════════════════════════════════════
+
+class FundReconciliationService:
+    """
+    Vérifie la cohérence entre les FundTransactions enregistrées
+    et les états réels des prêts, dépôts et séances.
+
+    Retourne un rapport avec :
+      - Solde calculé depuis les transactions
+      - Encours prêts actifs vs sorties loan_out
+      - Dépôts actifs vs entrées deposit_in
+      - Éventuels écarts (discrepancies)
+    """
+
+    @classmethod
+    def reconcile(cls, group) -> dict:
+        from django.db.models import Sum
+        from njangi.models.fund import FundDeposit, FundTransaction
+        from njangi.models.loan import Loan
+
+        # ── 1. Solde réel depuis les transactions ─────────────────────────────
+        tx_balance = FundTransaction.objects.filter(group=group).aggregate(
+            total=Sum("signed_amount")
+        )["total"] or 0
+
+        # ── 2. Répartition par type ────────────────────────────────────────────
+        tx_by_type = {}
+        for row in FundTransaction.objects.filter(group=group).values("type").annotate(
+            total=Sum("amount"), count=models.Count("id")
+        ):
+            tx_by_type[row["type"]] = {"total": int(row["total"]), "count": row["count"]}
+
+        # ── 3. Prêts actifs ───────────────────────────────────────────────────
+        active_loans = Loan.objects.filter(membership__group=group, status="active")
+        total_active_loans_balance = sum(int(l.balance_remaining) for l in active_loans)
+        total_active_loans_approved = int(
+            active_loans.aggregate(total=Sum("amount_approved"))["total"] or 0
+        )
+
+        # Sorties loan_out enregistrées
+        loan_out_total = tx_by_type.get("loan_out", {}).get("total", 0)
+        # Remboursements enregistrés
+        repayment_total = tx_by_type.get("repayment", {}).get("total", 0)
+
+        loan_discrepancy = loan_out_total - repayment_total - total_active_loans_balance
+
+        # ── 4. Dépôts actifs ──────────────────────────────────────────────────
+        active_deposits = FundDeposit.objects.filter(membership__group=group, status="active")
+        total_active_deposits = int(
+            active_deposits.aggregate(total=Sum("amount"))["total"] or 0
+        )
+        deposit_in_total  = tx_by_type.get("deposit_in",  {}).get("total", 0)
+        deposit_out_total = tx_by_type.get("deposit_out", {}).get("total", 0)
+
+        deposit_discrepancy = deposit_in_total - deposit_out_total - total_active_deposits
+
+        # ── 5. Intérêts attendus vs enregistrés ───────────────────────────────
+        from njangi.models.wallet import MonthlyGroupInterest
+        total_interest_generated = int(
+            MonthlyGroupInterest.objects.filter(group=group).aggregate(
+                total=Sum("total_interest_generated")
+            )["total"] or 0
+        )
+        interest_in_total = tx_by_type.get("interest_in", {}).get("total", 0)
+
+        # ── 6. Nombre de transactions & dernière transaction ──────────────────
+        tx_count = FundTransaction.objects.filter(group=group).count()
+        last_tx  = FundTransaction.objects.filter(group=group).order_by("-created_at").first()
+
+        # ── 7. Rapport final ──────────────────────────────────────────────────
+        issues = []
+        if abs(loan_discrepancy) > 100:
+            issues.append({
+                "type":    "loan_mismatch",
+                "label":   "Écart prêts",
+                "amount":  loan_discrepancy,
+                "detail":  f"Sorties prêts: {loan_out_total:,} FCFA | Remboursements: {repayment_total:,} FCFA | Encours actif: {total_active_loans_balance:,} FCFA",
+            })
+        if abs(deposit_discrepancy) > 100:
+            issues.append({
+                "type":    "deposit_mismatch",
+                "label":   "Écart dépôts",
+                "amount":  deposit_discrepancy,
+                "detail":  f"Entrées: {deposit_in_total:,} FCFA | Sorties: {deposit_out_total:,} FCFA | Dépôts actifs: {total_active_deposits:,} FCFA",
+            })
+
+        return {
+            "group":                    group,
+            "tx_balance":               int(tx_balance),
+            "tx_count":                 tx_count,
+            "last_tx":                  last_tx,
+            # Prêts
+            "active_loans_count":       active_loans.count(),
+            "active_loans_balance":     total_active_loans_balance,
+            "loan_out_total":           loan_out_total,
+            "repayment_total":          repayment_total,
+            "loan_discrepancy":         loan_discrepancy,
+            # Dépôts
+            "active_deposits_count":    active_deposits.count(),
+            "active_deposits_total":    total_active_deposits,
+            "deposit_in_total":         deposit_in_total,
+            "deposit_out_total":        deposit_out_total,
+            "deposit_discrepancy":      deposit_discrepancy,
+            # Intérêts
+            "interest_generated_total": total_interest_generated,
+            "interest_in_total":        interest_in_total,
+            # Transactions par type
+            "tx_by_type":               tx_by_type,
+            # Rapport
+            "issues":                   issues,
+            "is_clean":                 len(issues) == 0,
+        }
+
 
 class PenaltyService:
     """

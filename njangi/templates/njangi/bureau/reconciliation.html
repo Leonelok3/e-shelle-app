@@ -1,0 +1,148 @@
+{% extends "njangi/bureau/dashboard.html" %}
+{% block page_title %}Réconciliation fond commun — {{ group.name }}{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'njangi:fund_statement_pdf' group.slug %}"
+   class="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-xl text-sm font-semibold hover:bg-green-700 transition shadow-sm">
+  📄 Exporter PDF
+</a>
+{% endblock %}
+
+{% block dashboard_content %}
+{% with r=report %}
+
+<!-- Statut global -->
+<div class="mb-6 rounded-2xl p-5 border {% if r.is_clean %}bg-green-50 border-green-200{% else %}bg-red-50 border-red-200{% endif %}">
+  <div class="flex items-center gap-3">
+    <span class="text-3xl">{% if r.is_clean %}✅{% else %}⚠️{% endif %}</span>
+    <div>
+      <p class="font-bold text-lg {% if r.is_clean %}text-green-700{% else %}text-red-700{% endif %}">
+        {% if r.is_clean %}Fond réconcilié — aucun écart détecté{% else %}{{ r.issues|length }} écart(s) détecté(s){% endif %}
+      </p>
+      <p class="text-sm text-gray-500 mt-0.5">
+        {{ r.tx_count }} transactions enregistrées | Solde calculé : <strong>{{ r.tx_balance|floatformat:0 }} FCFA</strong>
+        {% if r.last_tx %}| Dernière tx : {{ r.last_tx.created_at|date:"d/m/Y H:i" }}{% endif %}
+      </p>
+    </div>
+  </div>
+</div>
+
+{% if r.issues %}
+<div class="mb-6 space-y-3">
+  {% for issue in r.issues %}
+  <div class="bg-orange-50 border border-orange-200 rounded-xl p-4">
+    <p class="font-bold text-orange-700">⚠️ {{ issue.label }} — Écart : {{ issue.amount|floatformat:0 }} FCFA</p>
+    <p class="text-sm text-orange-600 mt-1">{{ issue.detail }}</p>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- Grille KPIs -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+  <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 text-center">
+    <p class="text-xs text-gray-400 mb-1">Solde fond</p>
+    <p class="text-xl font-extrabold text-green-600">{{ r.tx_balance|floatformat:0 }}</p>
+    <p class="text-xs text-gray-300">FCFA</p>
+  </div>
+  <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 text-center">
+    <p class="text-xs text-gray-400 mb-1">Prêts actifs</p>
+    <p class="text-xl font-extrabold" style="color:var(--njangi-primary)">{{ r.active_loans_count }}</p>
+    <p class="text-xs text-gray-300">{{ r.active_loans_balance|floatformat:0 }} FCFA encours</p>
+  </div>
+  <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 text-center">
+    <p class="text-xs text-gray-400 mb-1">Dépôts actifs</p>
+    <p class="text-xl font-extrabold text-yellow-600">{{ r.active_deposits_count }}</p>
+    <p class="text-xs text-gray-300">{{ r.active_deposits_total|floatformat:0 }} FCFA</p>
+  </div>
+  <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 text-center">
+    <p class="text-xs text-gray-400 mb-1">Intérêts générés</p>
+    <p class="text-xl font-extrabold text-purple-600">{{ r.interest_generated_total|floatformat:0 }}</p>
+    <p class="text-xs text-gray-300">FCFA (tous mois)</p>
+  </div>
+</div>
+
+<!-- Tableau détaillé par type de transaction -->
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+  <div class="px-5 py-4 border-b border-gray-50">
+    <h3 class="font-bold text-gray-700">Récapitulatif par type de transaction</h3>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="bg-gray-50 text-gray-500 text-xs uppercase">
+          <th class="px-5 py-3 text-left">Type</th>
+          <th class="px-5 py-3 text-right">Nb transactions</th>
+          <th class="px-5 py-3 text-right">Total FCFA</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        {% for type_key, data in r.tx_by_type.items %}
+        <tr class="hover:bg-gray-50">
+          <td class="px-5 py-3 font-medium text-gray-700">{{ type_key }}</td>
+          <td class="px-5 py-3 text-right text-gray-500">{{ data.count }}</td>
+          <td class="px-5 py-3 text-right font-semibold text-gray-800">{{ data.total|floatformat:0 }} FCFA</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3" class="px-5 py-8 text-center text-gray-400">Aucune transaction</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Détail réconciliation prêts -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+    <h3 class="font-bold text-gray-700 mb-4">Prêts — Réconciliation</h3>
+    <div class="space-y-3">
+      <div class="flex justify-between text-sm">
+        <span class="text-gray-500">Total prêts décaissés</span>
+        <span class="font-semibold text-red-600">− {{ r.loan_out_total|floatformat:0 }} FCFA</span>
+      </div>
+      <div class="flex justify-between text-sm">
+        <span class="text-gray-500">Total remboursements reçus</span>
+        <span class="font-semibold text-green-600">+ {{ r.repayment_total|floatformat:0 }} FCFA</span>
+      </div>
+      <div class="flex justify-between text-sm">
+        <span class="text-gray-500">Encours prêts actifs</span>
+        <span class="font-semibold text-orange-600">{{ r.active_loans_balance|floatformat:0 }} FCFA</span>
+      </div>
+      <div class="border-t pt-3 flex justify-between text-sm font-bold">
+        <span class="text-gray-700">Écart</span>
+        <span class="{% if r.loan_discrepancy == 0 %}text-green-600{% else %}text-red-600{% endif %}">
+          {{ r.loan_discrepancy|floatformat:0 }} FCFA
+          {% if r.loan_discrepancy == 0 %}✅{% else %}⚠️{% endif %}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+    <h3 class="font-bold text-gray-700 mb-4">Dépôts — Réconciliation</h3>
+    <div class="space-y-3">
+      <div class="flex justify-between text-sm">
+        <span class="text-gray-500">Total dépôts entrants</span>
+        <span class="font-semibold text-green-600">+ {{ r.deposit_in_total|floatformat:0 }} FCFA</span>
+      </div>
+      <div class="flex justify-between text-sm">
+        <span class="text-gray-500">Total retraits dépôts</span>
+        <span class="font-semibold text-red-600">− {{ r.deposit_out_total|floatformat:0 }} FCFA</span>
+      </div>
+      <div class="flex justify-between text-sm">
+        <span class="text-gray-500">Dépôts actifs actuels</span>
+        <span class="font-semibold text-blue-600">{{ r.active_deposits_total|floatformat:0 }} FCFA</span>
+      </div>
+      <div class="border-t pt-3 flex justify-between text-sm font-bold">
+        <span class="text-gray-700">Écart</span>
+        <span class="{% if r.deposit_discrepancy == 0 %}text-green-600{% else %}text-red-600{% endif %}">
+          {{ r.deposit_discrepancy|floatformat:0 }} FCFA
+          {% if r.deposit_discrepancy == 0 %}✅{% else %}⚠️{% endif %}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endwith %}
+{% endblock %}

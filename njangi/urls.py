@@ -52,4 +52,14 @@ urlpatterns = [
     path("htmx/cotisation/<int:pk>/payer/",   views.HtmxContributionPayView.as_view(),  name="htmx_contribution_pay"),
     path("htmx/remboursement/<int:pk>/",      views.HtmxRepaymentView.as_view(),        name="htmx_repayment"),
     path("htmx/notifications/marquer-lues/",  views.HtmxMarkNotificationsRead.as_view(), name="htmx_mark_read"),
+
+    # ── Export PDF ────────────────────────────────────────────────────────────
+    path("mon-espace/releve-pdf/",            views.MemberStatementPDFView.as_view(),   name="member_statement_pdf"),
+    path("bureau/<slug:slug>/fond/pdf/",      views.FundStatementPDFView.as_view(),     name="fund_statement_pdf"),
+
+    # ── Réconciliation ────────────────────────────────────────────────────────
+    path("bureau/<slug:slug>/reconciliation/", views.FundReconciliationView.as_view(),  name="fund_reconciliation"),
+
+    # ── Audit trail ───────────────────────────────────────────────────────────
+    path("bureau/<slug:slug>/audit/",          views.AuditTrailView.as_view(),          name="audit_trail"),
 ]

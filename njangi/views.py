@@ -674,3 +674,310 @@ class SubscriptionRequestView(MembershipRequiredMixin, View):
             "et activer votre groupe sous 24h. Merci !"
         )
         return redirect("njangi:upgrade", slug=slug)
+
+
+# ── Export PDF ────────────────────────────────────────────────────────────────
+
+class MemberStatementPDFView(LoginRequiredMixin, View):
+    """
+    Génère un relevé PDF mensuel pour un membre (dépôts + intérêts).
+    URL: /njangi/mon-espace/releve-pdf/?group=<slug>&year=<year>&month=<month>
+    """
+
+    def get(self, request):
+        from io import BytesIO
+        from datetime import date
+        from njangi.models.wallet import MemberMonthlyStatement, MonthlyGroupInterest
+        from reportlab.lib.pagesizes import A4
+        from reportlab.lib import colors
+        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+        from reportlab.lib.units import cm
+
+        slug  = request.GET.get("group")
+        year  = int(request.GET.get("year",  date.today().year))
+        month = int(request.GET.get("month", date.today().month))
+
+        group      = get_object_or_404(Group, slug=slug)
+        membership = get_object_or_404(Membership, group=group, user=request.user, is_active=True)
+
+        MONTHS_FR = ["", "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+                     "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"]
+
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(
+            buffer, pagesize=A4,
+            rightMargin=2*cm, leftMargin=2*cm, topMargin=2*cm, bottomMargin=2*cm,
+        )
+        styles = getSampleStyleSheet()
+        PRIMARY = colors.HexColor("#1B6CA8")
+        LIGHT   = colors.HexColor("#EFF6FF")
+
+        story = []
+
+        # En-tête
+        title_style = ParagraphStyle("title", parent=styles["Title"], textColor=PRIMARY, fontSize=18)
+        story.append(Paragraph("Relevé mensuel Njangi+", title_style))
+        story.append(Spacer(1, 0.3*cm))
+        story.append(Paragraph(f"<b>{group.name}</b> — {MONTHS_FR[month]} {year}", styles["Normal"]))
+        story.append(Paragraph(
+            f"Membre : <b>{request.user.get_full_name() or request.user.username}</b> | "
+            f"Rôle : {membership.get_role_display()}",
+            styles["Normal"]
+        ))
+        story.append(Spacer(1, 0.5*cm))
+
+        # Relevé mensuel
+        try:
+            record = MonthlyGroupInterest.objects.get(group=group, year=year, month=month)
+            stmt   = MemberMonthlyStatement.objects.get(membership=membership, monthly_record=record)
+
+            stmt_data = [
+                ["Indicateur", "Valeur"],
+                ["Dépôt actif ce mois",       f"{int(stmt.deposit_balance):,} FCFA"],
+                ["Part dans le pool",          f"{float(stmt.pool_share_pct):.1f} %"],
+                ["Contribution aux prêts",     f"{int(stmt.contribution_to_loans):,} FCFA"],
+                ["Intérêts gagnés ce mois",    f"{int(stmt.interest_earned):,} FCFA"],
+                ["Intérêts cumulés (total)",   f"{int(stmt.cumulative_interest):,} FCFA"],
+                ["Avoirs totaux",              f"{int(stmt.wallet_balance):,} FCFA"],
+            ]
+            t = Table(stmt_data, colWidths=[10*cm, 7*cm])
+            t.setStyle(TableStyle([
+                ("BACKGROUND",   (0, 0), (-1, 0), PRIMARY),
+                ("TEXTCOLOR",    (0, 0), (-1, 0), colors.white),
+                ("FONTNAME",     (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("BACKGROUND",   (0, 1), (-1, -1), LIGHT),
+                ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, LIGHT]),
+                ("GRID",         (0, 0), (-1, -1), 0.5, colors.grey),
+                ("FONTSIZE",     (0, 0), (-1, -1), 10),
+                ("PADDING",      (0, 0), (-1, -1), 8),
+            ]))
+            story.append(Paragraph("Détail du mois", styles["Heading2"]))
+            story.append(Spacer(1, 0.3*cm))
+            story.append(t)
+        except (MonthlyGroupInterest.DoesNotExist, MemberMonthlyStatement.DoesNotExist):
+            story.append(Paragraph(
+                f"Aucun relevé disponible pour {MONTHS_FR[month]} {year}.",
+                styles["Normal"]
+            ))
+
+        story.append(Spacer(1, 0.5*cm))
+
+        # Dépôts actifs
+        deposits = FundDeposit.objects.filter(membership=membership, status="active")
+        if deposits.exists():
+            story.append(Paragraph("Dépôts actifs", styles["Heading2"]))
+            story.append(Spacer(1, 0.3*cm))
+            dep_data = [["Montant", "Durée", "Taux", "Intérêts accumulés", "Échéance"]]
+            for d in deposits:
+                dep_data.append([
+                    f"{int(d.amount):,} FCFA",
+                    f"{d.duration_months} mois",
+                    f"{d.interest_rate}%/mois",
+                    f"{d.current_interest:,} FCFA",
+                    d.maturity_date.strftime("%d/%m/%Y"),
+                ])
+            t2 = Table(dep_data, colWidths=[4*cm, 2.5*cm, 2.5*cm, 4*cm, 4*cm])
+            t2.setStyle(TableStyle([
+                ("BACKGROUND", (0, 0), (-1, 0), PRIMARY),
+                ("TEXTCOLOR",  (0, 0), (-1, 0), colors.white),
+                ("FONTNAME",   (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, LIGHT]),
+                ("GRID",       (0, 0), (-1, -1), 0.5, colors.grey),
+                ("FONTSIZE",   (0, 0), (-1, -1), 9),
+                ("PADDING",    (0, 0), (-1, -1), 6),
+            ]))
+            story.append(t2)
+
+        story.append(Spacer(1, 1*cm))
+        from datetime import datetime
+        story.append(Paragraph(
+            f"<font color='grey' size='8'>Document généré le {datetime.now().strftime('%d/%m/%Y à %H:%M')} "
+            f"— E-Shelle Njangi+</font>",
+            styles["Normal"]
+        ))
+
+        doc.build(story)
+        buffer.seek(0)
+        filename = f"releve_njangi_{membership.user.username}_{year}_{month:02d}.pdf"
+        response = HttpResponse(buffer, content_type="application/pdf")
+        response["Content-Disposition"] = f'attachment; filename="{filename}"'
+        return response
+
+
+class FundStatementPDFView(BureauRequiredMixin, View):
+    """
+    Génère un état complet du fond commun en PDF.
+    URL: /njangi/bureau/<slug>/fond/pdf/
+    """
+
+    def get(self, request, slug):
+        from io import BytesIO
+        from datetime import datetime
+        from njangi.models.fund import FundTransaction
+        from njangi.models.loan import Loan
+        from reportlab.lib.pagesizes import A4
+        from reportlab.lib import colors
+        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+        from reportlab.lib.units import cm
+
+        group = self.group
+        PRIMARY = colors.HexColor("#1B6CA8")
+        LIGHT   = colors.HexColor("#EFF6FF")
+        GREEN   = colors.HexColor("#dcfce7")
+        RED     = colors.HexColor("#fee2e2")
+
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(
+            buffer, pagesize=A4,
+            rightMargin=2*cm, leftMargin=2*cm, topMargin=2*cm, bottomMargin=2*cm,
+        )
+        styles = getSampleStyleSheet()
+        title_style = ParagraphStyle("title", parent=styles["Title"], textColor=PRIMARY, fontSize=18)
+
+        story = []
+
+        # En-tête
+        story.append(Paragraph("État du Fond Commun — Njangi+", title_style))
+        story.append(Spacer(1, 0.3*cm))
+        story.append(Paragraph(
+            f"Groupe : <b>{group.name}</b> | "
+            f"Généré le : {datetime.now().strftime('%d/%m/%Y à %H:%M')}",
+            styles["Normal"]
+        ))
+        story.append(Spacer(1, 0.5*cm))
+
+        # KPIs fond
+        balance   = int(group.fund_balance)
+        available = int(group.fund_available_for_loans)
+        kpi_data = [
+            ["Indicateur", "Valeur"],
+            ["Solde total du fond",            f"{balance:,} FCFA"],
+            ["Disponible pour prêts",          f"{available:,} FCFA"],
+            ["Réserve obligatoire",            f"{group.fund_reserve_pct}%"],
+            ["Taux intérêt prêts",             f"{group.fund_loan_rate}%/mois"],
+            ["Taux intérêt dépôts",            f"{group.fund_deposit_rate}%/mois"],
+        ]
+        t_kpi = Table(kpi_data, colWidths=[10*cm, 7*cm])
+        t_kpi.setStyle(TableStyle([
+            ("BACKGROUND",     (0, 0), (-1, 0), PRIMARY),
+            ("TEXTCOLOR",      (0, 0), (-1, 0), colors.white),
+            ("FONTNAME",       (0, 0), (-1, 0), "Helvetica-Bold"),
+            ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, LIGHT]),
+            ("GRID",           (0, 0), (-1, -1), 0.5, colors.grey),
+            ("FONTSIZE",       (0, 0), (-1, -1), 10),
+            ("PADDING",        (0, 0), (-1, -1), 8),
+        ]))
+        story.append(Paragraph("Situation du fond", styles["Heading2"]))
+        story.append(Spacer(1, 0.3*cm))
+        story.append(t_kpi)
+        story.append(Spacer(1, 0.5*cm))
+
+        # Prêts actifs
+        active_loans = Loan.objects.filter(
+            membership__group=group, status="active"
+        ).select_related("membership__user")
+        if active_loans.exists():
+            story.append(Paragraph("Prêts actifs", styles["Heading2"]))
+            story.append(Spacer(1, 0.3*cm))
+            loan_data = [["Membre", "Montant", "Reste dû", "Échéance", "Statut"]]
+            for loan in active_loans:
+                overdue = "EN RETARD" if loan.is_overdue else "OK"
+                loan_data.append([
+                    loan.membership.user.get_full_name() or loan.membership.user.username,
+                    f"{int(loan.amount_approved):,} FCFA",
+                    f"{int(loan.balance_remaining):,} FCFA",
+                    loan.due_date.strftime("%d/%m/%Y") if loan.due_date else "—",
+                    overdue,
+                ])
+            t_loans = Table(loan_data, colWidths=[4.5*cm, 3.5*cm, 3.5*cm, 3*cm, 2.5*cm])
+            t_loans.setStyle(TableStyle([
+                ("BACKGROUND",     (0, 0), (-1, 0), PRIMARY),
+                ("TEXTCOLOR",      (0, 0), (-1, 0), colors.white),
+                ("FONTNAME",       (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, LIGHT]),
+                ("GRID",           (0, 0), (-1, -1), 0.5, colors.grey),
+                ("FONTSIZE",       (0, 0), (-1, -1), 9),
+                ("PADDING",        (0, 0), (-1, -1), 6),
+            ]))
+            story.append(t_loans)
+            story.append(Spacer(1, 0.5*cm))
+
+        # 30 dernières transactions
+        transactions = FundTransaction.objects.filter(group=group).order_by("-created_at")[:30]
+        if transactions:
+            story.append(Paragraph("30 dernières transactions", styles["Heading2"]))
+            story.append(Spacer(1, 0.3*cm))
+            tx_data = [["Date", "Type", "Montant", "Sens", "Description"]]
+            for tx in transactions:
+                tx_data.append([
+                    tx.created_at.strftime("%d/%m/%Y"),
+                    tx.get_type_display(),
+                    f"{int(tx.amount):,} FCFA",
+                    "+" if tx.is_credit else "−",
+                    (tx.description or "")[:40],
+                ])
+            t_tx = Table(tx_data, colWidths=[2.5*cm, 4*cm, 3.5*cm, 1.5*cm, 5.5*cm])
+            t_tx.setStyle(TableStyle([
+                ("BACKGROUND", (0, 0), (-1, 0), PRIMARY),
+                ("TEXTCOLOR",  (0, 0), (-1, 0), colors.white),
+                ("FONTNAME",   (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("GRID",       (0, 0), (-1, -1), 0.5, colors.lightgrey),
+                ("FONTSIZE",   (0, 0), (-1, -1), 8),
+                ("PADDING",    (0, 0), (-1, -1), 5),
+                ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, LIGHT]),
+            ]))
+            story.append(t_tx)
+
+        story.append(Spacer(1, 1*cm))
+        story.append(Paragraph(
+            f"<font color='grey' size='8'>Document généré le {datetime.now().strftime('%d/%m/%Y à %H:%M')} "
+            f"— E-Shelle Njangi+ | {group.name}</font>",
+            styles["Normal"]
+        ))
+
+        doc.build(story)
+        buffer.seek(0)
+        filename = f"fond_commun_{group.slug}_{datetime.now().strftime('%Y%m%d')}.pdf"
+        response = HttpResponse(buffer, content_type="application/pdf")
+        response["Content-Disposition"] = f'attachment; filename="{filename}"'
+        return response
+
+
+# ── Réconciliation fond commun ─────────────────────────────────────────────────
+
+class FundReconciliationView(BureauRequiredMixin, TemplateView):
+    """Vue de réconciliation du fond commun — compare transactions vs états réels."""
+    template_name = "njangi/bureau/reconciliation.html"
+
+    def get_context_data(self, **kwargs):
+        from njangi.services import FundReconciliationService
+        ctx = super().get_context_data(**kwargs)
+        ctx["report"] = FundReconciliationService.reconcile(self.group)
+        return ctx
+
+
+# ── Audit trail ────────────────────────────────────────────────────────────────
+
+class AuditTrailView(BureauRequiredMixin, TemplateView):
+    """Journal d'audit complet du groupe — qui a fait quoi et quand."""
+    template_name = "njangi/bureau/audit_trail.html"
+
+    def get_context_data(self, **kwargs):
+        from njangi.models.audit import AuditLog
+        ctx = super().get_context_data(**kwargs)
+        logs = AuditLog.objects.filter(
+            group=self.group
+        ).select_related("performed_by").order_by("-created_at")[:200]
+        ctx["logs"]         = logs
+        ctx["total_count"]  = AuditLog.objects.filter(group=self.group).count()
+        # Filtre par action si passé en GET
+        action_filter = self.request.GET.get("action", "")
+        if action_filter:
+            logs = logs.filter(action=action_filter)
+            ctx["logs"] = logs
+            ctx["action_filter"] = action_filter
+        from njangi.models.audit import AuditLog as AL
+        ctx["action_choices"] = AL.ACTION_CHOICES
+        return ctx
