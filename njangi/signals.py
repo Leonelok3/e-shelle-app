@@ -156,10 +156,10 @@ def notify_deposit_withdrawn(sender, instance, created, **kwargs):
         _audit(
             group=instance.membership.group,
             action="deposit_created",
-            description=f"{instance.membership.user} — nouveau dépôt : {int(instance.amount):,} FCFA ({instance.duration_months} mois à {instance.interest_rate}%)",
+            description=f"{instance.membership.user} — nouveau dépôt : {int(instance.amount):,} FCFA à {instance.interest_rate}%/mois",
             model_name="FundDeposit",
             object_id=instance.pk,
-            extra={"amount": int(instance.amount), "months": instance.duration_months, "rate": float(instance.interest_rate)},
+            extra={"amount": int(instance.amount), "rate": float(instance.interest_rate)},
         )
         return
 

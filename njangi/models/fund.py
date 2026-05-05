@@ -6,22 +6,25 @@ from django.utils import timezone
 
 
 class FundDeposit(models.Model):
-    """Dépôt volontaire d'un membre dans le fond commun pour générer des intérêts."""
+    """Dépôt volontaire d'un membre dans le fond commun pour générer des intérêts.
+
+    Les intérêts sont calculés UNIQUEMENT sur un mois à la fois et distribués
+    proportionnellement à la part du membre dans le pool de prêts actifs.
+    Le cumul des intérêts est tracé dans MemberMonthlyStatement.
+    """
 
     STATUS_CHOICES = [
         ("active",    "Actif"),
         ("withdrawn", "Retiré"),
-        ("expired",   "Échu"),
     ]
 
     membership     = models.ForeignKey("njangi.Membership", on_delete=models.CASCADE, related_name="fund_deposits")
     amount         = models.DecimalField(max_digits=14, decimal_places=0, verbose_name="Montant déposé (FCFA)")
     deposited_at   = models.DateTimeField(auto_now_add=True)
-    duration_months = models.PositiveSmallIntegerField(default=3, verbose_name="Durée (mois)")
     interest_rate  = models.DecimalField(max_digits=5, decimal_places=2, verbose_name="Taux d'intérêt (%/mois)")
 
     # Résultats
-    interest_earned = models.DecimalField(max_digits=12, decimal_places=0, default=0, verbose_name="Intérêts gagnés (FCFA)")
+    interest_earned = models.DecimalField(max_digits=12, decimal_places=0, default=0, verbose_name="Intérêts cumulés versés (FCFA)")
     status          = models.CharField(max_length=10, choices=STATUS_CHOICES, default="active")
     withdrawn_at    = models.DateTimeField(null=True, blank=True)
     withdrawn_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0)
@@ -38,37 +41,43 @@ class FundDeposit(models.Model):
         return f"{self.membership.user} — {self.formatted_amount} ({self.get_status_display()})"
 
     @property
-    def expected_interest(self):
-        """Intérêts attendus à terme."""
-        return int(self.amount * self.interest_rate / 100 * self.duration_months)
+    def monthly_interest_potential(self):
+        """Intérêts potentiels sur 1 mois si 100% du pool est prêté."""
+        return int(self.amount * self.interest_rate / 100)
 
+    # Alias conservé pour compatibilité avec les templates existants
     @property
-    def months_elapsed(self):
-        from dateutil.relativedelta import relativedelta
-        end = self.withdrawn_at or timezone.now()
-        delta = relativedelta(end, self.deposited_at)
-        return min(delta.months + delta.years * 12, self.duration_months)
+    def expected_interest(self):
+        return self.monthly_interest_potential
 
     @property
     def current_interest(self):
-        """Intérêts accumulés à ce jour."""
-        return int(self.amount * self.interest_rate / 100 * self.months_elapsed)
-
-    @property
-    def maturity_date(self):
-        from dateutil.relativedelta import relativedelta
-        return self.deposited_at + relativedelta(months=self.duration_months)
+        """Intérêts réellement gagnés ce mois-ci (depuis les relevés mensuels)."""
+        from django.db.models import Sum
+        from njangi.models.wallet import MemberMonthlyStatement
+        result = MemberMonthlyStatement.objects.filter(
+            membership=self.membership
+        ).aggregate(total=Sum("interest_earned"))
+        return int(result["total"] or 0)
 
     @property
     def formatted_amount(self):
         return f"{int(self.amount):,}".replace(",", " ") + " FCFA"
 
     def withdraw(self, user=None):
-        """Retirer le dépôt + intérêts accumulés."""
-        self.interest_earned = self.current_interest
-        self.withdrawn_amount = self.amount + self.interest_earned
-        self.withdrawn_at = timezone.now()
-        self.status = "withdrawn"
+        """Retirer le dépôt — les intérêts cumulés viennent des relevés mensuels."""
+        from django.db.models import Sum
+        from njangi.models.wallet import MemberMonthlyStatement
+
+        cumul = MemberMonthlyStatement.objects.filter(
+            membership=self.membership
+        ).aggregate(total=Sum("interest_earned"))
+        cumul_interest = int(cumul["total"] or 0)
+
+        self.interest_earned  = cumul_interest
+        self.withdrawn_amount = int(self.amount) + cumul_interest
+        self.withdrawn_at     = timezone.now()
+        self.status           = "withdrawn"
         self.save()
 
         # Enregistrer la sortie dans le fond
@@ -76,7 +85,7 @@ class FundDeposit(models.Model):
             group=self.membership.group,
             type="deposit_out",
             amount=self.withdrawn_amount,
-            description=f"Retrait dépôt + intérêts — {self.membership.user}",
+            description=f"Retrait dépôt + intérêts cumulés — {self.membership.user}",
             reference_deposit=self,
         )
 

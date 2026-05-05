@@ -768,16 +768,15 @@ class MemberStatementPDFView(LoginRequiredMixin, View):
         if deposits.exists():
             story.append(Paragraph("Dépôts actifs", styles["Heading2"]))
             story.append(Spacer(1, 0.3*cm))
-            dep_data = [["Montant", "Durée", "Taux", "Intérêts accumulés", "Échéance"]]
+            dep_data = [["Montant", "Taux", "Déposé le", "Intérêt potentiel/mois"]]
             for d in deposits:
                 dep_data.append([
                     f"{int(d.amount):,} FCFA",
-                    f"{d.duration_months} mois",
                     f"{d.interest_rate}%/mois",
-                    f"{d.current_interest:,} FCFA",
-                    d.maturity_date.strftime("%d/%m/%Y"),
+                    d.deposited_at.strftime("%d/%m/%Y"),
+                    f"{d.monthly_interest_potential:,} FCFA",
                 ])
-            t2 = Table(dep_data, colWidths=[4*cm, 2.5*cm, 2.5*cm, 4*cm, 4*cm])
+            t2 = Table(dep_data, colWidths=[4*cm, 3*cm, 3.5*cm, 4.5*cm])
             t2.setStyle(TableStyle([
                 ("BACKGROUND", (0, 0), (-1, 0), PRIMARY),
                 ("TEXTCOLOR",  (0, 0), (-1, 0), colors.white),

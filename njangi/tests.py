@@ -64,11 +64,10 @@ def make_membership(user, group, role="member", hand_order=None):
     )
 
 
-def make_deposit(membership, amount, months=3):
+def make_deposit(membership, amount):
     deposit = FundDeposit.objects.create(
         membership=membership,
         amount=amount,
-        duration_months=months,
         interest_rate=membership.group.fund_deposit_rate,
     )
     FundTransaction.objects.create(

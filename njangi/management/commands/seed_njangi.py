@@ -214,7 +214,6 @@ class Command(BaseCommand):
                 dep = FundDeposit.objects.create(
                     membership=ms,
                     amount=amount,
-                    duration_months=random.choice([3, 6]),
                     interest_rate=gd["fund_deposit_rate"],
                     status="active",
                 )

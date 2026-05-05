@@ -89,7 +89,7 @@ class LoanRequestForm(forms.ModelForm):
 class DepositCreateForm(forms.ModelForm):
     class Meta:
         model = FundDeposit
-        fields = ["membership", "amount", "duration_months", "payment_method", "transaction_ref"]
+        fields = ["membership", "amount", "payment_method", "transaction_ref"]
 
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)

@@ -85,10 +85,10 @@ class ContributionAdmin(admin.ModelAdmin):
 
 @admin.register(FundDeposit)
 class FundDepositAdmin(admin.ModelAdmin):
-    list_display  = ("membership", "amount", "interest_rate", "duration_months", "status", "deposited_at", "maturity_date")
+    list_display  = ("membership", "amount", "interest_rate", "status", "deposited_at", "monthly_interest_potential")
     list_filter   = ("status",)
     search_fields = ("membership__user__username",)
-    readonly_fields = ("deposited_at", "interest_earned", "withdrawn_at", "withdrawn_amount", "current_interest", "expected_interest")
+    readonly_fields = ("deposited_at", "interest_earned", "withdrawn_at", "withdrawn_amount", "current_interest", "monthly_interest_potential")
 
 
 @admin.register(FundTransaction)

@@ -171,8 +171,7 @@
             <th class="text-left px-6 py-3">Montant</th>
             <th class="text-left px-6 py-3">Taux</th>
             <th class="text-left px-6 py-3">Déposé le</th>
-            <th class="text-left px-6 py-3">Échéance</th>
-            <th class="text-left px-6 py-3">Intérêts courus</th>
+            <th class="text-left px-6 py-3">Intérêt potentiel / mois</th>
             <th class="text-right px-6 py-3">Action</th>
           </tr>
         </thead>
@@ -182,10 +181,7 @@
             <td class="px-6 py-4 font-semibold text-gray-800">{{ dep.amount|floatformat:"0" }} FCFA</td>
             <td class="px-6 py-4 text-gray-600">{{ dep.interest_rate }} %/mois</td>
             <td class="px-6 py-4 text-gray-500">{{ dep.deposited_at|date:"d/m/Y" }}</td>
-            <td class="px-6 py-4 text-gray-500">
-              {% if dep.maturity_date %}{{ dep.maturity_date|date:"d/m/Y" }}{% else %}—{% endif %}
-            </td>
-            <td class="px-6 py-4 text-green-600 font-medium">+{{ dep.current_interest|floatformat:"0" }} FCFA</td>
+            <td class="px-6 py-4 text-blue-600 font-medium">≈ {{ dep.monthly_interest_potential|floatformat:"0" }} FCFA</td>
             <td class="px-6 py-4 text-right">
               <form method="post" action="{% url 'njangi:deposit_withdraw' dep.pk %}"
                     onsubmit="return confirm('Confirmer le retrait de ce dépôt ?')">
