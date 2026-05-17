@@ -1,0 +1,135 @@
+{% extends "tchaslucpay/dashboard/base.html" %}
+{% block title %}Tchaslucpay - Microfinance digitale rentable au Cameroun{% endblock %}
+{% block meta_description %}Tchaslucpay aide les institutions de microfinance, tontines et collecteurs au Cameroun a digitaliser les collectes, retraits, recus PDF, notifications SMS et tableaux de bord en temps reel.{% endblock %}
+{% block body_class %}tlp-landing{% endblock %}
+{% block main_class %}p-0{% endblock %}
+{% block content %}
+<section class="tlp-hero">
+  <div class="container py-5">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7">
+        <span class="badge text-bg-light text-dark mb-3">Fintech terrain · Cameroun · 2026</span>
+        <h1 class="fw-bold mb-4">La microfinance digitale à portée de main</h1>
+        <p class="lead text-white-50 mb-4">
+          Une plateforme SaaS pour administrer les collecteurs, servir les clients commerçants, sécuriser les dépôts et vendre la confiance avec des reçus et notifications instantanés.
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+          <a class="btn tlp-btn-emerald btn-lg px-4" href="{{ dashboard_url }}">Accéder à mon espace</a>
+          <a class="btn btn-outline-light btn-lg px-4" href="#contact">Demander une démo</a>
+        </div>
+        <div class="d-flex flex-wrap gap-3 mt-4 small text-white-50">
+          <span>Douala</span>
+          <span>Yaoundé</span>
+          <span>Marchés urbains</span>
+          <span>Tontines & microfinance</span>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="bg-white text-dark rounded border shadow p-4">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <div class="text-muted small">Solde réseau</div>
+              <div class="h2 mb-0 text-success">12 850 000 XAF</div>
+            </div>
+            <span class="badge text-bg-success">Live</span>
+          </div>
+          <div class="row g-3">
+            <div class="col-6"><div class="border rounded p-3"><div class="small text-muted">Collectes</div><div class="h4 mb-0">248</div></div></div>
+            <div class="col-6"><div class="border rounded p-3"><div class="small text-muted">Retraits</div><div class="h4 mb-0">76</div></div></div>
+            <div class="col-12"><div class="border rounded p-3"><div class="small text-muted">Dernier TRID</div><div class="font-monospace">COL2605171888852689</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="solutions" class="container py-5">
+  <div class="row align-items-end mb-4">
+    <div class="col-lg-7">
+      <h2 class="h1 fw-bold">Une page, trois espaces, un seul système de confiance</h2>
+      <p class="text-muted mb-0">Chaque utilisateur accède uniquement à ce dont il a besoin: administration, collecte terrain ou suivi client.</p>
+    </div>
+  </div>
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="bg-white border rounded p-4 h-100">
+        <div class="tlp-feature-icon mb-3">A</div>
+        <h3 class="h5">Super admin</h3>
+        <p class="text-muted mb-3">Création des collecteurs, supervision financière, reçus, journaux et contrôle des accès.</p>
+        <a class="link-success fw-semibold" href="{{ dashboard_url }}">Ouvrir l'administration</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="bg-white border rounded p-4 h-100">
+        <div class="tlp-feature-icon mb-3">C</div>
+        <h3 class="h5">Collecteur</h3>
+        <p class="text-muted mb-3">Ajout de clients, dépôts, retraits, challenge mensuel et portefeuille strictement cloisonné.</p>
+        <a class="link-success fw-semibold" href="{{ dashboard_url }}">Entrer côté collecteur</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="bg-white border rounded p-4 h-100">
+        <div class="tlp-feature-icon mb-3">K</div>
+        <h3 class="h5">Client</h3>
+        <p class="text-muted mb-3">Solde personnel, agent attitré, historique filtré, reçus PDF et notifications après opération.</p>
+        <a class="link-success fw-semibold" href="{{ dashboard_url }}">Voir mon solde</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="terrain" class="tlp-band py-5">
+  <div class="container">
+    <div class="row g-4 align-items-center">
+      <div class="col-lg-6">
+        <h2 class="h1 fw-bold">Pensé pour les agents qui travaillent vraiment sur le terrain</h2>
+        <p class="text-muted">Recherche rapide client, deux boutons dépôt/retrait, modaux simples, reçu PDF, notifications et challenge mensuel: l'outil est fait pour aller vite au marché, en boutique ou en tournée.</p>
+        <div class="row g-3 mt-2">
+          <div class="col-6"><div class="tlp-mini-stat">Moins de 30 s<br><span>par opération</span></div></div>
+          <div class="col-6"><div class="tlp-mini-stat">100% tracé<br><span>TRID unique</span></div></div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="tlp-phone-panel">
+          <div class="d-flex justify-content-between mb-3">
+            <span class="fw-semibold">Collecte validée</span>
+            <span class="badge text-bg-success">SMS prêt</span>
+          </div>
+          <div class="font-monospace small mb-3">TRID: COL2605171888852689</div>
+          <div class="display-6 fw-bold text-success">25 000 XAF</div>
+          <p class="text-muted mb-0">Solde client mis à jour instantanément, reçu disponible et historique synchronisé.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="confiance" class="container py-5">
+  <div class="row g-4">
+    <div class="col-lg-4">
+      <h2 class="h1 fw-bold">Référencement local et confiance commerciale</h2>
+      <p class="text-muted">Tchaslucpay parle le langage des marchés camerounais: épargne, collecte journalière, agent attitré, preuve de transaction et visibilité claire.</p>
+    </div>
+    <div class="col-lg-8">
+      <div class="row g-3">
+        <div class="col-md-6"><div class="bg-white border rounded p-4 h-100"><h3 class="h5">SEO local</h3><p class="text-muted mb-0">Microfinance digitale Cameroun, Douala, Yaoundé, collecteurs terrain, épargne commerçant.</p></div></div>
+        <div class="col-md-6"><div class="bg-white border rounded p-4 h-100"><h3 class="h5">Géolocalisation métier</h3><p class="text-muted mb-0">Zones, marchés, quartiers et agents assignés pour une croissance propre par secteur.</p></div></div>
+        <div class="col-md-6"><div class="bg-white border rounded p-4 h-100"><h3 class="h5">Conformité interne</h3><p class="text-muted mb-0">Cloisonnement strict client, collecteur et administrateur.</p></div></div>
+        <div class="col-md-6"><div class="bg-white border rounded p-4 h-100"><h3 class="h5">Motivation terrain</h3><p class="text-muted mb-0">Objectifs mensuels et bonus collecteur pour accélérer la performance.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="tlp-cta py-5">
+  <div class="container text-center">
+    <h2 class="display-6 fw-bold mb-3">Prêt à digitaliser votre microfinance en 2026 ?</h2>
+    <p class="lead text-white-50 mb-4">Lancez votre réseau de collecteurs, gagnez en transparence et donnez à chaque client une preuve claire de son argent.</p>
+    <div class="d-flex justify-content-center flex-wrap gap-3">
+      <a class="btn tlp-btn-emerald btn-lg px-4" href="{{ dashboard_url }}">Accéder maintenant</a>
+      <a class="btn btn-outline-light btn-lg px-4" href="mailto:contact@tchaslucpay.cm">Contacter l'équipe</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

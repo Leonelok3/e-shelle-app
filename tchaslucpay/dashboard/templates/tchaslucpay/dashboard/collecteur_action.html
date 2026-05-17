@@ -1,0 +1,82 @@
+{% extends "tchaslucpay/dashboard/base.html" %}
+{% block body_class %}tlp-action-shell{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+  <div>
+    <h1 class="h3 mb-1">Opération terrain</h1>
+    <p class="text-muted mb-0">Sélectionnez un client assigné, puis choisissez le type d'opération.</p>
+  </div>
+  <a class="btn btn-outline-secondary" href="{% url 'tchaslucpay_dashboard:collecteur' %}">Retour dashboard</a>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="bg-white border rounded p-3">
+      <label class="form-label fw-semibold" for="clientSearch">Recherche rapide</label>
+      <input id="clientSearch" class="form-control form-control-lg mb-3" type="search" placeholder="Nom, téléphone ou numéro de compte">
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead>
+            <tr><th>Client</th><th>Compte</th><th>Solde</th></tr>
+          </thead>
+          <tbody id="clientRows">
+            {% for client in clients %}
+            <tr class="tlp-client-row" data-client-id="{{ client.id }}" data-client-label="{{ client.user.get_full_name|default:client.user.username }}" data-search="{{ client.user.get_full_name }} {{ client.user.username }} {{ client.phone_number }} {{ client.account_number }} {{ client.quarter }}">
+              <td>
+                <div class="fw-semibold">{{ client.user.get_full_name|default:client.user.username }}</div>
+                <div class="small text-muted">{{ client.phone_number }} · {{ client.quarter }}</div>
+              </td>
+              <td class="font-monospace small">{{ client.account_number }}</td>
+              <td>{{ client.solde|floatformat:0 }} XAF</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-center text-muted py-4">Aucun client assigné</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="bg-white border rounded p-4">
+      <div class="text-muted small">Client sélectionné</div>
+      <div id="selectedClientLabel" class="h4 mb-4">Aucun client</div>
+      <div class="d-grid gap-3">
+        <button class="btn tlp-btn-emerald tlp-action-button" data-bs-toggle="modal" data-bs-target="#depotModal" type="button">Effectuer un Dépôt</button>
+        <button class="btn btn-dark tlp-action-button" data-bs-toggle="modal" data-bs-target="#retraitModal" type="button">Effectuer un Retrait</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include "tchaslucpay/dashboard/partials/transaction_modal.html" with modal_id="depotModal" title="Effectuer un Dépôt" type_op="DEPOT" button_label="Valider le dépôt" button_class="tlp-btn-emerald" %}
+{% include "tchaslucpay/dashboard/partials/transaction_modal.html" with modal_id="retraitModal" title="Effectuer un Retrait" type_op="RETRAIT" button_label="Valider le retrait" button_class="btn-dark" %}
+
+<script>
+  const rows = document.querySelectorAll(".tlp-client-row");
+  const search = document.getElementById("clientSearch");
+  const selectedLabel = document.getElementById("selectedClientLabel");
+  const hiddenInputs = document.querySelectorAll(".selected-client-input");
+
+  function selectClient(row) {
+    rows.forEach(item => item.classList.remove("is-selected"));
+    row.classList.add("is-selected");
+    selectedLabel.textContent = row.dataset.clientLabel;
+    hiddenInputs.forEach(input => input.value = row.dataset.clientId);
+  }
+
+  rows.forEach(row => {
+    row.addEventListener("click", () => selectClient(row));
+  });
+
+  search?.addEventListener("input", () => {
+    const value = search.value.toLowerCase();
+    rows.forEach(row => {
+      row.style.display = row.dataset.search.toLowerCase().includes(value) ? "" : "none";
+    });
+  });
+
+  if (rows.length) selectClient(rows[0]);
+</script>
+{% endblock %}

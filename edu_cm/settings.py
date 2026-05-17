@@ -152,6 +152,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.template.context_processors.media",
                 "django.contrib.messages.context_processors.messages",
+                "core.context_processors.eshelle_public_urls",
                 # ── E-Shelle Resto ────────────────────────────────────
                 "resto.context_processors.resto_globals",
                 # ── Abonnements globaux (injecte user_subs dans tous les templates)
@@ -342,6 +343,7 @@ EDU_PLATFORM = {
 
 # URL de base pour les webhooks Mobile Money
 SITE_URL = os.getenv('SITE_URL', 'https://e-shelle.com')
+TCHASLUCPAY_PUBLIC_URL = os.getenv("TCHASLUCPAY_PUBLIC_URL", "http://127.0.0.1:8001/")
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [

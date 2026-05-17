@@ -1,0 +1,123 @@
+{% extends "tchaslucpay/dashboard/base.html" %}
+{% block body_class %}tlp-action-shell{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+  <div>
+    <h1 class="h3 mb-1">Espace Collecteur</h1>
+    <p class="text-muted mb-0">{{ collecteur.zone }} · {{ collecteur.phone_number }}</p>
+  </div>
+  <a class="btn tlp-btn-emerald" href="{% url 'tchaslucpay_dashboard:collecteur_action' %}">Enregistrer une opération</a>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-lg-7">
+    <div class="bg-white border rounded p-4 h-100">
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <div>
+          <div class="text-muted small">Challenge Collecteur</div>
+          <h2 class="h4 mb-0">{{ volume_mensuel|floatformat:0 }} XAF collectés ce mois</h2>
+        </div>
+        {% if is_elite %}
+          <span class="badge text-bg-success">Collecteur Élite · Bonus débloqué : +5% de commission</span>
+        {% else %}
+          <span class="badge text-bg-dark">Objectif : {{ objectif_mensuel|floatformat:0 }} XAF</span>
+        {% endif %}
+      </div>
+      <div class="progress" role="progressbar" aria-valuenow="{{ progress_value }}" aria-valuemin="0" aria-valuemax="100" style="height: 14px;">
+        <div class="progress-bar bg-success" style="width: {{ progress_value }}%"></div>
+      </div>
+      <div class="d-flex justify-content-between small text-muted mt-2">
+        <span>Progression mensuelle</span>
+        <span>{{ progress_value }}%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="bg-white border rounded p-4 h-100">
+      <h2 class="h5 mb-3">Ajouter un client</h2>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">{{ client_form.first_name.label }}</label>
+            {{ client_form.first_name }}
+            {% for error in client_form.first_name.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">{{ client_form.last_name.label }}</label>
+            {{ client_form.last_name }}
+            {% for error in client_form.last_name.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">{{ client_form.phone_number.label }}</label>
+            {{ client_form.phone_number }}
+            {% for error in client_form.phone_number.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">{{ client_form.email.label }}</label>
+            {{ client_form.email }}
+            {% for error in client_form.email.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">{{ client_form.city.label }}</label>
+            {{ client_form.city }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">{{ client_form.solde_initial.label }}</label>
+            {{ client_form.solde_initial }}
+            {% for error in client_form.solde_initial.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+          <div class="col-12">
+            <label class="form-label">{{ client_form.quarter.label }}</label>
+            {{ client_form.quarter }}
+          </div>
+        </div>
+        <button class="btn btn-dark w-100 mt-3" type="submit">Créer et assigner le client</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="bg-white border rounded">
+      <div class="p-3 border-bottom fw-semibold">Mes clients assignés</div>
+      <div class="list-group list-group-flush">
+        {% for client in clients %}
+          <div class="list-group-item">
+            <div class="fw-semibold">{{ client.user.get_full_name|default:client.user.username }}</div>
+            <div class="small text-muted">{{ client.account_number }} · {{ client.solde|floatformat:0 }} XAF</div>
+          </div>
+        {% empty %}
+          <div class="p-4 text-center text-muted">Aucun client assigné</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-8">
+    <div class="bg-white border rounded">
+      <div class="p-3 border-bottom fw-semibold">Transactions collectées</div>
+      <div class="table-responsive">
+        <table class="table table-sm align-middle mb-0">
+          <thead><tr><th>Client</th><th>Type</th><th>Montant</th><th>Date</th><th>Reçu</th></tr></thead>
+          <tbody>
+            {% for tx in collected_transactions %}
+            <tr>
+              <td>{{ tx.account.get_full_name|default:tx.account.username }}</td>
+              <td>{{ tx.get_transaction_type_display }}</td>
+              <td>{{ tx.amount_display }}</td>
+              <td>{{ tx.created_at|date:"d/m/Y H:i" }}</td>
+              <td><a class="btn btn-sm btn-outline-dark tlp-receipt-link" href="{% url 'tchaslucpay_dashboard:receipt_pdf' tx.id %}">Télécharger le reçu</a></td>
+            </tr>
+            {% empty %}
+              <tr><td colspan="5" class="text-center text-muted py-4">Aucune transaction</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

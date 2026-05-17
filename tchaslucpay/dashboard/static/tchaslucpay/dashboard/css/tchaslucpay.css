@@ -1,0 +1,119 @@
+:root {
+  --tlp-navy: #07182f;
+  --tlp-navy-soft: #0d2747;
+  --tlp-cream: #f7f4ed;
+  --tlp-emerald: #0fa36b;
+  --tlp-emerald-dark: #087a50;
+  --tlp-ink: #132238;
+  --tlp-muted: #667085;
+}
+
+body {
+  color: var(--tlp-ink);
+}
+
+.tlp-landing {
+  background: var(--tlp-cream);
+}
+
+.tlp-hero {
+  background:
+    linear-gradient(120deg, rgba(7, 24, 47, .96), rgba(13, 39, 71, .92)),
+    url("https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1800&q=80");
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  min-height: calc(100vh - 57px);
+  display: flex;
+  align-items: center;
+}
+
+.tlp-hero h1 {
+  font-size: clamp(2.2rem, 5vw, 4.8rem);
+  line-height: 1.02;
+  letter-spacing: 0;
+}
+
+.tlp-btn-emerald {
+  --bs-btn-bg: var(--tlp-emerald);
+  --bs-btn-border-color: var(--tlp-emerald);
+  --bs-btn-hover-bg: var(--tlp-emerald-dark);
+  --bs-btn-hover-border-color: var(--tlp-emerald-dark);
+  color: #fff;
+}
+
+.tlp-feature-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 163, 107, .12);
+  color: var(--tlp-emerald-dark);
+  font-weight: 800;
+}
+
+.tlp-action-shell {
+  background: linear-gradient(180deg, #f7f4ed 0%, #eef3f0 100%);
+}
+
+.tlp-client-row {
+  cursor: pointer;
+}
+
+.tlp-client-row.is-selected {
+  background: rgba(15, 163, 107, .12);
+  outline: 2px solid rgba(15, 163, 107, .28);
+}
+
+.tlp-action-button {
+  min-height: 112px;
+  border-radius: 8px;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.tlp-receipt-link {
+  white-space: nowrap;
+}
+
+.tlp-band {
+  background: #eef3f0;
+}
+
+.tlp-mini-stat {
+  background: #fff;
+  border: 1px solid rgba(19, 34, 56, .12);
+  border-radius: 8px;
+  padding: 18px;
+  font-weight: 800;
+  color: var(--tlp-navy);
+}
+
+.tlp-mini-stat span {
+  color: var(--tlp-muted);
+  font-weight: 500;
+}
+
+.tlp-phone-panel {
+  background: #fff;
+  border: 1px solid rgba(19, 34, 56, .12);
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(7, 24, 47, .12);
+  padding: 32px;
+}
+
+.tlp-cta {
+  background: linear-gradient(120deg, var(--tlp-navy), var(--tlp-navy-soft));
+  color: #fff;
+}
+
+.navbar .nav-link {
+  color: var(--tlp-muted);
+  font-weight: 600;
+}
+
+.navbar .nav-link:hover {
+  color: var(--tlp-emerald-dark);
+}

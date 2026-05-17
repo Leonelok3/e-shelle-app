@@ -1,0 +1,25 @@
+{% extends "tchaslucpay/dashboard/base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0">Pilotage financier</h1>
+  <span class="badge text-bg-dark">{{ balances_count }} comptes</span>
+</div>
+<div class="table-responsive bg-white border rounded">
+  <table class="table table-hover align-middle mb-0">
+    <thead><tr><th>TRID</th><th>Client</th><th>Type</th><th>Montant</th><th>Solde</th><th>Date</th><th>Recu</th></tr></thead>
+    <tbody>
+      {% for tx in transactions %}
+      <tr>
+        <td class="font-monospace small">{{ tx.trid }}</td>
+        <td>{{ tx.account }}</td>
+        <td>{{ tx.get_transaction_type_display }}</td>
+        <td>{{ tx.amount_display }}</td>
+        <td>{{ tx.balance_after|floatformat:0 }} XAF</td>
+        <td>{{ tx.created_at|date:"d/m/Y H:i" }}</td>
+        <td><a class="btn btn-sm btn-outline-dark tlp-receipt-link" href="{% url 'tchaslucpay_dashboard:receipt_pdf' tx.id %}">Télécharger le reçu</a></td>
+      </tr>
+      {% empty %}<tr><td colspan="7" class="text-center text-muted py-4">Aucune transaction</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

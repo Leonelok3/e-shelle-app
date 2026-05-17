@@ -1,0 +1,52 @@
+{% extends "tchaslucpay/dashboard/base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="bg-white border rounded p-4">
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <div>
+          <h1 class="h4 mb-1">Nouvelle transaction</h1>
+          <p class="text-muted mb-0">Enregistrer un depot ou un retrait client en temps reel.</p>
+        </div>
+        <a class="btn btn-outline-secondary btn-sm" href="{% url 'tchaslucpay_dashboard:collecteur' %}">Retour</a>
+      </div>
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">
+            {{ form.non_field_errors }}
+          </div>
+        {% endif %}
+
+        <div class="mb-3">
+          <label class="form-label" for="{{ form.client.id_for_label }}">{{ form.client.label }}</label>
+          {{ form.client }}
+          {% for error in form.client.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="{{ form.type_op.id_for_label }}">{{ form.type_op.label }}</label>
+          {{ form.type_op }}
+          {% for error in form.type_op.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="{{ form.montant.id_for_label }}">{{ form.montant.label }}</label>
+          {{ form.montant }}
+          {% for error in form.montant.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label" for="{{ form.note.id_for_label }}">{{ form.note.label }}</label>
+          {{ form.note }}
+          {% for error in form.note.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+        </div>
+
+        <button class="btn btn-primary w-100" type="submit">Valider la transaction</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count
 from django.utils import timezone
+from django.conf import settings
 from datetime import timedelta
 
 
@@ -136,6 +137,15 @@ ESHELLE_SERVICES = [
         "color": "#1B6CA8",
         "url_name": "njangi:landing",
         "desc": "Tontines & fonds communs numériques",
+        "category": "finance",
+    },
+    {
+        "key": "tchaslucpay",
+        "name": "Tchaslucpay",
+        "icon": "💳",
+        "color": "#0FA36B",
+        "external_url": getattr(settings, "TCHASLUCPAY_PUBLIC_URL", "http://127.0.0.1:8001/"),
+        "desc": "Microfinance digitale, collectes, retraits et reçus PDF",
         "category": "finance",
     },
     {
@@ -448,10 +458,13 @@ def _dashboard_hub(request):
                 "services": [],
             }
         # Tenter de résoudre l'URL (certaines apps peuvent ne pas être incluses)
-        try:
-            url = reverse(svc["url_name"])
-        except NoReverseMatch:
-            url = "#"
+        if svc.get("external_url"):
+            url = svc["external_url"]
+        else:
+            try:
+                url = reverse(svc["url_name"])
+            except NoReverseMatch:
+                url = "#"
         services_by_category[cat]["services"].append({
             **svc,
             "url": url,

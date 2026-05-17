@@ -1,0 +1,31 @@
+{% extends "tchaslucpay/dashboard/base.html" %}
+{% block content %}
+{% csrf_token %}
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="bg-white border rounded p-3">
+      <h1 class="h5">Collecte terrain</h1>
+      <p class="text-muted mb-0">Transactions recentes collectees par votre compte.</p>
+      <a class="btn btn-primary mt-3" href="{% url 'tchaslucpay_dashboard:collecteur_action' %}">Nouvelle transaction</a>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="table-responsive bg-white border rounded">
+      <table class="table table-sm align-middle mb-0">
+        <thead><tr><th>Client</th><th>Type</th><th>Montant</th><th>Date</th><th>Recu</th></tr></thead>
+        <tbody>
+          {% for tx in collected_transactions %}
+          <tr>
+            <td>{{ tx.account }}</td>
+            <td>{{ tx.get_transaction_type_display }}</td>
+            <td>{{ tx.amount_display }}</td>
+            <td>{{ tx.created_at|date:"d/m/Y H:i" }}</td>
+            <td><a class="btn btn-sm btn-outline-dark tlp-receipt-link" href="{% url 'tchaslucpay_dashboard:receipt_pdf' tx.id %}">Télécharger le reçu</a></td>
+          </tr>
+          {% empty %}<tr><td colspan="5" class="text-center text-muted py-4">Aucune collecte</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

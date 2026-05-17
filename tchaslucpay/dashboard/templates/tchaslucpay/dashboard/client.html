@@ -1,0 +1,31 @@
+{% extends "tchaslucpay/dashboard/base.html" %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="bg-white border rounded p-3">
+      <div class="text-muted small">Solde disponible</div>
+      <div class="display-6">{{ client_profile.solde|default:"0"|floatformat:0 }} XAF</div>
+      <a class="btn btn-outline-dark btn-sm mt-3" href="/api/transactions/ledger/statement_pdf/">Releve PDF</a>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="bg-white border rounded">
+      <div class="p-3 border-bottom fw-semibold">Dernieres operations</div>
+      <div class="table-responsive">
+        <table class="table table-sm align-middle mb-0">
+          <tbody>
+            {% for tx in transactions %}
+            <tr>
+              <td>{{ tx.get_transaction_type_display }}</td>
+              <td>{{ tx.amount_display }}</td>
+              <td>{{ tx.created_at|date:"d/m/Y H:i" }}</td>
+              <td><a class="btn btn-sm btn-outline-dark tlp-receipt-link" href="{% url 'tchaslucpay_dashboard:receipt_pdf' tx.id %}">Télécharger le reçu</a></td>
+            </tr>
+            {% empty %}<tr><td class="text-center text-muted py-4">Aucune operation</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

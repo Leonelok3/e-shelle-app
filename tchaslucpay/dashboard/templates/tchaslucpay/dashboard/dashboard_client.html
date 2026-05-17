@@ -1,0 +1,50 @@
+{% extends "tchaslucpay/dashboard/base.html" %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="bg-white border rounded p-4 h-100">
+      <div class="text-muted small mb-2">Votre épargne actuelle</div>
+      <div class="display-4 fw-bold text-success">{{ client_profile.solde|floatformat:0 }} XAF</div>
+      <p class="text-muted mb-0 mt-3">Compte {{ client_profile.account_number }}</p>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="bg-white border rounded p-4 h-100">
+      <div class="text-muted small mb-2">Votre agent de collecte attitré</div>
+      {% if collecteur %}
+        <div class="h4 mb-1">{{ collecteur.user.get_full_name|default:collecteur.user.username }}</div>
+        <div class="text-muted">{{ collecteur.phone_number }} · {{ collecteur.zone }}</div>
+      {% else %}
+        <div class="h5 mb-0 text-muted">Aucun collecteur assigné</div>
+      {% endif %}
+      <div class="alert alert-success mt-4 mb-0">
+        Vos opérations sont suivies par TRID, avec reçu PDF et notification après chaque transaction validée.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bg-white border rounded mt-4">
+  <div class="p-3 border-bottom fw-semibold">Historique de vos opérations</div>
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead><tr><th>TRID</th><th>Type</th><th>Montant</th><th>Solde</th><th>Date</th><th>Reçu</th></tr></thead>
+      <tbody>
+        {% for tx in transactions %}
+        <tr>
+          <td class="font-monospace small">{{ tx.trid }}</td>
+          <td>{{ tx.get_transaction_type_display }}</td>
+          <td>{{ tx.amount_display }}</td>
+          <td>{{ tx.balance_after|floatformat:0 }} XAF</td>
+          <td>{{ tx.created_at|date:"d/m/Y H:i" }}</td>
+          <td><a class="btn btn-sm btn-outline-dark tlp-receipt-link" href="{% url 'tchaslucpay_dashboard:receipt_pdf' tx.id %}">Télécharger le reçu</a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="text-center text-muted py-4">Aucune opération liée à votre compte</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+<div class="modal fade" id="{{ modal_id }}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="post" action="{% url 'tchaslucpay_dashboard:collecteur_action' %}">
+        {% csrf_token %}
+        <input class="selected-client-input" type="hidden" name="client_id">
+        <input type="hidden" name="type_op" value="{{ type_op }}">
+        <div class="modal-header">
+          <h2 class="modal-title h5">{{ title }}</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Montant</label>
+            <input class="form-control form-control-lg" type="number" name="montant" min="1" step="0.01" required>
+          </div>
+          <div class="mb-0">
+            <label class="form-label">Note</label>
+            <textarea class="form-control" name="note" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="submit" class="btn {{ button_class }}">{{ button_label }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
