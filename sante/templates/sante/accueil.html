@@ -15,6 +15,7 @@
       <div class="hero-actions">
         <a class="btn btn-primary" href="{% url 'sante:produits' %}">Voir les produits</a>
         <a class="btn btn-outline" href="{% url 'sante:professionnels' %}">Trouver un professionnel</a>
+        <a class="btn btn-outline" href="{% url 'sante:urgence' %}">Urgence & garde</a>
         <a class="btn btn-ghost" href="{% url 'sante:publier_produit' %}">Vendre un produit</a>
       </div>
     </div>
@@ -51,13 +52,36 @@
 </section>
 
 <section class="section">
-  <div class="wrap grid grid-4" style="grid-template-columns:repeat(4,1fr)">
+  <div class="wrap grid grid-4" style="grid-template-columns:repeat(5,1fr)">
     <div class="panel" style="padding:18px"><strong style="font-size:2rem;color:var(--deep)">{{ stats.produits }}</strong><p>produits actifs</p></div>
     <div class="panel" style="padding:18px"><strong style="font-size:2rem;color:var(--deep)">{{ stats.pros }}</strong><p>professionnels</p></div>
     <div class="panel" style="padding:18px"><strong style="font-size:2rem;color:var(--deep)">{{ stats.villes }}</strong><p>villes couvertes</p></div>
+    <div class="panel" style="padding:18px"><strong style="font-size:2rem;color:var(--deep)">{{ stats.urgences }}</strong><p>contacts urgence</p></div>
     <div class="panel" style="padding:18px"><strong style="font-size:2rem;color:var(--deep)">{{ stats.demandes }}</strong><p>demandes ouvertes</p></div>
   </div>
 </section>
+
+{% if categories %}
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>Catégories santé</h2>
+        <p style="margin:0">Accédez vite aux produits, soins et spécialités utiles.</p>
+      </div>
+    </div>
+    <div class="card-grid">
+      {% for categorie in categories %}
+        <a class="health-card" href="{% if categorie.type_categorie == 'PRODUIT' %}{% url 'sante:produits' %}?cat={{ categorie.slug }}{% else %}{% url 'sante:professionnels' %}?specialite={{ categorie.slug }}{% endif %}" style="min-height:150px">
+          <span class="pill">{{ categorie.get_type_categorie_display }}</span>
+          <h3>{{ categorie.nom }}</h3>
+          <p>{{ categorie.description|default:"Explorer cette catégorie santé." }}</p>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
 
 <section class="section" style="padding-top:0">
   <div class="wrap">

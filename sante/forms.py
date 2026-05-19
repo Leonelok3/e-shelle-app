@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import DemandeSante, ProduitSante, ProfessionnelSante
+from .models import DemandeSante, ProduitSante, ProfessionnelSante, RendezVousSante
 
 
 class ProduitSanteForm(forms.ModelForm):
@@ -36,4 +36,15 @@ class DemandeSanteForm(forms.ModelForm):
         fields = ["nom", "telephone", "ville", "besoin", "message"]
         widgets = {
             "message": forms.Textarea(attrs={"rows": 3, "placeholder": "Décrivez votre besoin, quartier, urgence, produit recherché..."}),
+        }
+
+
+class RendezVousSanteForm(forms.ModelForm):
+    class Meta:
+        model = RendezVousSante
+        fields = ["nom", "telephone", "motif", "date_souhaitee", "heure_souhaitee", "message"]
+        widgets = {
+            "date_souhaitee": forms.DateInput(attrs={"type": "date"}),
+            "heure_souhaitee": forms.TimeInput(attrs={"type": "time"}),
+            "message": forms.Textarea(attrs={"rows": 3, "placeholder": "Symptômes, disponibilité, préférence téléconsultation ou présentiel..."}),
         }

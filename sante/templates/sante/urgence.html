@@ -1,0 +1,101 @@
+{% extends "sante/base.html" %}
+
+{% block title %}Urgence et garde · E-Shelle Santé{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="rise">
+      <div class="eyebrow"><span class="pulse-dot"></span> Urgence, garde et contacts rapides</div>
+      <h1>Contacts santé quand il faut agir vite.</h1>
+      <p>Retrouvez les numéros utiles, centres avec service urgence, professionnels disponibles et produits essentiels.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#numeros">Numéros utiles</a>
+        <a class="btn btn-outline" href="#centres">Centres de garde</a>
+      </div>
+    </div>
+    <form class="panel glass search-panel rise" method="get">
+      <h2 style="font-size:1.45rem">Filtrer par ville</h2>
+      <div class="field">
+        <label for="ville">Ville</label>
+        <select id="ville" name="ville">
+          <option value="">Toutes les villes</option>
+          {% for v in villes %}
+            <option value="{{ v.slug }}" {% if ville == v.slug %}selected{% endif %}>{{ v.nom }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-top:14px" type="submit">Afficher</button>
+    </form>
+  </div>
+</section>
+
+<section class="section" id="numeros">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>Numéros utiles</h2>
+        <p style="margin:0">Contacts rapides pour orientation et assistance.</p>
+      </div>
+    </div>
+    {% if numeros %}
+      <div class="card-grid">
+        {% for numero in numeros %}
+          <article class="health-card" style="min-height:190px">
+            <div class="meta">
+              <span class="pill">{{ numero.categorie }}</span>
+              {% if numero.disponible_24h %}<span class="pill">24h/24</span>{% endif %}
+              {% if numero.ville %}<span class="pill">{{ numero.ville }}</span>{% endif %}
+            </div>
+            <h3>{{ numero.nom }}</h3>
+            <p>{{ numero.description|default:"Contact santé utile." }}</p>
+            <a class="btn btn-primary" style="margin-top:auto" href="{{ numero.tel_url }}">Appeler {{ numero.telephone }}</a>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty">Aucun numéro d'urgence enregistré pour ce filtre.</div>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section" id="centres" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>Centres et professionnels avec urgence</h2>
+        <p style="margin:0">Profils vérifiés proposant urgence, garde ou assistance rapide.</p>
+      </div>
+    </div>
+    {% if pros %}
+      <div class="card-grid">
+        {% for pro in pros %}
+          {% include "sante/partials/pro_card.html" %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty">Aucun centre urgence trouvé pour ce filtre.</div>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>Produits utiles en urgence</h2>
+        <p style="margin:0">Matériel et produits pratiques à contacter rapidement.</p>
+      </div>
+    </div>
+    {% if produits_urgence %}
+      <div class="card-grid">
+        {% for produit in produits_urgence %}
+          {% include "sante/partials/produit_card.html" %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty">Aucun produit prioritaire disponible.</div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

@@ -190,6 +190,88 @@ class ProduitSante(models.Model):
         return f"https://wa.me/{numero}?text={urllib.parse.quote(msg)}"
 
     @property
+    def commande_whatsapp_url(self):
+        numero = (self.whatsapp or self.telephone).replace("+", "").replace(" ", "").replace("-", "")
+        msg = (
+            f"Bonjour, je veux commander {self.titre} sur E-Shelle Santé. "
+            f"Prix affiché: {self.prix_display}. Ville: {self.ville}. Livraison: {'oui' if self.livraison else 'à confirmer'}."
+        )
+        return f"https://wa.me/{numero}?text={urllib.parse.quote(msg)}"
+
+    @property
+    def tel_url(self):
+        return f"tel:{self.telephone}"
+
+
+class ImageProduitSante(models.Model):
+    produit = models.ForeignKey(ProduitSante, on_delete=models.CASCADE, related_name="images")
+    image = models.ImageField(upload_to="sante/produits/galerie/")
+    legende = models.CharField(max_length=160, blank=True)
+    ordre = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["ordre", "id"]
+        verbose_name = "Image produit santé"
+        verbose_name_plural = "Images produits santé"
+
+    def __str__(self):
+        return f"Image {self.ordre} - {self.produit.titre}"
+
+
+class RendezVousSante(models.Model):
+    class Statut(models.TextChoices):
+        NOUVEAU = "NOUVEAU", "Nouveau"
+        CONFIRME = "CONFIRME", "Confirmé"
+        TERMINE = "TERMINE", "Terminé"
+        ANNULE = "ANNULE", "Annulé"
+
+    professionnel = models.ForeignKey(ProfessionnelSante, on_delete=models.CASCADE, related_name="rendez_vous")
+    nom = models.CharField(max_length=120)
+    telephone = models.CharField(max_length=30)
+    motif = models.CharField(max_length=180)
+    date_souhaitee = models.DateField()
+    heure_souhaitee = models.TimeField(null=True, blank=True)
+    message = models.TextField(blank=True)
+    statut = models.CharField(max_length=20, choices=Statut.choices, default=Statut.NOUVEAU)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Rendez-vous santé"
+        verbose_name_plural = "Rendez-vous santé"
+
+    def __str__(self):
+        return f"{self.nom} - {self.professionnel.nom}"
+
+    @property
+    def whatsapp_url(self):
+        numero = (self.professionnel.whatsapp or self.professionnel.telephone).replace("+", "").replace(" ", "").replace("-", "")
+        msg = (
+            f"Bonjour, je demande un rendez-vous avec {self.professionnel.nom}. "
+            f"Nom: {self.nom}. Motif: {self.motif}. Date souhaitée: {self.date_souhaitee}."
+        )
+        return f"https://wa.me/{numero}?text={urllib.parse.quote(msg)}"
+
+
+class NumeroUrgenceSante(models.Model):
+    nom = models.CharField(max_length=120)
+    ville = models.ForeignKey(VilleSante, on_delete=models.SET_NULL, null=True, blank=True, related_name="numeros_urgence")
+    categorie = models.CharField(max_length=80, default="Urgence")
+    telephone = models.CharField(max_length=30)
+    description = models.CharField(max_length=220, blank=True)
+    disponible_24h = models.BooleanField(default=True)
+    ordre = models.PositiveIntegerField(default=0)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["ordre", "nom"]
+        verbose_name = "Numéro d'urgence santé"
+        verbose_name_plural = "Numéros d'urgence santé"
+
+    def __str__(self):
+        return self.nom
+
+    @property
     def tel_url(self):
         return f"tel:{self.telephone}"
 

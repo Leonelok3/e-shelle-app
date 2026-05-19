@@ -1,9 +1,18 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import DemandeSanteForm, ProduitSanteForm, ProfessionnelSanteForm
-from .models import CategorieSante, DemandeSante, ProduitSante, ProfessionnelSante, VilleSante
+from .forms import DemandeSanteForm, ProduitSanteForm, ProfessionnelSanteForm, RendezVousSanteForm
+from .models import (
+    CategorieSante,
+    DemandeSante,
+    NumeroUrgenceSante,
+    ProduitSante,
+    ProfessionnelSante,
+    RendezVousSante,
+    VilleSante,
+)
 
 
 def _produits_actifs():
@@ -24,6 +33,7 @@ def accueil(request):
         "pros": _pros_actifs().count(),
         "villes": villes.count(),
         "demandes": DemandeSante.objects.filter(is_active=True).count(),
+        "urgences": _pros_actifs().filter(urgence=True).count() + NumeroUrgenceSante.objects.filter(active=True).count(),
     }
     return render(request, "sante/accueil.html", {
         "produits_vedette": produits_vedette,
@@ -74,7 +84,8 @@ def detail_produit(request, slug):
     produit = get_object_or_404(_produits_actifs().select_related("ville", "categorie"), slug=slug)
     ProduitSante.objects.filter(pk=produit.pk).update(vues=produit.vues + 1)
     similaires = _produits_actifs().filter(type_produit=produit.type_produit).exclude(pk=produit.pk).select_related("ville", "categorie")[:4]
-    return render(request, "sante/detail_produit.html", {"produit": produit, "similaires": similaires})
+    galerie = produit.images.all()
+    return render(request, "sante/detail_produit.html", {"produit": produit, "similaires": similaires, "galerie": galerie})
 
 
 def publier_produit(request):
@@ -135,6 +146,25 @@ def detail_professionnel(request, slug):
     return render(request, "sante/detail_professionnel.html", {"pro": pro, "similaires": similaires})
 
 
+def prendre_rendez_vous(request, slug):
+    pro = get_object_or_404(_pros_actifs().select_related("ville"), slug=slug)
+    if request.method == "POST":
+        form = RendezVousSanteForm(request.POST)
+        if form.is_valid():
+            rendez_vous = form.save(commit=False)
+            rendez_vous.professionnel = pro
+            rendez_vous.save()
+            messages.success(request, "Demande de rendez-vous enregistrée. Vous pouvez aussi confirmer par WhatsApp.")
+            return redirect("sante:detail_professionnel", slug=pro.slug)
+        messages.error(request, "Vérifiez les informations du rendez-vous.")
+    else:
+        initial = {}
+        if request.user.is_authenticated:
+            initial["nom"] = request.user.get_full_name() or request.user.get_username()
+        form = RendezVousSanteForm(initial=initial)
+    return render(request, "sante/rendez_vous.html", {"form": form, "pro": pro})
+
+
 def inscrire_professionnel(request):
     if request.method == "POST":
         form = ProfessionnelSanteForm(request.POST)
@@ -165,3 +195,46 @@ def demande(request):
         form = DemandeSanteForm()
     demandes = DemandeSante.objects.filter(is_active=True).select_related("ville")[:12]
     return render(request, "sante/demande.html", {"form": form, "demandes": demandes})
+
+
+def urgence(request):
+    ville = request.GET.get("ville", "")
+    villes = VilleSante.objects.filter(active=True)
+    pros = _pros_actifs().filter(urgence=True).select_related("ville").prefetch_related("specialites")
+    numeros = NumeroUrgenceSante.objects.filter(active=True).select_related("ville")
+    if ville:
+        pros = pros.filter(ville__slug=ville)
+        numeros = numeros.filter(Q(ville__slug=ville) | Q(ville__isnull=True))
+    produits_urgence = _produits_actifs().filter(type_produit__in=[
+        ProduitSante.TypeProduit.MATERIEL,
+        ProduitSante.TypeProduit.HYGIENE,
+        ProduitSante.TypeProduit.BEBE,
+    ]).select_related("ville", "categorie")[:8]
+    return render(request, "sante/urgence.html", {
+        "ville": ville,
+        "villes": villes,
+        "pros": pros,
+        "numeros": numeros,
+        "produits_urgence": produits_urgence,
+    })
+
+
+@login_required
+def espace_vendeur(request):
+    produits_user = ProduitSante.objects.filter(auteur=request.user).select_related("ville", "categorie")
+    pros_user = ProfessionnelSante.objects.filter(auteur=request.user).select_related("ville")
+    rdv_user = RendezVousSante.objects.filter(professionnel__auteur=request.user).select_related("professionnel")[:12]
+    demandes = DemandeSante.objects.filter(is_active=True).select_related("ville")[:12]
+    stats = {
+        "produits": produits_user.count(),
+        "produits_actifs": produits_user.filter(is_active=True).count(),
+        "profils": pros_user.count(),
+        "rdv": rdv_user.count(),
+    }
+    return render(request, "sante/espace_vendeur.html", {
+        "produits_user": produits_user,
+        "pros_user": pros_user,
+        "rdv_user": rdv_user,
+        "demandes": demandes,
+        "stats": stats,
+    })

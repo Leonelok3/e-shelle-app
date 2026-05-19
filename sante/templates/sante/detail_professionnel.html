@@ -34,6 +34,7 @@
         <h2 style="font-size:1.35rem">Prendre contact</h2>
         <p>Contact direct pour rendez-vous, disponibilité ou information.</p>
         <div class="grid">
+          <a class="btn btn-primary" href="{% url 'sante:rendez_vous' pro.slug %}">Demander un rendez-vous</a>
           <a class="btn btn-primary" href="{{ pro.whatsapp_url }}" target="_blank" rel="noopener">WhatsApp</a>
           <a class="btn btn-outline" href="{{ pro.tel_url }}">Appeler</a>
         </div>

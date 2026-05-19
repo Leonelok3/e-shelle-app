@@ -15,6 +15,9 @@
   </div>
   <div style="margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:12px">
     <small class="muted">{{ pro.horaires }}</small>
-    <a class="btn btn-outline" href="{% url 'sante:detail_professionnel' pro.slug %}">Voir</a>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+      <a class="btn btn-ghost" href="{% url 'sante:rendez_vous' pro.slug %}">RDV</a>
+      <a class="btn btn-outline" href="{% url 'sante:detail_professionnel' pro.slug %}">Voir</a>
+    </div>
   </div>
 </article>

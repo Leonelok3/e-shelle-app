@@ -18,6 +18,9 @@
       <div class="price">{{ produit.prix_display }}</div>
       {% if produit.reduction %}<small class="muted">-{{ produit.reduction }}% aujourd'hui</small>{% endif %}
     </div>
-    <a class="btn btn-outline" href="{{ produit.get_absolute_url }}">Voir</a>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+      <a class="btn btn-ghost" href="{{ produit.commande_whatsapp_url }}" target="_blank" rel="noopener">Commander</a>
+      <a class="btn btn-outline" href="{{ produit.get_absolute_url }}">Voir</a>
+    </div>
   </div>
 </article>

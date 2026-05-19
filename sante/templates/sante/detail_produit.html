@@ -14,6 +14,16 @@
         </div>
         <h1 style="font-size:clamp(2rem,4vw,3.4rem);margin-top:14px">{{ produit.titre }}</h1>
         <p>{{ produit.description|linebreaksbr }}</p>
+        {% if produit.image or galerie %}
+          <div class="grid grid-3" style="margin:20px 0">
+            {% if produit.image %}
+              <img src="{{ produit.image.url }}" alt="{{ produit.titre }}" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;border:1px solid var(--line)">
+            {% endif %}
+            {% for image in galerie %}
+              <img src="{{ image.image.url }}" alt="{{ image.legende|default:produit.titre }}" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;border:1px solid var(--line)">
+            {% endfor %}
+          </div>
+        {% endif %}
         <div class="grid grid-2" style="margin-top:20px">
           <div class="panel" style="padding:14px;box-shadow:none"><strong>Ville</strong><p style="margin:.35rem 0 0">{{ produit.ville }}</p></div>
           <div class="panel" style="padding:14px;box-shadow:none"><strong>Stock</strong><p style="margin:.35rem 0 0">{{ produit.stock_disponible }} disponible{{ produit.stock_disponible|pluralize }}</p></div>
@@ -30,7 +40,8 @@
         {% if produit.prix_barre %}<p style="margin:.25rem 0 1rem"><s class="muted">{{ produit.prix_barre }} FCFA</s> {% if produit.reduction %}<span class="pill">-{{ produit.reduction }}%</span>{% endif %}</p>{% endif %}
         <p>Contact direct vendeur. Le paiement intégré pourra être ajouté ensuite avec Mobile Money.</p>
         <div class="grid">
-          <a class="btn btn-primary" href="{{ produit.whatsapp_url }}" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="btn btn-primary" href="{{ produit.commande_whatsapp_url }}" target="_blank" rel="noopener">Commander WhatsApp</a>
+          <a class="btn btn-ghost" href="{{ produit.whatsapp_url }}" target="_blank" rel="noopener">Question vendeur</a>
           <a class="btn btn-outline" href="{{ produit.tel_url }}">Appeler</a>
         </div>
       </aside>

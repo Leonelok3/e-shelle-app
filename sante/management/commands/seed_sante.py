@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from sante.models import CategorieSante, ProduitSante, ProfessionnelSante, VilleSante
+from sante.models import CategorieSante, NumeroUrgenceSante, ProduitSante, ProfessionnelSante, VilleSante
 
 
 class Command(BaseCommand):
@@ -97,6 +97,52 @@ class Command(BaseCommand):
                 defaults={**data, "is_active": True, "is_verified": True},
             )
             pro.specialites.set([cats[name] for name in specialites if name in cats])
+
+        numeros = [
+            {
+                "nom": "SAMU / Ambulance locale",
+                "categorie": "Ambulance",
+                "telephone": "+237680625082",
+                "description": "Contact d'assistance médicale et orientation urgence.",
+                "ordre": 1,
+            },
+            {
+                "nom": "Orientation E-Shelle Santé",
+                "categorie": "Orientation",
+                "telephone": "+237680625082",
+                "description": "Aide à trouver un centre, labo ou produit santé disponible.",
+                "ordre": 2,
+            },
+            {
+                "nom": "Urgence Clinique Santé Verte",
+                "categorie": "Clinique",
+                "ville": villes["Yaoundé"],
+                "telephone": "+237680625082",
+                "description": "Accueil urgence et consultation rapide à Yaoundé.",
+                "ordre": 3,
+            },
+            {
+                "nom": "Labo Express Prélèvement",
+                "categorie": "Laboratoire",
+                "ville": villes["Douala"],
+                "telephone": "+237680625082",
+                "description": "Prélèvements et bilans urgents à Douala.",
+                "ordre": 4,
+            },
+        ]
+        for data in numeros:
+            NumeroUrgenceSante.objects.update_or_create(
+                nom=data["nom"],
+                defaults={
+                    "categorie": data["categorie"],
+                    "ville": data.get("ville"),
+                    "telephone": data["telephone"],
+                    "description": data["description"],
+                    "disponible_24h": True,
+                    "ordre": data["ordre"],
+                    "active": True,
+                },
+            )
 
         produits = [
             {

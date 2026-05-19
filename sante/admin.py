@@ -1,6 +1,15 @@
 from django.contrib import admin
 
-from .models import CategorieSante, DemandeSante, ProduitSante, ProfessionnelSante, VilleSante
+from .models import (
+    CategorieSante,
+    DemandeSante,
+    ImageProduitSante,
+    NumeroUrgenceSante,
+    ProduitSante,
+    ProfessionnelSante,
+    RendezVousSante,
+    VilleSante,
+)
 
 
 @admin.register(VilleSante)
@@ -52,6 +61,32 @@ class ProduitSanteAdmin(admin.ModelAdmin):
     @admin.action(description="Mettre en vedette")
     def mettre_en_vedette(self, request, queryset):
         queryset.update(is_featured=True, is_active=True, is_verified=True)
+
+
+@admin.register(ImageProduitSante)
+class ImageProduitSanteAdmin(admin.ModelAdmin):
+    list_display = ("produit", "legende", "ordre")
+    list_filter = ("produit__ville",)
+    search_fields = ("produit__titre", "legende")
+
+
+@admin.register(RendezVousSante)
+class RendezVousSanteAdmin(admin.ModelAdmin):
+    list_display = ("nom", "telephone", "professionnel", "date_souhaitee", "heure_souhaitee", "statut", "created_at")
+    list_filter = ("statut", "date_souhaitee", "professionnel__ville")
+    search_fields = ("nom", "telephone", "motif", "professionnel__nom")
+    actions = ("confirmer",)
+
+    @admin.action(description="Marquer comme confirmé")
+    def confirmer(self, request, queryset):
+        queryset.update(statut=RendezVousSante.Statut.CONFIRME)
+
+
+@admin.register(NumeroUrgenceSante)
+class NumeroUrgenceSanteAdmin(admin.ModelAdmin):
+    list_display = ("nom", "categorie", "ville", "telephone", "disponible_24h", "active", "ordre")
+    list_filter = ("active", "disponible_24h", "categorie", "ville")
+    search_fields = ("nom", "telephone", "description")
 
 
 @admin.register(DemandeSante)

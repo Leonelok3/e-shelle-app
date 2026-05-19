@@ -1,0 +1,95 @@
+{% extends "sante/base.html" %}
+
+{% block title %}Espace vendeur santé · E-Shelle Santé{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h1 style="font-size:clamp(2rem,4vw,3.4rem)">Espace vendeur santé</h1>
+        <p style="margin:0">Suivez vos produits, profils professionnels, rendez-vous et demandes clients.</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a class="btn btn-primary" href="{% url 'sante:publier_produit' %}">Ajouter produit</a>
+        <a class="btn btn-outline" href="{% url 'sante:inscrire_professionnel' %}">Ajouter profil</a>
+      </div>
+    </div>
+
+    <div class="grid grid-4" style="grid-template-columns:repeat(4,1fr);margin-bottom:26px">
+      <div class="panel" style="padding:18px"><strong style="font-size:2rem;color:var(--deep)">{{ stats.produits }}</strong><p>produits</p></div>
+      <div class="panel" style="padding:18px"><strong style="font-size:2rem;color:var(--deep)">{{ stats.produits_actifs }}</strong><p>actifs</p></div>
+      <div class="panel" style="padding:18px"><strong style="font-size:2rem;color:var(--deep)">{{ stats.profils }}</strong><p>profils</p></div>
+      <div class="panel" style="padding:18px"><strong style="font-size:2rem;color:var(--deep)">{{ stats.rdv }}</strong><p>rendez-vous</p></div>
+    </div>
+
+    <div class="grid split-grid">
+      <div class="grid">
+        <section class="panel" style="padding:18px">
+          <h2 style="font-size:1.45rem">Mes produits</h2>
+          <div class="grid">
+            {% for produit in produits_user %}
+              <article style="display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:12px 0">
+                <div>
+                  <strong>{{ produit.titre }}</strong>
+                  <div class="meta"><span>{{ produit.prix_display }}</span><span>{{ produit.ville }}</span>{% if produit.is_active %}<span class="pill">Actif</span>{% else %}<span class="pill">En validation</span>{% endif %}</div>
+                </div>
+                <a class="btn btn-outline" href="{{ produit.get_absolute_url }}">Voir</a>
+              </article>
+            {% empty %}
+              <div class="empty">Aucun produit ajouté.</div>
+            {% endfor %}
+          </div>
+        </section>
+
+        <section class="panel" style="padding:18px">
+          <h2 style="font-size:1.45rem">Mes rendez-vous reçus</h2>
+          <div class="grid">
+            {% for rdv in rdv_user %}
+              <article style="border-bottom:1px solid var(--line);padding:12px 0">
+                <strong>{{ rdv.nom }} · {{ rdv.date_souhaitee|date:"d/m/Y" }}</strong>
+                <div class="meta"><span>{{ rdv.professionnel.nom }}</span><span>{{ rdv.motif }}</span><span class="pill">{{ rdv.get_statut_display }}</span></div>
+                <a class="btn btn-outline" style="margin-top:8px" href="{{ rdv.whatsapp_url }}" target="_blank" rel="noopener">Confirmer WhatsApp</a>
+              </article>
+            {% empty %}
+              <div class="empty">Aucun rendez-vous reçu.</div>
+            {% endfor %}
+          </div>
+        </section>
+      </div>
+
+      <aside class="grid">
+        <section class="panel" style="padding:18px">
+          <h2 style="font-size:1.35rem">Mes profils</h2>
+          {% for pro in pros_user %}
+            <article style="border-bottom:1px solid var(--line);padding:12px 0">
+              <strong>{{ pro.nom }}</strong>
+              <div class="meta"><span>{{ pro.ville }}</span>{% if pro.is_active %}<span class="pill">Actif</span>{% else %}<span class="pill">En validation</span>{% endif %}</div>
+            </article>
+          {% empty %}
+            <div class="empty">Aucun profil pro.</div>
+          {% endfor %}
+        </section>
+
+        <section class="panel" style="padding:18px">
+          <h2 style="font-size:1.35rem">Demandes clients</h2>
+          {% for demande in demandes %}
+            <article style="border-bottom:1px solid var(--line);padding:12px 0">
+              <strong>{{ demande.besoin }}</strong>
+              <div class="meta"><span>{{ demande.ville }}</span><span>{{ demande.nom }}</span></div>
+              <a class="btn btn-outline" style="margin-top:8px" href="tel:{{ demande.telephone }}">Appeler</a>
+            </article>
+          {% empty %}
+            <div class="empty">Aucune demande ouverte.</div>
+          {% endfor %}
+        </section>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+@media(max-width:780px){ .grid-4{ grid-template-columns:1fr 1fr !important; } }
+@media(max-width:480px){ .grid-4{ grid-template-columns:1fr !important; } }
+</style>
+{% endblock %}
