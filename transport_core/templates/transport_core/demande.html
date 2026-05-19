@@ -1,0 +1,49 @@
+{% extends "transport_core/base.html" %}
+
+{% block title %}Demandes de trajet · E-Shelle Transport{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="wrap">
+    <div class="grid half-grid">
+      <div>
+        <h1 style="font-size:clamp(2rem,4vw,3.2rem)">Publier une demande</h1>
+        <p>Vous ne trouvez pas votre trajet ? Laissez une demande visible aux conducteurs et agences.</p>
+        <form class="panel search-panel" method="post">
+          {% csrf_token %}
+          <div class="grid grid-2">
+            {% for field in form %}
+              <div class="field" {% if field.name == "message" %}style="grid-column:1/-1"{% endif %}>
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% for error in field.errors %}<small style="display:block;color:#dc2626">{{ error }}</small>{% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+          <button class="btn btn-primary" style="margin-top:16px" type="submit">Publier la demande</button>
+        </form>
+      </div>
+
+      <div>
+        <h2>Demandes récentes</h2>
+        <div class="grid">
+          {% for demande in demandes %}
+            <article class="panel" style="padding:16px">
+              <h3>{{ demande.depart }} vers {{ demande.arrivee }}</h3>
+              <div class="meta">
+                <span class="pill">{{ demande.date_souhaitee|date:"d/m/Y" }}</span>
+                <span class="pill">{{ demande.places }} place{{ demande.places|pluralize }}</span>
+                {% if demande.budget_max %}<span class="pill">Max {{ demande.budget_max }} XAF</span>{% endif %}
+              </div>
+              <p>{{ demande.message|default:"Aucun détail ajouté." }}</p>
+              <a class="btn btn-outline" href="tel:{{ demande.telephone }}">Contacter {{ demande.nom }}</a>
+            </article>
+          {% empty %}
+            <div class="empty">Aucune demande ouverte pour le moment.</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

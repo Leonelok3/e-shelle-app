@@ -158,6 +158,15 @@ ESHELLE_SERVICES = [
         "category": "terrain",
     },
     {
+        "key": "transport",
+        "name": "E-Shelle Transport",
+        "icon": "🚌",
+        "color": "#0EA5E9",
+        "external_url": getattr(settings, "TRANSPORT_PUBLIC_URL", "http://127.0.0.1:8000/transport/"),
+        "desc": "Covoiturage, bus, taxis et colis interurbains",
+        "category": "terrain",
+    },
+    {
         "key": "jobs",
         "name": "E-Shelle Jobs",
         "icon": "💼",
@@ -200,6 +209,7 @@ CATEGORY_LABELS = {
     "commerce":  "🛒 Commerce & Marché",
     "lifestyle": "🌟 Lifestyle & Services",
     "finance":   "💰 Finance & Épargne",
+    "terrain":   "🛵 Terrain & Mobilité",
     "business":  "💼 Business & IA",
 }
 

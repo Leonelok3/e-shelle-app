@@ -99,6 +99,9 @@ urlpatterns = [
     # ── E-Shelle Jobs — Emplois, stages & missions ───────────────────
     path("jobs/", include("jobs.urls", namespace="jobs")),
 
+    # ── E-Shelle Transport — Covoiturage & trajets interurbains ───────
+    path("transport/", include("transport_core.urls", namespace="transport")),
+
     # ── E-Shelle AI — Agent Intelligent Central ───────────────────────
     path("ai/", include("e_shelle_ai.urls", namespace="eshelle_ai")),
 

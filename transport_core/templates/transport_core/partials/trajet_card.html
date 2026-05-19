@@ -1,0 +1,26 @@
+<article class="trajet-card">
+  <div>
+    <div class="route" aria-label="{{ trajet.depart }} vers {{ trajet.arrivee }}">
+      <span class="route-dot"></span>
+      <span>{{ trajet.depart }}</span>
+      <span class="route-line"></span>
+      <span>{{ trajet.arrivee }}</span>
+      <span class="route-dot end"></span>
+    </div>
+    <p style="margin:10px 0 0">{{ trajet.titre }}</p>
+  </div>
+  <div class="meta">
+    <span class="pill">{{ trajet.get_type_trajet_display }}</span>
+    <span class="pill">{{ trajet.date_depart|date:"d/m/Y" }} · {{ trajet.heure_depart|time:"H:i" }}</span>
+    <span class="pill">{{ trajet.places_disponibles }} place{{ trajet.places_disponibles|pluralize }}</span>
+    {% if trajet.is_verified %}<span class="pill">Vérifié</span>{% endif %}
+  </div>
+  <div class="muted">
+    {% if trajet.lieu_depart %}Départ: {{ trajet.lieu_depart }}{% endif %}
+    {% if trajet.lieu_arrivee %}<br>Arrivée: {{ trajet.lieu_arrivee }}{% endif %}
+  </div>
+  <div style="margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:12px">
+    <div class="price">{{ trajet.prix_display }}</div>
+    <a class="btn btn-outline" href="{{ trajet.get_absolute_url }}">Voir</a>
+  </div>
+</article>

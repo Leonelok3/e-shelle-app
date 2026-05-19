@@ -1,0 +1,69 @@
+{% extends "transport_core/base.html" %}
+
+{% block title %}Trajets disponibles · E-Shelle Transport{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h1 style="font-size:clamp(2rem,4vw,3.2rem)">Trajets disponibles</h1>
+        <p style="margin:0">{{ nb_results }} résultat{{ nb_results|pluralize }} trouvé{{ nb_results|pluralize }}</p>
+      </div>
+      <a class="btn btn-primary" href="{% url 'transport:publier' %}">Publier un trajet</a>
+    </div>
+
+    <form class="panel search-panel" method="get">
+      <div class="grid grid-3">
+        <div class="field">
+          <label for="depart">Départ</label>
+          <select id="depart" name="depart">
+            <option value="">Tous</option>
+            {% for ville in villes %}
+              <option value="{{ ville.slug }}" {% if depart == ville.slug %}selected{% endif %}>{{ ville.nom }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label for="arrivee">Arrivée</label>
+          <select id="arrivee" name="arrivee">
+            <option value="">Tous</option>
+            {% for ville in villes %}
+              <option value="{{ ville.slug }}" {% if arrivee == ville.slug %}selected{% endif %}>{{ ville.nom }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label for="date">Date</label>
+          <input id="date" type="date" name="date" value="{{ date }}">
+        </div>
+        <div class="field">
+          <label for="type">Type</label>
+          <select id="type" name="type">
+            <option value="">Tous</option>
+            {% for value, label in types %}
+              <option value="{{ value }}" {% if type_trajet == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field" style="grid-column:span 2">
+          <label for="q">Lieu ou conducteur</label>
+          <input id="q" name="q" value="{{ q }}" placeholder="Carrefour, agence, gare, nom...">
+        </div>
+      </div>
+      <button class="btn btn-primary" style="margin-top:14px" type="submit">Filtrer</button>
+    </form>
+
+    <div style="height:20px"></div>
+    {% if trajets %}
+      <div class="card-grid">
+        {% for trajet in trajets %}
+          {% include "transport_core/partials/trajet_card.html" %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty">Aucun trajet ne correspond aux filtres. Essayez une autre ville ou publiez une demande.</div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

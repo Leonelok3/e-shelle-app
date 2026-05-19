@@ -102,6 +102,9 @@ INSTALLED_APPS = [
     # ── E-Shelle Jobs — Emplois, stages & missions ───────────────
     "jobs.apps.JobsConfig",
 
+    # ── E-Shelle Transport — Covoiturage & trajets interurbains ───
+    "transport_core.apps.TransportCoreConfig",
+
     # ── E-Shelle AI — Agent Intelligent Central ────────────────────
     "e_shelle_ai.apps.EshelleAiConfig",
 
@@ -380,6 +383,7 @@ PHARMA_PUBLIC_URL = os.getenv("PHARMA_PUBLIC_URL", "/pharma/")
 PRESSING_PUBLIC_URL = os.getenv("PRESSING_PUBLIC_URL", "/pressing/")
 AI_PUBLIC_URL = os.getenv("AI_PUBLIC_URL", "/ai/")
 JOBS_PUBLIC_URL = os.getenv("JOBS_PUBLIC_URL", "/jobs/")
+TRANSPORT_PUBLIC_URL = os.getenv("TRANSPORT_PUBLIC_URL", "/transport/")
 TCHASLUCPAY_PUBLIC_URL = os.getenv("TCHASLUCPAY_PUBLIC_URL", "http://127.0.0.1:8001/")
 SIMPLO_PUBLIC_URL = os.getenv("SIMPLO_PUBLIC_URL", "http://127.0.0.1:8020/")
 MAPEX_PUBLIC_URL = os.getenv("MAPEX_PUBLIC_URL", "http://127.0.0.1:8000/edu/")

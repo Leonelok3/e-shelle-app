@@ -1,0 +1,78 @@
+{% extends "transport_core/base.html" %}
+
+{% block title %}{{ trajet.depart }} vers {{ trajet.arrivee }} · E-Shelle Transport{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="wrap">
+    <div class="grid split-grid">
+      <article class="panel" style="padding:22px">
+        <div class="meta" style="margin-bottom:14px">
+          <span class="pill">{{ trajet.get_type_trajet_display }}</span>
+          <span class="pill">{{ trajet.get_statut_display }}</span>
+          {% if trajet.is_verified %}<span class="pill">Trajet vérifié</span>{% endif %}
+        </div>
+        <h1 style="font-size:clamp(2rem,4vw,3.4rem)">{{ trajet.depart }} vers {{ trajet.arrivee }}</h1>
+        <p>{{ trajet.titre }}</p>
+
+        <div class="grid grid-2" style="margin-top:22px">
+          <div class="panel" style="padding:14px;box-shadow:none">
+            <strong>Date et heure</strong>
+            <p style="margin:.35rem 0 0">{{ trajet.date_depart|date:"d/m/Y" }} à {{ trajet.heure_depart|time:"H:i" }}</p>
+          </div>
+          <div class="panel" style="padding:14px;box-shadow:none">
+            <strong>Prix</strong>
+            <p class="price" style="margin:.35rem 0 0">{{ trajet.prix_display }}</p>
+          </div>
+          <div class="panel" style="padding:14px;box-shadow:none">
+            <strong>Départ</strong>
+            <p style="margin:.35rem 0 0">{{ trajet.lieu_depart|default:"Lieu à confirmer" }}</p>
+          </div>
+          <div class="panel" style="padding:14px;box-shadow:none">
+            <strong>Arrivée</strong>
+            <p style="margin:.35rem 0 0">{{ trajet.lieu_arrivee|default:"Lieu à confirmer" }}</p>
+          </div>
+        </div>
+
+        <div style="margin-top:24px">
+          <h2>Détails</h2>
+          <p>{{ trajet.description|default:"Le conducteur n'a pas ajouté de description."|linebreaksbr }}</p>
+          {% if trajet.conditions %}
+            <h3>Conditions</h3>
+            <p>{{ trajet.conditions|linebreaksbr }}</p>
+          {% endif %}
+          <div class="meta">
+            <span class="pill">{{ trajet.places_disponibles }} place{{ trajet.places_disponibles|pluralize }}</span>
+            {% if trajet.vehicule %}<span class="pill">{{ trajet.vehicule }}</span>{% endif %}
+            {% if trajet.bagages_acceptes %}<span class="pill">Bagages acceptés</span>{% endif %}
+            {% if trajet.colis_acceptes %}<span class="pill">Colis acceptés</span>{% endif %}
+          </div>
+        </div>
+      </article>
+
+      <aside class="panel" style="padding:18px;position:sticky;top:82px">
+        <h2 style="font-size:1.4rem">Réserver</h2>
+        <p>Contactez directement {{ trajet.conducteur_nom }} pour confirmer le prix, le lieu et les places.</p>
+        <div class="grid">
+          <a class="btn btn-primary" href="{{ trajet.whatsapp_url }}" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="btn btn-outline" href="{{ trajet.tel_url }}">Appeler</a>
+        </div>
+        <p style="font-size:13px">E-Shelle ne prend pas encore de paiement pour les trajets. Vérifiez toujours l'identité et le point de rendez-vous.</p>
+      </aside>
+    </div>
+
+    {% if similaires %}
+      <section class="section">
+        <div class="section-head">
+          <h2>Trajets similaires</h2>
+        </div>
+        <div class="card-grid">
+          {% for trajet in similaires %}
+            {% include "transport_core/partials/trajet_card.html" %}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

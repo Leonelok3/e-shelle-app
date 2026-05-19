@@ -422,6 +422,13 @@
         <p>Trouvez rapidement une moto, un livreur ou un assistant de course disponible dans votre quartier. Appel et WhatsApp en un clic.</p>
         <a href="{{ SIMPLO_PUBLIC_URL }}" class="btn btn-sm" style="border:1px solid rgba(245,158,11,.45);color:#F59E0B;background:rgba(255,183,3,.08)">Ouvrir Simplo →</a>
       </div>
+      <div class="module-card aos-hidden" style="animation-delay:.792s;border-color:rgba(14,165,233,.3);background:linear-gradient(135deg,rgba(14,165,233,.08),rgba(22,163,74,.04))">
+        <div class="module-icon" style="background:rgba(14,165,233,.14);border-color:rgba(14,165,233,.3)">🚌</div>
+        <div style="position:absolute;top:1.25rem;right:1.25rem"><span class="badge" style="background:rgba(14,165,233,.14);color:#0EA5E9;border:1px solid rgba(14,165,233,.3)">Mobilité</span></div>
+        <h3 style="color:#0EA5E9">E-Shelle Transport</h3>
+        <p>Covoiturage, bus, taxis et colis interurbains. Trouvez un départ fiable ou publiez votre trajet en quelques minutes.</p>
+        <a href="{{ TRANSPORT_PUBLIC_URL }}" class="btn btn-sm" style="border:1px solid rgba(14,165,233,.45);color:#0EA5E9;background:rgba(14,165,233,.08)">Voir les trajets →</a>
+      </div>
       <div class="module-card aos-hidden" style="animation-delay:.795s;border-color:rgba(37,99,235,.3);background:linear-gradient(135deg,rgba(37,99,235,.08),rgba(7,24,47,.03))">
         <div class="module-icon" style="background:rgba(37,99,235,.14);border-color:rgba(37,99,235,.3)">💼</div>
         <div style="position:absolute;top:1.25rem;right:1.25rem"><span class="badge" style="background:rgba(37,99,235,.14);color:#2563EB;border:1px solid rgba(37,99,235,.3)">Jobs</span></div>
@@ -813,9 +820,9 @@
 <section class="section" id="ecosysteme" style="background:linear-gradient(180deg,var(--bg-primary) 0%,rgba(27,101,52,.04) 50%,var(--bg-primary) 100%)">
   <div class="container">
     <div class="text-center" style="margin-bottom:3rem">
-      <div class="section-label aos-hidden">17 applications</div>
+      <div class="section-label aos-hidden">20+ applications</div>
       <h2 class="section-title aos-hidden aos-delay-1">Tout l'écosystème<br><span class="text-gradient">E-Shelle</span></h2>
-      <p class="section-subtitle aos-hidden aos-delay-2">Une seule plateforme, 17 applications pour transformer votre quotidien au Cameroun et en Afrique.</p>
+      <p class="section-subtitle aos-hidden aos-delay-2">Une seule plateforme, des applications utiles pour transformer votre quotidien au Cameroun et en Afrique.</p>
     </div>
 
     <!-- Grille des 17 apps -->
@@ -945,6 +952,13 @@
         <div class="eco-icon">🏍️</div>
         <div class="eco-name">Simplo</div>
         <div class="eco-desc">Transport & courses</div>
+      </a>
+
+      <!-- Transport -->
+      <a href="{{ TRANSPORT_PUBLIC_URL }}" class="eco-card" style="--eco-color:#0EA5E9;--eco-bg:rgba(14,165,233,.10)">
+        <div class="eco-icon">🚌</div>
+        <div class="eco-name">Transport</div>
+        <div class="eco-desc">Covoiturage & bus</div>
       </a>
 
       <!-- Jobs -->

@@ -1,0 +1,110 @@
+{% extends "transport_core/base.html" %}
+
+{% block title %}E-Shelle Transport · Covoiturage et bus{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Trajets vérifiés · Cameroun</div>
+      <h1>Bougez plus facilement entre les villes.</h1>
+      <p>
+        Trouvez un covoiturage, un bus, un taxi interurbain ou un transport de colis.
+        E-Shelle réunit les trajets disponibles et les contacts utiles au même endroit.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="{% url 'transport:catalogue' %}">Chercher un trajet</a>
+        <a class="btn btn-outline" href="{% url 'transport:publier' %}">Proposer un trajet</a>
+      </div>
+    </div>
+
+    <form class="panel search-panel" method="get" action="{% url 'transport:catalogue' %}">
+      <div class="grid grid-2">
+        <div class="field">
+          <label for="depart">Départ</label>
+          <select id="depart" name="depart">
+            <option value="">Toutes les villes</option>
+            {% for ville in villes %}
+              <option value="{{ ville.slug }}">{{ ville.nom }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label for="arrivee">Arrivée</label>
+          <select id="arrivee" name="arrivee">
+            <option value="">Toutes les villes</option>
+            {% for ville in villes %}
+              <option value="{{ ville.slug }}">{{ ville.nom }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label for="date">Date</label>
+          <input id="date" type="date" name="date">
+        </div>
+        <div class="field">
+          <label for="type">Type</label>
+          <select id="type" name="type">
+            <option value="">Tous</option>
+            <option value="COVOITURAGE">Covoiturage</option>
+            <option value="BUS">Bus</option>
+            <option value="TAXI">Taxi</option>
+            <option value="COLIS">Colis</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-top:14px" type="submit">Lancer la recherche</button>
+    </form>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="grid grid-3">
+      <div class="panel" style="padding:18px"><strong style="font-size:2rem">{{ nb_trajets }}</strong><p>trajets ouverts</p></div>
+      <div class="panel" style="padding:18px"><strong style="font-size:2rem">{{ nb_villes }}</strong><p>villes suivies</p></div>
+      <div class="panel" style="padding:18px"><strong style="font-size:2rem">24h</strong><p>contact direct chauffeur</p></div>
+    </div>
+  </div>
+</section>
+
+{% if featured %}
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>Trajets recommandés</h2>
+        <p style="margin:0">Des départs utiles, vérifiés ou mis en avant.</p>
+      </div>
+      <a class="btn btn-outline" href="{% url 'transport:catalogue' %}">Tout voir</a>
+    </div>
+    <div class="card-grid">
+      {% for trajet in featured %}
+        {% include "transport_core/partials/trajet_card.html" %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>Derniers trajets</h2>
+        <p style="margin:0">Covoiturage, bus, taxi et colis en cours.</p>
+      </div>
+      <a class="btn btn-outline" href="{% url 'transport:demande' %}">Faire une demande</a>
+    </div>
+    {% if trajets %}
+      <div class="card-grid">
+        {% for trajet in trajets %}
+          {% include "transport_core/partials/trajet_card.html" %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty">Aucun trajet ouvert pour le moment. Publiez le premier départ.</div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
