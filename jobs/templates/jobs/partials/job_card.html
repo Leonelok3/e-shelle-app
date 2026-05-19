@@ -1,0 +1,13 @@
+<a class="card" href="{% url 'jobs:detail' offre.slug %}">
+  <div class="meta">
+    <span class="pill blue">{{ offre.get_type_contrat_display }}</span>
+    {% if offre.is_verified %}<span class="pill green">Verifiee</span>{% endif %}
+    {% if offre.ville %}<span class="pill">{{ offre.ville.nom }}</span>{% endif %}
+  </div>
+  <div>
+    <div class="title">{{ offre.titre }}</div>
+    <div class="company">{{ offre.entreprise }}</div>
+  </div>
+  <div class="muted">{{ offre.description|truncatechars:120 }}</div>
+  <div class="salary">{{ offre.salaire_display }}</div>
+</a>

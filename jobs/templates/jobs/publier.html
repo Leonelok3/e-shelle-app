@@ -1,0 +1,27 @@
+{% extends "jobs/base.html" %}
+{% block title %}Publier une offre - E-Shelle Jobs{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="wrap">
+    <div class="panel" style="max-width:860px;margin:0 auto">
+      <div class="kicker">Recruteurs</div>
+      <h1 style="font-size:38px">Publier une offre</h1>
+      <p class="muted">L'offre sera verifiee avant publication pour proteger les candidats et garder la plateforme fiable.</p>
+      <form method="post">
+        {% csrf_token %}
+        <div class="formgrid">
+          {% for field in form %}
+            <div {% if field.name == "description" or field.name == "missions" or field.name == "profil_recherche" %}style="grid-column:1/-1"{% endif %}>
+              <label>{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}<p style="color:#DC2626">{{ field.errors|join:", " }}</p>{% endif %}
+            </div>
+          {% endfor %}
+        </div>
+        <div style="height:16px"></div>
+        <button class="btn" type="submit">Soumettre l'offre</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

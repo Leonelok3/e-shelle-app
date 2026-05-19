@@ -96,6 +96,9 @@ urlpatterns = [
     # ── E-Shelle Pressing — Pressing & Blanchisserie ─────────────────
     path("pressing/", include("pressing.urls", namespace="pressing")),
 
+    # ── E-Shelle Jobs — Emplois, stages & missions ───────────────────
+    path("jobs/", include("jobs.urls", namespace="jobs")),
+
     # ── E-Shelle AI — Agent Intelligent Central ───────────────────────
     path("ai/", include("e_shelle_ai.urls", namespace="eshelle_ai")),
 

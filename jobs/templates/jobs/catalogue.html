@@ -1,0 +1,50 @@
+{% extends "jobs/base.html" %}
+{% block title %}Offres - E-Shelle Jobs{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="wrap">
+    <div class="head">
+      <div><h2>{{ nb_results }} offre{{ nb_results|pluralize }} disponible{{ nb_results|pluralize }}</h2><p class="muted">Filtrez par ville, secteur ou type de contrat.</p></div>
+      <a class="btn green" href="{% url 'jobs:publier' %}">Publier une offre</a>
+    </div>
+    <div class="layout">
+      <form class="filters" method="get">
+        <label>Recherche</label>
+        <input name="q" value="{{ q }}" placeholder="Poste, entreprise...">
+        <label>Ville</label>
+        <select name="ville">
+          <option value="">Toutes</option>
+          {% for ville in villes %}<option value="{{ ville.slug }}" {% if ville.slug == ville_slug %}selected{% endif %}>{{ ville.nom }}</option>{% endfor %}
+        </select>
+        <label>Secteur</label>
+        <select name="secteur">
+          <option value="">Tous</option>
+          {% for secteur in secteurs %}<option value="{{ secteur.slug }}" {% if secteur.slug == secteur_slug %}selected{% endif %}>{{ secteur.nom }}</option>{% endfor %}
+        </select>
+        <label>Contrat</label>
+        <select name="contrat">
+          <option value="">Tous</option>
+          {% for value,label in contrats %}<option value="{{ value }}" {% if value == contrat %}selected{% endif %}>{{ label }}</option>{% endfor %}
+        </select>
+        <div style="height:12px"></div>
+        <button class="btn" type="submit" style="width:100%">Appliquer</button>
+      </form>
+      <div class="list">
+        {% for offre in offres %}
+        <a class="job-row" href="{% url 'jobs:detail' offre.slug %}">
+          <div>
+            <div class="meta"><span class="pill blue">{{ offre.get_type_contrat_display }}</span>{% if offre.ville %}<span class="pill">{{ offre.ville.nom }}</span>{% endif %}{% if offre.is_verified %}<span class="pill green">Verifiee</span>{% endif %}</div>
+            <div class="title" style="margin-top:8px">{{ offre.titre }}</div>
+            <div class="company">{{ offre.entreprise }}{% if offre.secteur %} · {{ offre.secteur.nom }}{% endif %}</div>
+            <p class="muted">{{ offre.description|truncatechars:170 }}</p>
+          </div>
+          <div class="salary">{{ offre.salaire_display }}</div>
+        </a>
+        {% empty %}
+        <div class="panel">Aucune offre ne correspond aux filtres.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

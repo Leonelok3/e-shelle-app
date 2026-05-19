@@ -158,6 +158,15 @@ ESHELLE_SERVICES = [
         "category": "terrain",
     },
     {
+        "key": "jobs",
+        "name": "E-Shelle Jobs",
+        "icon": "💼",
+        "color": "#2563EB",
+        "external_url": getattr(settings, "JOBS_PUBLIC_URL", "http://127.0.0.1:8000/jobs/"),
+        "desc": "Emplois, stages et missions vérifiées",
+        "category": "business",
+    },
+    {
         "key": "adgen",
         "name": "AdGen IA",
         "icon": "✨",

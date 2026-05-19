@@ -1,0 +1,49 @@
+{% extends "jobs/base.html" %}
+{% block title %}{{ offre.titre }} - {{ offre.entreprise }}{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="wrap detail">
+    <article class="panel content">
+      <div class="meta">
+        <span class="pill blue">{{ offre.get_type_contrat_display }}</span>
+        <span class="pill">{{ offre.get_mode_travail_display }}</span>
+        {% if offre.is_verified %}<span class="pill green">Entreprise verifiee</span>{% endif %}
+      </div>
+      <h1 style="font-size:42px">{{ offre.titre }}</h1>
+      <p class="company">{{ offre.entreprise }}{% if offre.ville %} · {{ offre.ville.nom }}{% endif %}{% if offre.quartier %} · {{ offre.quartier }}{% endif %}</p>
+      <p class="salary">{{ offre.salaire_display }}</p>
+      <h2>Description</h2><p>{{ offre.description|linebreaksbr }}</p>
+      {% if offre.missions %}<h2>Missions</h2><p>{{ offre.missions|linebreaksbr }}</p>{% endif %}
+      {% if offre.profil_recherche %}<h2>Profil recherche</h2><p>{{ offre.profil_recherche|linebreaksbr }}</p>{% endif %}
+      {% if offre.avantages %}<h2>Avantages</h2><p>{{ offre.avantages|linebreaksbr }}</p>{% endif %}
+    </article>
+    <aside class="panel">
+      <h2>Postuler</h2>
+      {% if offre.whatsapp or offre.telephone %}
+        <a class="btn green" style="width:100%;margin-bottom:10px" href="{{ offre.whatsapp_url }}" target="_blank" rel="noopener">WhatsApp recruteur</a>
+      {% endif %}
+      {% if offre.telephone %}<a class="btn secondary" style="width:100%;margin-bottom:10px" href="{{ offre.tel_url }}">Appeler</a>{% endif %}
+      {% if offre.email %}<a class="btn secondary" style="width:100%;margin-bottom:10px" href="mailto:{{ offre.email }}?subject=Candidature - {{ offre.titre }}">Email</a>{% endif %}
+      {% if offre.lien_externe %}<a class="btn secondary" style="width:100%;margin-bottom:18px" href="{{ offre.lien_externe }}" target="_blank" rel="noopener">Lien externe</a>{% endif %}
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+          <label>{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}<p style="color:#DC2626">{{ field.errors|join:", " }}</p>{% endif %}
+        {% endfor %}
+        <div style="height:12px"></div>
+        <button class="btn" style="width:100%" type="submit">Envoyer ma candidature</button>
+      </form>
+    </aside>
+  </div>
+</section>
+{% if similaires %}
+<section class="section">
+  <div class="wrap">
+    <div class="head"><h2>Offres similaires</h2></div>
+    <div class="grid">{% for offre in similaires %}{% include "jobs/partials/job_card.html" %}{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

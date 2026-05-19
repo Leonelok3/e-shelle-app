@@ -25,6 +25,7 @@ def eshelle_public_urls(request):
         "PHARMA_PUBLIC_URL": getattr(settings, "PHARMA_PUBLIC_URL", "/pharma/"),
         "PRESSING_PUBLIC_URL": getattr(settings, "PRESSING_PUBLIC_URL", "/pressing/"),
         "AI_PUBLIC_URL": getattr(settings, "AI_PUBLIC_URL", "/ai/"),
+        "JOBS_PUBLIC_URL": getattr(settings, "JOBS_PUBLIC_URL", "/jobs/"),
         "TCHASLUCPAY_PUBLIC_URL": getattr(settings, "TCHASLUCPAY_PUBLIC_URL", "http://127.0.0.1:8001/"),
         "SIMPLO_PUBLIC_URL": getattr(settings, "SIMPLO_PUBLIC_URL", "http://127.0.0.1:8020/"),
         "MAPEX_PUBLIC_URL": getattr(settings, "MAPEX_PUBLIC_URL", "/edu/"),

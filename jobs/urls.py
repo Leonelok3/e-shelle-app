@@ -1,0 +1,11 @@
+from django.urls import path
+from . import views
+
+app_name = "jobs"
+
+urlpatterns = [
+    path("", views.accueil, name="accueil"),
+    path("offres/", views.catalogue, name="catalogue"),
+    path("publier/", views.publier, name="publier"),
+    path("offre/<slug:slug>/", views.detail, name="detail"),
+]

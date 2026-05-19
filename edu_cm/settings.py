@@ -99,6 +99,9 @@ INSTALLED_APPS = [
     # ── E-Shelle Pressing — Pressing & Blanchisserie ──────────────
     "pressing.apps.PressingConfig",
 
+    # ── E-Shelle Jobs — Emplois, stages & missions ───────────────
+    "jobs.apps.JobsConfig",
+
     # ── E-Shelle AI — Agent Intelligent Central ────────────────────
     "e_shelle_ai.apps.EshelleAiConfig",
 
@@ -375,6 +378,7 @@ GAZ_PUBLIC_URL = os.getenv("GAZ_PUBLIC_URL", "/gaz/")
 PHARMA_PUBLIC_URL = os.getenv("PHARMA_PUBLIC_URL", "/pharma/")
 PRESSING_PUBLIC_URL = os.getenv("PRESSING_PUBLIC_URL", "/pressing/")
 AI_PUBLIC_URL = os.getenv("AI_PUBLIC_URL", "/ai/")
+JOBS_PUBLIC_URL = os.getenv("JOBS_PUBLIC_URL", "/jobs/")
 TCHASLUCPAY_PUBLIC_URL = os.getenv("TCHASLUCPAY_PUBLIC_URL", "http://127.0.0.1:8001/")
 SIMPLO_PUBLIC_URL = os.getenv("SIMPLO_PUBLIC_URL", "http://127.0.0.1:8020/")
 MAPEX_PUBLIC_URL = os.getenv("MAPEX_PUBLIC_URL", "http://127.0.0.1:8000/edu/")
